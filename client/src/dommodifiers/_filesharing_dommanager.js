@@ -29,7 +29,7 @@ function createFileShareButton(fileshareobj){
  * @param {json} fileshareobj
  */
 function assignFileShareButton(fileshareobj){
-    var button= document.getElementById(fileshareobj.button.id);
+    let button= document.getElementById(fileshareobj.button.id);
     button.onclick = function() {
         var fileSelector = new FileSelector();
         fileSelector.selectSingleFile(function(file) {

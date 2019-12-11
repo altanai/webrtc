@@ -55,12 +55,12 @@ gulp.task('vendorjs',function(done) {
     vendorJsList=[ 
         "https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js",
         "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
-        "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.0/socket.io.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js",
         "https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js",
         "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
     ]; 
     remoteSrc(vendorJsList, {base: null })
-        // .pipe( rev({strict: true}) )
+        .pipe( rev({strict: true}) )
         .pipe(header(headerComment))
         .pipe(uglify())
         .pipe(concat('webrtcdevelopment_header.js'))  
@@ -102,9 +102,9 @@ gulp.task('webrtcdevelopmentServer',function(done) {
     ]; 
     console.log(list);
     gulp.src(list)
-        // .pipe( rev({strict: true}) )
+        .pipe( rev({strict: true}) )
         .pipe(header(headerComment))
-        // .pipe(uglify())
+        .pipe(uglify())
         .pipe(concat('webrtcdevelopmentServer.js'))  
         .pipe(gulp.dest(folderPath)); 
     done();
@@ -133,7 +133,7 @@ gulp.task('drawjs',function(done) {
 
 gulp.task('drawcss',function(done) {
     console.log(" gulping main drawcss  ");
-    list=[ "client/src/css/Style.css",
+    list=[
         "client/src/drawboard/drawing.css"
     ]; 
     console.log(list);
@@ -188,7 +188,7 @@ var scriptList=[
     "client/src/scripts/_init.js",
     // --------------------- dom modifiers
     "client/src/dommodifiers/_webcallviewmanager.js",
-    "client/src/dommodifiers/_filesharing_dommanager.jvi s",
+    "client/src/dommodifiers/_filesharing_dommanager.js",
     "client/src/dommodifiers/_media_dommanager.js",
     "client/src/dommodifiers/_notify.js",
     "client/src/dommodifiers/_screenshare_dommodifier.js",
@@ -250,7 +250,7 @@ gulp.task('webrtcdevelopmentjs',function(done) {
         }))
         .pipe(uglify())
         .pipe(concat('webrtcdevelopment.js'))  
-        .pipe(replace(/use strict/g, ''))
+        // .pipe(replace(/use strict/g, ''))
         .pipe(gulp.dest(folderPath));
     done();
 });
@@ -262,12 +262,12 @@ gulp.task('mainstyle',function(done) {
       "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css",
       "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css",
       "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css",
-      "https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css",
-      "https://www.gstatic.com/firebasejs/4.2.0/firebase.js"
+      "https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css"
+      // "https://www.gstatic.com/firebasejs/4.2.0/firebase.js"
     ]; 
     console.log(cssList);
     remoteSrc(cssList, {base: null })
-        // .pipe( rev({strict: true}) )
+        .pipe( rev({strict: true}) )
         .pipe(header(headerComment))
         .pipe(concat('webrtcdevelopment_header.css'))  
         .pipe(gulp.dest(folderPath));
@@ -277,7 +277,6 @@ gulp.task('mainstyle',function(done) {
 gulp.task('webrtcdevelopmentcss',function(done) {
     console.log(" gulping custom stylesheets css  ");
     cssList=[
-        "client/src/css/Style.css",
         "client/src/css/styles.css",
         "client/src/css/media.css",
         "client/src/css/chat.css",
@@ -288,8 +287,8 @@ gulp.task('webrtcdevelopmentcss',function(done) {
     ];
     console.log(cssList);
     gulp.src(cssList)
-      //.pipe(uglify())
-      //   .pipe( rev({strict: true}) )
+        // .pipe(uglify())
+        // .pipe( rev({strict: true}) )
         .pipe(header(headerComment))
         .pipe(concat('webrtcdevelopment.css'))
         .pipe(less().on('error', function(error) { console.error(error)}))
@@ -322,23 +321,25 @@ gulp.task('develop', gulp.series(
     // 'vendorjs',
     // 'drawjs' ,
     // 'codejs',
-    'betawebrtcdevelopmentjs',
-    // 'screensharejs',
-    // 'mainstyle',
-    // 'serverjs'
+    'betawebrtcdevelopmentjs'
+));
 
-)); 
+// only gulp vendor js
+gulp.task('vendorjs', gulp.series(
+    'vendorjs',
+    'mainstyle'
+));
 
 //gulp aall components to make it production ready
-gulp.task('production', gulp.parallel(
+gulp.task('production', gulp.series(
     'clean',
-    'vendorjs',
+    // 'vendorjs',
     'drawjs' , 
     'drawcss',
     'codejs',
     'codecss',
     'webrtcdevelopmentjs',
-    'mainstyle',
+    // 'mainstyle',
     'webrtcdevelopmentcss',
     'webrtcdevelopmentServer'
 )); 

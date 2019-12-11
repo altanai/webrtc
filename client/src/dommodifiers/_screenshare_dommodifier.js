@@ -121,7 +121,7 @@ function createScreenshareButton() {
             screenShareButton.innerHTML = screenshareobj.button.shareButton.html_off;
             webrtcdevStopShareScreen();
         } else {
-            webrtcdev.log("[svreenshare js] createScreenshareButton ,classname neither on nor off", creenShareButton.className);
+            webrtcdev.log("[screenshare js] createScreenshareButton , classname is neither on nor off", screenShareButton.className);
         }
     };
     let li = document.createElement("li");
@@ -138,7 +138,7 @@ function createScreenshareButton() {
  * @param {json} scrshareBtn
  */
 function assignScreenShareButton(scrshareBtn) {
-    webrtcdev.log("assignScreenShareButton");
+    webrtcdev.log("assignScreenShareButton", scrshareBtn);
     let button = getElementById(scrshareBtn.id);
 
     button.onclick = function (event) {
@@ -156,7 +156,7 @@ function assignScreenShareButton(scrshareBtn) {
             webrtcdevStopShareScreen();
             //if(debug) getElementById(button.id+"buttonstatus").innerHTML("On");
         } else {
-            webrtcdev.warn("[svreenshare js] createScreenshareButton ,classname neither on nor off", creenShareButton.className);
+            webrtcdev.warn("[screenshare js] createScreenshareButton,classname neither on nor off", scrshareBtn.className);
         }
     }
     return button;
