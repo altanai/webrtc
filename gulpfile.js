@@ -1,26 +1,20 @@
 
 var gulp = require('gulp');
-var concat = require('gulp-concat'); 
-var cat = require('gulp-cat');  
-var addsrc = require('gulp-add-src');
+var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 let babel = require('gulp-babel');
 // var uglify = require("uglify-js");
 var replace = require('gulp-replace');
 var less = require('gulp-less');
-var base64 = require('gulp-base64');
-var gulpSequence = require('gulp-sequence');
 var exec  =require('child_process').exec;
 var remoteSrc = require('gulp-remote-src');
 var rev = require('gulp-rev-timestamp');
-var replace = require('gulp-replace');
-
 var del = require('del');
-
 var fs = require('fs');
+
 var _properties = require('./env.js')(fs).readEnv();
 var properties= JSON.parse(_properties);
-console.log(properties);
+console.log("Properties " , properties);
 
 var folderPath="", file="";
 
@@ -47,7 +41,7 @@ var header = require('gulp-header'),
 // });
 
 gulp.task('clean', function (done) {
-  del.sync('dist');
+  del.sync('build');
   done();
 });
 
@@ -180,20 +174,23 @@ gulp.task('codecss',function(done) {
 var scriptList=[
     "client/src/scripts/RTCM.js",
     "client/src/scripts/_logger.js",
+
     // --------------------- helper libs
     "client/src/helperlibs/html2canvas.js",
-    // "client/src/scripts/jszip.js"
-    // "client/src/scripts/firebase.js",
     "client/src/scripts/head.js",
     "client/src/scripts/_init.js",
+
     // --------------------- dom modifiers
     "client/src/dommodifiers/_webcallviewmanager.js",
-    "client/src/dommodifiers/_filesharing_dommanager.js",
-    "client/src/dommodifiers/_media_dommanager.js",
+    "client/src/dommodifiers/_filesharing_dommodifier.js",
+    "client/src/dommodifiers/_media_dommodifier.js",
     "client/src/dommodifiers/_notify.js",
     "client/src/dommodifiers/_screenshare_dommodifier.js",
+    "client/src/dommodifiers/_screenrecord_dommodifier.js",
     "client/src/dommodifiers/_chat_dommodifier.js",
+    "client/src/dommodifiers/_draw_dommodifier.js",
     // "client/src/scripts/_settings.js",
+
     // --------------------- stats and analytics
     "client/src/analytics/_stats.js",
     // ---------------------- scripts
