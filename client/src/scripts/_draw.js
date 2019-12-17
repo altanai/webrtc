@@ -4,6 +4,12 @@
 var CanvasDesigner;
 var isDrawOpened = false ;
 
+/**
+ * Open draw iframe winside of drawCanvasContainer and ass tools
+ * @method
+ * @name webrtcdevCanvasDesigner
+ * @param {json} drawCanvasobj
+ */
 function webrtcdevCanvasDesigner(drawCanvasobj){
 
     if(document.getElementById(drawCanvasobj.drawCanvasContainer).innerHTML.indexOf("iframe")<0){

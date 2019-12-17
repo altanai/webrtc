@@ -48,18 +48,19 @@ var header = require('gulp-header'),
 
 gulp.task('clean', function (done) {
   del.sync('dist');
-  cone();
-})
+  done();
+});
 
 gulp.task('vendorjs',function(done) {
     vendorJsList=[ 
-      "https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js",
-      "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
-      "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.0/socket.io.js",
-      "https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"
+        "https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js",
+        "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js",
+        "https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
     ]; 
     remoteSrc(vendorJsList, {base: null })
-        // .pipe( rev({strict: true}) )
+        .pipe( rev({strict: true}) )
         .pipe(header(headerComment))
         .pipe(uglify())
         .pipe(concat('webrtcdevelopment_header.js'))  
@@ -132,7 +133,7 @@ gulp.task('drawjs',function(done) {
 
 gulp.task('drawcss',function(done) {
     console.log(" gulping main drawcss  ");
-    list=[ "client/src/css/Style.css",
+    list=[
         "client/src/drawboard/drawing.css"
     ]; 
     console.log(list);
@@ -177,19 +178,30 @@ gulp.task('codecss',function(done) {
 });
 
 var scriptList=[
-    "client/src/scripts/_init.js",
-    "client/src/scripts/_notify.js",
-    "client/src/scripts/DetectRTC.js",
-    // "client/src/scripts/RTCMultiConnection_depricated.js",
     "client/src/scripts/RTCM.js",
+    "client/src/scripts/_logger.js",
+    // --------------------- helper libs
+    "client/src/helperlibs/html2canvas.js",
+    // "client/src/scripts/jszip.js"
+    // "client/src/scripts/firebase.js",
+    "client/src/scripts/head.js",
+    "client/src/scripts/_init.js",
+    // --------------------- dom modifiers
+    "client/src/dommodifiers/_webcallviewmanager.js",
+    "client/src/dommodifiers/_filesharing_dommanager.js",
+    "client/src/dommodifiers/_media_dommanager.js",
+    "client/src/dommodifiers/_notify.js",
+    "client/src/dommodifiers/_screenshare_dommodifier.js",
+    "client/src/dommodifiers/_chat_dommodifier.js",
+    // "client/src/scripts/_settings.js",
+    // --------------------- stats and analytics
+    "client/src/analytics/_stats.js",
+    // ---------------------- scripts
     "client/src/scripts/_screenshare.js",
     "client/src/scripts/_webrtcchecks.js",
-    "client/src/scripts/_settings.js",
-    // "client/src/scripts/firebase.js",
     "client/src/scripts/FileBufferReader.js",
     "client/src/scripts/MediaStreamRecorder.js",
     "client/src/scripts/RecordRTC.js",
-    "client/src/scripts/html2canvas.js",
     "client/src/scripts/_snapshot.js",
     "client/src/scripts/_geolocation.js",
     "client/src/scripts/_chat.js",
@@ -205,14 +217,15 @@ var scriptList=[
     "client/src/scripts/_texteditor.js",
     "client/src/scripts/_turn.js",
     "client/src/scripts/_timer.js",
-    "client/src/scripts/_stats.js",
     "client/src/scripts/_tracing.js",
-    // "client/src/scripts/jszip.js"
+    "client/src/scripts/_peerinfomanager.js",
+    "client/src/scripts/_sessionmanager.js",
+    "client/src/scripts/_exitmanager.js",
+    "client/src/scripts/tail.js"
 ];
 
 gulp.task('betawebrtcdevelopmentjs',function(done) {
     console.log(" gulping main webrtc development scripts into beta ");
-    scriptList.push("client/src/scripts/start.js");
     scriptList.push("client/src/scripts/admin.js");  
     console.log(scriptList);
     gulp.src(scriptList , {allowEmpty: true })
@@ -230,16 +243,15 @@ gulp.task('webrtcdevelopmentjs',function(done) {
     scriptList.push("client/src/scripts/start.js");
     scriptList.push("client/src/scripts/admin.js");    
     console.log(scriptList);
-    gulp.src(scriptList)
+    gulp.src(scriptList,{ allowEmpty: true })
         .pipe(header(headerComment))
         .pipe(babel({
             presets: ['es2015']
         }))
         .pipe(uglify())
         .pipe(concat('webrtcdevelopment.js'))  
-        .pipe(replace(/use strict/g, ''))
+        // .pipe(replace(/use strict/g, ''))
         .pipe(gulp.dest(folderPath));
-        //.pipe(uglify()); 
     done();
 });
 
@@ -250,8 +262,8 @@ gulp.task('mainstyle',function(done) {
       "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css",
       "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css",
       "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css",
-      "https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css",
-      "https://www.gstatic.com/firebasejs/4.2.0/firebase.js"
+      "https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css"
+      // "https://www.gstatic.com/firebasejs/4.2.0/firebase.js"
     ]; 
     console.log(cssList);
     remoteSrc(cssList, {base: null })
@@ -265,19 +277,20 @@ gulp.task('mainstyle',function(done) {
 gulp.task('webrtcdevelopmentcss',function(done) {
     console.log(" gulping custom stylesheets css  ");
     cssList=[
-        "client/src/css/Style.css",
         "client/src/css/styles.css",
         "client/src/css/media.css",
         "client/src/css/chat.css",
         "client/src/css/cursor.css",
         "client/src/css/draw.css",
         "client/src/css/filesharing.css",
-        "client/src/css/screenshare.css"
+        "client/src/css/screenshare.css",
+        "client/src/css/timer.css",
+        "client/src/css/icons.css"
     ];
     console.log(cssList);
     gulp.src(cssList)
-      //.pipe(uglify())
-        .pipe( rev({strict: true}) )
+        // .pipe(uglify())
+        // .pipe( rev({strict: true}) )
         .pipe(header(headerComment))
         .pipe(concat('webrtcdevelopment.css'))
         .pipe(less().on('error', function(error) { console.error(error)}))
@@ -308,29 +321,27 @@ gulp.task('default', gulp.series(
 // onlu gulp webrtcdev js changes 
 gulp.task('develop', gulp.series(
     // 'vendorjs',
-    // 'drawjs' , 
-    // 'drawcss',
+    // 'drawjs' ,
     // 'codejs',
-    // 'codecss',
-    'betawebrtcdevelopmentjs',
-    // 'screensharejs',
-    // 'mainstyle',
-    // 'webrtcdevelopmentcss',
-    // 'serverjs'
+    'betawebrtcdevelopmentjs'
+));
 
-)); 
+// only gulp vendor js
+gulp.task('vendorjs', gulp.series(
+    'vendorjs',
+    'mainstyle'
+));
 
 //gulp aall components to make it production ready
-gulp.task('production', gulp.parallel(
+gulp.task('production', gulp.series(
     'clean',
-    'vendorjs',
+    // 'vendorjs',
     'drawjs' , 
     'drawcss',
     'codejs',
     'codecss',
     'webrtcdevelopmentjs',
-    /*'screensharejs',*/
-    'mainstyle',
+    // 'mainstyle',
     'webrtcdevelopmentcss',
     'webrtcdevelopmentServer'
 )); 

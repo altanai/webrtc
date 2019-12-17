@@ -1,10 +1,6 @@
 .glyphicon {
     cursor: pointer
 }
-.bodyWhole{
-  background:#F3F3F3 
-}
-
 #contentWrap {
     margin: 0;
     width: 100%;
@@ -44,7 +40,6 @@
     top: -11px;
     transform: rotate(-30deg)
 }
-
 
 .modal-body {
     font-size: 13px;

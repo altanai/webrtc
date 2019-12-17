@@ -1,4 +1,4 @@
-'use strict';
+// 'use strict';
 
 // Last time updated: 2019-07-08 4:54:27 PM UTC
 
@@ -1870,23 +1870,23 @@ function MultiPeers(connection) {
     }
     DetectRTC.isGetUserMediaSupported = isGetUserMediaSupported;
 
-    var displayResolution = '';
-    if (screen.width) {
-        var width = (screen.width) ? screen.width : '';
-        var height = (screen.height) ? screen.height : '';
-        displayResolution += '' + width + ' x ' + height;
-    }
-    DetectRTC.displayResolution = displayResolution;
+    // var displayResolution = '';
+    // if (screen.width) {
+    //     var width = (screen.width) ? screen.width : '';
+    //     var height = (screen.height) ? screen.height : '';
+    //     displayResolution += '' + width + ' x ' + height;
+    // }
+    // DetectRTC.displayResolution = displayResolution;
 
-    function getAspectRatio(w, h) {
-        function gcd(a, b) {
-            return (b == 0) ? a : gcd(b, a % b);
-        }
-        var r = gcd(w, h);
-        return (w / r) / (h / r);
-    }
+    // function getAspectRatio(w, h) {
+    //     function gcd(a, b) {
+    //         return (b == 0) ? a : gcd(b, a % b);
+    //     }
+    //     var r = gcd(w, h);
+    //     return (w / r) / (h / r);
+    // }
 
-    DetectRTC.displayAspectRatio = getAspectRatio(screen.width, screen.height).toFixed(2);
+    // DetectRTC.displayAspectRatio = getAspectRatio(screen.width, screen.height).toFixed(2);
 
     // ----------
     DetectRTC.isCanvasSupportsStreamCapturing = isCanvasSupportsStreamCapturing;
@@ -3600,6 +3600,8 @@ function getUserMediaHandler(options) {
             return;
         }
 
+        console.log(" =======================KKKKKKKKKKKK ===================== ", options.localMediaConstraints );
+
         navigator.mediaDevices.getUserMedia(options.localMediaConstraints).then(function(stream) {
             stream.streamid = stream.streamid || stream.id || getRandomString();
             stream.idInstance = idInstance;
@@ -5111,7 +5113,7 @@ var TranslationHandler = (function() {
             connection.renegotiate(remoteUserId);
         }
     };
-
+    var IsChrome = !!navigator.webkitGetUserMedia;
     connection.invokeGetUserMedia = function(localMediaConstraints, callback, session) {
         if (!session) {
             session = connection.session;
@@ -5121,36 +5123,73 @@ var TranslationHandler = (function() {
             localMediaConstraints = connection.mediaConstraints;
         }
 
-        getUserMediaHandler({
-            onGettingLocalMedia: function(stream) {
-                var videoConstraints = localMediaConstraints.video;
-                if (videoConstraints) {
-                    if (videoConstraints.mediaSource || videoConstraints.mozMediaSource) {
-                        stream.isScreen = true;
-                    } else if (videoConstraints.mandatory && videoConstraints.mandatory.chromeMediaSource) {
-                        stream.isScreen = true;
+        console.log(" ======================= invokeGetUserMedia ============= ", session.audio , session.video , localMediaConstraints);
+        if(localMediaConstraints.isScreen){
+            // For ScreenShare
+            getUserMediaHandler({
+                onGettingLocalMedia: function(stream) {
+                    var videoConstraints = localMediaConstraints.video;
+                    if (videoConstraints) {
+                        if (videoConstraints.mediaSource || videoConstraints.mozMediaSource) {
+                            stream.isScreen = true;
+                        } else if (videoConstraints.mandatory && videoConstraints.mandatory.chromeMediaSource) {
+                            stream.isScreen = true;
+                        }
                     }
-                }
 
-                if (!stream.isScreen) {
-                    stream.isVideo = !!getTracks(stream, 'video').length;
-                    stream.isAudio = !stream.isVideo && getTracks(stream, 'audio').length;
-                }
-
-                mPeer.onGettingLocalMedia(stream, function() {
-                    if (typeof callback === 'function') {
-                        callback(stream);
+                    if (!stream.isScreen) {
+                        stream.isVideo = !!getTracks(stream, 'video').length;
+                        stream.isAudio = !stream.isVideo && getTracks(stream, 'audio').length;
                     }
-                });
-            },
-            onLocalMediaError: function(error, constraints) {
-                mPeer.onLocalMediaError(error, constraints);
-            },
-            localMediaConstraints: localMediaConstraints || {
-                audio: session.audio ? localMediaConstraints.audio : false,
-                video: session.video ? localMediaConstraints.video : false
-            }
-        });
+
+                    mPeer.onGettingLocalMedia(stream, function() {
+                        if (typeof callback === 'function') {
+                            callback(stream);
+                        }
+                    });
+                },
+                onLocalMediaError: function(error, constraints) {
+                    mPeer.onLocalMediaError(error, constraints);
+                },
+                localMediaConstraints: localMediaConstraints
+            });
+        }else{
+            // For regular Call Audio / Video
+            getUserMediaHandler({
+                onGettingLocalMedia: function(stream) {
+                    var videoConstraints = localMediaConstraints.video;
+                    if (videoConstraints) {
+                        if (videoConstraints.mediaSource || videoConstraints.mozMediaSource) {
+                            stream.isScreen = true;
+                        } else if (videoConstraints.mandatory && videoConstraints.mandatory.chromeMediaSource) {
+                            stream.isScreen = true;
+                        }
+                    }
+
+                    if (!stream.isScreen) {
+                        stream.isVideo = !!getTracks(stream, 'video').length;
+                        stream.isAudio = !stream.isVideo && getTracks(stream, 'audio').length;
+                    }
+
+                    mPeer.onGettingLocalMedia(stream, function() {
+                        if (typeof callback === 'function') {
+                            callback(stream);
+                        }
+                    });
+                },
+                onLocalMediaError: function(error, constraints) {
+                    mPeer.onLocalMediaError(error, constraints);
+                },
+                // localMediaConstraints: localMediaConstraints || {
+                //     audio: session.audio ? localMediaConstraints.audio : false,
+                //     video: session.video ? localMediaConstraints.video : false
+                // }
+                localMediaConstraints:  {
+                    audio: session.audio ? localMediaConstraints.audio : false,
+                    video: session.video ? localMediaConstraints.video : false
+                }
+            });
+        }
     };
 
     function applyConstraints(stream, mediaConstraints) {

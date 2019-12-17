@@ -4,7 +4,6 @@
 
 function getStats(mediaStreamTrack, callback, interval) {
     var peer = this;
-    //webrtcdev.log("----getStats-----", arguments[0] , arguments[1] ,arguments[2] , arguments[3])
     if (arguments[0] instanceof RTCMultiConnection) {
         peer = arguments[0];
         
@@ -292,12 +291,13 @@ function showRtpstats(){
     }
 
 }
+
 /*
  * shows rtc conn of ongoing webrtc call 
  * @method
  * @name showRtcConn
  */
-function showRtcConn(){
+this.showRtcConn = function(){
     if(rtcConn){
         webrtcdev.info(" =========================================================================");
         webrtcdev.info("[stats] rtcConn : " , rtcConn);
