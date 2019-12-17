@@ -23,18 +23,20 @@
     height:20px
 }
 */
+
+.filesharing-box{
+    height: 60%;
+    max-height: 200px;
+    overflow-x: scroll;
+}
+
 .fileinputClass{
     background: transparent;
     border: none;
     bottom: 10px;
     position: fixed;
 }
-/*.filesharingBox{
-    color: #A28686;
-    font-size: 20px;
-    padding-top: 0px !important;
-    margin-top: -33px !important;
-}*/
+
 /*.filesharingWidget{
     overflow: auto;
     height: 100%;

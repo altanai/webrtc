@@ -25058,6 +25058,12 @@ function addNewFileRemote(e) {
 var CanvasDesigner;
 var isDrawOpened = false ;
 
+/**
+ * Open draw iframe winside of drawCanvasContainer and ass tools
+ * @method
+ * @name webrtcdevCanvasDesigner
+ * @param {json} drawCanvasobj
+ */
 function webrtcdevCanvasDesigner(drawCanvasobj){
 
     if(document.getElementById(drawCanvasobj.drawCanvasContainer).innerHTML.indexOf("iframe")<0){
@@ -25782,10 +25788,13 @@ function peerTimeZone(zone, userid) {
         if (timerobj.span.remoteTimeZone_id &&
             getElementById(timerobj.span.remoteTimeZone_id) &&
             !getElementById(timerobj.span.remoteTimeZone_id).innerHTML) {
+
+            webrtcdev.warn("timerobj.span.remoteTimeZone_id DOM exist , add timezone to it ");
             let timerzonepeer = getElementById(timerobj.span.remoteTimeZone_id);
             timerzonepeer.innerHTML = zone;
+
         } else {
-            webrtcdev.warn("timerobj.span.remoteTimeZone_id DOM doesnt exist , creating it ");
+            webrtcdev.warn("timerobj.span.remoteTimeZone_id DOM doesnt exist , creating it to add timezone");
 
             if (getElementById("remoteTimeZone_" + userid))
                 return;
@@ -25836,6 +25845,7 @@ var startPeersTime = function (date, zone, userid) {
                 });
 
             } else if (timerobj.span.remoteTime_id && getElementById(timerobj.span.remoteTime_id)) {
+
                 // update the time for p2p
                 webrtcdev.info(" timerobj.span.remoteTime_id exists and its a p2p session , hence updating it");
                 options = {
@@ -25847,6 +25857,7 @@ var startPeersTime = function (date, zone, userid) {
                 let timerspanpeer = getElementById(timerobj.span.remoteTime_id);
                 timerspanpeer.innerHTML = new Date().toLocaleString('en-US', options);
             } else {
+
                 // create the timer for p2p and conferences
                 webrtcdev.info(" timerobj.span.remoteTime_id DOM does not exist , creating it",
                     timerobj.span.remoteTime_id, getElementById(timerobj.span.remoteTime_id));

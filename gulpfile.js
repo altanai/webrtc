@@ -283,7 +283,9 @@ gulp.task('webrtcdevelopmentcss',function(done) {
         "client/src/css/cursor.css",
         "client/src/css/draw.css",
         "client/src/css/filesharing.css",
-        "client/src/css/screenshare.css"
+        "client/src/css/screenshare.css",
+        "client/src/css/timer.css",
+        "client/src/css/icons.css"
     ];
     console.log(cssList);
     gulp.src(cssList)
