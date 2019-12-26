@@ -12,41 +12,38 @@ var mediaRecorder = null, chunks = [];
 // function autorecordScreenVideo(){
 // }
 
-
-
 // function webrtcdevScreenRecordConstraints(chromeMediaSourceId){
-//     webrtcdev.log(" webrtcdevScreenRecordConstraints :" + chromeMediaSourceId);
+    // webrtcdev.log(" webrtcdevScreenRecordConstraints :" + chromeMediaSourceId);
+    // navigator.getUserMedia(
+    //     {
+    //         audio: true,
+    //         video: false
+    //     },
+    //     function stream(event) {
 
-//     // navigator.getUserMedia(
-//     //     {
-//     //         audio: true,
-//     //         video: false
-//     //     },
-//     //     function stream(event) {
+    //         var peerinfo;
+    //         if(selfuserid)
+    //             peerinfo = findPeerInfo(selfuserid);
+    //         else
+    //             peerinfo = findPeerInfo(rtcConn.userid);
 
-//     //         var peerinfo;
-//     //         if(selfuserid)
-//     //             peerinfo = findPeerInfo(selfuserid);
-//     //         else
-//     //             peerinfo = findPeerInfo(rtcConn.userid);
-
-//     //         scrrecordAudioStreamid = event.id ;
-//     //         scrrecordAudioStream = event ;
-//     //         startRecord(peerinfo ,  scrrecordAudioStreamid , scrrecordAudioStream);
-//     //     },
-//     //     function error(err) {
-//     //         webrtcdev.log(" Error in webrtcdevScreenRecordConstraints "  , err);
-//     //         if (isChrome && location.protocol === 'http:') {
-//     //             alert('Please test this WebRTC experiment on HTTPS.');
-//     //         } else if(isChrome) {
-//     //             alert('Screen capturing is either denied or not supported. Please install chrome extension for screen capturing or run chrome with command-line flag: --enable-usermedia-screen-capturing');
-//     //         } else if(!!navigator.mozGetUserMedia) {
-//     //             alert(Firefox_Screen_Capturing_Warning);
-//     //         }
-//     //     }
-//     // );
-
+    //         scrrecordAudioStreamid = event.id ;
+    //         scrrecordAudioStream = event ;
+    //         startRecord(peerinfo ,  scrrecordAudioStreamid , scrrecordAudioStream);
+    //     },
+    //     function error(err) {
+    //         webrtcdev.log(" Error in webrtcdevScreenRecordConstraints "  , err);
+    //         if (isChrome && location.protocol === 'http:') {
+    //             alert('Please test this WebRTC experiment on HTTPS.');
+    //         } else if(isChrome) {
+    //             alert('Screen capturing is either denied or not supported. Please install chrome extension for screen capturing or run chrome with command-line flag: --enable-usermedia-screen-capturing');
+    //         } else if(!!navigator.mozGetUserMedia) {
+    //             alert(Firefox_Screen_Capturing_Warning);
+    //         }
+    //     }
+    // );
 // }
+
 
 // {
 

@@ -5963,6 +5963,13 @@ web dev Logger
 ****************************************************** */
 var webrtcdevlogs = [];
 
+
+/**
+ * is this json
+ * @method
+ * @name isJSON
+ * @return {str}text
+ */
 function isJSON(text) {
     if (typeof text !== "string") {
         return false;
@@ -5975,6 +5982,12 @@ function isJSON(text) {
     }
 }
 
+/**
+ * convert to str
+ * @method
+ * @name toStr
+ * @return {json}obj
+ */
 function toStr(obj) {
     try {
         return JSON.stringify(obj, function (key, value) {
@@ -5988,6 +6001,12 @@ function toStr(obj) {
     }
 }
 
+/**
+ * ger args json
+ * @method
+ * @name getArgsJson
+ * @return {array}arg
+ */
 function getArgsJson(arg) {
     var str = "";
     for (let i = 0; i < arg.length; i++) {
@@ -13621,13 +13640,12 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function () {
  */
 function showelem(elem) {
     webrtcdev.log(" [init] show elem", elem ," , type ",  typeof elem , " , nodetype " , elem.nodeType);
-
     if (typeof elem === 'object' && elem.nodeType !== undefined) {
         // validate its is a dom node
         elem.removeAttribute("hidden");
         elem.setAttribute("style", "display:block!important");
     } else if (document.getElementById(elem)) {
-        // serach by ID
+        // search by ID
         elem = document.getElementById(elem);
         elem.removeAttribute("hidden");
         elem.setAttribute("style", "display:block");
@@ -16206,6 +16224,402 @@ function screenshareNotification(message, type) {
         alert(message);
     }
 }
+/*
+ * Assign Screen Record Button based on screenrecordobj widget
+ * @method
+ * @name assignScreenRecordButton
+ */
+function assignScreenRecordButton() {
+
+    let recordButton = document.getElementById(screenrecordobj.button.id);
+
+    recordButton.onclick = function () {
+        if (recordButton.className == screenrecordobj.button.class_on) {
+
+            recordButton.className = screenrecordobj.button.class_off;
+            recordButton.innerHTML = screenrecordobj.button.html_off;
+            //recordButton.disabled=true;
+            webrtcdevRecordScreen();
+
+        } else if (recordButton.className == screenrecordobj.button.class_off) {
+
+            // var peerinfo;
+            // if (selfuserid)
+            //     peerinfo = findPeerInfo(selfuserid);
+            // else
+            //     peerinfo = findPeerInfo(rtcConn.userid);
+
+            recordButton.className = screenrecordobj.button.class_on;
+            recordButton.innerHTML = screenrecordobj.button.html_on;
+            webrtcdevStopRecordScreen();
+
+            // stopRecord(peerinfo , scrrecordStreamid, scrrecordStream , scrrecordAudioStreamid, scrrecordAudioStream);
+
+            // var scrrecordStreamBlob;
+            // var scrrecordAudioStreamBlob;
+
+            // var recorder1 = listOfRecorders[scrrecordStreamid];
+            // recorder1.stopRecording(function() {
+            //     scrrecordStreamBlob = recorder1.getBlob();
+            // });
+
+            // var recorder2 = listOfRecorders[scrrecordAudioStreamid];
+            // recorder2.stopRecording(function() {
+            //     scrrecordAudioStreamBlob = recorder2.getBlob();
+            // });
+
+            // setTimeout(function(){
+
+            //     webrtcdev.log(" ===blobs====", scrrecordStreamBlob , scrrecordAudioStreamBlob);
+            //     mergeStreams(scrrecordStreamBlob , scrrecordAudioStreamBlob);
+            //     //convertStreams(scrrecordStreamBlob , scrrecordAudioStreamBlob);
+
+            //     scrrecordStreamid = null;
+            //     scrrecordStream = null ;
+
+            //     scrrecordAudioStreamid = null;
+            //     scrrecordAudioStream = null ;
+
+            //     //recordButton.disabled=false;
+
+            //  }, 5000);
+
+        }
+    };
+}
+
+/*function assignScreenRecordButton(){
+
+    var recordButton = document.getElementById(screenrecordobj.button.id);
+    webrtcdev.log(" -------recordButton---------" , recordButton);
+    recordButton.onclick = function() {
+        if(recordButton.className==screenrecordobj.button.class_off){
+            alert(" start recording screen + audio ");
+
+            var elementToShare = document.getElementById("parentDiv");
+
+            var canvas2d = document.createElement('canvas');
+            canvas2d.setAttribute("style","z-index:-1");
+            canvas2d.id="screenrecordCanvas";
+
+            var context = canvas2d.getContext('2d');
+
+            canvas2d.width = elementToShare.clientWidth;
+            canvas2d.height = elementToShare.clientHeight;
+
+            canvas2d.style.top = 0;
+            canvas2d.style.left = 0;
+
+            (document.body || document.documentElement).appendChild(canvas2d);
+
+            var isRecordingStarted = false;
+            var isStoppedRecording = false;
+
+            (function looper() {
+                if(!isRecordingStarted) {
+                    return setTimeout(looper, 500);
+                }
+
+                html2canvas(elementToShare, {
+                    grabMouse: true,
+                    onrendered: function(canvas) {
+                        context.clearRect(0, 0, canvas2d.width, canvas2d.height);
+                        context.drawImage(canvas, 0, 0, canvas2d.width, canvas2d.height);
+
+                        if(isStoppedRecording) {
+                            return;
+                        }
+
+                        setTimeout(looper, 1);
+                    }
+                });
+            })();
+
+            recorder = RecordRTC(canvas2d, {
+                type: 'canvas'
+            });
+
+            recordButton.className= screenrecordobj.button.class_on ;
+            recordButton.innerHTML= screenrecordobj.button.html_on;
+
+            recorder.startRecording();
+
+            isStoppedRecording = false;
+            isRecordingStarted = true;
+
+        }else if(recordButton.className==screenrecordobj.button.class_on){
+            alert(" stoppped recording screen + audio ");
+
+            var elem = document.getElementById("screenrecordCanvas");
+            elem.parentNode.removeChild(elem);
+
+            recordButton.className= screenrecordobj.button.class_off ;
+            recordButton.innerHTML= screenrecordobj.button.html_off;
+
+            isStoppedRecoridng = true;
+
+            recorder.stopRecording(function() {
+                var blob = recorder.getBlob();
+                var videoURL=URL.createObjectURL(blob);
+                var uuid= guid();
+                var recordVideoname= "screenrecorded"+ Math.floor(new Date() / 1000);
+                var peerinfo=findPeerInfo( selfuserid);
+                displayList(uuid , peerinfo , videoURL, recordVideoname , "videoScreenRecording");
+                displayFile(uuid , peerinfo , videoURL, recordVideoname , "videoScreenRecording");
+            });
+
+        }
+    };
+}*/
+
+/*function createScreenRecordButton(){
+
+    var recordButton= document.createElement("span");
+    recordButton.className= screenrecordobj.button.class_off ;
+    recordButton.innerHTML= screenrecordobj.button.html_off;
+    recordButton.onclick = function() {
+        if(recordButton.className==screenrecordobj.button.class_off){
+
+            var element = document.body;
+            recorder = RecordRTC(element, {
+                type: 'canvas',
+                showMousePointer: true
+            });
+
+            var canvas2d = document.createElement('canvas');
+            canvas2d.id="screenrecordCanvas";
+            canvas2d.setAttribute("style","z-index:-1");
+            var context = canvas2d.getContext('2d');
+
+            canvas2d.style.top = 0;
+            canvas2d.style.left = 0;
+
+            (document.body || document.documentElement).appendChild(canvas2d);
+
+            var isRecordingStarted = false;
+            var isStoppedRecording = false;
+
+            (function looper() {
+                if(!isRecordingStarted) {
+                    return setTimeout(looper, 500);
+                }
+
+                html2canvas(elementToShare, {
+                    grabMouse: true,
+                    onrendered: function(canvas) {
+                        context.clearRect(0, 0, canvas2d.width, canvas2d.height);
+                        context.drawImage(canvas, 0, 0, canvas2d.width, canvas2d.height);
+
+                        if(isStoppedRecording) {
+                            return;
+                        }
+
+                        setTimeout(looper, 1);
+                    }
+                });
+            })();
+
+            recorder = RecordRTC(canvas2d, {
+                type: 'canvas'
+            });
+
+            recordButton.className= screenrecordobj.button.class_on ;
+            recordButton.innerHTML= screenrecordobj.button.html_on;
+            recorder.startRecording();
+
+            isStoppedRecording = false;
+            isRecordingStarted = true;
+
+            setTimeout(function() {
+                recordButton.disabled = false;
+            }, 500);
+
+        }else if(recordButton.className==screenrecordobj.button.class_on){
+            recordButton.className= screenrecordobj.button.class_off ;
+            recordButton.innerHTML= screenrecordobj.button.html_off;
+
+            isStoppedRecoridng = true;
+
+            recorder.stopRecording(function() {
+                var elem = document.getElementById("screenrecordCanvas");
+                elem.parentNode.removeChild(elem);
+
+                var blob = recorder.getBlob();
+                var video = document.createElement('video');
+                video.src = URL.createObjectURL(blob);
+                video.setAttribute('style', 'height: 100%; position: absolute; top:0;');
+                document.body.appendChild(video);
+                video.controls = true;
+                video.play();
+            });
+
+        }
+    };
+
+    //webrtcUtils.enableLogs = false;
+
+    var li =document.createElement("li");
+    li.appendChild(recordButton);
+    document.getElementById("topIconHolder_ul").appendChild(li);
+}*/
+
+
+
+/**
+ * Sync draw boads opening between all peers
+ * @method
+ * @name syncDrawBoard
+ * @param {json} bdata
+ */
+function syncDrawBoard(bdata){
+    if(document.getElementById(bdata.button.id)){
+        document.getElementById(bdata.button.id).click();
+    }else{
+        webrtcdev.error(" Receieved sync board evenet but no button id found");
+    }
+}
+
+/**
+ * Create a draw button
+ * @method
+ * @name createdrawButton
+ * @param {json} drawCanvasobj
+ */
+function createdrawButton(drawCanvasobj){
+    let drawButton= document.createElement("span");
+    drawButton.className = drawCanvasobj.button.class_off ;
+    drawButton.innerHTML = drawCanvasobj.button.html_off;
+    drawButton.onclick=function(){
+        if(drawButton.className==drawCanvasobj.button.class_off  && document.getElementById(drawCanvasobj.drawCanvasContainer).hidden){
+            alert(" Draw Board Opened ");
+            drawButton.className= drawCanvasobj.button.class_on ;
+            drawButton.innerHTML= drawCanvasobj.button.html_on;
+            if(document.getElementById(drawCanvasobj.container.id))
+                document.getElementById(drawCanvasobj.container.id).hidden=false;
+            else
+                webrtcdev.error("Draw : container-" , drawCanvasobj.container.id , " doesnt exist");
+
+            if(document.getElementById(drawCanvasobj.drawCanvasContainer)){
+                document.getElementById(drawCanvasobj.drawCanvasContainer).hidden=false;
+                document.getElementById(drawCanvasobj.drawCanvasContainer).focus();
+                var bdata={
+                    event : "open",
+                    from : "remote",
+                    board : drawCanvasobj.drawCanvasContainer,
+                    button : drawCanvasobj.button
+                };
+                rtcConn.send({type:"canvas", board:bdata});
+            }else{
+                webrtcdev.error("Draw : canvascontainer-" , drawCanvasobj.drawCanvasContainer , " doesnt exist");
+            }
+            webrtcdevCanvasDesigner(drawCanvasobj);
+
+        }else if(drawButton.className==drawCanvasobj.button.class_on &&  !document.getElementById(drawCanvasobj.drawCanvasContainer).hidden){
+            drawButton.className= drawCanvasobj.button.class_off ;
+            drawButton.innerHTML= drawCanvasobj.button.html_off;
+            if(document.getElementById(drawCanvasobj.container.id))
+                document.getElementById(drawCanvasobj.container.id).hidden=true;
+            else
+                webrtcdev.error("Draw : container-" , drawCanvasobj.container.id , " doesnt exist");
+
+            if(document.getElementById(drawCanvasobj.drawCanvasContainer))
+                document.getElementById(drawCanvasobj.drawCanvasContainer).hidden=true;
+            else
+                webrtcdev.error("Draw : canvascontainer-" , drawCanvasobj.drawCanvasContainer , " doesnt exist");
+
+
+        }
+    };
+    var li =document.createElement("li");
+    li.appendChild(drawButton);
+    document.getElementById("topIconHolder_ul").appendChild(li);
+}
+
+/**
+ * Assign a draw button
+ * @method
+ * @name assigndrawButton
+ * @param {json} drawCanvasobj
+ */
+function assigndrawButton(drawCanvasobj){
+    webrtcdev.log(" ==================== drawCanvasobj ", drawCanvasobj);
+    let drawButton = document.getElementById(drawCanvasobj.button.id);
+    drawButton.className = drawCanvasobj.button.class_off;
+    drawButton.innerHTML = drawCanvasobj.button.html_off;
+    drawButton.onclick=function(){
+        if(drawButton.className == drawCanvasobj.button.class_off  && document.getElementById(drawCanvasobj.drawCanvasContainer).hidden){
+            // self.onDrawBoardActive();
+            showelem(drawCanvasobj.container.id);
+            webrtcdev.log("[draw dom modifier] Draw Board Opened ");
+            drawButton.className = drawCanvasobj.button.class_on ;
+            drawButton.innerHTML = drawCanvasobj.button.html_on;
+            // if(document.getElementById(drawCanvasobj.container.id))
+            //     document.getElementById(drawCanvasobj.container.id).hidden=false;
+            // else
+            //     webrtcdev.error("Draw : container-" , drawCanvasobj.container.id , " doesnt exist");
+
+            if(document.getElementById(drawCanvasobj.drawCanvasContainer)){
+                document.getElementById(drawCanvasobj.drawCanvasContainer).hidden=false;
+                document.getElementById(drawCanvasobj.drawCanvasContainer).focus();
+                isDrawOpened = true;
+                let boarddata={
+                    event : "open",
+                    from : "remote",
+                    board : drawCanvasobj.drawCanvasContainer,
+                    button : drawCanvasobj.button
+                };
+                rtcConn.send({type:"canvas", board:boarddata});
+            }else{
+                webrtcdev.error("[drawjs] canvascontainer-" , drawCanvasobj.drawCanvasContainer , " doesnt exist");
+            }
+            webrtcdevCanvasDesigner(drawCanvasobj);
+
+        }else if(drawButton.className == drawCanvasobj.button.class_on &&  !document.getElementById(drawCanvasobj.drawCanvasContainer).hidden){
+            webrtcdev.log("[draw dom modifier] Draw Board Closed ");
+            // self.onDrawBoardTerminate();
+            hideelem(drawCanvasobj.container.id);
+
+            // if(document.getElementById(drawCanvasobj.container.id))
+            //     document.getElementById(drawCanvasobj.container.id).hidden=true;
+            // else
+            //     webrtcdev.error("Draw : container-" , drawCanvasobj.container.id , " doesnt exist");
+            drawButton.className= drawCanvasobj.button.class_off ;
+            drawButton.innerHTML= drawCanvasobj.button.html_off;
+            if(document.getElementById(drawCanvasobj.drawCanvasContainer)){
+                document.getElementById(drawCanvasobj.drawCanvasContainer).hidden=true;
+                isDrawOpened = false ;
+                let boarddata = {
+                    event : "close",
+                    from : "remote",
+                    board : drawCanvasobj.drawCanvasContainer,
+                    button : drawCanvasobj.button
+                };
+                rtcConn.send({type:"canvas", board:boarddata});
+            }else
+                webrtcdev.error("[drawjs] canvascontainer-" , drawCanvasobj.drawCanvasContainer , " doesnt exist");
+        }
+    };
+}
+
+/**
+ * Create a save button for canvas
+ * @method
+ * @name saveButtonCanvas
+ * @param {json} bdata
+ */
+var saveButtonCanvas = document.createElement("div");
+saveButtonCanvas.id = "saveButtonCanvasDraw";
+saveButtonCanvas.setAttribute("data-toggle","modal");
+saveButtonCanvas.setAttribute("data-target","#saveModal");
+saveButtonCanvas.onclick=function(){
+    createModalPopup( "blobcanvas" );
+};
+document.body.appendChild(saveButtonCanvas);
+
+
+// Event emitters for drawboard
+this.onDrawBoardActive = function(){};
+this.onDrawBoardTerminate = function(){};
 
 /*-----------------------------------------------------------------------------------*/
 /*                        stats JS                                                   */
@@ -24155,7 +24569,7 @@ function reattachMediaStream(to,from) {
  * @param {blob} stream
  */
 function createRecordButton(controlBarName, peerinfo, streamid, stream) {
-    var recordButton = document.createElement("div");
+    let recordButton = document.createElement("div");
     recordButton.id = controlBarName + "recordButton";
     recordButton.setAttribute("title", "Record");
     // recordButton.setAttribute("data-placement", "bottom");
@@ -24174,7 +24588,6 @@ function createRecordButton(controlBarName, peerinfo, streamid, stream) {
             startRecord(peerinfo, streamid, stream);
         }
     };
-
     return recordButton;
 }
 
@@ -24191,7 +24604,7 @@ var listOfRecorders = {};
  * @param {blob} stream
  */
 function startRecord(peerinfo, streamid, stream) {
-    var recorder = RecordRTC(stream, {
+    let recorder = RecordRTC(stream, {
         type: 'video',
         recorderType: MediaStreamRecorder,
     });
@@ -24214,9 +24627,9 @@ function stopRecord(peerinfo, streamid, stream) {
         /*throw 'Wrong stream-id';*/
         webrtcdev.log("wrong stream id ");
     }
-    var recorder = listOfRecorders[streamid];
+    let recorder = listOfRecorders[streamid];
     recorder.stopRecording(function () {
-        var blob = recorder.getBlob();
+        let blob = recorder.getBlob();
         if (!peerinfo) {
             if (selfuserid)
                 peerinfo = findPeerInfo(selfuserid);
@@ -24231,11 +24644,11 @@ function stopRecord(peerinfo, streamid, stream) {
         formData.append('file', blob);
         $.post('/server-address', formData, serverCallback);*/
 
-        var recordVideoname = "recordedvideo" + new Date().getTime();
+        let recordVideoname = "recordedvideo" + new Date().getTime();
         peerinfo.filearray.push(recordVideoname);
-        var numFile = document.createElement("div");
+        let numFile = document.createElement("div");
         numFile.value = peerinfo.filearray.length;
-        var fileurl = URL.createObjectURL(blob);
+        let fileurl = URL.createObjectURL(blob);
 
         displayList(peerinfo.uuid, peerinfo, fileurl, recordVideoname, "videoRecording");
         displayFile(peerinfo.uuid, peerinfo, fileurl, recordVideoname, "videoRecording");
@@ -24268,13 +24681,13 @@ function stopSessionRecord(peerinfo, scrrecordStreamid, scrrecordStream, scrreco
     var recorder = listOfRecorders[scrrecordStreamid];
     recorder.stopRecording(function () {
         var blob = recorder.getBlob();
-        webrtcdev.log(" scrrecordStreamid stopped recoridng blob is ", blob);
+        webrtcdev.log("scrrecordStreamid stopped recording blob is ", blob);
     });
 
     var recorder2 = listOfRecorders[scrrecordAudioStreamid];
     recorder2.stopRecording(function () {
         var blob = recorder2.getBlob();
-        webrtcdev.log(" scrrecordStreamid stopped recoridng blob is ", blob);
+        webrtcdev.log("scrrecordStreamid stopped recording blob is ", blob);
     });
 
 }
@@ -24322,280 +24735,38 @@ var mediaRecorder = null, chunks = [];
 // function autorecordScreenVideo(){
 // }
 
-
-/* 
- * Assign Screen Record Button based on screenrecordobj widget
- * @method
- * @name assignScreenRecordButton
- */
-function assignScreenRecordButton() {
-
-    var recordButton = document.getElementById(screenrecordobj.button.id);
-
-    recordButton.onclick = function () {
-        if (recordButton.className == screenrecordobj.button.class_on) {
-
-            recordButton.className = screenrecordobj.button.class_off;
-            recordButton.innerHTML = screenrecordobj.button.html_off;
-            //recordButton.disabled=true;
-            webrtcdevRecordScreen();
-
-        } else if (recordButton.className == screenrecordobj.button.class_off) {
-
-            var peerinfo;
-            if (selfuserid)
-                peerinfo = findPeerInfo(selfuserid);
-            else
-                peerinfo = findPeerInfo(rtcConn.userid);
-
-            recordButton.className = screenrecordobj.button.class_on;
-            recordButton.innerHTML = screenrecordobj.button.html_on;
-            webrtcdevStopRecordScreen();
-
-            // stopRecord(peerinfo , scrrecordStreamid, scrrecordStream , scrrecordAudioStreamid, scrrecordAudioStream);
-
-            // var scrrecordStreamBlob;
-            // var scrrecordAudioStreamBlob;
-
-            // var recorder1 = listOfRecorders[scrrecordStreamid];
-            // recorder1.stopRecording(function() {
-            //     scrrecordStreamBlob = recorder1.getBlob();
-            // });
-
-            // var recorder2 = listOfRecorders[scrrecordAudioStreamid];
-            // recorder2.stopRecording(function() {
-            //     scrrecordAudioStreamBlob = recorder2.getBlob();
-            // });
-
-            // setTimeout(function(){ 
-
-            //     webrtcdev.log(" ===blobs====", scrrecordStreamBlob , scrrecordAudioStreamBlob); 
-            //     mergeStreams(scrrecordStreamBlob , scrrecordAudioStreamBlob);
-            //     //convertStreams(scrrecordStreamBlob , scrrecordAudioStreamBlob);
-
-            //     scrrecordStreamid = null;
-            //     scrrecordStream = null ;
-
-            //     scrrecordAudioStreamid = null;
-            //     scrrecordAudioStream = null ;
-
-            //     //recordButton.disabled=false;
-
-            //  }, 5000);
-
-        }
-    };
-}
-
-/*function assignScreenRecordButton(){
-
-    var recordButton = document.getElementById(screenrecordobj.button.id);
-    webrtcdev.log(" -------recordButton---------" , recordButton);
-    recordButton.onclick = function() {
-        if(recordButton.className==screenrecordobj.button.class_off){
-            alert(" start recording screen + audio ");
-
-            var elementToShare = document.getElementById("parentDiv");
-
-            var canvas2d = document.createElement('canvas');
-            canvas2d.setAttribute("style","z-index:-1");
-            canvas2d.id="screenrecordCanvas";
-
-            var context = canvas2d.getContext('2d');
-
-            canvas2d.width = elementToShare.clientWidth;
-            canvas2d.height = elementToShare.clientHeight;
-
-            canvas2d.style.top = 0;
-            canvas2d.style.left = 0;
-
-            (document.body || document.documentElement).appendChild(canvas2d);
-
-            var isRecordingStarted = false;
-            var isStoppedRecording = false;
-
-            (function looper() {
-                if(!isRecordingStarted) {
-                    return setTimeout(looper, 500);
-                }
-
-                html2canvas(elementToShare, {
-                    grabMouse: true,
-                    onrendered: function(canvas) {
-                        context.clearRect(0, 0, canvas2d.width, canvas2d.height);
-                        context.drawImage(canvas, 0, 0, canvas2d.width, canvas2d.height);
-
-                        if(isStoppedRecording) {
-                            return;
-                        }
-
-                        setTimeout(looper, 1);
-                    }
-                });
-            })();
-
-            recorder = RecordRTC(canvas2d, {
-                type: 'canvas'
-            });
-
-            recordButton.className= screenrecordobj.button.class_on ;
-            recordButton.innerHTML= screenrecordobj.button.html_on;
-            
-            recorder.startRecording();
-        
-            isStoppedRecording = false;
-            isRecordingStarted = true;
-
-        }else if(recordButton.className==screenrecordobj.button.class_on){
-            alert(" stoppped recording screen + audio ");
-
-            var elem = document.getElementById("screenrecordCanvas");
-            elem.parentNode.removeChild(elem);
-
-            recordButton.className= screenrecordobj.button.class_off ;
-            recordButton.innerHTML= screenrecordobj.button.html_off;
-            
-            isStoppedRecoridng = true;
-
-            recorder.stopRecording(function() {
-                var blob = recorder.getBlob();
-                var videoURL=URL.createObjectURL(blob);
-                var uuid= guid();
-                var recordVideoname= "screenrecorded"+ Math.floor(new Date() / 1000);
-                var peerinfo=findPeerInfo( selfuserid);
-                displayList(uuid , peerinfo , videoURL, recordVideoname , "videoScreenRecording");
-                displayFile(uuid , peerinfo , videoURL, recordVideoname , "videoScreenRecording");
-            });
-  
-        }
-    };
-}*/
-
-/*function createScreenRecordButton(){
-
-    var recordButton= document.createElement("span");
-    recordButton.className= screenrecordobj.button.class_off ;
-    recordButton.innerHTML= screenrecordobj.button.html_off;
-    recordButton.onclick = function() {
-        if(recordButton.className==screenrecordobj.button.class_off){
-
-            var element = document.body;  
-            recorder = RecordRTC(element, {
-                type: 'canvas',
-                showMousePointer: true
-            });
-
-            var canvas2d = document.createElement('canvas');
-            canvas2d.id="screenrecordCanvas";
-            canvas2d.setAttribute("style","z-index:-1");
-            var context = canvas2d.getContext('2d');
-
-            canvas2d.style.top = 0;
-            canvas2d.style.left = 0;
-
-            (document.body || document.documentElement).appendChild(canvas2d);
-
-            var isRecordingStarted = false;
-            var isStoppedRecording = false;
-
-            (function looper() {
-                if(!isRecordingStarted) {
-                    return setTimeout(looper, 500);
-                }
-
-                html2canvas(elementToShare, {
-                    grabMouse: true,
-                    onrendered: function(canvas) {
-                        context.clearRect(0, 0, canvas2d.width, canvas2d.height);
-                        context.drawImage(canvas, 0, 0, canvas2d.width, canvas2d.height);
-
-                        if(isStoppedRecording) {
-                            return;
-                        }
-
-                        setTimeout(looper, 1);
-                    }
-                });
-            })();
-
-            recorder = RecordRTC(canvas2d, {
-                type: 'canvas'
-            });
-
-            recordButton.className= screenrecordobj.button.class_on ;
-            recordButton.innerHTML= screenrecordobj.button.html_on;
-            recorder.startRecording();
-
-            isStoppedRecording = false;
-            isRecordingStarted = true;
-
-            setTimeout(function() {
-                recordButton.disabled = false;
-            }, 500);
-
-        }else if(recordButton.className==screenrecordobj.button.class_on){
-            recordButton.className= screenrecordobj.button.class_off ;
-            recordButton.innerHTML= screenrecordobj.button.html_off;
-            
-            isStoppedRecoridng = true;
-
-            recorder.stopRecording(function() {
-                var elem = document.getElementById("screenrecordCanvas");
-                elem.parentNode.removeChild(elem);
-
-                var blob = recorder.getBlob();
-                var video = document.createElement('video');
-                video.src = URL.createObjectURL(blob);
-                video.setAttribute('style', 'height: 100%; position: absolute; top:0;');
-                document.body.appendChild(video);
-                video.controls = true;
-                video.play();
-            });
-  
-        }
-    };
-
-    //webrtcUtils.enableLogs = false;
-
-    var li =document.createElement("li");
-    li.appendChild(recordButton);
-    document.getElementById("topIconHolder_ul").appendChild(li);       
-}*/
-
-
 // function webrtcdevScreenRecordConstraints(chromeMediaSourceId){
-//     webrtcdev.log(" webrtcdevScreenRecordConstraints :" + chromeMediaSourceId);
+    // webrtcdev.log(" webrtcdevScreenRecordConstraints :" + chromeMediaSourceId);
+    // navigator.getUserMedia(
+    //     {
+    //         audio: true,
+    //         video: false
+    //     },
+    //     function stream(event) {
 
-//     // navigator.getUserMedia(
-//     //     {
-//     //         audio: true,
-//     //         video: false
-//     //     },
-//     //     function stream(event) {
+    //         var peerinfo;
+    //         if(selfuserid)
+    //             peerinfo = findPeerInfo(selfuserid);
+    //         else
+    //             peerinfo = findPeerInfo(rtcConn.userid);
 
-//     //         var peerinfo;
-//     //         if(selfuserid)
-//     //             peerinfo = findPeerInfo(selfuserid);
-//     //         else
-//     //             peerinfo = findPeerInfo(rtcConn.userid);
-
-//     //         scrrecordAudioStreamid = event.id ;
-//     //         scrrecordAudioStream = event ;
-//     //         startRecord(peerinfo ,  scrrecordAudioStreamid , scrrecordAudioStream);
-//     //     },
-//     //     function error(err) {
-//     //         webrtcdev.log(" Error in webrtcdevScreenRecordConstraints "  , err);
-//     //         if (isChrome && location.protocol === 'http:') {
-//     //             alert('Please test this WebRTC experiment on HTTPS.');
-//     //         } else if(isChrome) {
-//     //             alert('Screen capturing is either denied or not supported. Please install chrome extension for screen capturing or run chrome with command-line flag: --enable-usermedia-screen-capturing');
-//     //         } else if(!!navigator.mozGetUserMedia) {
-//     //             alert(Firefox_Screen_Capturing_Warning);
-//     //         }
-//     //     }
-//     // );
-
+    //         scrrecordAudioStreamid = event.id ;
+    //         scrrecordAudioStream = event ;
+    //         startRecord(peerinfo ,  scrrecordAudioStreamid , scrrecordAudioStream);
+    //     },
+    //     function error(err) {
+    //         webrtcdev.log(" Error in webrtcdevScreenRecordConstraints "  , err);
+    //         if (isChrome && location.protocol === 'http:') {
+    //             alert('Please test this WebRTC experiment on HTTPS.');
+    //         } else if(isChrome) {
+    //             alert('Screen capturing is either denied or not supported. Please install chrome extension for screen capturing or run chrome with command-line flag: --enable-usermedia-screen-capturing');
+    //         } else if(!!navigator.mozGetUserMedia) {
+    //             alert(Firefox_Screen_Capturing_Warning);
+    //         }
+    //     }
+    // );
 // }
+
 
 // {
 
@@ -25065,8 +25236,8 @@ var isDrawOpened = false ;
  * @param {json} drawCanvasobj
  */
 function webrtcdevCanvasDesigner(drawCanvasobj){
-
-    if(document.getElementById(drawCanvasobj.drawCanvasContainer).innerHTML.indexOf("iframe")<0){
+    webrtcdev.log("[drawjs] drawCanvasobj.drawCanvasContainer " , drawCanvasobj.drawCanvasContainer);
+    if(document.getElementById(drawCanvasobj.drawCanvasContainer).innerHTML.indexOf("iframe") < 0){
         try{
             CanvasDesigner.addSyncListener(function(data) {
                 rtcConn.send({type:"canvas", draw:data});
@@ -25084,132 +25255,10 @@ function webrtcdevCanvasDesigner(drawCanvasobj){
             webrtcdev.error(" Canvas drawing not supported " , e);
         }
     }else{
-        webrtcdev.log("CanvasDesigner already started .iframe is attached ");
+        webrtcdev.log("[drawjs] CanvasDesigner already started iframe is attached ");
     }
 
 }
-
-function syncDrawBoard(bdata){
-    if(document.getElementById(bdata.button.id)){
-        document.getElementById(bdata.button.id).click();
-    }else{
-        webrtcdev.error(" Receieved sync board evenet but no button id found");
-    }
-}
-
-function createdrawButton(drawCanvasobj){
-    var drawButton= document.createElement("span");
-    drawButton.className=drawCanvasobj.button.class_off ;
-    drawButton.innerHTML=drawCanvasobj.button.html_off;
-    drawButton.onclick=function(){
-        if(drawButton.className==drawCanvasobj.button.class_off  && document.getElementById(drawCanvasobj.drawCanvasContainer).hidden){
-            alert(" Draw Board Opened ");
-            drawButton.className= drawCanvasobj.button.class_on ;
-            drawButton.innerHTML= drawCanvasobj.button.html_on;
-            if(document.getElementById(drawCanvasobj.container.id))
-                document.getElementById(drawCanvasobj.container.id).hidden=false;
-            else
-                webrtcdev.error("Draw : container-" , drawCanvasobj.container.id , " doesnt exist");
-            
-            if(document.getElementById(drawCanvasobj.drawCanvasContainer)){
-                document.getElementById(drawCanvasobj.drawCanvasContainer).hidden=false;
-                document.getElementById(drawCanvasobj.drawCanvasContainer).focus();
-                var bdata={
-                    event : "open",
-                    from : "remote",
-                    board : drawCanvasobj.drawCanvasContainer,
-                    button : drawCanvasobj.button
-                };
-                rtcConn.send({type:"canvas", board:bdata});
-            }else{
-                webrtcdev.error("Draw : canvascontainer-" , drawCanvasobj.drawCanvasContainer , " doesnt exist");
-            }
-            webrtcdevCanvasDesigner(drawCanvasobj);
-
-        }else if(drawButton.className==drawCanvasobj.button.class_on &&  !document.getElementById(drawCanvasobj.drawCanvasContainer).hidden){
-            drawButton.className= drawCanvasobj.button.class_off ;
-            drawButton.innerHTML= drawCanvasobj.button.html_off;
-            if(document.getElementById(drawCanvasobj.container.id))
-                document.getElementById(drawCanvasobj.container.id).hidden=true;
-            else
-                webrtcdev.error("Draw : container-" , drawCanvasobj.container.id , " doesnt exist");
-            
-            if(document.getElementById(drawCanvasobj.drawCanvasContainer))
-                document.getElementById(drawCanvasobj.drawCanvasContainer).hidden=true;
-            else
-                webrtcdev.error("Draw : canvascontainer-" , drawCanvasobj.drawCanvasContainer , " doesnt exist");
-
-
-        }
-    };
-    var li =document.createElement("li");
-    li.appendChild(drawButton);
-    document.getElementById("topIconHolder_ul").appendChild(li);
-}
-
-function assigndrawButton(drawCanvasobj){
-    drawButton = document.getElementById(drawCanvasobj.button.id);
-    drawButton.className= drawCanvasobj.button.class_off;
-    drawButton.innerHTML= drawCanvasobj.button.html_off;
-    drawButton.onclick=function(){
-        if(drawButton.className==drawCanvasobj.button.class_off  && document.getElementById(drawCanvasobj.drawCanvasContainer).hidden){
-            //alert(" Draw Board Opened ");
-            drawButton.className= drawCanvasobj.button.class_on ;
-            drawButton.innerHTML= drawCanvasobj.button.html_on;
-            if(document.getElementById(drawCanvasobj.container.id))
-                document.getElementById(drawCanvasobj.container.id).hidden=false;
-            else
-                webrtcdev.error("Draw : container-" , drawCanvasobj.container.id , " doesnt exist");
-            
-            if(document.getElementById(drawCanvasobj.drawCanvasContainer)){
-                document.getElementById(drawCanvasobj.drawCanvasContainer).hidden=false;
-                document.getElementById(drawCanvasobj.drawCanvasContainer).focus();
-                isDrawOpened = true;
-                var bdata={
-                    event : "open",
-                    from : "remote",
-                    board : drawCanvasobj.drawCanvasContainer,
-                    button : drawCanvasobj.button
-                };
-                rtcConn.send({type:"canvas", board:bdata});
-            }else{
-                webrtcdev.error("Draw : canvascontainer-" , drawCanvasobj.drawCanvasContainer , " doesnt exist");
-            }
-            webrtcdevCanvasDesigner(drawCanvasobj);
-
-        }else if(drawButton.className==drawCanvasobj.button.class_on &&  !document.getElementById(drawCanvasobj.drawCanvasContainer).hidden){
-            drawButton.className= drawCanvasobj.button.class_off ;
-            drawButton.innerHTML= drawCanvasobj.button.html_off;
-            if(document.getElementById(drawCanvasobj.container.id))
-                document.getElementById(drawCanvasobj.container.id).hidden=true;
-            else
-                webrtcdev.error("Draw : container-" , drawCanvasobj.container.id , " doesnt exist");
-            
-            if(document.getElementById(drawCanvasobj.drawCanvasContainer)){
-                document.getElementById(drawCanvasobj.drawCanvasContainer).hidden=true;
-                isDrawOpened = false ;
-                var bdata={
-                    event : "close",
-                    from : "remote",
-                    board : drawCanvasobj.drawCanvasContainer,
-                    button : drawCanvasobj.button
-                };
-                rtcConn.send({type:"canvas", board:bdata});
-            }else
-                webrtcdev.error("Draw : canvascontainer-" , drawCanvasobj.drawCanvasContainer , " doesnt exist");
-        }
-    };
-}
-
-
-var saveButtonCanvas = document.createElement("div");
-saveButtonCanvas.id = "saveButtonCanvasDraw";
-saveButtonCanvas.setAttribute("data-toggle","modal");
-saveButtonCanvas.setAttribute("data-target","#saveModal");
-saveButtonCanvas.onclick=function(){
-   createModalPopup( "blobcanvas" );
-};
-document.body.appendChild(saveButtonCanvas);
 
 /*-----------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------*/
@@ -26202,7 +26251,7 @@ function updatePeerInfo(userid, username, usecolor, useremail, userrole, type) {
  */
 this.getwebcallpeers = function(){
     return webcallpeers;
-}
+};
 
 // var inherits = require('util').inherits;
 // var EventEmitter = require('events').EventEmitter;
@@ -27401,7 +27450,7 @@ var joinWebRTC = function (channel, userid) {
  */
 this.clearCaches = clearCaches = function () {
     localStorage.clear();
-}
+};
 
 /**
  * function to leave a webrtc socket channel

@@ -141,4 +141,4 @@ function updatePeerInfo(userid, username, usecolor, useremail, userrole, type) {
  */
 this.getwebcallpeers = function(){
     return webcallpeers;
-}
+};

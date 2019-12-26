@@ -3,6 +3,13 @@ web dev Logger
 ****************************************************** */
 var webrtcdevlogs = [];
 
+
+/**
+ * is this json
+ * @method
+ * @name isJSON
+ * @return {str}text
+ */
 function isJSON(text) {
     if (typeof text !== "string") {
         return false;
@@ -15,6 +22,12 @@ function isJSON(text) {
     }
 }
 
+/**
+ * convert to str
+ * @method
+ * @name toStr
+ * @return {json}obj
+ */
 function toStr(obj) {
     try {
         return JSON.stringify(obj, function (key, value) {
@@ -28,6 +41,12 @@ function toStr(obj) {
     }
 }
 
+/**
+ * ger args json
+ * @method
+ * @name getArgsJson
+ * @return {array}arg
+ */
 function getArgsJson(arg) {
     var str = "";
     for (let i = 0; i < arg.length; i++) {

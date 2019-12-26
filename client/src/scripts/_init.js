@@ -292,13 +292,12 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function () {
  */
 function showelem(elem) {
     webrtcdev.log(" [init] show elem", elem ," , type ",  typeof elem , " , nodetype " , elem.nodeType);
-
     if (typeof elem === 'object' && elem.nodeType !== undefined) {
         // validate its is a dom node
         elem.removeAttribute("hidden");
         elem.setAttribute("style", "display:block!important");
     } else if (document.getElementById(elem)) {
-        // serach by ID
+        // search by ID
         elem = document.getElementById(elem);
         elem.removeAttribute("hidden");
         elem.setAttribute("style", "display:block");

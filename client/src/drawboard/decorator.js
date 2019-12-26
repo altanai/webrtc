@@ -244,7 +244,7 @@ function setSelection(element, prop) {
         //console.log(document.getElementById('pencil-icon'));
         var context = document.getElementById('pencil-icon').getContext('2d');
         var imageObj = new Image();
-        imageObj.src = 'images/pencil.png';
+        imageObj.src = 'drawboardicons/pencil.png';
         imageObj.onload = function() {
             context.drawImage(imageObj, 0, 0 , 35, 35);
         };
@@ -261,7 +261,7 @@ function setSelection(element, prop) {
         context.font = '9px Verdana';
         context.fillText('Pencil', 6, 12);*/
 
-        //make_base('/images/pencil.png', context);
+        //make_base('/drawboardicons/pencil.png', context);
 
         bindEvent(context, 'Pencil');
     }
@@ -276,7 +276,7 @@ function setSelection(element, prop) {
 
         var context = document.getElementById('eraser-icon').getContext('2d');
         var imageObj = new Image();
-        imageObj.src = 'images/eraser.png';
+        imageObj.src = 'drawboardicons/eraser.png';
         imageObj.onload = function() {
             context.drawImage(imageObj, 0, 0 , 35, 35);
         };
@@ -420,7 +420,7 @@ function setSelection(element, prop) {
 
         var context = document.getElementById('line-width').getContext('2d');
         var imageObj = new Image();
-        imageObj.src = 'images/linesize.png';
+        imageObj.src = 'drawboardicons/linesize.png';
         imageObj.onload = function() {
             context.drawImage(imageObj, 0, 0 , 35, 35);
         };
@@ -464,7 +464,7 @@ function setSelection(element, prop) {
 
         var context = document.getElementById('colors').getContext('2d');
         var imageObj = new Image();
-        imageObj.src = 'images/color.png';
+        imageObj.src = 'drawboardicons/color.png';
         imageObj.onload = function() {
             context.drawImage(imageObj, 0, 0 , 35, 35);
         };

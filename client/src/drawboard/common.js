@@ -28,11 +28,11 @@ function setContext(canv) {
     return ctx;
 }
 
-var mainCanvas  = document.getElementById("main-canvas");
-var canvas  = document.getElementById("temp-canvas");
-var context = setContext(mainCanvas);
-var tempContext = setContext(canvas);
-var parentBox = document.getElementById("drawBox");
+let mainCanvas  = document.getElementById("main-canvas");
+let canvas  = document.getElementById("temp-canvas");
+let context = setContext(mainCanvas);
+let tempContext = setContext(canvas);
+let parentBox = document.getElementById("drawBox");
 
 console.log("Main Canvas : " , mainCanvas , context);
 console.log("Temp Canvas : " , canvas , tempContext );
@@ -152,11 +152,9 @@ var common = {
     },
 
 
-
     toFixed: function(input) {
         return Number(input).toFixed(1);
     },
-
 
 
     getPoint: function(pointToCompare, compareWith, prefix) {

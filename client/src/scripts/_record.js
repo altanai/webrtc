@@ -12,7 +12,7 @@
  * @param {blob} stream
  */
 function createRecordButton(controlBarName, peerinfo, streamid, stream) {
-    var recordButton = document.createElement("div");
+    let recordButton = document.createElement("div");
     recordButton.id = controlBarName + "recordButton";
     recordButton.setAttribute("title", "Record");
     // recordButton.setAttribute("data-placement", "bottom");
@@ -31,7 +31,6 @@ function createRecordButton(controlBarName, peerinfo, streamid, stream) {
             startRecord(peerinfo, streamid, stream);
         }
     };
-
     return recordButton;
 }
 
@@ -48,7 +47,7 @@ var listOfRecorders = {};
  * @param {blob} stream
  */
 function startRecord(peerinfo, streamid, stream) {
-    var recorder = RecordRTC(stream, {
+    let recorder = RecordRTC(stream, {
         type: 'video',
         recorderType: MediaStreamRecorder,
     });
@@ -71,9 +70,9 @@ function stopRecord(peerinfo, streamid, stream) {
         /*throw 'Wrong stream-id';*/
         webrtcdev.log("wrong stream id ");
     }
-    var recorder = listOfRecorders[streamid];
+    let recorder = listOfRecorders[streamid];
     recorder.stopRecording(function () {
-        var blob = recorder.getBlob();
+        let blob = recorder.getBlob();
         if (!peerinfo) {
             if (selfuserid)
                 peerinfo = findPeerInfo(selfuserid);
@@ -88,11 +87,11 @@ function stopRecord(peerinfo, streamid, stream) {
         formData.append('file', blob);
         $.post('/server-address', formData, serverCallback);*/
 
-        var recordVideoname = "recordedvideo" + new Date().getTime();
+        let recordVideoname = "recordedvideo" + new Date().getTime();
         peerinfo.filearray.push(recordVideoname);
-        var numFile = document.createElement("div");
+        let numFile = document.createElement("div");
         numFile.value = peerinfo.filearray.length;
-        var fileurl = URL.createObjectURL(blob);
+        let fileurl = URL.createObjectURL(blob);
 
         displayList(peerinfo.uuid, peerinfo, fileurl, recordVideoname, "videoRecording");
         displayFile(peerinfo.uuid, peerinfo, fileurl, recordVideoname, "videoRecording");
@@ -125,13 +124,13 @@ function stopSessionRecord(peerinfo, scrrecordStreamid, scrrecordStream, scrreco
     var recorder = listOfRecorders[scrrecordStreamid];
     recorder.stopRecording(function () {
         var blob = recorder.getBlob();
-        webrtcdev.log(" scrrecordStreamid stopped recoridng blob is ", blob);
+        webrtcdev.log("scrrecordStreamid stopped recording blob is ", blob);
     });
 
     var recorder2 = listOfRecorders[scrrecordAudioStreamid];
     recorder2.stopRecording(function () {
         var blob = recorder2.getBlob();
-        webrtcdev.log(" scrrecordStreamid stopped recoridng blob is ", blob);
+        webrtcdev.log("scrrecordStreamid stopped recording blob is ", blob);
     });
 
 }

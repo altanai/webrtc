@@ -1195,4 +1195,4 @@ var joinWebRTC = function (channel, userid) {
  */
 this.clearCaches = clearCaches = function () {
     localStorage.clear();
-}
+};

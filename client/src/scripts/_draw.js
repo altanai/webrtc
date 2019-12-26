@@ -11,8 +11,8 @@ var isDrawOpened = false ;
  * @param {json} drawCanvasobj
  */
 function webrtcdevCanvasDesigner(drawCanvasobj){
-
-    if(document.getElementById(drawCanvasobj.drawCanvasContainer).innerHTML.indexOf("iframe")<0){
+    webrtcdev.log("[drawjs] drawCanvasobj.drawCanvasContainer " , drawCanvasobj.drawCanvasContainer);
+    if(document.getElementById(drawCanvasobj.drawCanvasContainer).innerHTML.indexOf("iframe") < 0){
         try{
             CanvasDesigner.addSyncListener(function(data) {
                 rtcConn.send({type:"canvas", draw:data});
@@ -30,7 +30,7 @@ function webrtcdevCanvasDesigner(drawCanvasobj){
             webrtcdev.error(" Canvas drawing not supported " , e);
         }
     }else{
-        webrtcdev.log("CanvasDesigner already started .iframe is attached ");
+        webrtcdev.log("[drawjs] CanvasDesigner already started iframe is attached ");
     }
 
 }
