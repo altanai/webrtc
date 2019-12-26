@@ -10,6 +10,8 @@ html, body  {
 }
 .design-surface canvas {
     position: absolute;
+    height: -webkit-fill-available;
+    width: -webkit-fill-available;
 }
 .design-surface canvas:last-child {
     position: static;
