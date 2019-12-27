@@ -25,6 +25,7 @@ function sendFile(file){
         }
     }
     rtcConn.send(file);
+
 }
 
 
@@ -72,7 +73,6 @@ function requestOldFiles(){
  * @param {json} files
  */
 function sendOldFiles(){
-
     // Sync old files
     var oldfilesList = [];
     for(x in webcallpeers){

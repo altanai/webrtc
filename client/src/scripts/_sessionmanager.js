@@ -343,9 +343,13 @@ var setRtcConn = function (sessionid) {
 
                 // if the callback function is defined in client implementation , call it
                 if (typeof onSessionConnect !== 'undefined') {
-                    onSessionConnect();
+                    // onSessionConnect();
+                    let event = new Event('webrtcdev',{
+                        "servicetype":"session",
+                        "action": "onSessionConnect"
+                    });
+                    window.dispatchEvent(event);
                 }
-                //eventEmitter.emit('sessionconnected');        // Call Function just in case the client is implementing this
 
                 // stats widget
                 if (statisticsobj && statisticsobj.active) {
@@ -390,7 +394,7 @@ var setRtcConn = function (sessionid) {
                 updatePeerInfo(event.userid, event.extra.name, event.extra.color, event.extra.email, event.extra.role, event.type),
                 webrtcdev.log(" [sessionmanager] onstream - updated local peerinfo for open-channel "),
                 peerinfo = findPeerInfo(event.userid);
-                //alert(" Cannot create session for Peer");
+
             } else if (role == "inspector" && event.type == "local") {
                 //ignore
                 webrtcdev.info("[sessionmanager] onstream - ignore any incoming stream from inspector");

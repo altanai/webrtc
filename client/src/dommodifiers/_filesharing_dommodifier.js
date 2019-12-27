@@ -175,15 +175,15 @@ function addProgressHelper(uuid , peerinfo , filename , fileSize,  file , progre
 
         var progressDiv = document.createElement("li");
         progressDiv.setAttribute("class", progressHelperclassName),
-            //progressDiv.setAttribute("filefor", ),
-            progressDiv.innerHTML = "<label>0%</label><progress></progress>",
-            progressul.appendChild(progressDiv),
-            progressHelper[progressid] = {
-                div: progressDiv,
-                progress: progressDiv.querySelector("progress"),
-                label: progressDiv.querySelector("label")
-            },
-            progressHelper[progressid].progress.max = fileSize;
+        //progressDiv.setAttribute("filefor", ),
+        progressDiv.innerHTML = "<label>0%</label><progress></progress>",
+        progressul.appendChild(progressDiv),
+        progressHelper[progressid] = {
+            div: progressDiv,
+            progress: progressDiv.querySelector("progress"),
+            label: progressDiv.querySelector("label")
+        },
+        progressHelper[progressid].progress.max = fileSize;
         //progressHelper[uuid].label = filename + " "+ fileSize;
 
         var stopuploadButton = document.createElement("li");
@@ -242,9 +242,6 @@ function simulateClick(buttonName){
     return true;
 }
 
-
-
-
 /*
  * Display list and file list box button
  * @method
@@ -263,8 +260,8 @@ function displayList(uuid , peerinfo , fileurl , filename , filetype ){
             "file url : " , fileurl, " file name : " , filename, " file type :", filetype);
         var showDownloadButton = true , showRemoveButton=true;
 
-        var elementList = peerinfo.fileList.container;
-        var elementDisplay = peerinfo.fileShare.container;
+        let elementList = peerinfo.fileList.container;
+        let elementDisplay = peerinfo.fileShare.container;
         var listlength = peerinfo.filearray.length;
 
         /*
@@ -273,24 +270,20 @@ function displayList(uuid , peerinfo , fileurl , filename , filetype ){
         }else{
             showRemoveButton=false;
         }*/
-        var _filename=null;
+        let _filename=null;
         if (filetype =="sessionRecording"){
             filename = filename.videoname+"_"+filename.audioname;
             _filename = filename;
         }
 
         //get parent DOM and remove progress bar
-        var parentdom, filedom ;
-        var fileprogressbar = document.querySelectorAll('ul[id^="'+uuid+'"]');
-
-        // console.log(" ====================== filename  ", document.querySelectorAll('ul[id^="'+filename+'"]'));
-        // console.log(" ====================== uuid ", document.querySelectorAll('ul[id^="'+uuid+'"]'));
+        let parentdom, filedom ;
+        let fileprogressbar = document.querySelectorAll('ul[id^="'+uuid+'"]');
 
         if(fileprogressbar.length > 0 ){
             for ( x in fileprogressbar){
 
-                webrtcdev.log("[filesharing js] displayList remove progress bar ",
-                    "index - " , x , " file dom - " ,  fileprogressbar[x] );
+                webrtcdev.log("[filesharing js] displayList remove progress bar index - " , x , " file dom - " ,  fileprogressbar[x] );
 
                 if (fileprogressbar[x].type=="progressbar" || fileprogressbar[x].indexOf("progressbar") >-1){
                     // if the progress bar exist , remove the progress bar div and create the ul
@@ -334,7 +327,7 @@ function displayList(uuid , peerinfo , fileurl , filename , filetype ){
     filedom.className="row";
     filedom.setAttribute("style","float: left; width: 98%; margin-left: 2%;");
 
-    var name = document.createElement("li");
+    let name = document.createElement("li");
     /*name.innerHTML = listlength +"   " + filename ;*/
     name.innerHTML = filename ;
     name.title = filetype +" shared by " +peerinfo.name ;
@@ -343,7 +336,7 @@ function displayList(uuid , peerinfo , fileurl , filename , filetype ){
     filedom.appendChild(name);
 
     // Download Button
-    var downloadButton = document.createElement("li");
+    let downloadButton = document.createElement("li");
     downloadButton.id = "downloadButton"+filename+uuid;
     downloadButton.title = "Download";
     downloadButton.setAttribute("style","float: right");
@@ -352,43 +345,43 @@ function displayList(uuid , peerinfo , fileurl , filename , filetype ){
         img.src = fileshareobj.filelist.downloadicon;
         downloadButton.appendChild(img);
     } else {
-        downloadButton.innerHTML = '<i class="fa fa-download" style=" color: #615aa8;padding: 10px; font-size: larger;"></i>';
+        downloadButton.innerHTML = '<i class="fa fa-download"></i>';
     }
     downloadButton.onclick = function () {
         downloadFile(uuid , elementDisplay , fileurl , _filename , filetype);
     };
 
     //Save Button
-    var saveButton = document.createElement("li");
+    let saveButton = document.createElement("li");
     saveButton.id= "saveButton"+filename+uuid;
     saveButton.title = "Save";
     saveButton.setAttribute("data-toggle","modal");
     saveButton.setAttribute("data-target", "#saveModal");
     saveButton.setAttribute("style","float: right");
     if (fileshareobj.filelist.saveicon) {
-        var img = document.createElement("img");
+        let img = document.createElement("img");
         img.src = fileshareobj.filelist.saveicon;
         saveButton.appendChild(img);
     } else {
-        saveButton.innerHTML = '<i class="fa fa-floppy-o" style="color: #615aa8;padding: 10px; font-size: larger;"></i>';
+        saveButton.innerHTML = '<i class="fa fa-floppy-o"></i>';
     }
     saveButton.onclick=function(){
         createModalPopup(filetype);
     };
 
     // Show Button
-    var showButton = document.createElement("li");
+    let showButton = document.createElement("li");
     showButton.id= "showButton"+filename+uuid;
     showButton.title="Show";
     showButton.setAttribute("style","float: right");
     if (fileshareobj.filelist.saveicon) {
-        var img = document.createElement("img");
+        let img = document.createElement("img");
         img.src = fileshareobj.filelist.showicon;
         showButton.appendChild(img);
     } else {
-        showButton.innerHTML = '<i class="fa fa-eye-slash" style="color: #615aa8;padding: 10px; font-size: larger;"></i>';
+        showButton.innerHTML = '<i class="fa fa-eye-slash"></i>';
     }
-    var countClicks=0;
+    let countClicks=0;
     repeatFlagHideButton = filename;
     repeatFlagShowButton = "";
     showButton.onclick = function () {
@@ -424,12 +417,12 @@ function displayList(uuid , peerinfo , fileurl , filename , filetype ){
     */
 
     //Remove Button
-    var removeButton = document.createElement("li");
+    let removeButton = document.createElement("li");
     removeButton.id= "removeButton"+filename+uuid;
     removeButton.title="Remove";
     removeButton.setAttribute("style","float: right");
     // removeButton.style.float="right";
-    removeButton.innerHTML ='<i class="fa fa-trash-o" style="color: #615aa8;padding: 10px; font-size: larger;"></i>';
+    removeButton.innerHTML ='<i class="fa fa-trash-o"></i>';
     removeButton.onclick=function(event){
         if(repeatFlagRemoveButton != filename){
             //var tobeHiddenElement = event.target.parentNode.id;
@@ -495,17 +488,17 @@ function getFileElementDisplayByType(filetype , fileurl , filename){
     webrtcdev.log(" [filehsaring js]  - getFileElementDisplayByType ",
         "file type :", filetype , "file url : " , fileurl, ", file name : " ,  filename );
 
-    var elementDisplay;
+    let elementDisplay;
 
     if(filetype.indexOf("msword")>-1 || filetype.indexOf("officedocument")>-1) {
-        var divNitofcation= document.createElement("div");
+        let divNitofcation= document.createElement("div");
         divNitofcation.className="alert alert-warning";
         divNitofcation.innerHTML= "Microsoft and Libra word file cannot be opened in browser. " +
             "Click bottom DOWNLOAD in UF box . File shows up below the UF box. Click arrow on right, then select OPEN  . File Opens in New Window, then 'Save As'.";
         elementDisplay=divNitofcation;
 
     }else if(filetype.indexOf("image")>-1){
-        var image= document.createElement("img");
+        let image= document.createElement("img");
         image.src= fileurl;
         image.style.width="100%";
         image.style.height="100%";
@@ -515,7 +508,7 @@ function getFileElementDisplayByType(filetype , fileurl , filename){
 
     }else if (filetype == "sessionRecording") {
 
-        var filename = filename.videoname+"_"+filename.audioname;
+        let filename = filename.videoname+"_"+filename.audioname;
         var div =  document.createElement("div");
         div.setAttribute("background-color","black");
         div.id= "display"+filename;
@@ -547,7 +540,7 @@ function getFileElementDisplayByType(filetype , fileurl , filename){
 
     }else if(filetype.indexOf("videoScreenRecording")>-1){
         webrtcdev.log("videoScreenRecording " , fileurl);
-        var video = document.createElement("video");
+        let video = document.createElement("video");
         video.src = fileurl;
         video.setAttribute("controls","controls");
         video.style.width="100%";
@@ -557,7 +550,7 @@ function getFileElementDisplayByType(filetype , fileurl , filename){
 
     }else if(filetype.indexOf("video")>-1){
         webrtcdev.log("videoRecording " , fileurl);
-        var video = document.createElement("video");
+        let video = document.createElement("video");
         video.src=fileurl;
         /*
         try{
@@ -577,7 +570,7 @@ function getFileElementDisplayByType(filetype , fileurl , filename){
         elementDisplay=video;
 
     }else{
-        var iframe= document.createElement("iframe");
+        let iframe= document.createElement("iframe");
         iframe.style.width="100%";
         iframe.src= fileurl;
         iframe.className= "viewerIframeClass";
@@ -791,7 +784,7 @@ function createFileSharingBox(peerinfo, parent){
         if(fileshareobj.props.fileList =="single"){
             fileSharingBox.className = "col-md-12 fileviewing-box";
         }else {
-            fileSharingBox.className = "fileviewing-box";
+            fileSharingBox.className = "col-md-6 fileviewing-box";
         }
         fileSharingBox.setAttribute("style", "background-color:" + peerinfo.color);
         fileSharingBox.id = peerinfo.fileShare.outerbox;
@@ -810,18 +803,17 @@ function createFileSharingBox(peerinfo, parent){
         //fileControlBar.appendChild(document.createTextNode("File Viewer " + peerinfo.name));
 
 
-
         if(fileshareobj.fileshare.minicon != "none"){
             // Minimize the File viewer box
-            var minButton = document.createElement("span");
+            let minButton = document.createElement("span");
             /*    minButton.className="btn btn-default glyphicon glyphicon-import closeButton";
             minButton.innerHTML="Minimize";*/
             if (fileshareobj.fileshare.minicon) {
-                var img = document.createElement("img");
+                let img = document.createElement("img");
                 img.src = fileshareobj.fileshare.minicon;
                 minButton.appendChild(img);
             } else {
-                minButton.innerHTML = '<i class="fa fa-minus-square" style="font-size: 25px;"></i>';
+                minButton.innerHTML = '<i class="fa fa-minus-square"></i>';
             }
             minButton.id = peerinfo.fileShare.minButton;
             minButton.title = "Minimize";
@@ -845,11 +837,11 @@ function createFileSharingBox(peerinfo, parent){
             if (fileshareobj.fileshare.maxicon) {
                 let maxicon = fileshareobj.fileshare.maxicon;
                 webrtcdev.log(" [fileShare JS ] creating custom maxicon" , maxicon);
-                var img = document.createElement("img");
+                let img = document.createElement("img");
                 img.src = maxicon;
                 maxButton.appendChild(img);
             } else {
-                let maxicon = '<i class="fa fa-external-link-square" style="font-size: 25px;"></i>';
+                let maxicon = '<i class="fa fa-external-link-square"></i>';
                 maxButton.innerHTML = maxicon;
                 webrtcdev.log(" [fileShare JS ] creating default maxicon" , maxicon);
             }
@@ -868,18 +860,16 @@ function createFileSharingBox(peerinfo, parent){
             webrtcdev.log(" [fileShare JS ] maxicon is none" );
         }
 
-
-
         // close the file viewer box
-        var closeButton = document.createElement("span");
+        let closeButton = document.createElement("span");
         /* closeButton.className="btn btn-default glyphicon glyphicon-remove closeButton";
         closeButton.innerHTML="Close";*/
         if (fileshareobj.fileshare.closeicon) {
-            var img = document.createElement("img");
+            let img = document.createElement("img");
             img.src = fileshareobj.fileshare.closeicon;
             closeButton.appendChild(img);
         } else {
-            closeButton.innerHTML = '<i class="fa fa-times-circle" style="font-size: 25px;"></i>';
+            closeButton.innerHTML = '<i class="fa fa-times-circle"></i>';
         }
         closeButton.id = peerinfo.fileShare.closeButton;
         closeButton.title="Close";
@@ -891,16 +881,15 @@ function createFileSharingBox(peerinfo, parent){
         fileControlBar.appendChild(closeButton);
 
 
-
         // rotate the content of file viewer box
         var angle = 0 , orientation = null;
-        var rotateButton = document.createElement("span");
+        let rotateButton = document.createElement("span");
         if (fileshareobj.fileshare.rotateicon) {
-            var img = document.createElement("img");
+            let img = document.createElement("img");
             img.src = fileshareobj.fileshare.rotateicon;
             rotateButton.appendChild(img);
         } else {
-            rotateButton.innerHTML = '<i class="fa fa-mail-forward" style="font-size: 25px;"></i>';
+            rotateButton.innerHTML = '<i class="fa fa-mail-forward"></i>';
         }
         rotateButton.id = peerinfo.fileShare.rotateButton;
         rotateButton.title="Rotate";

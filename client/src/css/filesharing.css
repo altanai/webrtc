@@ -28,8 +28,14 @@
     height: 60%;
     max-height: 200px;
     overflow-x: scroll;
+    font-size :small;
 }
 
+.filesharing-box li{
+    color: #615aa8;
+    padding: 10px;
+    font-size: small;
+}
 .fileinputClass{
     background: transparent;
     border: none;

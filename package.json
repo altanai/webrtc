@@ -55,9 +55,6 @@
     "type": "git",
     "url": "git+https://github.com/altanai/webrtc.git"
   },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  },
   "keywords": [
     "webrtc",
     "tfx",
