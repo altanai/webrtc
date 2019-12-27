@@ -13671,9 +13671,8 @@ function hideelem(elem) {
         elem.addAttribute("hidden");
         elem.setAttribute("style", "display:none!important");
     } else if (document.getElementById(elem)) {
-        document.getElementById(eid).setAttribute("hidden", true);
-        document.getElementById(eid).setAttribute("style", "display:none");
-        webrtcdev.log("hideElement ", eid, document.getElementById(eid));
+        document.getElementById(elem).setAttribute("hidden", true);
+        document.getElementById(elem).setAttribute("style", "display:none");
     }
 }
 
@@ -15314,7 +15313,7 @@ function createFileListingBox(peerinfo, parent){
         if(fileshareobj.props.fileList =="single"){
             fileListingBox.className = "col-sm-12 filesharing-box";
         }else {
-            fileListingBox.className = "filesharing-box";
+            fileListingBox.className = "col-sm-6 filesharing-box";
         }
 
         fileListingBox.id = peerinfo.fileList.outerbox;
@@ -15332,29 +15331,29 @@ function createFileListingBox(peerinfo, parent){
         fileHelpButton.innerHTML="Help";
         /*fileListControlBar.appendChild(fileHelpButton);*/
 
-        var minButton = document.createElement("span");
-        minButton.innerHTML = '<i class="fa fa-minus-square" style="font-size: 20px;></i>';
+        let minButton = document.createElement("span");
+        minButton.innerHTML = '<i class="fa fa-minus-square" ></i>';
         minButton.id = peerinfo.fileShare.minButton;
         minButton.setAttribute("lastClickedBy", '');
         minButton.onclick = function () {
             resizeFV(peerinfo.userid, minButton.id, peerinfo.fileShare.outerbox);
-        }
+        };
 
-        var maxButton = document.createElement("span");
-        maxButton.innerHTML = '<i class="fa fa-external-link-square" style="font-size: 20px;></i>';
+        let maxButton = document.createElement("span");
+        maxButton.innerHTML = '<i class="fa fa-external-link-square" ></i>';
         maxButton.id = peerinfo.fileShare.maxButton;
         maxButton.setAttribute("lastClickedBy", '');
         maxButton.onclick = function () {
             maxFV(peerinfo.userid, maxButton.id, peerinfo.fileShare.outerbox);
-        }
+        };
 
-        var closeButton = document.createElement("span");
-        closeButton.innerHTML = '<i class="fa fa-times-circle" style="font-size: 20px;></i>';
+        let closeButton = document.createElement("span");
+        closeButton.innerHTML = '<i class="fa fa-times-circle"></i>';
         closeButton.id = peerinfo.fileShare.closeButton;
         closeButton.setAttribute("lastClickedBy", '');
         closeButton.onclick = function () {
             closeFV(peerinfo.userid, closeButton.id, peerinfo.fileShare.container);
-        }
+        };
 
         fileListControlBar.appendChild(minButton);
         fileListControlBar.appendChild(maxButton);
@@ -16454,6 +16453,163 @@ function assignScreenRecordButton() {
 
 
 
+/*
+ * creates chat button DOM
+ * @method
+ * @name createChatButton
+ * @param {json} chat widget object
+ */
+function createChatButton(obj) {
+    var button = document.createElement("span");
+    button.className = chatobj.button.class_on;
+    button.innerHTML = chatobj.button.html_on;
+    button.onclick = function () {
+        if (button.className == chatobj.button.class_off) {
+            hideelem(chatobj.container.id);
+            button.className = chatobj.button.class_on;
+            button.innerHTML = chatobj.button.html_on;
+        } else if (button.className == chatobj.button.class_on) {
+            showelem(chatobj.container.id)
+            button.className = chatobj.button.class_off;
+            button.innerHTML = chatobj.button.html_off;
+        }
+    };
+
+    var li = document.createElement("li");
+    li.appendChild(button);
+    document.getElementById("topIconHolder_ul").appendChild(li);
+}
+
+/*function assignChatButton(chatobj){
+    var button= document.getElementById(chatobj.button.id);
+    button.onclick = function() {
+        if(button.className==chatobj.button.class_off){
+            document.getElementById(chatobj.chatContainer).hidden=true;
+            button.className=chatobj.button.class_on;
+            button.innerHTML= chatobj.button.html_on;
+        }else if(button.className==chatobj.button.class_on){
+            document.getElementById(chatobj.chatContainer).hidden=false;
+            button.className=chatobj.button.class_off;
+            button.innerHTML= chatobj.button.html_off;
+        }
+    };
+}*/
+
+
+/*
+ * creates chat box DOM
+ * @method
+ * @name createChatBox
+ * @param {json} chat widget object
+ */
+function createChatBox(obj) {
+
+    var mainInputBox = document.createElement("div");
+
+    let chatInput = document.createElement("input");
+    chatInput.setAttribute("type", "text");
+    chatInput.className = "form-control chatInputClass";
+    chatInput.id = "chatInput";
+    chatInput.onkeypress = function (e) {
+        if (e.keyCode == 13) {
+            sendChatMessage(chatInput.value);
+            chatInput.value = "";
+        }
+    };
+
+    let chatButton = document.createElement("span");
+    chatButton.className = "btn btn-primary";
+    chatButton.innerHTML = "Enter";
+    chatButton.onclick = function () {
+        let chatInput = document.getElementById("chatInput");
+        sendChatMessage(chatInput.value);
+        chatInput.value = "";
+    };
+
+    let whoTyping = document.createElement("div");
+    whoTyping.className = "whoTypingClass";
+    whoTyping.id = "whoTyping";
+
+    mainInputBox.appendChild(chatInput);
+    mainInputBox.appendChild(chatButton);
+    mainInputBox.appendChild(whoTyping);
+    document.getElementById(chatobj.container.id).appendChild(mainInputBox);
+
+    let chatBoard = document.createElement("div");
+    chatBoard.className = "chatMessagesClass";
+    chatBoard.setAttribute("contenteditable", true);
+    chatBoard.id = chatobj.chatBox.id;
+    document.getElementById(chatobj.container.id).appendChild(chatBoard);
+}
+
+
+/*
+ * Assigns chat DOM
+ * @method
+ * @name assignChatBox
+ * @param {json} chat widget object
+ */
+function assignChatBox(obj) {
+
+    var chatInput = document.getElementById(chatobj.inputBox.text_id);
+    chatInput.onkeypress = function (e) {
+        if (e.keyCode == 13) {
+            var peerinfo = findPeerInfo(selfuserid);
+            webrtcdev.log(" chat ", selfuserid, peerinfo);
+            sendChatMessage(chatInput.value, peerinfo);
+            chatInput.value = "";
+        }
+    };
+
+    if (document.getElementById(chatobj.inputBox.sendbutton_id)) {
+        var chatButton = document.getElementById(chatobj.inputBox.sendbutton_id);
+        chatButton.onclick = function (e) {
+
+            var peerinfo = findPeerInfo(selfuserid);
+            var chatInput = document.getElementById(chatobj.inputBox.text_id);
+            sendChatMessage(chatInput.value, peerinfo);
+            chatInput.value = "";
+        }
+    }
+
+    if (document.getElementById(chatobj.inputBox.minbutton_id)) {
+        var button = document.getElementById(chatobj.inputBox.minbutton_id);
+        button.onclick = function (e) {
+            if (document.getElementById(chatobj.container.id).hidden)
+                showelem(chatobj.container.id);
+            else
+                hideelem(chatobj.container.id);
+        }
+    }
+}
+
+
+/*
+ * diaplys Who is typing
+ * @method
+ * @name updateWhotyping
+ * @param {string} data
+ */
+function updateWhotyping(data) {
+    document.getElementById("whoTyping").innerHTML = data;
+}
+
+
+/*$("#chatInput").keypress(function(e) {
+    if (e.keyCode == 13) {
+        sendChatMessage();
+    }
+})*/
+
+/*$('#send').click( function() {
+    sendChatMessage();
+    return false;
+});*/
+
+//$('#chatbox').height($( "#leftVideo" ).height());
+$('#chatbox').css('max-height', $("#leftVideo").height() + 80);
+$('#chatBoard').css('max-height', $("#leftVideo").height());
+$("#chatBoard").css("overflow-y", "scroll");
 /**
  * Sync draw boads opening between all peers
  * @method
@@ -16464,7 +16620,7 @@ function syncDrawBoard(bdata){
     if(document.getElementById(bdata.button.id)){
         document.getElementById(bdata.button.id).click();
     }else{
-        webrtcdev.error(" Receieved sync board evenet but no button id found");
+        webrtcdev.error("[draw dom modifier] Received sync board event but no button id found");
     }
 }
 
@@ -16531,59 +16687,32 @@ function createdrawButton(drawCanvasobj){
  * @param {json} drawCanvasobj
  */
 function assigndrawButton(drawCanvasobj){
-    webrtcdev.log(" ==================== drawCanvasobj ", drawCanvasobj);
+    webrtcdev.log("[draw] dom modifier] drawCanvasobj ", drawCanvasobj);
     let drawButton = document.getElementById(drawCanvasobj.button.id);
     drawButton.className = drawCanvasobj.button.class_off;
     drawButton.innerHTML = drawCanvasobj.button.html_off;
     drawButton.onclick=function(){
         if(drawButton.className == drawCanvasobj.button.class_off  && document.getElementById(drawCanvasobj.drawCanvasContainer).hidden){
-            // self.onDrawBoardActive();
             showelem(drawCanvasobj.container.id);
             webrtcdev.log("[draw dom modifier] Draw Board Opened ");
             drawButton.className = drawCanvasobj.button.class_on ;
             drawButton.innerHTML = drawCanvasobj.button.html_on;
-            // if(document.getElementById(drawCanvasobj.container.id))
-            //     document.getElementById(drawCanvasobj.container.id).hidden=false;
-            // else
-            //     webrtcdev.error("Draw : container-" , drawCanvasobj.container.id , " doesnt exist");
 
             if(document.getElementById(drawCanvasobj.drawCanvasContainer)){
-                document.getElementById(drawCanvasobj.drawCanvasContainer).hidden=false;
+                showelem(drawCanvasobj.drawCanvasContainer);
                 document.getElementById(drawCanvasobj.drawCanvasContainer).focus();
-                isDrawOpened = true;
-                let boarddata={
-                    event : "open",
-                    from : "remote",
-                    board : drawCanvasobj.drawCanvasContainer,
-                    button : drawCanvasobj.button
-                };
-                rtcConn.send({type:"canvas", board:boarddata});
+                openDrawBoard();
             }else{
                 webrtcdev.error("[drawjs] canvascontainer-" , drawCanvasobj.drawCanvasContainer , " doesnt exist");
             }
-            webrtcdevCanvasDesigner(drawCanvasobj);
-
         }else if(drawButton.className == drawCanvasobj.button.class_on &&  !document.getElementById(drawCanvasobj.drawCanvasContainer).hidden){
             webrtcdev.log("[draw dom modifier] Draw Board Closed ");
-            // self.onDrawBoardTerminate();
             hideelem(drawCanvasobj.container.id);
-
-            // if(document.getElementById(drawCanvasobj.container.id))
-            //     document.getElementById(drawCanvasobj.container.id).hidden=true;
-            // else
-            //     webrtcdev.error("Draw : container-" , drawCanvasobj.container.id , " doesnt exist");
             drawButton.className= drawCanvasobj.button.class_off ;
             drawButton.innerHTML= drawCanvasobj.button.html_off;
             if(document.getElementById(drawCanvasobj.drawCanvasContainer)){
-                document.getElementById(drawCanvasobj.drawCanvasContainer).hidden=true;
-                isDrawOpened = false ;
-                let boarddata = {
-                    event : "close",
-                    from : "remote",
-                    board : drawCanvasobj.drawCanvasContainer,
-                    button : drawCanvasobj.button
-                };
-                rtcConn.send({type:"canvas", board:boarddata});
+                hideelem(drawCanvasobj.drawCanvasContainer);
+                closeDrawBoard();
             }else
                 webrtcdev.error("[drawjs] canvascontainer-" , drawCanvasobj.drawCanvasContainer , " doesnt exist");
         }
@@ -16604,11 +16733,6 @@ saveButtonCanvas.onclick=function(){
     createModalPopup( "blobcanvas" );
 };
 document.body.appendChild(saveButtonCanvas);
-
-
-// Event emitters for drawboard
-this.onDrawBoardActive = function(){};
-this.onDrawBoardTerminate = function(){};
 
 /*-----------------------------------------------------------------------------------*/
 /*                        stats JS                                                   */
@@ -17063,7 +17187,12 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
             //removeScreenViewButton();
 
             // event listener for Screen share stream ended
-            onScreenShareSEnded();
+            window.dispatchEvent(new CustomEvent('webrtcdev',{
+                detail: {
+                    servicetype: "screenshare",
+                    action: "onScreenShareEnded"
+                }
+            }));
         },
 
         scrConn.onopen = function (event) {
@@ -24027,148 +24156,6 @@ function showError(error) {
 /*-----------------------------------------------------------------------------------*/
 
 /* 
- * creates chat button DOM
- * @method
- * @name createChatButton
- * @param {json} chat widget object
- */
-function createChatButton(obj) {
-    var button = document.createElement("span");
-    button.className = chatobj.button.class_on;
-    button.innerHTML = chatobj.button.html_on;
-    button.onclick = function () {
-        if (button.className == chatobj.button.class_off) {
-            document.getElementById(chatobj.container.id).hidden = true;
-            button.className = chatobj.button.class_on;
-            button.innerHTML = chatobj.button.html_on;
-        } else if (button.className == chatobj.button.class_on) {
-            document.getElementById(chatobj.container.id).hidden = false;
-            button.className = chatobj.button.class_off;
-            button.innerHTML = chatobj.button.html_off;
-        }
-    };
-
-    var li = document.createElement("li");
-    li.appendChild(button);
-    document.getElementById("topIconHolder_ul").appendChild(li);
-}
-
-/*function assignChatButton(chatobj){
-    var button= document.getElementById(chatobj.button.id);
-    button.onclick = function() {
-        if(button.className==chatobj.button.class_off){
-            document.getElementById(chatobj.chatContainer).hidden=true;
-            button.className=chatobj.button.class_on;
-            button.innerHTML= chatobj.button.html_on;
-        }else if(button.className==chatobj.button.class_on){
-            document.getElementById(chatobj.chatContainer).hidden=false;
-            button.className=chatobj.button.class_off;
-            button.innerHTML= chatobj.button.html_off;
-        }
-    };
-}*/
-
-
-/* 
- * creates chat box DOM
- * @method
- * @name createChatBox
- * @param {json} chat widget object
- */
-function createChatBox(obj) {
-
-    var mainInputBox = document.createElement("div");
-
-    var chatInput = document.createElement("input");
-    chatInput.setAttribute("type", "text");
-    chatInput.className = "form-control chatInputClass";
-    chatInput.id = "chatInput";
-    chatInput.onkeypress = function (e) {
-        if (e.keyCode == 13) {
-            sendChatMessage(chatInput.value);
-            chatInput.value = "";
-        }
-    };
-
-    var chatButton = document.createElement("span");
-    chatButton.className = "btn btn-primary";
-    chatButton.innerHTML = "Enter";
-    chatButton.onclick = function () {
-        var chatInput = document.getElementById("chatInput");
-        sendChatMessage(chatInput.value);
-        chatInput.value = "";
-    }
-
-    var whoTyping = document.createElement("div");
-    whoTyping.className = "whoTypingClass";
-    whoTyping.id = "whoTyping";
-
-    mainInputBox.appendChild(chatInput);
-    mainInputBox.appendChild(chatButton);
-    mainInputBox.appendChild(whoTyping);
-    document.getElementById(chatobj.container.id).appendChild(mainInputBox);
-
-    var chatBoard = document.createElement("div");
-    chatBoard.className = "chatMessagesClass";
-    chatBoard.setAttribute("contenteditable", true);
-    chatBoard.id = chatobj.chatBox.id;
-    document.getElementById(chatobj.container.id).appendChild(chatBoard);
-}
-
-
-/* 
- * Assigns chat DOM
- * @method
- * @name assignChatBox
- * @param {json} chat widget object
- */
-function assignChatBox(obj) {
-
-    var chatInput = document.getElementById(chatobj.inputBox.text_id);
-    chatInput.onkeypress = function (e) {
-        if (e.keyCode == 13) {
-            var peerinfo = findPeerInfo(selfuserid);
-            webrtcdev.log(" chat ", selfuserid, peerinfo);
-            sendChatMessage(chatInput.value, peerinfo);
-            chatInput.value = "";
-        }
-    };
-
-    if (document.getElementById(chatobj.inputBox.sendbutton_id)) {
-        var chatButton = document.getElementById(chatobj.inputBox.sendbutton_id);
-        chatButton.onclick = function (e) {
-
-            var peerinfo = findPeerInfo(selfuserid);
-            var chatInput = document.getElementById(chatobj.inputBox.text_id);
-            sendChatMessage(chatInput.value, peerinfo);
-            chatInput.value = "";
-        }
-    }
-
-    if (document.getElementById(chatobj.inputBox.minbutton_id)) {
-        var button = document.getElementById(chatobj.inputBox.minbutton_id);
-        button.onclick = function (e) {
-            if (document.getElementById(chatobj.container.id).hidden)
-                document.getElementById(chatobj.container.id).hidden = false;
-            else
-                document.getElementById(chatobj.container.id).hidden = true;
-        }
-    }
-}
-
-
-/* 
- * diaplys Who is typing
- * @method
- * @name updateWhotyping
- * @param {string} data
- */
-function updateWhotyping(data) {
-    document.getElementById("whoTyping").innerHTML = data;
-}
-
-
-/* 
  * Sends chat messages
  * @method
  * @name sendChatMessage
@@ -24308,21 +24295,6 @@ function addMessageBlockFormat(messageheaderDivclass, messageheader, messageDivc
     /* $("#all-messages").scrollTop($("#all-messages")[0].scrollHeight) */
 }
 
-/*$("#chatInput").keypress(function(e) {
-    if (e.keyCode == 13) {
-        sendChatMessage();
-    }
-})*/
-
-/*$('#send').click( function() {
-    sendChatMessage();
-    return false; 
-});*/
-
-//$('#chatbox').height($( "#leftVideo" ).height());
-$('#chatbox').css('max-height', $("#leftVideo").height() + 80);
-$('#chatBoard').css('max-height', $("#leftVideo").height());
-$("#chatBoard").css("overflow-y", "scroll");
 
 /*-----------------------------------------------------------------------------------*/
 function listDevices() {
@@ -24446,7 +24418,12 @@ function getCamMedia(rtcConn) {
         } else {
             rtcConn.dontCaptureUserMedia = true;
             webrtcdev.error(" [startJS] getCamMedia - dont Capture outgoing video ", outgoingVideo);
-            onNoCameraCard();
+            window.dispatchEvent(new CustomEvent('webrtcdev',{
+                detail: {
+                    servicetype: "session",
+                    action: "onNoCameraCard"
+                }
+            }));
         }
         resolve("success");
     }).catch(
@@ -25088,6 +25065,118 @@ function PostBlob(resource) {
 
 var progressHelper = {};
 
+
+function fileSharingStarted(file){
+    webrtcdev.log("[start] on File start ", file);
+    webrtcdev.log("[start] on File start description  , name :", file.name, " from -> ", file.userid, " to ->", file.remoteUserId);
+
+    //alert ( "send fille to " + file.remoteUserId , findPeerInfo(file.remoteUserId).name);
+
+    let progressid = file.uuid + "_" + file.userid + "_" + file.remoteUserId;
+    let peerinfo = findPeerInfo(file.userid);
+    // check if not already present ,
+    // done to include one entry even if same file is being sent to multiple particpants
+    if (!peerinfo.filearray.includes("name : file.name")) {
+        // add to peerinfo file array
+        peerinfo.filearray.push({
+            "pid": progressid,
+            "name": file.name,
+            "status": "progress",
+            "from": file.userid,
+            "to": file.remoteUserId
+        });
+
+        // create multiple instances  , also pass file from and file to for the progress bars
+        addProgressHelper(file.uuid, peerinfo, file.name, file.maxChunks, file, "fileBoxClass", file.userid, file.remoteUserId);
+    }
+    window.dispatchEvent(new CustomEvent('webrtcdev',{
+        detail: {
+            servicetype: "file",
+            action: "onFileShareStart"
+        }
+    }));
+}
+
+function fileSharingInprogress(file) {
+    //.log("[start] on File progress uuid : ", e.uuid , " , name :", e.name ,
+    //   " from -> ", e.userid , " to ->" , e.remoteUserId);
+    try {
+        // if the file has already recahed max chunks then exit
+        if (e.currentPosition > e.maxChunks) return;
+
+        var progressid = e.uuid + "_" + e.userid + "_" + e.remoteUserId;
+        var r = progressHelper[progressid];
+        // webrtcdev.log("[start] on File progress ",
+        //     " progresshelper id - " , progressid ,
+        //     "currentPosition - " , e.currentPosition ,
+        //     "maxchunks - ", e.maxChunks ,
+        //     "progress.max - " , r.progress.max);
+
+        r && (r.progress.value = e.currentPosition || e.maxChunks || r.progress.max, updateLabel(r.progress, r.label));
+    } catch (err) {
+        webrtcdev.error("[sessionmanager] Problem in onFileProgress ", err);
+    }
+}
+
+function fileSharingEnded(file){
+    webrtcdev.log("[start] On file End description , file :", file, " from -> ", file.userid, " to ->", file.remoteUserId);
+
+    window.dispatchEvent(new CustomEvent('webrtcdev',{
+        detail: {
+            servicetype: "file",
+            action: "onFileShareEnded"
+        }
+    }));
+
+    let progressid = file.uuid + "_" + file.userid + "_" + file.remoteUserId;
+    let filename = file.name;
+
+    // find duplicate file
+    // for(x in webcallpeers){
+    //     for (y in webcallpeers[x].filearray){
+    //         webrtcdev.log(" Duplicate find , Files shared  so far " , webcallpeers[x].filearray[y].name);
+    //         if(webcallpeers[x].filearray[y].name==filename){
+    //             //discard file as duplicate
+    //             webrtcdev.error("duplicate file shared ");
+    //             return;
+    //         }
+    //     }
+    // }
+
+    // push to peerinfo's file array
+    var peerinfo = findPeerInfo(file.userid);
+    if (peerinfo != null) {
+        for (x in peerinfo.filearray)
+            if (peerinfo.filearray[x].name == filename && peerinfo.filearray[x].pid == progressid) {
+                //update filearray status to finished
+                peerinfo.filearray[x].status = "finished";
+
+                // Hide the stop upload button for this file
+                hideelem("stopuploadButton" + progressid);
+            }
+    }
+
+    // Display on File Viewer and List
+    webrtcdev.log("[start] onFileEnd - Display on File Viewer and List -", file.url, filename, file.type);
+    displayFile(file.uuid, peerinfo, file.url, filename, file.type);
+
+    webrtcdev.log("[sessionmanager] onFileEnd - Display List -", filename + file.uuid, document.getElementById(filename + file.uuid));
+    // if the file is from me ( orignal share ) then diaply listing in viewbox just one
+    if (selfuserid == file.userid && document.getElementById(filename + file.uuid)) {
+        return;
+    }
+    displayList(file.uuid, peerinfo, file.url, filename, file.type);
+    onFileShareEnded(file);
+
+    //start the pending transfer from pendingFileTransfer.push(file);
+    if (pendingFileTransfer.length >= pendingFileTransferlimit) {
+        webrtcdev.log("resuming pending/paused file ", pendingFileTransfer[0]);
+        hideelem(pendingFileTransfer[0].name);
+        sendFile(pendingFileTransfer[0]);
+        pendingFileTransfer.pop();
+    }
+}
+
 /**
  * Send File 
  * @method
@@ -25096,7 +25185,6 @@ var progressHelper = {};
  */
 function sendFile(file){
     webrtcdev.log(" [filehsraing js] Send file - " , file );
-    //var peerinfo = findPeerInfo(selfuserid);
     for( x in webcallpeers){
         for(y in webcallpeers[x].filearray){
             if(webcallpeers[x].filearray[y].status=="progress"){
@@ -25109,7 +25197,6 @@ function sendFile(file){
         }
     }
     rtcConn.send(file);
-
 }
 
 
@@ -25218,6 +25305,40 @@ function addNewFileRemote(e) {
 var CanvasDesigner;
 var isDrawOpened = false ;
 
+function openDrawBoard(){
+    isDrawOpened = true;
+    let boarddata={
+        event : "open",
+        from : "remote",
+        board : drawCanvasobj.drawCanvasContainer,
+        button : drawCanvasobj.button
+    };
+    rtcConn.send({type:"canvas", board:boarddata});
+    webrtcdevCanvasDesigner(drawCanvasobj);
+    window.dispatchEvent(new CustomEvent('webrtcdev',{
+        detail: {
+            servicetype: "draw",
+            action: "onDrawBoardActive"
+        }
+    }));
+}
+
+function closeDrawBoard(){
+    isDrawOpened = false ;
+    let boarddata = {
+        event : "close",
+        from : "remote",
+        board : drawCanvasobj.drawCanvasContainer,
+        button : drawCanvasobj.button
+    };
+    rtcConn.send({type:"canvas", board:boarddata});
+    window.dispatchEvent(new CustomEvent('webrtcdev',{
+        detail: {
+            servicetype: "draw",
+            action: "onDrawBoardTerminate"
+        }
+    }));
+}
 /**
  * Open draw iframe winside of drawCanvasContainer and ass tools
  * @method
@@ -26242,6 +26363,262 @@ this.getwebcallpeers = function(){
     return webcallpeers;
 };
 
+/**
+ * set Widgets.
+ */
+var setWidgets = function (rtcConn) {
+
+    return new Promise(function (resolve, reject) {
+
+        // ---------------------------------- Chat Widget --------------------------------------------------
+        if (chatobj.active) {
+            if (chatobj.inputBox && chatobj.inputBox.text_id && document.getElementById(chatobj.inputBox.text_id)) {
+                webrtcdev.log("[sessionmanager]Assign chat Box ");
+                assignChatBox(chatobj);
+            } else {
+                webrtcdev.log("[sessionmanager]Create chat Box ");
+                createChatBox(chatobj);
+            }
+            webrtcdev.log("[sessionmanager] chat widget loaded ");
+        } else {
+            webrtcdev.log("[sessionmanager] chat widget not loaded ");
+        }
+
+        // ---------------------------------- Screen record Widget --------------------------------------------------
+        if (screenrecordobj && screenrecordobj.active && role != "inspector") {
+            if (screenrecordobj.button.id && document.getElementById(screenrecordobj.button.id)) {
+                webrtcdev.log("[sessionmanager] Assign Record Button ");
+                assignScreenRecordButton(screenrecordobj);
+            } else {
+                webrtcdev.log("[sessionmanager] Create Record Button ");
+                createScreenRecordButton(screenrecordobj);
+            }
+            webrtcdev.log(" [sessionmanager] screen record widget loaded ");
+        } else if (screenrecordobj && !screenrecordobj.active) {
+            if (screenrecordobj.button && screenrecordobj.button.id && document.getElementById(screenrecordobj.button.id)) {
+                document.getElementById(screenrecordobj.button.id).className = "inactiveButton";
+            }
+            webrtcdev.warn("[sessionmanager] screen record widget not loaded ");
+        }
+
+        // ---------------------------------- Screenshare Widget --------------------------------------------------
+        if (screenshareobj.active) {
+            if (screenrecordobj.button.id && document.getElementById(screenrecordobj.button.id)) {
+                webrtcdev.log("[sessionmanager] Assign Record Button ");
+                assignScreenShareButton(screenshareobj.button.shareButton);
+            } else {
+                webrtcdev.log("[sessionmanager] Create Record Button ");
+                createScreenShareButton();
+            }
+            webrtcdev.log(" [sessionmanager]screen share widget loaded ");
+        } else {
+            webrtcdev.warn("[sessionmanager] screen share widget not loaded ");
+        }
+
+        // ---------------------------------- Reconnect Widget --------------------------------------------------
+        if (reconnectobj && reconnectobj.active) {
+            if (reconnectobj.button.id && document.getElementById(reconnectobj.button.id)) {
+                webrtcdev.log("[sessionmanager] Reconnect Button Assigned");
+                assignButtonRedial(reconnectobj.button.id);
+            } else {
+                webrtcdev.log("[sessionmanager]Rconnect Button created");
+                createButtonRedial(reconnectobj);
+            }
+            webrtcdev.log(" [sessionmanager]reconnect widget loacded ");
+        } else if (reconnectobj && !reconnectobj.active) {
+            if (reconnectobj.button && reconnectobj.button.id && document.getElementById(reconnectobj.button.id)) {
+                document.getElementById(reconnectobj.button.id).className = "inactiveButton";
+            }
+            webrtcdev.warn(" [sessionmanager] reconnect widget not loaded ");
+        }
+
+        // ---------------------------------- Cursor Widget --------------------------------------------------
+        if (cursorobj.active) {
+            hideelem("cursor1");
+            hideelem("cursor2");
+        }
+
+        // ---------------------------------- Listenin Widget --------------------------------------------------
+        if (listeninobj && listeninobj.active) {
+            if (listeninobj.button.id && document.getElementById(listeninobj.button.id)) {
+                //assignButtonRedial(reconnectobj.button.id);
+            } else {
+                //createButtonRedial();
+            }
+            webrtcdev.log(" [sessionmanager]listen in widget loaded ");
+        } else if (listeninobj && !listeninobj.active) {
+            if (listeninobj.button.id && document.getElementById(listeninobj.button.id)) {
+                document.getElementById(listeninobj.button.id).className = "inactiveButton";
+            }
+            webrtcdev.warn("[sessionmanager] listenin widget not loaded ");
+        }
+
+        // ---------------------------------- Timer Widget --------------------------------------------------
+        if (timerobj && timerobj.active) {
+            startTime();
+            timeZone();
+            activateBttons(timerobj);
+            hideelem(timerobj.container.id)
+        } else if (timerobj && !timerobj.active) {
+            if (timerobj.button.id && document.getElementById(timerobj.button.id)) {
+                document.getElementById(timerobj.button.id).className = "inactiveButton";
+            }
+        }
+
+        // ---------------------------------- Draw Widget --------------------------------------------------
+        if (drawCanvasobj && drawCanvasobj.active) {
+            if (drawCanvasobj.container && drawCanvasobj.container.id && document.getElementById(drawCanvasobj.container.id)) {
+                document.getElementById(drawCanvasobj.container.id).hidden = true;
+            }
+            if (drawCanvasobj.button && drawCanvasobj.button.id && document.getElementById(drawCanvasobj.button.id)) {
+                assigndrawButton(drawCanvasobj);
+            } else {
+                createdrawButton(drawCanvasobj);
+            }
+
+            CanvasDesigner = (function () {
+                var iframe;
+                let tools = {
+                    line: true,
+                    pencil: true,
+                    dragSingle: true,
+                    dragMultiple: true,
+                    eraser: true,
+                    rectangle: true,
+                    arc: true,
+                    bezier: true,
+                    quadratic: true,
+                    text: true
+                };
+
+                var selectedIcon = 'pencil';
+
+                function syncData(data) {
+                    if (!iframe) return;
+
+                    iframe.contentWindow.postMessage({
+                        canvasDesignerSyncData: data
+                    }, '*');
+                }
+
+                var syncDataListener = function (data) {
+                    webrtcdev.log("syncDataListener", data);
+                };
+
+                function onMessage() {
+                    if (!event.data || !event.data.canvasDesignerSyncData) return;
+                    syncDataListener(event.data.canvasDesignerSyncData);
+                }
+
+                /*window.addEventListener('message', onMessage, false);*/
+
+                var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+                var eventer = window[eventMethod];
+                var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+
+                // Listen to message from child window
+                eventer(messageEvent, function (e) {
+                    webrtcdev.log("CanvasDesigner parent received message : ", e.data);
+
+                    if (e.data.modalpopup) {
+                        saveButtonCanvas.click();
+                        //return;
+                    } else if (e.data || e.data.canvasDesignerSyncData) {
+                        syncDataListener(e.data.canvasDesignerSyncData);
+                    } else if (!e.data || !e.data.canvasDesignerSyncData) {
+                        webrtcdev.log("parent received unexpected message");
+                        //return;
+                    }
+
+                }, false);
+
+                return {
+                    appendTo: function (parentNode) {
+                        iframe = document.createElement('iframe');
+                        iframe.id = "drawboard";
+                        iframe.src = 'widget.html?tools=' + JSON.stringify(tools) + '&selectedIcon=' + selectedIcon;
+                        iframe.style.width = "100%";
+                        iframe.style.height = "100%";
+                        iframe.style.border = 0;
+                        parentNode.appendChild(iframe);
+                    },
+                    destroy: function () {
+                        if (iframe) {
+                            iframe.parentNode.removeChild(iframe);
+                        }
+                        window.removeEventListener('message', onMessage);
+                    },
+                    addSyncListener: function (callback) {
+                        syncDataListener = callback;
+                    },
+                    syncData: syncData,
+                    setTools: function (_tools) {
+                        tools = _tools;
+                    },
+                    setSelected: function (icon) {
+                        if (typeof tools[icon] !== 'undefined') {
+                            selectedIcon = icon;
+                        }
+                    }
+                };
+            })();
+            webrtcdev.log("[sessionmanager] draw widget loaded ");
+        } else if (drawCanvasobj && !drawCanvasobj.active) {
+            if (drawCanvasobj.button && drawCanvasobj.button.id && document.getElementById(drawCanvasobj.button.id)) {
+                document.getElementById(drawCanvasobj.button.id).className = "inactiveButton";
+            }
+            webrtcdev.warn("[sessionmanager] draw widget not loaded ");
+        }
+
+        // ---------------------------------- TextEditor Widget --------------------------------------------------
+        if (texteditorobj.active) {
+            createTextEditorButton();
+        }
+
+        // ---------------------------------- CodeEditor Widget --------------------------------------------------
+        if (codeeditorobj.active) {
+            createCodeEditorButton();
+        }
+
+        // ---------------------------------- Fileshare Widget --------------------------------------------------
+        if (fileshareobj.active) {
+
+            webrtcdev.log("[sessionmnagare] fileshareobj "),
+                rtcConn.enableFileSharing = true;
+            // rtcConn.filesContainer = document.body || document.documentElement;
+            // /*setFileProgressBarHandlers(rtcConn);*/
+            rtcConn.filesContainer = document.getElementById(fileshareobj.fileShareContainer);
+            if (fileshareobj.button.id && document.getElementById(fileshareobj.button.id)) {
+                assignFileShareButton(fileshareobj);
+            } else {
+                createFileShareButton(fileshareobj);
+            }
+            webrtcdev.log(" [sessionmanager] File sharing widget loaded ");
+        } else {
+            webrtcdev.warn("[sessionmanager] File sharing widget not loaded ");
+        }
+
+        // ---------------------------------- stats Widget --------------------------------------------------
+        if (statisticsobj && statisticsobj.active) {
+            try {
+                document.getElementById(statisticsobj.statsConainer).innerHTML = "";
+            } catch (e) {
+                webrtcdev.error("[sessionmanager] statisticsobj statsConainer not found", e);
+            }
+        }
+
+        // ---------------------------------- Help Widget --------------------------------------------------
+        if (helpobj && helpobj.active) {
+            try {
+                document.getElementById(helpobj.helpContainer).innerHTML = "";
+            } catch (err) {
+                webrtcdev.error("[sessionmanager] helpobj helpContainer not found", err);
+            }
+        }
+        resolve("success");
+    });
+};
+
 // var inherits = require('util').inherits;
 // var EventEmitter = require('events').EventEmitter;
 
@@ -26435,7 +26812,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
                     let role = event.data.extra.role;
                     if (!peerinfo) {
                         webrtcdev.log(" [sartjs] channel-event : PeerInfo not already present, create new peerinfo");
-                        // If peerinfo isnot present for new particpant , treat him as Remote 
+                        // If peerinfo isnot present for new participant , treat him as Remote
                         if (name == "LOCAL") {
                             name = "REMOTE";
                             color = remotecolor;
@@ -26457,7 +26834,13 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
                     peerinfo.streamid = "";
                     updateWebCallView(peerinfo);
 
-                    onLocalConnect(); // event emitter for app client
+                    // event emitter for app client
+                    window.dispatchEvent(new CustomEvent('webrtcdev',{
+                        detail:{
+                            servicetype:"session",
+                            action: "onLocalConnect"
+                        },
+                    }));
 
                 } else {
                     // max capacity of session is reached 
@@ -26585,15 +26968,12 @@ var setRtcConn = function (sessionid) {
                 shownotification(event.extra.name + " joined session ", "info");
                 showdesktopnotification();
 
-                // if the callback function is defined in client implementation , call it
-                if (typeof onSessionConnect !== 'undefined') {
-                    // onSessionConnect();
-                    let event = new Event('webrtcdev',{
-                        "servicetype":"session",
-                        "action": "onSessionConnect"
-                    });
-                    window.dispatchEvent(event);
-                }
+                window.dispatchEvent(new CustomEvent('webrtcdev',{
+                    detail: {
+                        servicetype: "session",
+                        action: "onSessionConnect"
+                    }
+                }));
 
                 // stats widget
                 if (statisticsobj && statisticsobj.active) {
@@ -26622,8 +27002,13 @@ var setRtcConn = function (sessionid) {
             updateWebCallView(peerinfo);
 
             // start local Connect
-            onLocalConnect(); // event emitter for app client
-
+            // onLocalConnect(); // event emitter for app client
+            window.dispatchEvent(new CustomEvent('webrtcdev',{
+                detail: {
+                    servicetype: "session",
+                    action: "onLocalConnect"
+                }
+            }));
         },
 
         rtcConn.onstream = function (event) {
@@ -26703,6 +27088,12 @@ var setRtcConn = function (sessionid) {
                             userinfo: e.data.userinfo,
                             color: e.extra.color
                         });
+                        window.dispatchEvent(new CustomEvent('webrtcdev',{
+                            detail: {
+                                servicetype: "chat",
+                                action: "onchat"
+                            }
+                        }));
                         break;
                     case "imagesnapshot":
                         displayList(null, msgpeerinfo, e.data.message, e.data.name, "imagesnapshot");
@@ -26787,10 +27178,10 @@ var setRtcConn = function (sessionid) {
                         let removeButton = "removeButton" + progressdiv;
 
                         if (document.getElementById("display" + filename))
-                            document.getElementById("display" + filename).setAttribute("style", "display:none !important");
+                            hideelem("display" + filename);
 
                         if (document.getElementById(progressdiv)) {
-                            document.getElementById(progressdiv).setAttribute("style", "display:none !important");
+                            hideelem(progressdiv);
                             removeFile(progressdiv);
                             webrtcdev.log(" [sessionmanager] shareFileRemove done");
                         } else {
@@ -26799,7 +27190,7 @@ var setRtcConn = function (sessionid) {
                             return;
                         }
                         document.getElementById(removeButton).click();
-                        document.getElementById(removeButton).hidden = true;
+                        hideelem(removeButton);
 
                         break;
                     case "shareFileStopUpload":
@@ -26832,8 +27223,8 @@ var setRtcConn = function (sessionid) {
         rtcConn.sendMessage = function (event) {
             webrtcdev.log(" sendMessage ", event);
             event.userid = rtcConn.userid,
-                event.extra = rtcConn.extra,
-                rtcConn.sendCustomMessage(event)
+            event.extra = rtcConn.extra,
+            rtcConn.sendCustomMessage(event)
         },
 
         rtcConn.onleave = function (e) {
@@ -26846,8 +27237,7 @@ var setRtcConn = function (sessionid) {
             }), */
 
             var peerinfo = findPeerInfo(e.userid);
-
-            webrtcdev.log(" RTCConn onleave user", e, " his peerinfo ", peerinfo, " rom webcallpeers ", webcallpeers);
+            webrtcdev.log(" RTCConn onleave user", e, " his peerinfo ", peerinfo, " from webcallpeers ", webcallpeers);
             if (e.extra.name != "undefined")
                 shownotification(e.extra.name + "  left the conversation.");
             //rtcConn.playRoleOfInitiator()
@@ -26858,12 +27248,10 @@ var setRtcConn = function (sessionid) {
                         removePeerInfo(e.userid);
                 });
             }*/
-            //eventEmitter.emit('sessiondisconnected', peerinfo);
         },
 
         rtcConn.onclose = function (e) {
             webrtcdev.warn(" RTCConn on close conversation ", e);
-            /*alert(e.extra.name + "closed ");*/
         },
 
         rtcConn.onEntireSessionClosed = function (event) {
@@ -26871,114 +27259,14 @@ var setRtcConn = function (sessionid) {
                 stream.stop();
             });
             shownotification("Session Disconneted");
-            //alert(" Entire Session Disconneted ");
             //eventEmitter.emit('sessiondisconnected', '');
         },
 
-        rtcConn.onFileStart = function (file) {
-            webrtcdev.log("[start] on File start ", file);
-            webrtcdev.log("[start] on File start description  , name :", file.name, " from -> ", file.userid, " to ->", file.remoteUserId);
+        rtcConn.onFileStart = function(file){ fileSharingStarted(this.file) },
 
-            //alert ( "send fille to " + file.remoteUserId , findPeerInfo(file.remoteUserId).name);
+        rtcConn.onFileProgress = function(event){ fileSharingInprogress(this.event) },
 
-            let progressid = file.uuid + "_" + file.userid + "_" + file.remoteUserId;
-            let peerinfo = findPeerInfo(file.userid);
-            // check if not already present ,
-            // done to include one entry even if same file is being sent to multiple particpants
-            if (!peerinfo.filearray.includes("name : file.name")) {
-                // add to peerinfo file array
-                peerinfo.filearray.push({
-                    "pid": progressid,
-                    "name": file.name,
-                    "status": "progress",
-                    "from": file.userid,
-                    "to": file.remoteUserId
-                });
-
-                // create multiple instances  , also pass file from and file to for the progress bars
-                addProgressHelper(file.uuid, peerinfo, file.name, file.maxChunks, file, "fileBoxClass", file.userid, file.remoteUserId);
-            }
-            onFileShareStart(file);
-        },
-
-        rtcConn.onFileProgress = function (e) {
-            //.log("[start] on File progress uuid : ", e.uuid , " , name :", e.name ,
-            //   " from -> ", e.userid , " to ->" , e.remoteUserId);
-            try {
-                // if the file has already recahed max chunks then exit
-                if (e.currentPosition > e.maxChunks) return;
-
-                var progressid = e.uuid + "_" + e.userid + "_" + e.remoteUserId;
-                var r = progressHelper[progressid];
-                // webrtcdev.log("[start] on File progress ",
-                //     " progresshelper id - " , progressid ,
-                //     "currentPosition - " , e.currentPosition ,
-                //     "maxchunks - ", e.maxChunks ,
-                //     "progress.max - " , r.progress.max);
-
-                r && (r.progress.value = e.currentPosition || e.maxChunks || r.progress.max, updateLabel(r.progress, r.label));
-            } catch (err) {
-                webrtcdev.error("[sessionmanager] Problem in onFileProgress ", err);
-            }
-        },
-
-        rtcConn.onFileEnd = function (file) {
-            webrtcdev.log("[start] On file End description , file :", file, " from -> ", file.userid, " to ->", file.remoteUserId);
-
-            //alert ( "end file to " + file.remoteUserId , findPeerInfo(file.remoteUserId).name);
-
-            var progressid = file.uuid + "_" + file.userid + "_" + file.remoteUserId;
-            var filename = file.name;
-
-            // find duplicate file
-            // for(x in webcallpeers){
-            //     for (y in webcallpeers[x].filearray){
-            //         webrtcdev.log(" Duplicate find , Files shared  so far " , webcallpeers[x].filearray[y].name);
-            //         if(webcallpeers[x].filearray[y].name==filename){
-            //             //discard file as duplicate
-            //             webrtcdev.error("duplicate file shared ");
-            //             return;
-            //         }
-            //     }
-            // }
-
-            // push to peerinfo's file array
-            var peerinfo = findPeerInfo(file.userid);
-            if (peerinfo != null) {
-                for (x in peerinfo.filearray)
-                    if (peerinfo.filearray[x].name == filename && peerinfo.filearray[x].pid == progressid) {
-                        //update filearray status to finished
-                        peerinfo.filearray[x].status = "finished";
-
-                        // Hide the stop upload button for this file
-                        var stopuploadbutton = document.getElementById("stopuploadButton" + progressid);
-                        if (stopuploadbutton) stopuploadbutton.hidden = true;
-                    }
-            }
-
-            // if all file progress bars with the name are finsihed
-            //- tbd
-
-            // Display on File Viewer and List
-            webrtcdev.log("[start] onFileEnd - Display on File Viewer and List -", file.url, filename, file.type);
-            displayFile(file.uuid, peerinfo, file.url, filename, file.type);
-
-            webrtcdev.log("[sessionmanager] onFileEnd - Display List -", filename + file.uuid, document.getElementById(filename + file.uuid));
-            // if the file is from me ( orignal share ) then diaply listing in viewbox just one
-            if (selfuserid == file.userid && document.getElementById(filename + file.uuid)) {
-                return;
-            }
-            displayList(file.uuid, peerinfo, file.url, filename, file.type);
-            onFileShareEnded(file);
-
-            //start the pending transfer from pendingFileTransfer.push(file);
-            if (pendingFileTransfer.length >= pendingFileTransferlimit) {
-                webrtcdev.log("resuming pending/paused file ", pendingFileTransfer[0]);
-                document.getElementById(pendingFileTransfer[0].name).hidden = true;
-                sendFile(pendingFileTransfer[0]);
-                pendingFileTransfer.pop();
-            }
-        },
+        rtcConn.onFileEnd = function(file){ fileSharingEnded(this.file) },
 
         rtcConn.takeSnapshot = function (userid, callback) {
             takeSnapshot({
@@ -27008,8 +27296,6 @@ var setRtcConn = function (sessionid) {
         rtcConn.iceServers = webrtcdevIceServers,
 
         webrtcdev.log(" [sessionmanager] rtcConn : ", rtcConn);
-
-        //tempuserid = supportSessionRefresh();
 
         // if(this.turn!=null && this.turn !="none"){
         //     if (!webrtcdevIceServers) {
@@ -27057,265 +27343,6 @@ function supportSessionRefresh() {
 // function checkDevices(resolveparent, rejectparent, incoming, outgoing) {
 //     listDevices();
 // }
-
-
-/**
- * set Widgets.
- */
-var setWidgets = function (rtcConn) {
-
-    return new Promise(function (resolve, reject) {
-
-        // ---------------------------------- Chat Widget --------------------------------------------------
-        if (chatobj.active) {
-            if (chatobj.inputBox && chatobj.inputBox.text_id && document.getElementById(chatobj.inputBox.text_id)) {
-                webrtcdev.log("[sessionmanager]Assign chat Box ");
-                assignChatBox(chatobj);
-            } else {
-                webrtcdev.log("[sessionmanager]Create chat Box ");
-                createChatBox(chatobj);
-            }
-            webrtcdev.log("[sessionmanager] chat widget loaded ");
-        } else {
-            webrtcdev.log("[sessionmanager] chat widget not loaded ");
-        }
-
-        // ---------------------------------- Screen record Widget --------------------------------------------------
-        if (screenrecordobj && screenrecordobj.active && role != "inspector") {
-            if (screenrecordobj.button.id && document.getElementById(screenrecordobj.button.id)) {
-                webrtcdev.log("[sessionmanager] Assign Record Button ");
-                assignScreenRecordButton(screenrecordobj);
-            } else {
-                webrtcdev.log("[sessionmanager] Create Record Button ");
-                createScreenRecordButton(screenrecordobj);
-            }
-            webrtcdev.log(" [sessionmanager] screen record widget loaded ");
-        } else if (screenrecordobj && !screenrecordobj.active) {
-            if (screenrecordobj.button && screenrecordobj.button.id && document.getElementById(screenrecordobj.button.id)) {
-                document.getElementById(screenrecordobj.button.id).className = "inactiveButton";
-            }
-            webrtcdev.warn("[sessionmanager] screen record widget not loaded ");
-        }
-
-        // ---------------------------------- Screenshare Widget --------------------------------------------------
-        if (screenshareobj.active) {
-            //................ TBD
-            if (screenrecordobj.button.id && document.getElementById(screenrecordobj.button.id)) {
-                webrtcdev.log("[sessionmanager] Assign Record Button ");
-                assignScreenShareButton(screenshareobj.button.shareButton);
-            } else {
-                webrtcdev.log("[sessionmanager] Create Record Button ");
-                createScreenShareButton();
-            }
-            webrtcdev.log(" [sessionmanager]screen share widget loaded ");
-        } else {
-            webrtcdev.warn("[sessionmanager] screen share widget not loaded ");
-        }
-
-        // ---------------------------------- Reconnect Widget --------------------------------------------------
-        if (reconnectobj && reconnectobj.active) {
-            if (reconnectobj.button.id && document.getElementById(reconnectobj.button.id)) {
-                webrtcdev.log("[sessionmanager] Rconnect Button Assigned");
-                assignButtonRedial(reconnectobj.button.id);
-            } else {
-                webrtcdev.log("[sessionmanager]Rconnect Button created");
-                createButtonRedial(reconnectobj);
-            }
-            webrtcdev.log(" [sessionmanager]reconnect widget loacded ");
-        } else if (reconnectobj && !reconnectobj.active) {
-            if (reconnectobj.button && reconnectobj.button.id && document.getElementById(reconnectobj.button.id)) {
-                document.getElementById(reconnectobj.button.id).className = "inactiveButton";
-            }
-            webrtcdev.warn(" [sessionmanager] reconnect widget not loaded ");
-        }
-
-        // ---------------------------------- Cursor Widget --------------------------------------------------
-        if (cursorobj.active) {
-            document.getElementById("cursor1").setAttribute("style", "display:none");
-            document.getElementById("cursor2").setAttribute("style", "display:none");
-        }
-
-        // ---------------------------------- Listenin Widget --------------------------------------------------
-        if (listeninobj && listeninobj.active) {
-            if (listeninobj.button.id && document.getElementById(listeninobj.button.id)) {
-                //assignButtonRedial(reconnectobj.button.id);
-            } else {
-                //createButtonRedial();
-            }
-            webrtcdev.log(" [sessionmanager]listen in widget loaded ");
-        } else if (listeninobj && !listeninobj.active) {
-            if (listeninobj.button.id && document.getElementById(listeninobj.button.id)) {
-                document.getElementById(listeninobj.button.id).className = "inactiveButton";
-            }
-            webrtcdev.warn("[sessionmanager] listenin widget not loaded ");
-        }
-
-        // ---------------------------------- Timer Widget --------------------------------------------------
-        if (timerobj && timerobj.active) {
-            startTime();
-            timeZone();
-            activateBttons(timerobj);
-            document.getElementById(timerobj.container.id).hidden = true;
-        } else if (timerobj && !timerobj.active) {
-            if (timerobj.button.id && document.getElementById(timerobj.button.id)) {
-                document.getElementById(timerobj.button.id).className = "inactiveButton";
-            }
-        }
-
-        // ---------------------------------- Draw Widget --------------------------------------------------
-        if (drawCanvasobj && drawCanvasobj.active) {
-            if (drawCanvasobj.container && drawCanvasobj.container.id && document.getElementById(drawCanvasobj.container.id)) {
-                document.getElementById(drawCanvasobj.container.id).hidden = true;
-            }
-            if (drawCanvasobj.button && drawCanvasobj.button.id && document.getElementById(drawCanvasobj.button.id)) {
-                assigndrawButton(drawCanvasobj);
-            } else {
-                createdrawButton(drawCanvasobj);
-            }
-
-            CanvasDesigner = (function () {
-                var iframe;
-                var tools = {
-                    line: true,
-                    pencil: true,
-                    dragSingle: true,
-                    dragMultiple: true,
-                    eraser: true,
-                    rectangle: true,
-                    arc: true,
-                    bezier: true,
-                    quadratic: true,
-                    text: true
-                };
-
-                var selectedIcon = 'pencil';
-
-                function syncData(data) {
-                    if (!iframe) return;
-
-                    iframe.contentWindow.postMessage({
-                        canvasDesignerSyncData: data
-                    }, '*');
-                }
-
-                var syncDataListener = function (data) {
-                    webrtcdev.log("syncDataListener", data);
-                };
-
-                function onMessage() {
-                    if (!event.data || !event.data.canvasDesignerSyncData) return;
-                    syncDataListener(event.data.canvasDesignerSyncData);
-                }
-
-                /*window.addEventListener('message', onMessage, false);*/
-
-                var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
-                var eventer = window[eventMethod];
-                var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
-
-                // Listen to message from child window
-                eventer(messageEvent, function (e) {
-                    webrtcdev.log("CanvasDesigner parent received message : ", e.data);
-
-                    if (e.data.modalpopup) {
-                        saveButtonCanvas.click();
-                        //return;
-                    } else if (e.data || e.data.canvasDesignerSyncData) {
-                        syncDataListener(e.data.canvasDesignerSyncData);
-                    } else if (!e.data || !e.data.canvasDesignerSyncData) {
-                        webrtcdev.log("parent received unexpected message");
-                        //return;
-                    }
-
-                }, false);
-
-                return {
-                    appendTo: function (parentNode) {
-                        iframe = document.createElement('iframe');
-                        iframe.id = "drawboard";
-                        iframe.src = 'widget.html?tools=' + JSON.stringify(tools) + '&selectedIcon=' + selectedIcon;
-                        iframe.style.width = "100%";
-                        iframe.style.height = "100%";
-                        iframe.style.border = 0;
-                        parentNode.appendChild(iframe);
-                    },
-                    destroy: function () {
-                        if (iframe) {
-                            iframe.parentNode.removeChild(iframe);
-                        }
-                        window.removeEventListener('message', onMessage);
-                    },
-                    addSyncListener: function (callback) {
-                        syncDataListener = callback;
-                    },
-                    syncData: syncData,
-                    setTools: function (_tools) {
-                        tools = _tools;
-                    },
-                    setSelected: function (icon) {
-                        if (typeof tools[icon] !== 'undefined') {
-                            selectedIcon = icon;
-                        }
-                    }
-                };
-            })();
-            webrtcdev.log("[sessionmanager] draw widget loaded ");
-        } else if (drawCanvasobj && !drawCanvasobj.active) {
-            if (drawCanvasobj.button && drawCanvasobj.button.id && document.getElementById(drawCanvasobj.button.id)) {
-                document.getElementById(drawCanvasobj.button.id).className = "inactiveButton";
-            }
-            webrtcdev.warn("[sessionmanager] draw widget not loaded ");
-        }
-
-        // ---------------------------------- TextEditor Widget --------------------------------------------------
-        if (texteditorobj.active) {
-            createTextEditorButton();
-        }
-
-        // ---------------------------------- CodeEditor Widget --------------------------------------------------
-        if (codeeditorobj.active) {
-            createCodeEditorButton();
-        }
-
-        // ---------------------------------- Fileshare Widget --------------------------------------------------
-        if (fileshareobj.active) {
-
-            webrtcdev.log("[sessionmnagare] fileshareobj "),
-                rtcConn.enableFileSharing = true;
-            // //rtcConn.filesContainer = document.body || document.documentElement;
-            // /*setFileProgressBarHandlers(rtcConn);*/
-            rtcConn.filesContainer = document.getElementById(fileshareobj.fileShareContainer);
-            if (fileshareobj.button.id && document.getElementById(fileshareobj.button.id)) {
-                assignFileShareButton(fileshareobj);
-            } else {
-                createFileShareButton(fileshareobj);
-            }
-            webrtcdev.log(" [sessionmanager] File sharing widget loaded ");
-        } else {
-            webrtcdev.warn("[sessionmanager] File sharing widget not loaded ");
-        }
-
-        // ---------------------------------- stats Widget --------------------------------------------------
-        if (statisticsobj && statisticsobj.active) {
-            try {
-                document.getElementById(statisticsobj.statsConainer).innerHTML = "";
-            } catch (e) {
-                webrtcdev.error("[sessionmanager] statisticsobj statsConainer not found", e);
-            }
-        }
-
-        // ---------------------------------- Help Widget --------------------------------------------------
-        if (helpobj && helpobj.active) {
-            try {
-                document.getElementById(helpobj.helpContainer).innerHTML = "";
-            } catch (err) {
-                webrtcdev.error("[sessionmanager] helpobj helpContainer not found", err);
-            }
-        }
-        resolve("success");
-    });
-};
-
 
 /**
  * Open a WebRTC socket channel

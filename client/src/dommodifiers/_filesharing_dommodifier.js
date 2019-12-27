@@ -1047,7 +1047,7 @@ function createFileListingBox(peerinfo, parent){
         if(fileshareobj.props.fileList =="single"){
             fileListingBox.className = "col-sm-12 filesharing-box";
         }else {
-            fileListingBox.className = "filesharing-box";
+            fileListingBox.className = "col-sm-6 filesharing-box";
         }
 
         fileListingBox.id = peerinfo.fileList.outerbox;
@@ -1065,29 +1065,29 @@ function createFileListingBox(peerinfo, parent){
         fileHelpButton.innerHTML="Help";
         /*fileListControlBar.appendChild(fileHelpButton);*/
 
-        var minButton = document.createElement("span");
-        minButton.innerHTML = '<i class="fa fa-minus-square" style="font-size: 20px;></i>';
+        let minButton = document.createElement("span");
+        minButton.innerHTML = '<i class="fa fa-minus-square" ></i>';
         minButton.id = peerinfo.fileShare.minButton;
         minButton.setAttribute("lastClickedBy", '');
         minButton.onclick = function () {
             resizeFV(peerinfo.userid, minButton.id, peerinfo.fileShare.outerbox);
-        }
+        };
 
-        var maxButton = document.createElement("span");
-        maxButton.innerHTML = '<i class="fa fa-external-link-square" style="font-size: 20px;></i>';
+        let maxButton = document.createElement("span");
+        maxButton.innerHTML = '<i class="fa fa-external-link-square" ></i>';
         maxButton.id = peerinfo.fileShare.maxButton;
         maxButton.setAttribute("lastClickedBy", '');
         maxButton.onclick = function () {
             maxFV(peerinfo.userid, maxButton.id, peerinfo.fileShare.outerbox);
-        }
+        };
 
-        var closeButton = document.createElement("span");
-        closeButton.innerHTML = '<i class="fa fa-times-circle" style="font-size: 20px;></i>';
+        let closeButton = document.createElement("span");
+        closeButton.innerHTML = '<i class="fa fa-times-circle"></i>';
         closeButton.id = peerinfo.fileShare.closeButton;
         closeButton.setAttribute("lastClickedBy", '');
         closeButton.onclick = function () {
             closeFV(peerinfo.userid, closeButton.id, peerinfo.fileShare.container);
-        }
+        };
 
         fileListControlBar.appendChild(minButton);
         fileListControlBar.appendChild(maxButton);

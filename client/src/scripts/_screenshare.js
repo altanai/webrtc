@@ -109,7 +109,12 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
             //removeScreenViewButton();
 
             // event listener for Screen share stream ended
-            onScreenShareSEnded();
+            window.dispatchEvent(new CustomEvent('webrtcdev',{
+                detail: {
+                    servicetype: "screenshare",
+                    action: "onScreenShareEnded"
+                }
+            }));
         },
 
         scrConn.onopen = function (event) {

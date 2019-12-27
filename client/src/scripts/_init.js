@@ -323,9 +323,8 @@ function hideelem(elem) {
         elem.addAttribute("hidden");
         elem.setAttribute("style", "display:none!important");
     } else if (document.getElementById(elem)) {
-        document.getElementById(eid).setAttribute("hidden", true);
-        document.getElementById(eid).setAttribute("style", "display:none");
-        webrtcdev.log("hideElement ", eid, document.getElementById(eid));
+        document.getElementById(elem).setAttribute("hidden", true);
+        document.getElementById(elem).setAttribute("style", "display:none");
     }
 }
 

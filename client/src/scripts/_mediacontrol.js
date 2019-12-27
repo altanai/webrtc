@@ -119,7 +119,12 @@ function getCamMedia(rtcConn) {
         } else {
             rtcConn.dontCaptureUserMedia = true;
             webrtcdev.error(" [startJS] getCamMedia - dont Capture outgoing video ", outgoingVideo);
-            onNoCameraCard();
+            window.dispatchEvent(new CustomEvent('webrtcdev',{
+                detail: {
+                    servicetype: "session",
+                    action: "onNoCameraCard"
+                }
+            }));
         }
         resolve("success");
     }).catch(
