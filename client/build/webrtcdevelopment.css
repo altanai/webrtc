@@ -1,4 +1,4 @@
-/* Generated on:Tue Dec 17 2019 22:19:21 GMT+0530 (India Standard Time) || version: 4.8.5 - Altanai , License : MIT  */
+/* Generated on:Sat Dec 28 2019 13:30:24 GMT+0530 (India Standard Time) || version: 4.8.8 - Altanai , License : MIT  */
 .glyphicon {
   cursor: pointer;
 }
@@ -235,7 +235,7 @@
   margin: 0px;
   background-color: grey;
 }
-/* Generated on:Tue Dec 17 2019 22:19:21 GMT+0530 (India Standard Time) || version: 4.8.5 - Altanai , License : MIT  */
+/* Generated on:Sat Dec 28 2019 13:30:24 GMT+0530 (India Standard Time) || version: 4.8.8 - Altanai , License : MIT  */
 /*-----------------------------------------------------------------------------------*/
 /*              Video and media Related style                                        */
 /*-----------------------------------------------------------------------------------*/
@@ -309,7 +309,7 @@ video::-webkit-media-controls-current-time-display {}*/
   display: none;
 }
 /*-------------------------------------------------------------*/
-/* Generated on:Tue Dec 17 2019 22:19:21 GMT+0530 (India Standard Time) || version: 4.8.5 - Altanai , License : MIT  */
+/* Generated on:Sat Dec 28 2019 13:30:24 GMT+0530 (India Standard Time) || version: 4.8.8 - Altanai , License : MIT  */
 /*-----------------------------------------------------------------------------------*/
 /*                    Chat Related style                                        */
 /*-----------------------------------------------------------------------------------*/
@@ -382,7 +382,7 @@ video::-webkit-media-controls-current-time-display {}*/
   font-style: italic;
 }
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Tue Dec 17 2019 22:19:21 GMT+0530 (India Standard Time) || version: 4.8.5 - Altanai , License : MIT  */
+/* Generated on:Sat Dec 28 2019 13:30:24 GMT+0530 (India Standard Time) || version: 4.8.8 - Altanai , License : MIT  */
 /*-----------------------------------------------------------------------------------*/
 /*              Cursr share    Related style                                        */
 /*-----------------------------------------------------------------------------------*/
@@ -403,7 +403,7 @@ video::-webkit-media-controls-current-time-display {}*/
   border-right: 10px solid transparent;
 }
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Tue Dec 17 2019 22:19:21 GMT+0530 (India Standard Time) || version: 4.8.5 - Altanai , License : MIT  */
+/* Generated on:Sat Dec 28 2019 13:30:24 GMT+0530 (India Standard Time) || version: 4.8.8 - Altanai , License : MIT  */
 /*-----------------------------------------------------------------------------------*/
 /*              Draw and paint Related style                                        */
 /*-----------------------------------------------------------------------------------*/
@@ -467,27 +467,16 @@ video::-webkit-media-controls-current-time-display {}*/
   color: #C5C5C5;
 }
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Tue Dec 17 2019 22:19:21 GMT+0530 (India Standard Time) || version: 4.8.5 - Altanai , License : MIT  */
+/* Generated on:Sat Dec 28 2019 13:30:24 GMT+0530 (India Standard Time) || version: 4.8.8 - Altanai , License : MIT  */
 /*-----------------------------------------------------------------------------------*/
 /*                    Fileshare Related style                                        */
 /*-----------------------------------------------------------------------------------*/
 /*
-.filesharing1Box{
-    background-color: #9999FF;
-    color: #968787;
-    overflow-y: auto;
-}
 
 #file-progress1{
     color:#FFF;
     height:20px;
 }
-
-.filesharing2Box{
-    background-color: #666699;
-    color: #968787;
-}
-
 #file-progress2{
     color:#FFF;
     height:20px
@@ -497,6 +486,20 @@ video::-webkit-media-controls-current-time-display {}*/
   height: 60%;
   max-height: 200px;
   overflow-x: scroll;
+  font-size: small;
+}
+.filesharing-box li {
+  color: #615aa8;
+  padding: 10px;
+  font-size: small;
+  float: right;
+}
+.filesharing-box i {
+  padding-right: 10px;
+  float: right;
+}
+.fileviewing-box span {
+  float: right;
 }
 .fileinputClass {
   background: transparent;
@@ -606,7 +609,7 @@ video::-webkit-media-controls-current-time-display {}*/
     margin-left: -150px; */
 }
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Tue Dec 17 2019 22:19:21 GMT+0530 (India Standard Time) || version: 4.8.5 - Altanai , License : MIT  */
+/* Generated on:Sat Dec 28 2019 13:30:24 GMT+0530 (India Standard Time) || version: 4.8.8 - Altanai , License : MIT  */
 /*-----------------------------------------------------------------------------------*/
 /*              Screenshare Related style                                        */
 /*-----------------------------------------------------------------------------------*/
@@ -618,11 +621,11 @@ video::-webkit-media-controls-current-time-display {}*/
   /* Firefox */
 }
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Tue Dec 17 2019 22:19:21 GMT+0530 (India Standard Time) || version: 4.8.5 - Altanai , License : MIT  */
+/* Generated on:Sat Dec 28 2019 13:30:24 GMT+0530 (India Standard Time) || version: 4.8.8 - Altanai , License : MIT  */
 ul {
   list-style-type: none;
 }
-/* Generated on:Tue Dec 17 2019 22:19:21 GMT+0530 (India Standard Time) || version: 4.8.5 - Altanai , License : MIT  */
+/* Generated on:Sat Dec 28 2019 13:30:24 GMT+0530 (India Standard Time) || version: 4.8.8 - Altanai , License : MIT  */
 .remoteVideoControlBarClass {
   display: inline-table;
   font: icon;

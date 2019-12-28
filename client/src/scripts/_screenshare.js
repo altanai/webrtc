@@ -72,7 +72,7 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
                 attachMediaStream(video, stream);
                 //video.id = peerInfo.videoContainer;
                 getElementById(screenshareobj.screenshareContainer).appendChild(video);
-                getElementById(screenshareobj.screenshareContainer).hidden = false;
+                showelem(screenshareobj.screenshareContainer);
                 rtcConn.send({
                     type: "screenshare",
                     screenid: screenRoomid,
@@ -83,7 +83,6 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
                 // Local got screen share stream
                 shownotificationWarning("started streaming local screen");
                 webrtcdev.log("[screenshareJS] on stream local ");
-
                 rtcConn.send({
                     type: "screenshare",
                     screenid: screenRoomid,
@@ -94,8 +93,13 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
 
             //createScreenViewButton();
 
-            // Event Listner for Screen share stream started
-            onScreenShareStarted();
+            // Event Listener for Screen share stream started
+            window.dispatchEvent(new CustomEvent('webrtcdev',{
+                detail: {
+                    servicetype: "screenshare",
+                    action: "onScreenShareStarted"
+                }
+            }));
         },
 
         scrConn.onstreamended = function (event) {

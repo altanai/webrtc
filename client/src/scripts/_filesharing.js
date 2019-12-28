@@ -4,7 +4,6 @@
 
 var progressHelper = {};
 
-
 function fileSharingStarted(file){
     webrtcdev.log("[start] on File start ", file);
     webrtcdev.log("[start] on File start description  , name :", file.name, " from -> ", file.userid, " to ->", file.remoteUserId);
@@ -36,22 +35,21 @@ function fileSharingStarted(file){
     }));
 }
 
-function fileSharingInprogress(file) {
-    //.log("[start] on File progress uuid : ", e.uuid , " , name :", e.name ,
-    //   " from -> ", e.userid , " to ->" , e.remoteUserId);
+function fileSharingInprogress(e) {
+    //webrtcdev.log("[start] on File progress uuid : ", e.uuid , " , name :", e.name ," from -> ", e.userid , " to ->" , e.remoteUserId);
     try {
         // if the file has already recahed max chunks then exit
         if (e.currentPosition > e.maxChunks) return;
 
-        var progressid = e.uuid + "_" + e.userid + "_" + e.remoteUserId;
-        var r = progressHelper[progressid];
+        let progressid = e.uuid + "_" + e.userid + "_" + e.remoteUserId;
+        let ph = progressHelper[progressid];
         // webrtcdev.log("[start] on File progress ",
-        //     " progresshelper id - " , progressid ,
+        //     "progresshelper id - " , progressid ,
         //     "currentPosition - " , e.currentPosition ,
         //     "maxchunks - ", e.maxChunks ,
         //     "progress.max - " , r.progress.max);
 
-        r && (r.progress.value = e.currentPosition || e.maxChunks || r.progress.max, updateLabel(r.progress, r.label));
+        ph && (ph.progress.value = e.currentPosition || e.maxChunks || ph.progress.max, updateLabel(ph.progress, ph.label));
     } catch (err) {
         webrtcdev.error("[sessionmanager] Problem in onFileProgress ", err);
     }

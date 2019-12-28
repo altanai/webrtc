@@ -2,22 +2,11 @@
 /*                    Fileshare Related style                                        */
 /*-----------------------------------------------------------------------------------*/
 /*
-.filesharing1Box{
-    background-color: #9999FF;
-    color: #968787;
-    overflow-y: auto;
-}
 
 #file-progress1{
     color:#FFF;
     height:20px;
 }
-
-.filesharing2Box{
-    background-color: #666699;
-    color: #968787;
-}
-
 #file-progress2{
     color:#FFF;
     height:20px
@@ -35,6 +24,16 @@
     color: #615aa8;
     padding: 10px;
     font-size: small;
+    float: right;
+}
+
+.filesharing-box i{
+    padding-right: 10px;
+    float: right;
+}
+
+.fileviewing-box span{
+    float:right;
 }
 .fileinputClass{
     background: transparent;
