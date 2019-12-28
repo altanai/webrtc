@@ -170,10 +170,11 @@ var setWidgets = function (rtcConn) {
                 return {
                     appendTo: function (parentNode) {
                         iframe = document.createElement('iframe');
-                        iframe.id = "drawboard";
-                        iframe.src = 'widget.html?tools=' + JSON.stringify(tools) + '&selectedIcon=' + selectedIcon;
-                        iframe.style.width = "100%";
-                        iframe.style.height = "100%";
+                        iframe.id = "drawboard",
+                        iframe.src = 'widget.html?tools=' + JSON.stringify(tools) + '&selectedIcon=' + selectedIcon,
+                        iframe.style.width = "100%",
+                        iframe.style.height = "100%",
+                        iframe.allowtransparency = true,
                         iframe.style.border = 0;
                         parentNode.appendChild(iframe);
                     },

@@ -23,7 +23,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
     if (!selfuserid)
         selfuserid = rtcConn.userid;
     else
-        webrtcdev.warn("[sessionmanager] trying to overwrite selfuserid")
+        webrtcdev.warn("[sessionmanager] trying to overwrite sremoteobj.userdetails.usercolorelfuserid")
 
     return new Promise((resolve, reject) => {
         try {
@@ -206,7 +206,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
                     peerinfo.streamid = "";
                     updateWebCallView(peerinfo);
 
-                    // event emitter for app client
+                    // event emitter for local connect
                     window.dispatchEvent(new CustomEvent('webrtcdev', {
                         detail: {
                             servicetype: "session",
@@ -407,7 +407,13 @@ var setRtcConn = function (sessionid) {
                 peerinfo.streamid = event.stream.streamid;
                 updateWebCallView(peerinfo);
 
-                onLocalConnect(); // event emitter for app client
+                // event emitter for app client
+                window.dispatchEvent(new CustomEvent('webrtcdev', {
+                    detail: {
+                        servicetype: "session",
+                        action: "onLocalConnect"
+                    },
+                }));
             },
 
             rtcConn.onstreamended = function (event) {
@@ -663,7 +669,7 @@ var setRtcConn = function (sessionid) {
                 uuid: rtcConn.userid,
                 name: selfusername || "",
                 // color: selfcolor || "", // user rmeote color do that joining parties can take it correctly
-                color: remoteobj.userdetails.usercolor || "",
+                color: (typeof remoteobj.userdetails === 'undefined') ? "" : remoteobj.userdetails.usercolor ,
                 email: selfemail || "",
                 role: role || "participant"
             },

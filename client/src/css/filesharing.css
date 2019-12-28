@@ -18,6 +18,7 @@
     max-height: 200px;
     overflow-x: scroll;
     font-size :small;
+    padding:0px;
 }
 
 .filesharing-box li{

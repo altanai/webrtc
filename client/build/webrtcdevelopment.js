@@ -25799,10 +25799,10 @@ function startForwardTimer() {
  */
 function startBackwardTimer() {
     webrtcdev.log("[timerjs] startBackwardTimer", hours, mins, secs);
-    var cd = secs;
-    var cdm = mins;
-    var c = parseInt(cd.innerHTML, 10);
-    var m = parseInt(cdm.innerHTML, 10);
+    let cd = secs;
+    let cdm = mins;
+    let c = parseInt(cd.innerHTML, 10);
+    let m = parseInt(cdm.innerHTML, 10);
     //alert(" Time for session validy is "+m +" minutes :"+ c+ " seconds");
     btimer(cd, c, cdm, m);
 }
@@ -25863,9 +25863,8 @@ function prepareTime() {
  */
 function startTime() {
     try {
-
         if (timerobj.span.currentTime_id && getElementById(timerobj.span.currentTime_id)) {
-            var timerspanlocal = getElementById(timerobj.span.currentTime_id);
+            let timerspanlocal = getElementById(timerobj.span.currentTime_id);
             timerspanlocal.innerHTML = new Date().toLocaleTimeString();
             var t = setTimeout(startTime, 1000);
         } else {
@@ -25874,7 +25873,6 @@ function startTime() {
     } catch (e) {
         webrtcdev.error(e);
     }
-    //webrtcdev.log(" localdate :" , today);
 }
 
 
@@ -26025,7 +26023,7 @@ function timeZone() {
     try {
         if (timerobj.span.currentTimeZone_id && getElementById(timerobj.span.currentTimeZone_id)) {
             zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            var timerzonelocal = getElementById(timerobj.span.currentTimeZone_id);
+            let timerzonelocal = getElementById(timerobj.span.currentTimeZone_id);
             timerzonelocal.innerHTML = zone;
         } else {
             webrtcdev.error(" timerobj.span.currentTimeZone_id DOM doesnt exist ");
@@ -26496,10 +26494,11 @@ var setWidgets = function (rtcConn) {
                 return {
                     appendTo: function (parentNode) {
                         iframe = document.createElement('iframe');
-                        iframe.id = "drawboard";
-                        iframe.src = 'widget.html?tools=' + JSON.stringify(tools) + '&selectedIcon=' + selectedIcon;
-                        iframe.style.width = "100%";
-                        iframe.style.height = "100%";
+                        iframe.id = "drawboard",
+                        iframe.src = 'widget.html?tools=' + JSON.stringify(tools) + '&selectedIcon=' + selectedIcon,
+                        iframe.style.width = "100%",
+                        iframe.style.height = "100%",
+                        iframe.allowtransparency = true,
                         iframe.style.border = 0;
                         parentNode.appendChild(iframe);
                     },
@@ -26605,7 +26604,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
     if (!selfuserid)
         selfuserid = rtcConn.userid;
     else
-        webrtcdev.warn("[sessionmanager] trying to overwrite selfuserid")
+        webrtcdev.warn("[sessionmanager] trying to overwrite sremoteobj.userdetails.usercolorelfuserid")
 
     return new Promise((resolve, reject) => {
         try {
@@ -26788,7 +26787,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
                     peerinfo.streamid = "";
                     updateWebCallView(peerinfo);
 
-                    // event emitter for app client
+                    // event emitter for local connect
                     window.dispatchEvent(new CustomEvent('webrtcdev', {
                         detail: {
                             servicetype: "session",
@@ -26989,7 +26988,13 @@ var setRtcConn = function (sessionid) {
                 peerinfo.streamid = event.stream.streamid;
                 updateWebCallView(peerinfo);
 
-                onLocalConnect(); // event emitter for app client
+                // event emitter for app client
+                window.dispatchEvent(new CustomEvent('webrtcdev', {
+                    detail: {
+                        servicetype: "session",
+                        action: "onLocalConnect"
+                    },
+                }));
             },
 
             rtcConn.onstreamended = function (event) {
@@ -27245,7 +27250,7 @@ var setRtcConn = function (sessionid) {
                 uuid: rtcConn.userid,
                 name: selfusername || "",
                 // color: selfcolor || "", // user rmeote color do that joining parties can take it correctly
-                color: remoteobj.userdetails.usercolor || "",
+                color: (typeof remoteobj.userdetails === 'undefined') ? "" : remoteobj.userdetails.usercolor ,
                 email: selfemail || "",
                 role: role || "participant"
             },

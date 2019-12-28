@@ -1,3 +1,9 @@
-ul {
+.time{
+    color: black;
+}
+.timer ul {
     list-style-type: none;
+}
+.timer li{
+    float: right;
 }

@@ -79,10 +79,10 @@ function startForwardTimer() {
  */
 function startBackwardTimer() {
     webrtcdev.log("[timerjs] startBackwardTimer", hours, mins, secs);
-    var cd = secs;
-    var cdm = mins;
-    var c = parseInt(cd.innerHTML, 10);
-    var m = parseInt(cdm.innerHTML, 10);
+    let cd = secs;
+    let cdm = mins;
+    let c = parseInt(cd.innerHTML, 10);
+    let m = parseInt(cdm.innerHTML, 10);
     //alert(" Time for session validy is "+m +" minutes :"+ c+ " seconds");
     btimer(cd, c, cdm, m);
 }
@@ -143,9 +143,8 @@ function prepareTime() {
  */
 function startTime() {
     try {
-
         if (timerobj.span.currentTime_id && getElementById(timerobj.span.currentTime_id)) {
-            var timerspanlocal = getElementById(timerobj.span.currentTime_id);
+            let timerspanlocal = getElementById(timerobj.span.currentTime_id);
             timerspanlocal.innerHTML = new Date().toLocaleTimeString();
             var t = setTimeout(startTime, 1000);
         } else {
@@ -154,7 +153,6 @@ function startTime() {
     } catch (e) {
         webrtcdev.error(e);
     }
-    //webrtcdev.log(" localdate :" , today);
 }
 
 
@@ -305,7 +303,7 @@ function timeZone() {
     try {
         if (timerobj.span.currentTimeZone_id && getElementById(timerobj.span.currentTimeZone_id)) {
             zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            var timerzonelocal = getElementById(timerobj.span.currentTimeZone_id);
+            let timerzonelocal = getElementById(timerobj.span.currentTimeZone_id);
             timerzonelocal.innerHTML = zone;
         } else {
             webrtcdev.error(" timerobj.span.currentTimeZone_id DOM doesnt exist ");
