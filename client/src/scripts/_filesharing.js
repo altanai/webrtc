@@ -103,8 +103,12 @@ function fileSharingEnded(file){
         return;
     }
     displayList(file.uuid, peerinfo, file.url, filename, file.type);
-    onFileShareEnded(file);
-
+    window.dispatchEvent(new CustomEvent('webrtcdev',{
+        detail: {
+            servicetype: "file",
+            action: "onFileShareEnded"
+        }
+    }));
     //start the pending transfer from pendingFileTransfer.push(file);
     if (pendingFileTransfer.length >= pendingFileTransferlimit) {
         webrtcdev.log("resuming pending/paused file ", pendingFileTransfer[0]);

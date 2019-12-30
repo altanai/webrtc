@@ -436,6 +436,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     }
 
     //Append all of the above components into file list view
+    filedom.appendChild(name);
     if (showDownloadButton)
         filedom.appendChild(downloadButton);
     filedom.appendChild(showButton);
@@ -443,7 +444,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     //filedom.appendChild(hideButton);
     if (showRemoveButton)
         filedom.appendChild(removeButton);
-    filedom.appendChild(name);
+
     webrtcdev.log("[filesharing dom modifier JS ] filedom ", filedom, " | parentdom ", parentdom);
 
     if (parentdom) {
@@ -1016,6 +1017,7 @@ function createFileListingBox(peerinfo, parent) {
         /*--------------------------------add for File List control Bar--------------------*/
 
         let fileListControlBar = document.createElement("div");
+        fileListControlBar.id = "widget-filelisting-container-header";
         fileListControlBar.setAttribute("style", "background-color:" + peerinfo.color);
         fileListControlBar.appendChild(document.createTextNode(peerinfo.name + "     "));
         //fileListControlBar.appendChild(document.createTextNode("Uploaded Files " + peerinfo.name + "     "));
@@ -1026,33 +1028,33 @@ function createFileListingBox(peerinfo, parent) {
         fileHelpButton.innerHTML="Help";
         /*fileListControlBar.appendChild(fileHelpButton);*/
 
-        let minButton = document.createElement("span");
-        minButton.innerHTML = '<i class="fa fa-minus" ></i>';
-        minButton.id = peerinfo.fileShare.minButton;
-        minButton.setAttribute("lastClickedBy", '');
-        minButton.onclick = function () {
-            resizeFV(peerinfo.userid, minButton.id, peerinfo.fileShare.outerbox);
-        };
-
-        let maxButton = document.createElement("span");
-        maxButton.innerHTML = '<i class="fa fa-arrows-alt" ></i>';
-        maxButton.id = peerinfo.fileShare.maxButton;
-        maxButton.setAttribute("lastClickedBy", '');
-        maxButton.onclick = function () {
-            maxFV(peerinfo.userid, maxButton.id, peerinfo.fileShare.outerbox);
-        };
-
-        let closeButton = document.createElement("span");
-        closeButton.innerHTML = '<i class="fa fa-times"></i>';
-        closeButton.id = peerinfo.fileShare.closeButton;
-        closeButton.setAttribute("lastClickedBy", '');
-        closeButton.onclick = function () {
-            closeFV(peerinfo.userid, closeButton.id, peerinfo.fileShare.container);
-        };
-
-        fileListControlBar.appendChild(minButton);
-        fileListControlBar.appendChild(maxButton);
-        fileListControlBar.appendChild(closeButton);
+        // let minButton = document.createElement("span");
+        // minButton.innerHTML = '<i class="fa fa-minus" ></i>';
+        // minButton.id = peerinfo.fileShare.minButton;
+        // minButton.setAttribute("lastClickedBy", '');
+        // minButton.onclick = function () {
+        //     resizeFV(peerinfo.userid, minButton.id, peerinfo.fileShare.outerbox);
+        // };
+        //
+        // let maxButton = document.createElement("span");
+        // maxButton.innerHTML = '<i class="fa fa-arrows-alt" ></i>';
+        // maxButton.id = peerinfo.fileShare.maxButton;
+        // maxButton.setAttribute("lastClickedBy", '');
+        // maxButton.onclick = function () {
+        //     maxFV(peerinfo.userid, maxButton.id, peerinfo.fileShare.outerbox);
+        // };
+        //
+        // let closeButton = document.createElement("span");
+        // closeButton.innerHTML = '<i class="fa fa-times"></i>';
+        // closeButton.id = peerinfo.fileShare.closeButton;
+        // closeButton.setAttribute("lastClickedBy", '');
+        // closeButton.onclick = function () {
+        //     closeFV(peerinfo.userid, closeButton.id, peerinfo.fileShare.container);
+        // };
+        //
+        // fileListControlBar.appendChild(minButton);
+        // fileListControlBar.appendChild(maxButton);
+        // fileListControlBar.appendChild(closeButton);
 
         /*-------------------------------- add for File List Container--------------------*/
         var fileListContainer = document.createElement("div");
