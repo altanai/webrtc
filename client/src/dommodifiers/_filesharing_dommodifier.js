@@ -772,6 +772,7 @@ function createFileSharingBox(peerinfo, parent) {
         fileSharingBox.id = peerinfo.fileShare.outerbox;
 
         /*-------------------------------- add for File Share control Bar --------------------*/
+        var minButton , maxButton;
 
         let fileControlBar = document.createElement("p");
         fileControlBar.id = peerinfo.fileShare.container + "controlBar";
@@ -780,7 +781,7 @@ function createFileSharingBox(peerinfo, parent) {
 
         if (fileshareobj.fileshare.minicon != "none") {
             // Minimize the File viewer box
-            let minButton = document.createElement("span");
+            minButton = document.createElement("span");
             if (fileshareobj.fileshare.minicon) {
                 let img = document.createElement("img");
                 img.src = fileshareobj.fileshare.minicon;
@@ -796,14 +797,15 @@ function createFileSharingBox(peerinfo, parent) {
                 resizeFV(peerinfo.userid, minButton.id, peerinfo.fileShare.outerbox);
                 hideelem(minButton);
                 showelem(maxButton);
-            }
-
+            };
             fileControlBar.appendChild(minButton);
+        }else {
+            webrtcdev.warn(" [fileShare JS ] minicon is none");
         }
 
         if (fileshareobj.fileshare.maxicon != "none") {
             // Maximize the file viewer box
-            var maxButton = document.createElement("span");
+            maxButton = document.createElement("span");
             if (fileshareobj.fileshare.maxicon) {
                 let maxicon = fileshareobj.fileshare.maxicon;
                 webrtcdev.log(" [fileShare JS ] creating custom maxicon", maxicon);
@@ -823,10 +825,10 @@ function createFileSharingBox(peerinfo, parent) {
                 maxFV(peerinfo.userid, maxButton.id, peerinfo.fileShare.outerbox);
                 hideelem(maxButton);
                 showelem(minButton);
-            }
+            };
             fileControlBar.appendChild(maxButton);
         } else {
-            webrtcdev.log(" [fileShare JS ] maxicon is none");
+            webrtcdev.warn(" [fileShare JS ] maxicon is none");
         }
 
         // close the file viewer box
@@ -843,9 +845,8 @@ function createFileSharingBox(peerinfo, parent) {
         closeButton.setAttribute("lastClickedBy", '');
         closeButton.onclick = function () {
             closeFV(peerinfo.userid, closeButton.id, peerinfo.fileShare.container);
-        }
+        };
         fileControlBar.appendChild(closeButton);
-
 
         // rotate the content of file viewer box
         var angle = 0, orientation = null;

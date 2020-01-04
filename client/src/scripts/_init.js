@@ -291,6 +291,10 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function () {
  * @param {dom} elem
  */
 function showelem(elem) {
+    if(!elem) {
+        webrtcdev.error("show elem undefined");
+        return;
+    }
     webrtcdev.log(" [init] show elem", elem ," , type ",  typeof elem , " , nodetype " , elem.nodeType);
     if (typeof elem === 'object' && elem.nodeType !== undefined) {
         // validate its is a dom node
@@ -319,12 +323,16 @@ function showelem(elem) {
  * @param {dom} elem
  */
 function hideelem(elem) {
-    if (typeof elem === 'object' && elem.nodeType !== undefined) {
-        elem.addAttribute("hidden");
-        elem.setAttribute("style", "display:none!important");
-    } else if (document.getElementById(elem)) {
-        document.getElementById(elem).setAttribute("hidden", true);
-        document.getElementById(elem).setAttribute("style", "display:none");
+    try{
+        if (typeof elem === 'object' && elem.nodeType !== undefined) {
+            elem.setAttribute("hidden", true);
+            elem.setAttribute("style", "display:none!important");
+        } else if (document.getElementById(elem)) {
+            document.getElementById(elem).setAttribute("hidden", true);
+            document.getElementById(elem).setAttribute("style", "display:none");
+        }
+    }catch(err){
+        webrtcdev.error(elem , err)
     }
 }
 

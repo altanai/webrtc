@@ -530,7 +530,7 @@ var setRtcConn = function (sessionid) {
 
                             break;
                         case "timer":
-                            if (!msgpeerinfo.time && !msgpeerinfo.zone) {
+                            if (!msgpeerinfo || (!msgpeerinfo.time && !msgpeerinfo.zone)) {
                                 //check if the peer has stored zone and time info
                                 msgpeerinfo.time = e.data.time;
                                 msgpeerinfo.zone = e.data.zone;
