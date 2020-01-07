@@ -13346,10 +13346,8 @@ var formatCounterValue = function formatCounterValue(counter, glue, format) {
 });
 var webrtcdevcon = function () {
     var _this = this;
-/*-----------------------------------------------------------------------------------*/
-/*                    Global Init JS                                                 */
-/*-----------------------------------------------------------------------------------*/
 
+/*********** global Params ****************/
 var t = "";
 var e = null;
 var n = "";
@@ -13432,8 +13430,11 @@ var role = "participant";
 
 var webrtcdev = webrtcdevlogger;
 
-/*********** global ****************/
 this.sessionid = "";
+
+/*-----------------------------------------------------------------------------------*/
+/*                    Global Init JS                                                 */
+/*-----------------------------------------------------------------------------------*/
 
 /**
  * creates sessionid
@@ -13523,31 +13524,6 @@ function getLength(obj) {
 }
 
 
-function isHTML(str) {
-    var a = document.createElement('div');
-    a.innerHTML = str;
-
-    for (var c = a.childNodes, i = c.length; i--;) {
-        if (c[i].nodeType == 1) return true;
-    }
-
-    return false;
-}
-
-
-function getElement(e) {
-    return document.querySelector(e)
-}
-
-function getElementById(elem) {
-    try {
-        return document.getElementById(elem);
-    } catch (e) {
-        webrtcdev.error(e);
-        return "";
-    }
-}
-
 function getRandomColor() {
     for (var e = "0123456789ABCDEF".split(""), t = "#", n = 0; 6 > n; n++) t += e[Math.round(15 * Math.random())];
     return t
@@ -13611,78 +13587,6 @@ function loadScript(src, onload) {
     document.documentElement.appendChild(script);
 }
 
-/* ********************************************************
-UI / DOM related functions
-****************************************************** */
-
-Element.prototype.remove = function () {
-    this.parentElement.removeChild(this);
-}
-NodeList.prototype.remove = HTMLCollection.prototype.remove = function () {
-    for (var i = this.length - 1; i >= 0; i--) {
-        if (this[i] && this[i].parentElement) {
-            this[i].parentElement.removeChild(this[i]);
-        }
-    }
-}
-
-// function showElement(elem){
-//     if(elem.vide) elem.video.hidden = false;
-//     elem.removeAttribute("hidden");
-//     elem.setAttribute("style","display:block!important");
-// }
-
-/**
- * function to show an elemnt by id or dom
- * @method
- * @name showelem
- * @param {dom} elem
- */
-function showelem(elem) {
-    if(!elem) {
-        webrtcdev.error("show elem undefined");
-        return;
-    }
-    webrtcdev.log(" [init] show elem", elem ," , type ",  typeof elem , " , nodetype " , elem.nodeType);
-    if (typeof elem === 'object' && elem.nodeType !== undefined) {
-        // validate its is a dom node
-        elem.removeAttribute("hidden");
-        elem.setAttribute("style", "display:block!important");
-    } else if (document.getElementById(elem)) {
-        // search by ID
-        elem = document.getElementById(elem);
-        elem.removeAttribute("hidden");
-        elem.setAttribute("style", "display:block");
-    } else if ( (document.getElementsByName(elem)).length >0 ){
-        // search by name
-        elem = document.getElementsByName(elem);
-        elem[0].removeAttribute("hidden");
-        elem[0].setAttribute("style", "display:block");
-    } else {
-        // not found
-        webrtcdev.warn("elem not found ", elem);
-    }
-}
-
-/**
- * function to hide an Element by id of dom
- * @method
- * @name hideelem
- * @param {dom} elem
- */
-function hideelem(elem) {
-    try{
-        if (typeof elem === 'object' && elem.nodeType !== undefined) {
-            elem.setAttribute("hidden", true);
-            elem.setAttribute("style", "display:none!important");
-        } else if (document.getElementById(elem)) {
-            document.getElementById(elem).setAttribute("hidden", true);
-            document.getElementById(elem).setAttribute("style", "display:none");
-        }
-    }catch(err){
-        webrtcdev.error(elem , err)
-    }
-}
 
 /*-----------------------------------------------------------------------------------*/
 
@@ -14436,9 +14340,9 @@ function addProgressHelper(uuid, peerinfo, filename, fileSize, file, progressHel
 
         let progressul = document.createElement("ul");
         progressul.id = progressid,
-            progressul.title = filename + " size - " + file.size + " type - " + file.type + " last modified on -" + file.lastModifiedDate,
-            progressul.setAttribute("type", "progressbar");
-
+        progressul.title = filename + " size - " + file.size + " type - " + file.type + " last modified on -" + file.lastModifiedDate,
+        progressul.setAttribute("type", "progressbar"),
+        progressul.setAttribute("class", "row");
         if (debug) {
             var progressDebug = document.createElement("li");
             progressDebug.innerHTML = filename + "size - " + file.size + " type - " + file.type + " last modified on -" + file.lastModifiedDate
@@ -14552,7 +14456,8 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
         if (fileprogressbar.length > 0) {
             for (x in fileprogressbar) {
                 webrtcdev.log("[filesharing js] displayList remove progress bar index - ", x, " file dom - ", fileprogressbar[x]);
-                if (fileprogressbar[x].type == "progressbar" || fileprogressbar[x].indexOf("progressbar") > -1) {
+                if ((typeof fileprogressbar[x]) == "object" &&
+                        (fileprogressbar[x].type == "progressbar" || fileprogressbar[x].indexOf("progressbar") > -1)) {
                     // if the progress bar exist , remove the progress bar div and create the ul
                     // fileprogressbar[x].getAttribute("type")=="progressbar" /removed due to not a function error
                     if (peerinfo.fileList.container && document.getElementById(peerinfo.fileList.container)) {
@@ -14946,8 +14851,7 @@ function showFile(element, fileurl, filename, filetype) {
     webrtcdev.log("[filehsaring js]  showFile  filedom - ", filedom);
     if (document.getElementById(element)) {
         document.getElementById(element).innerHTML = "";
-        document.getElementById(element).removeAttribute("hidden");
-        document.getElementById(element).setAttribute("style", "display:block!important");
+        showelem(element);
         document.getElementById(element).appendChild(filedom);
     } else {
         webrtcdev.warn(" [filehsaring js] cant show file as parent DOM fir fileDiaply container doesnt exist ");
@@ -14959,8 +14863,7 @@ function hideFile(element) {
     //if(document.getElementById(element) && $("#"+element).has("#display"+filename)){
     if (document.getElementById(element)) {
         document.getElementById(element).innerHTML = "";
-        document.getElementById(element).hidden = true;
-        document.getElementById(element).setAttribute("style", "display:none!important");
+        hideelem(element);
         webrtcdev.log("[filehsaring js] hidefile done");
     } else {
         webrtcdev.warn(" [filehsaring js]  file is not displayed to hide  ");
@@ -15303,32 +15206,32 @@ function createFileListingBox(peerinfo, parent) {
         fileHelpButton.innerHTML="Help";
         /*fileListControlBar.appendChild(fileHelpButton);*/
 
-        // let minButton = document.createElement("span");
-        // minButton.innerHTML = '<i class="fa fa-minus" ></i>';
-        // minButton.id = peerinfo.fileShare.minButton;
-        // minButton.setAttribute("lastClickedBy", '');
-        // minButton.onclick = function () {
-        //     resizeFV(peerinfo.userid, minButton.id, peerinfo.fileShare.outerbox);
-        // };
-        //
-        // let maxButton = document.createElement("span");
-        // maxButton.innerHTML = '<i class="fa fa-arrows-alt" ></i>';
-        // maxButton.id = peerinfo.fileShare.maxButton;
-        // maxButton.setAttribute("lastClickedBy", '');
-        // maxButton.onclick = function () {
-        //     maxFV(peerinfo.userid, maxButton.id, peerinfo.fileShare.outerbox);
-        // };
-        //
+        let minButton = document.createElement("span");
+        minButton.innerHTML = '<i class="fa fa-minus" ></i>';
+        minButton.id = peerinfo.fileShare.minButton;
+        minButton.setAttribute("lastClickedBy", '');
+        minButton.onclick = function () {
+            resizeFV(peerinfo.userid, minButton.id, peerinfo.fileList.outerbox);
+        };
+
+        let maxButton = document.createElement("span");
+        maxButton.innerHTML = '<i class="fa fa-arrows-alt" ></i>';
+        maxButton.id = peerinfo.fileShare.maxButton;
+        maxButton.setAttribute("lastClickedBy", '');
+        maxButton.onclick = function () {
+            maxFV(peerinfo.userid, maxButton.id, peerinfo.fileList.outerbox);
+        };
+
         // let closeButton = document.createElement("span");
         // closeButton.innerHTML = '<i class="fa fa-times"></i>';
         // closeButton.id = peerinfo.fileShare.closeButton;
         // closeButton.setAttribute("lastClickedBy", '');
         // closeButton.onclick = function () {
-        //     closeFV(peerinfo.userid, closeButton.id, peerinfo.fileShare.container);
+        //     closeFV(peerinfo.userid, closeButton.id, peerinfo.fileList.container);
         // };
-        //
-        // fileListControlBar.appendChild(minButton);
-        // fileListControlBar.appendChild(maxButton);
+
+        fileListControlBar.appendChild(minButton);
+        fileListControlBar.appendChild(maxButton);
         // fileListControlBar.appendChild(closeButton);
 
         /*-------------------------------- add for File List Container--------------------*/
@@ -25119,7 +25022,7 @@ function fileSharingEnded(file){
     var peerinfo = findPeerInfo(file.userid);
     if (peerinfo != null) {
         for (x in peerinfo.filearray)
-            if (peerinfo.filearray[x].name == filename && peerinfo.filearray[x].pid == progressid) {
+            if (peerinfo.filearray[x].name == filename && peerƒinfo.filearray[x].pid == progressid) {
                 //update filearray status to finished
                 peerinfo.filearray[x].status = "finished";
 

@@ -178,9 +178,11 @@ var scriptList=[
     // --------------------- helper libs
     "client/src/helperlibs/html2canvas.js",
     "client/src/scripts/head.js",
+    "client/src/scripts/globals.js",
     "client/src/scripts/_init.js",
 
     // --------------------- dom modifiers
+    "client/src/dommodifiers/_dommodifier.js",
     "client/src/dommodifiers/_webcallviewmanager.js",
     "client/src/dommodifiers/_filesharing_dommodifier.js",
     "client/src/dommodifiers/_media_dommodifier.js",
@@ -193,6 +195,7 @@ var scriptList=[
 
     // --------------------- stats and analytics
     "client/src/analytics/_stats.js",
+
     // ---------------------- scripts
     "client/src/scripts/_screenshare.js",
     "client/src/scripts/_webrtcchecks.js",
@@ -219,6 +222,7 @@ var scriptList=[
     "client/src/scripts/_widgets.js",
     "client/src/scripts/_sessionmanager.js",
     "client/src/scripts/_exitmanager.js",
+
     "client/src/scripts/tail.js"
 ];
 

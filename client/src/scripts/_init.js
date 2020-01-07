@@ -2,91 +2,6 @@
 /*                    Global Init JS                                                 */
 /*-----------------------------------------------------------------------------------*/
 
-var t = "";
-var e = null;
-var n = "";
-var rtcConn = null;
-var scrConn = null;
-var selfuserid = null, remoteUserId = null;
-var containerDiv;
-var webcallpeers = [];
-var sessions = {};
-var repeatFlagShowButton = null, repeatFlagHideButton = null, repeatFlagRemoveButton = null,
-    repeatFlagStopuploadButton = null;
-
-/* DOM objects for single user video , user in conf and all other users*/
-var localVideo = null, selfVideo = null, remoteVideos = [];
-
-var webrtcDetectedBrowser = null;
-var webrtcDetectedVersion = null;
-/*var usersList     = document.getElementById("userslist");
-var numbersOfUsers  = document.getElementById("numbersofusers");
-var usersContainer  = document.getElementById("usersContainer");*/
-var tempuserid;
-var sessions = {};
-
-var selfusername = "", selfemail = "", selfcolor = "";
-var remoteusername = "", remoteemail = "", remotecolor = "";
-
-var latitude = "", longitude = "", operatingsystem = "";
-
-/* webrtc session intilization */
-var autoload = true;
-var sessionid = null, socketAddr = "/", webrtcdevIceServers = [];
-var localStream, localStreamId, remoteStream, remoteStreamId;
-
-/* incoming and outgoing call params */
-var incomingAudio = true, incomingVideo = true, incomingData = true;
-var outgoingAudio = true, outgoingVideo = true, outgoingData = true;
-
-var debug = false;
-
-var timerobj = false;
-var peerTimerStarted = false;
-
-var chatobj = false, chatContainer = null;
-
-var fileshareobj = false;
-var pendingFileTransferlimit = 3;
-
-var screenrecordobj = false;
-
-var snapshotobj = false;
-
-var videoRecordobj = false, videoRecordContainer = null;
-
-var drawCanvasobj = false;
-
-var texteditorobj = false;
-
-var codeeditorobj = false, editor = null;
-
-var reconnectobj = false;
-
-var cursorobj = false;
-
-var muteobj = false;
-
-var minmaxobj = false;
-
-var listeninobj = false;
-
-var screenshareobj = false;
-
-var helpobj = false;
-
-var statisticsobj = false;
-
-var screen, isScreenOn = 0, chromeMediaSourceId = null, extensioninstalled;
-var screen_roomid, screen_userid;
-
-var role = "participant";
-
-var webrtcdev = webrtcdevlogger;
-
-/*********** global ****************/
-this.sessionid = "";
-
 /**
  * creates sessionid
  * @method
@@ -175,31 +90,6 @@ function getLength(obj) {
 }
 
 
-function isHTML(str) {
-    var a = document.createElement('div');
-    a.innerHTML = str;
-
-    for (var c = a.childNodes, i = c.length; i--;) {
-        if (c[i].nodeType == 1) return true;
-    }
-
-    return false;
-}
-
-
-function getElement(e) {
-    return document.querySelector(e)
-}
-
-function getElementById(elem) {
-    try {
-        return document.getElementById(elem);
-    } catch (e) {
-        webrtcdev.error(e);
-        return "";
-    }
-}
-
 function getRandomColor() {
     for (var e = "0123456789ABCDEF".split(""), t = "#", n = 0; 6 > n; n++) t += e[Math.round(15 * Math.random())];
     return t
@@ -263,78 +153,6 @@ function loadScript(src, onload) {
     document.documentElement.appendChild(script);
 }
 
-/* ********************************************************
-UI / DOM related functions
-****************************************************** */
-
-Element.prototype.remove = function () {
-    this.parentElement.removeChild(this);
-}
-NodeList.prototype.remove = HTMLCollection.prototype.remove = function () {
-    for (var i = this.length - 1; i >= 0; i--) {
-        if (this[i] && this[i].parentElement) {
-            this[i].parentElement.removeChild(this[i]);
-        }
-    }
-}
-
-// function showElement(elem){
-//     if(elem.vide) elem.video.hidden = false;
-//     elem.removeAttribute("hidden");
-//     elem.setAttribute("style","display:block!important");
-// }
-
-/**
- * function to show an elemnt by id or dom
- * @method
- * @name showelem
- * @param {dom} elem
- */
-function showelem(elem) {
-    if(!elem) {
-        webrtcdev.error("show elem undefined");
-        return;
-    }
-    webrtcdev.log(" [init] show elem", elem ," , type ",  typeof elem , " , nodetype " , elem.nodeType);
-    if (typeof elem === 'object' && elem.nodeType !== undefined) {
-        // validate its is a dom node
-        elem.removeAttribute("hidden");
-        elem.setAttribute("style", "display:block!important");
-    } else if (document.getElementById(elem)) {
-        // search by ID
-        elem = document.getElementById(elem);
-        elem.removeAttribute("hidden");
-        elem.setAttribute("style", "display:block");
-    } else if ( (document.getElementsByName(elem)).length >0 ){
-        // search by name
-        elem = document.getElementsByName(elem);
-        elem[0].removeAttribute("hidden");
-        elem[0].setAttribute("style", "display:block");
-    } else {
-        // not found
-        webrtcdev.warn("elem not found ", elem);
-    }
-}
-
-/**
- * function to hide an Element by id of dom
- * @method
- * @name hideelem
- * @param {dom} elem
- */
-function hideelem(elem) {
-    try{
-        if (typeof elem === 'object' && elem.nodeType !== undefined) {
-            elem.setAttribute("hidden", true);
-            elem.setAttribute("style", "display:none!important");
-        } else if (document.getElementById(elem)) {
-            document.getElementById(elem).setAttribute("hidden", true);
-            document.getElementById(elem).setAttribute("style", "display:none");
-        }
-    }catch(err){
-        webrtcdev.error(elem , err)
-    }
-}
 
 /*-----------------------------------------------------------------------------------*/
 

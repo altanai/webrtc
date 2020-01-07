@@ -84,7 +84,7 @@ function fileSharingEnded(file){
     var peerinfo = findPeerInfo(file.userid);
     if (peerinfo != null) {
         for (x in peerinfo.filearray)
-            if (peerinfo.filearray[x].name == filename && peerinfo.filearray[x].pid == progressid) {
+            if (peerinfo.filearray[x].name == filename && peerƒinfo.filearray[x].pid == progressid) {
                 //update filearray status to finished
                 peerinfo.filearray[x].status = "finished";
 

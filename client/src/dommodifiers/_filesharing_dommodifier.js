@@ -162,9 +162,9 @@ function addProgressHelper(uuid, peerinfo, filename, fileSize, file, progressHel
 
         let progressul = document.createElement("ul");
         progressul.id = progressid,
-            progressul.title = filename + " size - " + file.size + " type - " + file.type + " last modified on -" + file.lastModifiedDate,
-            progressul.setAttribute("type", "progressbar");
-
+        progressul.title = filename + " size - " + file.size + " type - " + file.type + " last modified on -" + file.lastModifiedDate,
+        progressul.setAttribute("type", "progressbar"),
+        progressul.setAttribute("class", "row");
         if (debug) {
             var progressDebug = document.createElement("li");
             progressDebug.innerHTML = filename + "size - " + file.size + " type - " + file.type + " last modified on -" + file.lastModifiedDate
@@ -278,7 +278,8 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
         if (fileprogressbar.length > 0) {
             for (x in fileprogressbar) {
                 webrtcdev.log("[filesharing js] displayList remove progress bar index - ", x, " file dom - ", fileprogressbar[x]);
-                if (fileprogressbar[x].type == "progressbar" || fileprogressbar[x].indexOf("progressbar") > -1) {
+                if ((typeof fileprogressbar[x]) == "object" &&
+                        (fileprogressbar[x].type == "progressbar" || fileprogressbar[x].indexOf("progressbar") > -1)) {
                     // if the progress bar exist , remove the progress bar div and create the ul
                     // fileprogressbar[x].getAttribute("type")=="progressbar" /removed due to not a function error
                     if (peerinfo.fileList.container && document.getElementById(peerinfo.fileList.container)) {
@@ -672,8 +673,7 @@ function showFile(element, fileurl, filename, filetype) {
     webrtcdev.log("[filehsaring js]  showFile  filedom - ", filedom);
     if (document.getElementById(element)) {
         document.getElementById(element).innerHTML = "";
-        document.getElementById(element).removeAttribute("hidden");
-        document.getElementById(element).setAttribute("style", "display:block!important");
+        showelem(element);
         document.getElementById(element).appendChild(filedom);
     } else {
         webrtcdev.warn(" [filehsaring js] cant show file as parent DOM fir fileDiaply container doesnt exist ");
@@ -685,8 +685,7 @@ function hideFile(element) {
     //if(document.getElementById(element) && $("#"+element).has("#display"+filename)){
     if (document.getElementById(element)) {
         document.getElementById(element).innerHTML = "";
-        document.getElementById(element).hidden = true;
-        document.getElementById(element).setAttribute("style", "display:none!important");
+        hideelem(element);
         webrtcdev.log("[filehsaring js] hidefile done");
     } else {
         webrtcdev.warn(" [filehsaring js]  file is not displayed to hide  ");
@@ -1029,32 +1028,32 @@ function createFileListingBox(peerinfo, parent) {
         fileHelpButton.innerHTML="Help";
         /*fileListControlBar.appendChild(fileHelpButton);*/
 
-        // let minButton = document.createElement("span");
-        // minButton.innerHTML = '<i class="fa fa-minus" ></i>';
-        // minButton.id = peerinfo.fileShare.minButton;
-        // minButton.setAttribute("lastClickedBy", '');
-        // minButton.onclick = function () {
-        //     resizeFV(peerinfo.userid, minButton.id, peerinfo.fileShare.outerbox);
-        // };
-        //
-        // let maxButton = document.createElement("span");
-        // maxButton.innerHTML = '<i class="fa fa-arrows-alt" ></i>';
-        // maxButton.id = peerinfo.fileShare.maxButton;
-        // maxButton.setAttribute("lastClickedBy", '');
-        // maxButton.onclick = function () {
-        //     maxFV(peerinfo.userid, maxButton.id, peerinfo.fileShare.outerbox);
-        // };
-        //
+        let minButton = document.createElement("span");
+        minButton.innerHTML = '<i class="fa fa-minus" ></i>';
+        minButton.id = peerinfo.fileShare.minButton;
+        minButton.setAttribute("lastClickedBy", '');
+        minButton.onclick = function () {
+            resizeFV(peerinfo.userid, minButton.id, peerinfo.fileList.outerbox);
+        };
+
+        let maxButton = document.createElement("span");
+        maxButton.innerHTML = '<i class="fa fa-arrows-alt" ></i>';
+        maxButton.id = peerinfo.fileShare.maxButton;
+        maxButton.setAttribute("lastClickedBy", '');
+        maxButton.onclick = function () {
+            maxFV(peerinfo.userid, maxButton.id, peerinfo.fileList.outerbox);
+        };
+
         // let closeButton = document.createElement("span");
         // closeButton.innerHTML = '<i class="fa fa-times"></i>';
         // closeButton.id = peerinfo.fileShare.closeButton;
         // closeButton.setAttribute("lastClickedBy", '');
         // closeButton.onclick = function () {
-        //     closeFV(peerinfo.userid, closeButton.id, peerinfo.fileShare.container);
+        //     closeFV(peerinfo.userid, closeButton.id, peerinfo.fileList.container);
         // };
-        //
-        // fileListControlBar.appendChild(minButton);
-        // fileListControlBar.appendChild(maxButton);
+
+        fileListControlBar.appendChild(minButton);
+        fileListControlBar.appendChild(maxButton);
         // fileListControlBar.appendChild(closeButton);
 
         /*-------------------------------- add for File List Container--------------------*/
