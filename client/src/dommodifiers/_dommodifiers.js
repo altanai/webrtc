@@ -1,6 +1,4 @@
 
-
-
 function getElement(e) {
     return document.querySelector(e)
 }
@@ -13,7 +11,6 @@ function getElementById(elem) {
         return "";
     }
 }
-
 
 function isHTML(str) {
     var a = document.createElement('div');
@@ -98,4 +95,9 @@ function hideelem(elem) {
     }catch(err){
         webrtcdev.error(elem , err)
     }
+}
+
+
+function existselem(elem){
+    return document.getElementById(elem)?true:false;
 }

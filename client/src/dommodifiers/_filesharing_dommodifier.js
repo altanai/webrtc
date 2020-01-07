@@ -671,19 +671,19 @@ function showFile(element, fileurl, filename, filetype) {
     webrtcdev.log("[filehsaring js]  showFile container - ", element, document.getElementById(element));
     var filedom = getFileElementDisplayByType(filetype, fileurl, filename);
     webrtcdev.log("[filehsaring js]  showFile  filedom - ", filedom);
-    if (document.getElementById(element)) {
+    if (existselem(element)) {
         document.getElementById(element).innerHTML = "";
         showelem(element);
         document.getElementById(element).appendChild(filedom);
     } else {
-        webrtcdev.warn(" [filehsaring js] cant show file as parent DOM fir fileDiaply container doesnt exist ");
+        webrtcdev.warn(" [filehsaring js] cant show file as parent DOM fir fileDisplay container doesnt exist ");
     }
 }
 
 function hideFile(element) {
     webrtcdev.log("[filehsaring js]  hidefile ", element);
     //if(document.getElementById(element) && $("#"+element).has("#display"+filename)){
-    if (document.getElementById(element)) {
+    if (existselem(element)) {
         document.getElementById(element).innerHTML = "";
         hideelem(element);
         webrtcdev.log("[filehsaring js] hidefile done");

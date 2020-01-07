@@ -5,15 +5,13 @@
 var progressHelper = {};
 
 function fileSharingStarted(file){
-    webrtcdev.log("[start] on File start ", file);
-    webrtcdev.log("[start] on File start description  , name :", file.name, " from -> ", file.userid, " to ->", file.remoteUserId);
-
-    //alert ( "send fille to " + file.remoteUserId , findPeerInfo(file.remoteUserId).name);
+    webrtcdev.log("[flesharing JS] on File start ", file);
+    webrtcdev.log("[flesharing JS] on File start description  , name :", file.name, " from -> ", file.userid, " to ->", file.remoteUserId);
 
     let progressid = file.uuid + "_" + file.userid + "_" + file.remoteUserId;
     let peerinfo = findPeerInfo(file.userid);
     // check if not already present ,
-    // done to include one entry even if same file is being sent to multiple particpants
+    // done to include one entry even if same file is being sent to multiple participants
     if (!peerinfo.filearray.includes("name : file.name")) {
         // add to peerinfo file array
         peerinfo.filearray.push({
@@ -51,12 +49,12 @@ function fileSharingInprogress(e) {
 
         ph && (ph.progress.value = e.currentPosition || e.maxChunks || ph.progress.max, updateLabel(ph.progress, ph.label));
     } catch (err) {
-        webrtcdev.error("[sessionmanager] Problem in onFileProgress ", err);
+        webrtcdev.error("[flesharing JS] Problem in onFileProgress ", err);
     }
 }
 
 function fileSharingEnded(file){
-    webrtcdev.log("[start] On file End description , file :", file, " from -> ", file.userid, " to ->", file.remoteUserId);
+    webrtcdev.log("[flesharing JS] On file End description , file :", file, " from -> ", file.userid, " to ->", file.remoteUserId);
 
     window.dispatchEvent(new CustomEvent('webrtcdev',{
         detail: {
@@ -94,10 +92,10 @@ function fileSharingEnded(file){
     }
 
     // Display on File Viewer and List
-    webrtcdev.log("[start] onFileEnd - Display on File Viewer and List -", file.url, filename, file.type);
+    webrtcdev.log("[flesharing JS] onFileEnd - Display on File Viewer and List -", file.url, filename, file.type);
     displayFile(file.uuid, peerinfo, file.url, filename, file.type);
 
-    webrtcdev.log("[sessionmanager] onFileEnd - Display List -", filename + file.uuid, document.getElementById(filename + file.uuid));
+    webrtcdev.log("[flesharing JS] onFileEnd - Display List -", filename + file.uuid, document.getElementById(filename + file.uuid));
     // if the file is from me ( orignal share ) then diaply listing in viewbox just one
     if (selfuserid == file.userid && document.getElementById(filename + file.uuid)) {
         return;
@@ -129,7 +127,7 @@ function sendFile(file){
     for( x in webcallpeers){
         for(y in webcallpeers[x].filearray){
             if(webcallpeers[x].filearray[y].status=="progress"){
-                webrtcdev.log(" A file is already in progress , add the new file "+file.name+" to queue");
+                webrtcdev.log("[flesharing JS] A file is already in progress , add the new file "+file.name+" to queue");
                 //alert("Allow current file to complete uploading, before selecting the next file share upload");
                 pendingFileTransfer.push(file);
                 addstaticProgressHelper(file.uuid, findPeerInfo(selfuserid), file.name, file.maxChunks, file , "fileBoxClass" , selfuserid , "" );
@@ -188,7 +186,7 @@ function sendOldFiles(){
     // Sync old files
     var oldfilesList = [];
     for(x in webcallpeers){
-        webrtcdev.log(" Checking Old Files in index " , x);
+        webrtcdev.log("[flesharing JS] Checking Old Files in index " , x);
         var user = webcallpeers[x];
         if(user.filearray && user.filearray.length >0 ){
             for( y in user.filearray){
@@ -220,7 +218,7 @@ function sendOldFiles(){
  * @param {json} files
  */
 function addNewFileLocal(e) {
-    webrtcdev.log("addNewFileLocal message ", e);
+    webrtcdev.log("[flesharing JS] addNewFileLocal message ", e);
     if ("" != e.message && " " != e.message) {
         webrtcdev.log("addNewFileLocal");
     }
@@ -233,7 +231,7 @@ function addNewFileLocal(e) {
  * @param {json} files
  */
 function addNewFileRemote(e) {
-    webrtcdev.log("addNewFileRemote message ", e);
+    webrtcdev.log("[flesharing JS] addNewFileRemote message ", e);
     if ("" != e.message && " " != e.message) {
         webrtcdev.log("addNewFileRemote");
     }
