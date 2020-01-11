@@ -55,7 +55,6 @@ function startsessionTimer(timerobj) {
     } else {
         webrtcdev.error(" timerobj.counter DOM elemnts not found ");
     }
-
 }
 
 /**
@@ -156,23 +155,6 @@ function startTime() {
 }
 
 
-/**
- * creates and appends remotetimecontainer belonging to userid to parentTimecontainer
- * @method
- * @name createRemotetimeArea
- */
-function createRemotetimeArea(userid) {
-    let remotetimecontainer = document.createElement("ul");
-    remotetimecontainer.id = "remoteTimerArea_" + userid;
-    var peerinfo = findPeerInfo(userid);
-    if (getElementById(peerinfo.videoContainer)) {
-        var parentTimecontainer = getElementById(peerinfo.videoContainer).parentNode;
-        parentTimecontainer.appendChild(remotetimecontainer);
-        return remotetimecontainer;
-    } else {
-        return null;
-    }
-}
 
 /**
  * function to fetch and show local peers time zone based on locally captured values
@@ -229,31 +211,51 @@ var startPeersTime = function (date, zone, userid) {
         var tobj = [];
 
         // Starting peer timer for all peers
-        for (var x in webcallpeers) {
+        for ( x in webcallpeers) {
+
+            var peerinfo = webcallpeers[x];
 
             webrtcdev.debug(" [timerjs] startPeersTime for ", userid);
 
-            if (window.location.href.indexOf("conference") > -1 && getElementById("remoteTimeDate_" + webcallpeers[x].userid)) {
-                //if its conference , send to webworkers 
+            if (window.location.href.indexOf("conference") > -1) {
+                //if its conference , send to webworkers
                 webrtcdev.info(" timerobj.span.remoteTime_id exist for local and remotes, appending to tobj to send to worker cumulatively");
                 tobj.push({
-                    zone: webcallpeers[x].zone,
-                    userid: webcallpeers[x].userid,
-                    remotetimeid: "remoteTimeDate_" + webcallpeers[x].userid
+                    zone: peerinfo.zone,
+                    userid: peerinfo.userid,
+                    remotetimeid: timerobj.span.remoteTime_id[x]
                 });
 
-            } else if (timerobj.span.remoteTime_id && getElementById(timerobj.span.remoteTime_id)) {
+                if (timerobj.span.remoteTime_id && Array.isArray(timerobj.span.remoteTime_id)) {
+                    // conf with array in timerobj.span.remoteTime_id
+                    options = {
+                        //year: 'numeric', month: 'numeric', day: 'numeric',
+                        hour: 'numeric', minute: 'numeric', second: 'numeric',
+                        hour12: false,
+                        timeZone: peerinfo.zone
+                    };
+                    for (pt in timerobj.span.remoteTime_id) {
+                        console.log(" ====================  timerobj.span.remoteTime_id ", timerobj.span.remoteTime_id , " pt " , pt );
+                        if (x = pt) {
+                            let timerspanpeer = getElementById(timerobj.span.remoteTime_id[x]);
+                            timerspanpeer.innerHTML = new Date().toLocaleString('en-US', options);
+                        }
+                    }
+                }
+            }
 
-                // update the time for p2p
+            if (timerobj.span.remoteTime_id && typeof timerobj.span.remoteTime_id === 'string' && getElementById(timerobj.span.remoteTime_id)) {
+                // one to one - update the time for p2p
                 webrtcdev.info(" timerobj.span.remoteTime_id exists and its a p2p session , hence updating it");
                 options = {
                     //year: 'numeric', month: 'numeric', day: 'numeric',
                     hour: 'numeric', minute: 'numeric', second: 'numeric',
                     hour12: false,
-                    timeZone: webcallpeers[x].zone
+                    timeZone: peerinfo.zone
                 };
                 let timerspanpeer = getElementById(timerobj.span.remoteTime_id);
                 timerspanpeer.innerHTML = new Date().toLocaleString('en-US', options);
+
             } else {
 
                 // create the timer for p2p and conferences
@@ -263,6 +265,12 @@ var startPeersTime = function (date, zone, userid) {
                 if (getElementById("remoteTimeDate_" + userid))
                     return;
 
+                options = {
+                    //year: 'numeric', month: 'numeric', day: 'numeric',
+                    hour: 'numeric', minute: 'numeric', second: 'numeric',
+                    hour12: false,
+                    timeZone: webcallpeers[x].zone
+                };
                 let timerspanpeer = document.createElement("li");
                 timerspanpeer.id = "remoteTimeDate_" + userid;
                 timerspanpeer.innerHTML = new Date().toLocaleString('en-US', options);
@@ -330,21 +338,7 @@ function shareTimePeer() {
     }
 }
 
-/**
- * function to activateButtons
- * @name activateButtons
- */
-function activateBttons(timerobj) {
-    if (timerobj.container.minbutton_id && getElementById(timerobj.container.minbutton_id)) {
-        var button = getElementById(timerobj.container.minbutton_id);
-        button.onclick = function (e) {
-            if (getElementById(timerobj.container.id).hidden)
-                getElementById(timerobj.container.id).hidden = false;
-            else
-                getElementById(timerobj.container.id).hidden = true;
-        }
-    }
-}
+
 
 function checkTime(i) {
     if (i < 10) {

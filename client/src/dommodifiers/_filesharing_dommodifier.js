@@ -70,7 +70,8 @@ function addstaticProgressHelper(uuid, peerinfo, filename, fileSize, file, progr
 
         let progressul = document.createElement("ul");
         //progressul.id = progressid,
-        progressul.id = filename;
+        progressul.setAttribute("class", "row"),
+        progressul.id = filename,
         progressul.title = filename + " size - " + file.size + " type - " + file.type + " last modified on -" + file.lastModifiedDate;
 
         if (debug) {

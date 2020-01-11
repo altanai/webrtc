@@ -49,7 +49,8 @@ function replaceURLWithHTMLLinks(text) {
  */
 function addNewMessagelocal(e) {
     if ("" != e.message && " " != e.message) {
-        addMessageSnapshotFormat("user-activity user-activity-right localMessageClass", e.userinfo, e.message, chatobj.chatBox.id);
+        // addMessageSnapshotFormat("localMessageClass", e.userinfo, e.message, chatobj.chatBox.id);
+        addMessageSnapshotFormat("chat-message self", e.userinfo, e.message, chatobj.chatBox.id);
     }
 }
 
@@ -61,7 +62,8 @@ function addNewMessagelocal(e) {
  */
 function addNewMessage(e) {
     if ("" != e.message && " " != e.message) {
-        addMessageSnapshotFormat("user-activity user-activity-right remoteMessageClass", e.userinfo, e.message, chatobj.chatBox.id);
+        // addMessageSnapshotFormat("remoteMessageClass", e.userinfo, e.message, chatobj.chatBox.id);
+        addMessageSnapshotFormat("chat-message user", e.userinfo, e.message, chatobj.chatBox.id);
     }
 }
 

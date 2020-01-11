@@ -13837,6 +13837,109 @@ this.stopCall = function () {
 }
 
 
+
+function getElement(e) {
+    return document.querySelector(e)
+}
+
+function getElementById(elem) {
+    try {
+        return document.getElementById(elem);
+    } catch (e) {
+        webrtcdev.error(e);
+        return "";
+    }
+}
+
+function isHTML(str) {
+    var a = document.createElement('div');
+    a.innerHTML = str;
+
+    for (var c = a.childNodes, i = c.length; i--;) {
+        if (c[i].nodeType == 1) return true;
+    }
+
+    return false;
+}
+
+
+/* ********************************************************
+UI / DOM related functions
+****************************************************** */
+
+Element.prototype.remove = function () {
+    this.parentElement.removeChild(this);
+}
+NodeList.prototype.remove = HTMLCollection.prototype.remove = function () {
+    for (var i = this.length - 1; i >= 0; i--) {
+        if (this[i] && this[i].parentElement) {
+            this[i].parentElement.removeChild(this[i]);
+        }
+    }
+}
+
+// function showElement(elem){
+//     if(elem.vide) elem.video.hidden = false;
+//     elem.removeAttribute("hidden");
+//     elem.setAttribute("style","display:block!important");
+// }
+
+/**
+ * function to show an elemnt by id or dom
+ * @method
+ * @name showelem
+ * @param {dom} elem
+ */
+function showelem(elem) {
+    if(!elem) {
+        webrtcdev.error("show elem undefined");
+        return;
+    }
+    webrtcdev.log(" [init] show elem", elem ," , type ",  typeof elem , " , nodetype " , elem.nodeType);
+    if (typeof elem === 'object' && elem.nodeType !== undefined) {
+        // validate its is a dom node
+        elem.removeAttribute("hidden");
+        elem.setAttribute("style", "display:block!important");
+    } else if (document.getElementById(elem)) {
+        // search by ID
+        elem = document.getElementById(elem);
+        elem.removeAttribute("hidden");
+        elem.setAttribute("style", "display:block");
+    } else if ( (document.getElementsByName(elem)).length >0 ){
+        // search by name
+        elem = document.getElementsByName(elem);
+        elem[0].removeAttribute("hidden");
+        elem[0].setAttribute("style", "display:block");
+    } else {
+        // not found
+        webrtcdev.warn("elem not found ", elem);
+    }
+}
+
+/**
+ * function to hide an Element by id of dom
+ * @method
+ * @name hideelem
+ * @param {dom} elem
+ */
+function hideelem(elem) {
+    try{
+        if (typeof elem === 'object' && elem.nodeType !== undefined) {
+            elem.setAttribute("hidden", true);
+            elem.setAttribute("style", "display:none!important");
+        } else if (document.getElementById(elem)) {
+            document.getElementById(elem).setAttribute("hidden", true);
+            document.getElementById(elem).setAttribute("style", "display:none");
+        }
+    }catch(err){
+        webrtcdev.error(elem , err)
+    }
+}
+
+
+function existselem(elem){
+    return document.getElementById(elem)?true:false;
+}
 /**
  * Update local cache of user sesssion based object called peerinfo
  * @method
@@ -14248,7 +14351,8 @@ function addstaticProgressHelper(uuid, peerinfo, filename, fileSize, file, progr
 
         let progressul = document.createElement("ul");
         //progressul.id = progressid,
-        progressul.id = filename;
+        progressul.setAttribute("class", "row"),
+        progressul.id = filename,
         progressul.title = filename + " size - " + file.size + " type - " + file.type + " last modified on -" + file.lastModifiedDate;
 
         if (debug) {
@@ -14849,19 +14953,19 @@ function showFile(element, fileurl, filename, filetype) {
     webrtcdev.log("[filehsaring js]  showFile container - ", element, document.getElementById(element));
     var filedom = getFileElementDisplayByType(filetype, fileurl, filename);
     webrtcdev.log("[filehsaring js]  showFile  filedom - ", filedom);
-    if (document.getElementById(element)) {
+    if (existselem(element)) {
         document.getElementById(element).innerHTML = "";
         showelem(element);
         document.getElementById(element).appendChild(filedom);
     } else {
-        webrtcdev.warn(" [filehsaring js] cant show file as parent DOM fir fileDiaply container doesnt exist ");
+        webrtcdev.warn(" [filehsaring js] cant show file as parent DOM fir fileDisplay container doesnt exist ");
     }
 }
 
 function hideFile(element) {
     webrtcdev.log("[filehsaring js]  hidefile ", element);
     //if(document.getElementById(element) && $("#"+element).has("#display"+filename)){
-    if (document.getElementById(element)) {
+    if (existselem(element)) {
         document.getElementById(element).innerHTML = "";
         hideelem(element);
         webrtcdev.log("[filehsaring js] hidefile done");
@@ -16607,6 +16711,41 @@ saveButtonCanvas.onclick=function(){
 };
 document.body.appendChild(saveButtonCanvas);
 
+
+/**
+ * creates and appends remotetimecontainer belonging to userid to parentTimecontainer
+ * @method
+ * @name createRemotetimeArea
+ */
+function createRemotetimeArea(userid) {
+    let remotetimecontainer = document.createElement("ul");
+    remotetimecontainer.id = "remoteTimerArea_" + userid;
+    var peerinfo = findPeerInfo(userid);
+    if (getElementById(peerinfo.videoContainer)) {
+        var parentTimecontainer = getElementById(peerinfo.videoContainer).parentNode;
+        parentTimecontainer.appendChild(remotetimecontainer);
+        return remotetimecontainer;
+    } else {
+        return null;
+    }
+}
+
+
+/**
+ * function to activateButtons
+ * @name activateButtons
+ */
+function activateButtons(timerobj) {
+    if (timerobj.container.minbutton_id && getElementById(timerobj.container.minbutton_id)) {
+        var button = getElementById(timerobj.container.minbutton_id);
+        button.onclick = function (e) {
+            if (getElementById(timerobj.container.id).hidden)
+                getElementById(timerobj.container.id).hidden = false;
+            else
+                getElementById(timerobj.container.id).hidden = true;
+        }
+    }
+}
 /*-----------------------------------------------------------------------------------*/
 /*                        stats JS                                                   */
 /*-----------------------------------------------------------------------------------*/
@@ -24079,7 +24218,8 @@ function replaceURLWithHTMLLinks(text) {
  */
 function addNewMessagelocal(e) {
     if ("" != e.message && " " != e.message) {
-        addMessageSnapshotFormat("user-activity user-activity-right localMessageClass", e.userinfo, e.message, chatobj.chatBox.id);
+        // addMessageSnapshotFormat("localMessageClass", e.userinfo, e.message, chatobj.chatBox.id);
+        addMessageSnapshotFormat("chat-message self", e.userinfo, e.message, chatobj.chatBox.id);
     }
 }
 
@@ -24091,7 +24231,8 @@ function addNewMessagelocal(e) {
  */
 function addNewMessage(e) {
     if ("" != e.message && " " != e.message) {
-        addMessageSnapshotFormat("user-activity user-activity-right remoteMessageClass", e.userinfo, e.message, chatobj.chatBox.id);
+        // addMessageSnapshotFormat("remoteMessageClass", e.userinfo, e.message, chatobj.chatBox.id);
+        addMessageSnapshotFormat("chat-message user", e.userinfo, e.message, chatobj.chatBox.id);
     }
 }
 
@@ -24943,15 +25084,13 @@ function PostBlob(resource) {
 var progressHelper = {};
 
 function fileSharingStarted(file){
-    webrtcdev.log("[start] on File start ", file);
-    webrtcdev.log("[start] on File start description  , name :", file.name, " from -> ", file.userid, " to ->", file.remoteUserId);
-
-    //alert ( "send fille to " + file.remoteUserId , findPeerInfo(file.remoteUserId).name);
+    webrtcdev.log("[flesharing JS] on File start ", file);
+    webrtcdev.log("[flesharing JS] on File start description  , name :", file.name, " from -> ", file.userid, " to ->", file.remoteUserId);
 
     let progressid = file.uuid + "_" + file.userid + "_" + file.remoteUserId;
     let peerinfo = findPeerInfo(file.userid);
     // check if not already present ,
-    // done to include one entry even if same file is being sent to multiple particpants
+    // done to include one entry even if same file is being sent to multiple participants
     if (!peerinfo.filearray.includes("name : file.name")) {
         // add to peerinfo file array
         peerinfo.filearray.push({
@@ -24989,12 +25128,12 @@ function fileSharingInprogress(e) {
 
         ph && (ph.progress.value = e.currentPosition || e.maxChunks || ph.progress.max, updateLabel(ph.progress, ph.label));
     } catch (err) {
-        webrtcdev.error("[sessionmanager] Problem in onFileProgress ", err);
+        webrtcdev.error("[flesharing JS] Problem in onFileProgress ", err);
     }
 }
 
 function fileSharingEnded(file){
-    webrtcdev.log("[start] On file End description , file :", file, " from -> ", file.userid, " to ->", file.remoteUserId);
+    webrtcdev.log("[flesharing JS] On file End description , file :", file, " from -> ", file.userid, " to ->", file.remoteUserId);
 
     window.dispatchEvent(new CustomEvent('webrtcdev',{
         detail: {
@@ -25022,7 +25161,7 @@ function fileSharingEnded(file){
     var peerinfo = findPeerInfo(file.userid);
     if (peerinfo != null) {
         for (x in peerinfo.filearray)
-            if (peerinfo.filearray[x].name == filename && peerƒinfo.filearray[x].pid == progressid) {
+            if (peerinfo.filearray[x].name == filename && peerinfo.filearray[x].pid == progressid) {
                 //update filearray status to finished
                 peerinfo.filearray[x].status = "finished";
 
@@ -25032,10 +25171,10 @@ function fileSharingEnded(file){
     }
 
     // Display on File Viewer and List
-    webrtcdev.log("[start] onFileEnd - Display on File Viewer and List -", file.url, filename, file.type);
+    webrtcdev.log("[flesharing JS] onFileEnd - Display on File Viewer and List -", file.url, filename, file.type);
     displayFile(file.uuid, peerinfo, file.url, filename, file.type);
 
-    webrtcdev.log("[sessionmanager] onFileEnd - Display List -", filename + file.uuid, document.getElementById(filename + file.uuid));
+    webrtcdev.log("[flesharing JS] onFileEnd - Display List -", filename + file.uuid, document.getElementById(filename + file.uuid));
     // if the file is from me ( orignal share ) then diaply listing in viewbox just one
     if (selfuserid == file.userid && document.getElementById(filename + file.uuid)) {
         return;
@@ -25067,7 +25206,7 @@ function sendFile(file){
     for( x in webcallpeers){
         for(y in webcallpeers[x].filearray){
             if(webcallpeers[x].filearray[y].status=="progress"){
-                webrtcdev.log(" A file is already in progress , add the new file "+file.name+" to queue");
+                webrtcdev.log("[flesharing JS] A file is already in progress , add the new file "+file.name+" to queue");
                 //alert("Allow current file to complete uploading, before selecting the next file share upload");
                 pendingFileTransfer.push(file);
                 addstaticProgressHelper(file.uuid, findPeerInfo(selfuserid), file.name, file.maxChunks, file , "fileBoxClass" , selfuserid , "" );
@@ -25126,7 +25265,7 @@ function sendOldFiles(){
     // Sync old files
     var oldfilesList = [];
     for(x in webcallpeers){
-        webrtcdev.log(" Checking Old Files in index " , x);
+        webrtcdev.log("[flesharing JS] Checking Old Files in index " , x);
         var user = webcallpeers[x];
         if(user.filearray && user.filearray.length >0 ){
             for( y in user.filearray){
@@ -25158,7 +25297,7 @@ function sendOldFiles(){
  * @param {json} files
  */
 function addNewFileLocal(e) {
-    webrtcdev.log("addNewFileLocal message ", e);
+    webrtcdev.log("[flesharing JS] addNewFileLocal message ", e);
     if ("" != e.message && " " != e.message) {
         webrtcdev.log("addNewFileLocal");
     }
@@ -25171,7 +25310,7 @@ function addNewFileLocal(e) {
  * @param {json} files
  */
 function addNewFileRemote(e) {
-    webrtcdev.log("addNewFileRemote message ", e);
+    webrtcdev.log("[flesharing JS] addNewFileRemote message ", e);
     if ("" != e.message && " " != e.message) {
         webrtcdev.log("addNewFileRemote");
     }
@@ -25693,7 +25832,6 @@ function startsessionTimer(timerobj) {
     } else {
         webrtcdev.error(" timerobj.counter DOM elemnts not found ");
     }
-
 }
 
 /**
@@ -25794,23 +25932,6 @@ function startTime() {
 }
 
 
-/**
- * creates and appends remotetimecontainer belonging to userid to parentTimecontainer
- * @method
- * @name createRemotetimeArea
- */
-function createRemotetimeArea(userid) {
-    let remotetimecontainer = document.createElement("ul");
-    remotetimecontainer.id = "remoteTimerArea_" + userid;
-    var peerinfo = findPeerInfo(userid);
-    if (getElementById(peerinfo.videoContainer)) {
-        var parentTimecontainer = getElementById(peerinfo.videoContainer).parentNode;
-        parentTimecontainer.appendChild(remotetimecontainer);
-        return remotetimecontainer;
-    } else {
-        return null;
-    }
-}
 
 /**
  * function to fetch and show local peers time zone based on locally captured values
@@ -25867,31 +25988,50 @@ var startPeersTime = function (date, zone, userid) {
         var tobj = [];
 
         // Starting peer timer for all peers
-        for (var x in webcallpeers) {
+        for ( x in webcallpeers) {
+
+            var peerinfo = webcallpeers[x];
 
             webrtcdev.debug(" [timerjs] startPeersTime for ", userid);
 
-            if (window.location.href.indexOf("conference") > -1 && getElementById("remoteTimeDate_" + webcallpeers[x].userid)) {
-                //if its conference , send to webworkers 
+            if (window.location.href.indexOf("conference") > -1) {
+                //if its conference , send to webworkers
                 webrtcdev.info(" timerobj.span.remoteTime_id exist for local and remotes, appending to tobj to send to worker cumulatively");
                 tobj.push({
-                    zone: webcallpeers[x].zone,
-                    userid: webcallpeers[x].userid,
-                    remotetimeid: "remoteTimeDate_" + webcallpeers[x].userid
+                    zone: peerinfo.zone,
+                    userid: peerinfo.userid,
+                    remotetimeid: timerobj.span.remoteTime_id[x]
                 });
 
-            } else if (timerobj.span.remoteTime_id && getElementById(timerobj.span.remoteTime_id)) {
+                if (timerobj.span.remoteTime_id && Array.isArray(timerobj.span.remoteTime_id)) {
+                    // conf with array in timerobj.span.remoteTime_id
+                    options = {
+                        //year: 'numeric', month: 'numeric', day: 'numeric',
+                        hour: 'numeric', minute: 'numeric', second: 'numeric',
+                        hour12: false,
+                        timeZone: peerinfo.zone
+                    };
+                    for (pt in timerobj.span.remoteTime_id) {
+                        if (x = pt) {
+                            let timerspanpeer = getElementById(timerobj.span.remoteTime_id[x]);
+                            timerspanpeer.innerHTML = new Date().toLocaleString('en-US', options);
+                        }
+                    }
+                }
+            }
 
-                // update the time for p2p
+            if (timerobj.span.remoteTime_id && typeof timerobj.span.remoteTime_id === 'string' && getElementById(timerobj.span.remoteTime_id)) {
+                // one to one - update the time for p2p
                 webrtcdev.info(" timerobj.span.remoteTime_id exists and its a p2p session , hence updating it");
                 options = {
                     //year: 'numeric', month: 'numeric', day: 'numeric',
                     hour: 'numeric', minute: 'numeric', second: 'numeric',
                     hour12: false,
-                    timeZone: webcallpeers[x].zone
+                    timeZone: peerinfo.zone
                 };
                 let timerspanpeer = getElementById(timerobj.span.remoteTime_id);
                 timerspanpeer.innerHTML = new Date().toLocaleString('en-US', options);
+
             } else {
 
                 // create the timer for p2p and conferences
@@ -25901,6 +26041,12 @@ var startPeersTime = function (date, zone, userid) {
                 if (getElementById("remoteTimeDate_" + userid))
                     return;
 
+                options = {
+                    //year: 'numeric', month: 'numeric', day: 'numeric',
+                    hour: 'numeric', minute: 'numeric', second: 'numeric',
+                    hour12: false,
+                    timeZone: webcallpeers[x].zone
+                };
                 let timerspanpeer = document.createElement("li");
                 timerspanpeer.id = "remoteTimeDate_" + userid;
                 timerspanpeer.innerHTML = new Date().toLocaleString('en-US', options);
@@ -25968,21 +26114,7 @@ function shareTimePeer() {
     }
 }
 
-/**
- * function to activateButtons
- * @name activateButtons
- */
-function activateBttons(timerobj) {
-    if (timerobj.container.minbutton_id && getElementById(timerobj.container.minbutton_id)) {
-        var button = getElementById(timerobj.container.minbutton_id);
-        button.onclick = function (e) {
-            if (getElementById(timerobj.container.id).hidden)
-                getElementById(timerobj.container.id).hidden = false;
-            else
-                getElementById(timerobj.container.id).hidden = true;
-        }
-    }
-}
+
 
 function checkTime(i) {
     if (i < 10) {
@@ -26334,7 +26466,7 @@ var setWidgets = function (rtcConn) {
         if (timerobj && timerobj.active) {
             startTime();
             timeZone();
-            activateBttons(timerobj);
+            activateButtons(timerobj);
             hideelem(timerobj.container.id)
         } else if (timerobj && !timerobj.active) {
             if (timerobj.button.id && document.getElementById(timerobj.button.id)) {

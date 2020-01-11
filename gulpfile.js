@@ -191,6 +191,7 @@ var scriptList=[
     "client/src/dommodifiers/_screenrecord_dommodifier.js",
     "client/src/dommodifiers/_chat_dommodifier.js",
     "client/src/dommodifiers/_draw_dommodifier.js",
+    "client/src/dommodifiers/_timer_dommodifier.js",
     // "client/src/scripts/_settings.js",
 
     // --------------------- stats and analytics

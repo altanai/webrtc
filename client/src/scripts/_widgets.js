@@ -92,7 +92,7 @@ var setWidgets = function (rtcConn) {
         if (timerobj && timerobj.active) {
             startTime();
             timeZone();
-            activateBttons(timerobj);
+            activateButtons(timerobj);
             hideelem(timerobj.container.id)
         } else if (timerobj && !timerobj.active) {
             if (timerobj.button.id && document.getElementById(timerobj.button.id)) {
