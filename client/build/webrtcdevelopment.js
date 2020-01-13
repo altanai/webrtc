@@ -16570,23 +16570,6 @@ function assignChatBox(obj) {
 function updateWhotyping(data) {
     document.getElementById("whoTyping").innerHTML = data;
 }
-
-
-/*$("#chatInput").keypress(function(e) {
-    if (e.keyCode == 13) {
-        sendChatMessage();
-    }
-})*/
-
-/*$('#send').click( function() {
-    sendChatMessage();
-    return false;
-});*/
-
-//$('#chatbox').height($( "#leftVideo" ).height());
-$('#chatbox').css('max-height', $("#leftVideo").height() + 80);
-$('#chatBoard').css('max-height', $("#leftVideo").height());
-$("#chatBoard").css("overflow-y", "scroll");
 /**
  * Sync draw boads opening between all peers
  * @method
@@ -24253,9 +24236,10 @@ function addMessageSnapshotFormat(messageDivclass, userinfo, message, parent) {
     takeSnapshot(userinfo, function (datasnapshot) {
         var image = document.createElement("img");
         image.src = datasnapshot;
-        image.style.height = "40px";
+        image.setAttribute("style", "border-radius: 50%;height:40px");
 
         var t = document.createElement("span");
+        t.className="cm-msg-text";
         t.innerHTML = replaceURLWithHTMLLinks(message);
 
         n.appendChild(image);
@@ -25942,15 +25926,14 @@ function startTime() {
  */
 function peerTimeZone(zone, userid) {
     try {
-        if (timerobj.span.remoteTimeZone_id &&
+        if (window.location.href.indexOf("conference") > -1) {
+            //if its conference , send to webworkers
+
+        } else if (timerobj.span.remoteTimeZone_id &&
             getElementById(timerobj.span.remoteTimeZone_id) &&
             !getElementById(timerobj.span.remoteTimeZone_id).innerHTML) {
+            // one to one - update the time for p2p
 
-            webrtcdev.warn("timerobj.span.remoteTimeZone_id DOM exist , add timezone to it ");
-            let timerzonepeer = getElementById(timerobj.span.remoteTimeZone_id);
-            timerzonepeer.innerHTML = zone;
-
-        } else {
             webrtcdev.warn("timerobj.span.remoteTimeZone_id DOM doesnt exist , creating it to add timezone");
 
             if (getElementById("remoteTimeZone_" + userid))
@@ -25967,6 +25950,11 @@ function peerTimeZone(zone, userid) {
                 remotetimecontainer = getElementById("remoteTimerArea_" + userid);
             }
             remotetimecontainer.appendChild(timerzonepeer);
+
+        } else {
+            webrtcdev.warn("timerobj.span.remoteTimeZone_id DOM exist , add timezone to it ");
+            let timerzonepeer = getElementById(timerobj.span.remoteTimeZone_id);
+            timerzonepeer.innerHTML = zone;
         }
     } catch (e) {
         webrtcdev.error(e);
@@ -26006,21 +25994,17 @@ var startPeersTime = function (date, zone, userid) {
                 if (timerobj.span.remoteTime_id && Array.isArray(timerobj.span.remoteTime_id)) {
                     // conf with array in timerobj.span.remoteTime_id
                     options = {
-                        //year: 'numeric', month: 'numeric', day: 'numeric',
+                        year: 'numeric', month: 'numeric', day: 'numeric',
                         hour: 'numeric', minute: 'numeric', second: 'numeric',
                         hour12: false,
                         timeZone: peerinfo.zone
                     };
-                    for (pt in timerobj.span.remoteTime_id) {
-                        if (x = pt) {
-                            let timerspanpeer = getElementById(timerobj.span.remoteTime_id[x]);
-                            timerspanpeer.innerHTML = new Date().toLocaleString('en-US', options);
-                        }
-                    }
-                }
-            }
 
-            if (timerobj.span.remoteTime_id && typeof timerobj.span.remoteTime_id === 'string' && getElementById(timerobj.span.remoteTime_id)) {
+                    let timerspanpeer = getElementById(timerobj.span.remoteTime_id[x]);
+                    timerspanpeer.innerHTML = new Date().toLocaleString('en-US', options);
+                }
+
+            } else if (timerobj.span.remoteTime_id && typeof timerobj.span.remoteTime_id === 'string' && getElementById(timerobj.span.remoteTime_id)) {
                 // one to one - update the time for p2p
                 webrtcdev.info(" timerobj.span.remoteTime_id exists and its a p2p session , hence updating it");
                 options = {
@@ -26033,7 +26017,6 @@ var startPeersTime = function (date, zone, userid) {
                 timerspanpeer.innerHTML = new Date().toLocaleString('en-US', options);
 
             } else {
-
                 // create the timer for p2p and conferences
                 webrtcdev.info(" timerobj.span.remoteTime_id DOM does not exist , creating it",
                     timerobj.span.remoteTime_id, getElementById(timerobj.span.remoteTime_id));
@@ -26042,7 +26025,7 @@ var startPeersTime = function (date, zone, userid) {
                     return;
 
                 options = {
-                    //year: 'numeric', month: 'numeric', day: 'numeric',
+                    year: 'numeric', month: 'numeric', day: 'numeric',
                     hour: 'numeric', minute: 'numeric', second: 'numeric',
                     hour12: false,
                     timeZone: webcallpeers[x].zone
@@ -26068,9 +26051,9 @@ var startPeersTime = function (date, zone, userid) {
         }
 
         webrtcdev.info("[timerjs] tobj ", tobj);
-        if (tobj.length > 0) {
-            worker.postMessage(tobj);
-        }
+        // if (tobj.length > 0) {
+        //     worker.postMessage(tobj);
+        // }
 
     } catch (e) {
         webrtcdev.error(e);
@@ -27161,10 +27144,15 @@ var setRtcConn = function (sessionid) {
 
                             break;
                         case "timer":
-                            if (!msgpeerinfo || (!msgpeerinfo.time && !msgpeerinfo.zone)) {
+                            webrtcdev.log("[sessionmanager] ---------------------- timer ",  msgpeerinfo);
+                            if (msgpeerinfo ){
                                 //check if the peer has stored zone and time info
-                                msgpeerinfo.time = e.data.time;
-                                msgpeerinfo.zone = e.data.zone;
+                                if (!msgpeerinfo.time) {
+                                    msgpeerinfo.time = e.data.time;
+                                }
+                                if (!msgpeerinfo.zone) {
+                                    msgpeerinfo.zone = e.data.zone;
+                                }
                                 webrtcdev.log("[sessionmanager] webcallpeers appended with zone and datetime ", msgpeerinfo);
                             }
                             webrtcdev.log("[sessionmanager] peerTimerStarted, start peerTimeZone and startPeersTime");

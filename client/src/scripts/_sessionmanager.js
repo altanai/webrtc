@@ -530,10 +530,15 @@ var setRtcConn = function (sessionid) {
 
                             break;
                         case "timer":
-                            if (!msgpeerinfo || (!msgpeerinfo.time && !msgpeerinfo.zone)) {
+                            webrtcdev.log("[sessionmanager] ---------------------- timer ",  msgpeerinfo);
+                            if (msgpeerinfo ){
                                 //check if the peer has stored zone and time info
-                                msgpeerinfo.time = e.data.time;
-                                msgpeerinfo.zone = e.data.zone;
+                                if (!msgpeerinfo.time) {
+                                    msgpeerinfo.time = e.data.time;
+                                }
+                                if (!msgpeerinfo.zone) {
+                                    msgpeerinfo.zone = e.data.zone;
+                                }
                                 webrtcdev.log("[sessionmanager] webcallpeers appended with zone and datetime ", msgpeerinfo);
                             }
                             webrtcdev.log("[sessionmanager] peerTimerStarted, start peerTimeZone and startPeersTime");

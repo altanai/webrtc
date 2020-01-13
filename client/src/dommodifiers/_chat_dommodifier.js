@@ -139,20 +139,3 @@ function assignChatBox(obj) {
 function updateWhotyping(data) {
     document.getElementById("whoTyping").innerHTML = data;
 }
-
-
-/*$("#chatInput").keypress(function(e) {
-    if (e.keyCode == 13) {
-        sendChatMessage();
-    }
-})*/
-
-/*$('#send').click( function() {
-    sendChatMessage();
-    return false;
-});*/
-
-//$('#chatbox').height($( "#leftVideo" ).height());
-$('#chatbox').css('max-height', $("#leftVideo").height() + 80);
-$('#chatBoard').css('max-height', $("#leftVideo").height());
-$("#chatBoard").css("overflow-y", "scroll");
