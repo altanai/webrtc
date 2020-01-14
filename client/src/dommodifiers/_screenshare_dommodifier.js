@@ -162,18 +162,18 @@ function assignScreenShareButton(scrshareBtn) {
     return button;
 }
 
-function hideScreenShareButton() {
-    let button = getElementById(screenshareobj.button.shareButton.id);
-    button.hidden = true;
-    button.setAttribute("style", "display:none");
-}
-
-function showScreenShareButton() {
-    let button = getElementById(screenshareobj.button.shareButton.id);
-    button.removeAttribute("hidden");
-    button.setAttribute("style", "display:block");
-}
-
+// function hideScreenShareButton() {
+//     let button = getElementById(screenshareobj.button.shareButton.id);
+//     button.hidden = true;
+//     button.setAttribute("style", "display:none");
+// }
+//
+// function showScreenShareButton() {
+//     let button = getElementById(screenshareobj.button.shareButton.id);
+//     button.removeAttribute("hidden");
+//     button.setAttribute("style", "display:block");
+// }
+//
 
 
 var counterBeforeFailureNotice = 0;

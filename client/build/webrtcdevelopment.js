@@ -16127,18 +16127,18 @@ function assignScreenShareButton(scrshareBtn) {
     return button;
 }
 
-function hideScreenShareButton() {
-    let button = getElementById(screenshareobj.button.shareButton.id);
-    button.hidden = true;
-    button.setAttribute("style", "display:none");
-}
-
-function showScreenShareButton() {
-    let button = getElementById(screenshareobj.button.shareButton.id);
-    button.removeAttribute("hidden");
-    button.setAttribute("style", "display:block");
-}
-
+// function hideScreenShareButton() {
+//     let button = getElementById(screenshareobj.button.shareButton.id);
+//     button.hidden = true;
+//     button.setAttribute("style", "display:none");
+// }
+//
+// function showScreenShareButton() {
+//     let button = getElementById(screenshareobj.button.shareButton.id);
+//     button.removeAttribute("hidden");
+//     button.setAttribute("style", "display:block");
+// }
+//
 
 
 var counterBeforeFailureNotice = 0;
@@ -17122,7 +17122,7 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
             webrtcdev.log("[screenshareJS] on stream in _screenshare :", event);
 
             if (debug) {
-                var nameBox = document.createElement("span");
+                let nameBox = document.createElement("span");
                 nameBox.innerHTML = "<br/>" + screenRoomid + "<br/>";
                 getElementById(screenshareobj.screenshareContainer).appendChild(nameBox);
             }
@@ -17140,11 +17140,11 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
                     screenStreamId = event.streamid;
                 }
 
-                var video = document.createElement('video');
-                var stream = event.stream;
+                let video = document.createElement('video');
+                let stream = event.stream;
                 attachMediaStream(video, stream);
                 //video.id = peerInfo.videoContainer;
-                console.log("========================= getElementById(screenshareobj.screenshareContainer) " , getElementById(screenshareobj.screenshareContainer));
+                console.log("========================= getElementById screenshareobj.screenshareContainer " , getElementById(screenshareobj.screenshareContainer));
                 getElementById(screenshareobj.screenshareContainer).appendChild(video);
                 showelem(screenshareobj.screenshareContainer);
                 rtcConn.send({
@@ -24191,7 +24191,7 @@ function sendChatMessage(msg, peerinfo) {
  */
 function replaceURLWithHTMLLinks(text) {
     var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-    return text.replace(exp, "<a href='$1'>$1</a>");
+    return text.replace(exp, "<a href='$1' target='_blank'>$1</a>");
 }
 
 /* 
