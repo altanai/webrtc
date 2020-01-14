@@ -17144,6 +17144,7 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
                 var stream = event.stream;
                 attachMediaStream(video, stream);
                 //video.id = peerInfo.videoContainer;
+                console.log("========================= getElementById(screenshareobj.screenshareContainer) " , getElementById(screenshareobj.screenshareContainer));
                 getElementById(screenshareobj.screenshareContainer).appendChild(video);
                 showelem(screenshareobj.screenshareContainer);
                 rtcConn.send({

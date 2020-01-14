@@ -49,7 +49,7 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
             webrtcdev.log("[screenshareJS] on stream in _screenshare :", event);
 
             if (debug) {
-                var nameBox = document.createElement("span");
+                let nameBox = document.createElement("span");
                 nameBox.innerHTML = "<br/>" + screenRoomid + "<br/>";
                 getElementById(screenshareobj.screenshareContainer).appendChild(nameBox);
             }
@@ -67,10 +67,11 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
                     screenStreamId = event.streamid;
                 }
 
-                var video = document.createElement('video');
-                var stream = event.stream;
+                let video = document.createElement('video');
+                let stream = event.stream;
                 attachMediaStream(video, stream);
                 //video.id = peerInfo.videoContainer;
+                console.log("========================= getElementById screenshareobj.screenshareContainer " , getElementById(screenshareobj.screenshareContainer));
                 getElementById(screenshareobj.screenshareContainer).appendChild(video);
                 showelem(screenshareobj.screenshareContainer);
                 rtcConn.send({
