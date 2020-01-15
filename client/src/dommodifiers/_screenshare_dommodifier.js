@@ -162,20 +162,6 @@ function assignScreenShareButton(scrshareBtn) {
     return button;
 }
 
-// function hideScreenShareButton() {
-//     let button = getElementById(screenshareobj.button.shareButton.id);
-//     button.hidden = true;
-//     button.setAttribute("style", "display:none");
-// }
-//
-// function showScreenShareButton() {
-//     let button = getElementById(screenshareobj.button.shareButton.id);
-//     button.removeAttribute("hidden");
-//     button.setAttribute("style", "display:block");
-// }
-//
-
-
 var counterBeforeFailureNotice = 0;
 
 function screenshareNotification(message, type) {
@@ -186,14 +172,14 @@ function screenshareNotification(message, type) {
 
         if (type == "screenshareBegin") {
 
-            var alertDiv = document.createElement("div");
+            let alertDiv = document.createElement("div");
             resetAlertBox();
             alertDiv.className = "alert alert-info";
             alertDiv.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' + "You have begun sharing screen , waiting for peer to view";
             getElementById("alertBox").appendChild(alertDiv);
 
             setTimeout(function () {
-                var alertDiv = document.createElement("div");
+                let alertDiv = document.createElement("div");
                 resetAlertBox();
                 alertDiv.className = "alert alert-danger";
                 alertDiv.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' + "Peer was not able to view screen , please retry";
@@ -202,7 +188,7 @@ function screenshareNotification(message, type) {
 
         } else if (type == "screenshareStartedViewing") {
 
-            var alertDiv = document.createElement("div");
+            let alertDiv = document.createElement("div");
             resetAlertBox();
             alertDiv.className = "alert alert-success";
             alertDiv.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' + "Peer has started viewing screen ";
@@ -210,7 +196,7 @@ function screenshareNotification(message, type) {
 
         } else if (type == "screenshareError") {
 
-            var alertDiv = document.createElement("div");
+            let alertDiv = document.createElement("div");
             resetAlertBox();
             alertDiv.className = "alert alert-danger";
             alertDiv.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' + "There was a error while sharing screen , please contact support ";

@@ -15282,7 +15282,7 @@ function rescaleImage(dom, domparent) {
 function createFileListingBox(peerinfo, parent) {
 
     try {
-        if (document.getElementById(peerinfo.fileList.outerbox))
+        if (getElementById(peerinfo.fileList.outerbox))
             return;
 
         var fileListingBox = document.createElement("div");
@@ -15315,7 +15315,7 @@ function createFileListingBox(peerinfo, parent) {
         minButton.id = peerinfo.fileShare.minButton;
         minButton.setAttribute("lastClickedBy", '');
         minButton.onclick = function () {
-            resizeFV(peerinfo.userid, minButton.id, peerinfo.fileList.outerbox);
+            minFV(peerinfo.userid, minButton.id, peerinfo.fileList.outerbox);
         };
 
         let maxButton = document.createElement("span");
@@ -15368,13 +15368,13 @@ function createFileSharingDiv(peerinfo) {
     // When the peerinfo role is inspctor but self role is not inspector only then exit
     if (peerinfo.role == "inspector" && role != "inspector") return;
 
-    if (!document.getElementById(peerinfo.fileShare.outerbox)) {
-        var parentFileShareContainer = document.getElementById(fileshareobj.fileShareContainer);
+    if (! getElementById(peerinfo.fileShare.outerbox)) {
+        let parentFileShareContainer = getElementById(fileshareobj.fileShareContainer);
         createFileSharingBox(peerinfo, parentFileShareContainer);
     }
 
-    if (!document.getElementById(peerinfo.fileList.outerbox)) {
-        var parentFileListContainer = document.getElementById(fileshareobj.fileListContainer);
+    if (! getElementById(peerinfo.fileList.outerbox)) {
+        let parentFileListContainer = getElementById(fileshareobj.fileListContainer);
         createFileListingBox(peerinfo, parentFileListContainer);
     }
 }
@@ -15382,7 +15382,7 @@ function createFileSharingDiv(peerinfo) {
 /* --------------- file sharing container button functions --------------- */
 
 function closeFV(userid, buttonId, selectedFileSharingBox) {
-    document.getElementById(selectedFileSharingBox).innerHTML = "";
+    getElementById(selectedFileSharingBox).innerHTML = "";
     /*syncButton(buttonId);*/
 }
 
@@ -15390,30 +15390,31 @@ function resizeFV(userid, buttonId, selectedFileSharingBox) {
     for (x in webcallpeers) {
         if (webcallpeers[x].fileShare.outerbox == selectedFileSharingBox) {
             showelem(selectedFileSharingBox)
-            document.getElementById(selectedFileSharingBox).style.width = "50%";
+            getElementById(selectedFileSharingBox).style.width = "50%";
         } else {
             showelem(webcallpeers[x].fileShare.outerbox)
-            document.getElementById(webcallpeers[x].fileShare.outerbox).style.width = "50%";
+            getElementById(webcallpeers[x].fileShare.outerbox).style.width = "50%";
         }
     }
     /*syncButton(buttonId);*/
 }
 
 function minFV(userid, buttonId, selectedFileSharingBox) {
-    showelem(selectedFileSharingBox);
-    document.getElementById(selectedFileSharingBox).style.width = "50%";
-    document.getElementById(selectedFileSharingBox).style.height = "10%";
-    /*syncButton(buttonId);*/
+    for (x in webcallpeers) {
+        if (webcallpeers[x].fileShare.outerbox == selectedFileSharingBox) {
+            hideelem(selectedFileSharingBox);
+        } else {
+            showelem(webcallpeers[x].fileShare.outerbox)
+        }
+    }
 }
 
 function maxFV(userid, buttonId, selectedFileSharingBox) {
     for (x in webcallpeers) {
         if (webcallpeers[x].fileShare.outerbox == selectedFileSharingBox) {
             showelem(selectedFileSharingBox);
-            document.getElementById(selectedFileSharingBox).style.width = "100%";
         } else {
             hideelem(webcallpeers[x].fileShare.outerbox)
-            document.getElementById(webcallpeers[x].fileShare.outerbox).style.width = "0%";
         }
     }
     /*syncButton(buttonId);  */
@@ -15428,9 +15429,9 @@ function maxFV(userid, buttonId, selectedFileSharingBox) {
 function createModalPopup(filetype) {
     webrtcdev.log(" create Modal popup for filetype ", filetype);
 
-    var mainDiv = document.getElementById("mainDiv");
+    var mainDiv = getElementById("mainDiv");
 
-    if (document.getElementById("saveModal")) {
+    if (getElementById("saveModal")) {
         mainDiv.removeChild(document.getElementById("saveModal"));
     }
 
@@ -16127,20 +16128,6 @@ function assignScreenShareButton(scrshareBtn) {
     return button;
 }
 
-// function hideScreenShareButton() {
-//     let button = getElementById(screenshareobj.button.shareButton.id);
-//     button.hidden = true;
-//     button.setAttribute("style", "display:none");
-// }
-//
-// function showScreenShareButton() {
-//     let button = getElementById(screenshareobj.button.shareButton.id);
-//     button.removeAttribute("hidden");
-//     button.setAttribute("style", "display:block");
-// }
-//
-
-
 var counterBeforeFailureNotice = 0;
 
 function screenshareNotification(message, type) {
@@ -16151,14 +16138,14 @@ function screenshareNotification(message, type) {
 
         if (type == "screenshareBegin") {
 
-            var alertDiv = document.createElement("div");
+            let alertDiv = document.createElement("div");
             resetAlertBox();
             alertDiv.className = "alert alert-info";
             alertDiv.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' + "You have begun sharing screen , waiting for peer to view";
             getElementById("alertBox").appendChild(alertDiv);
 
             setTimeout(function () {
-                var alertDiv = document.createElement("div");
+                let alertDiv = document.createElement("div");
                 resetAlertBox();
                 alertDiv.className = "alert alert-danger";
                 alertDiv.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' + "Peer was not able to view screen , please retry";
@@ -16167,7 +16154,7 @@ function screenshareNotification(message, type) {
 
         } else if (type == "screenshareStartedViewing") {
 
-            var alertDiv = document.createElement("div");
+            let alertDiv = document.createElement("div");
             resetAlertBox();
             alertDiv.className = "alert alert-success";
             alertDiv.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' + "Peer has started viewing screen ";
@@ -16175,7 +16162,7 @@ function screenshareNotification(message, type) {
 
         } else if (type == "screenshareError") {
 
-            var alertDiv = document.createElement("div");
+            let alertDiv = document.createElement("div");
             resetAlertBox();
             alertDiv.className = "alert alert-danger";
             alertDiv.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' + "There was a error while sharing screen , please contact support ";
@@ -17477,7 +17464,11 @@ function checkWebRTCSupport(obj) {
                 if(webcallpeers[x].userid == selfuserid ){
                     for( y in webcallpeers[x].filearray){
                         //console.log(" ========= fbr.getNextChunk - filearray " , webcallpeers[x].filearray[y]);
-                        if(webcallpeers[x].filearray[y].pid.includes(fileUUID) && webcallpeers[x].filearray[y].status =="stop") {
+                        if ( ! webcallpeers[x].filearray[y].pid){
+                            console.warn("[ fbr.getNextChunk ] pid does mot exist ");
+                            return;
+                        }
+                        if( webcallpeers[x].filearray[y].pid.includes(fileUUID) && webcallpeers[x].filearray[y].status =="stop") {
                             console.log("[ fbr.getNextChunk ] filename " , webcallpeers[x].filearray[y].pid , " | status " , webcallpeers[x].filearray[y].status);
                             webcallpeers[x].filearray[y].status="stopped";
                             return;
@@ -24291,10 +24282,10 @@ function addMessageBlockFormat(messageheaderDivclass, messageheader, messageDivc
 
     var n = document.createElement("div");
     n.className = messageDivclass,
-        n.innerHTML = message,
+    n.innerHTML = message,
 
-        t.appendChild(n),
-        $("#" + parent).append(n);
+    t.appendChild(n),
+    $("#" + parent).append(n);
     /* $("#all-messages").scrollTop($("#all-messages")[0].scrollHeight) */
 }
 
@@ -25927,35 +25918,35 @@ function startTime() {
  */
 function peerTimeZone(zone, userid) {
     try {
+
+        console.log("timerobj.span.remoteTimeZone_id" , timerobj.span.remoteTimeZone_id , getElementById(timerobj.span.remoteTimeZone_id));
         if (window.location.href.indexOf("conference") > -1) {
             //if its conference , send to webworkers
 
-        } else if (timerobj.span.remoteTimeZone_id &&
-            getElementById(timerobj.span.remoteTimeZone_id) &&
-            !getElementById(timerobj.span.remoteTimeZone_id).innerHTML) {
+        } else if (typeof timerobj.span.remoteTimeZone_id  == "object" && timerobj.span.remoteTimeZone_id.length ==2) {
             // one to one - update the time for p2p
 
             webrtcdev.warn("timerobj.span.remoteTimeZone_id DOM doesnt exist , creating it to add timezone");
 
-            if (getElementById("remoteTimeZone_" + userid))
-                return;
+            // if (getElementById("remoteTimeZone_" + userid))
+            //     return;
+            //
+            // let timerzonepeer = document.createElement("li");
+            // timerzonepeer.id = "remoteTimeZone_" + userid;
+            // timerzonepeer.innerHTML = zone + " , ";
+            //
+            // var remotetimecontainer;
+            // if (!getElementById("remoteTimerArea_" + userid)) {
+            //     remotetimecontainer = createRemotetimeArea(userid);
+            // } else {
+            //     remotetimecontainer = getElementById("remoteTimerArea_" + userid);
+            // }
+            // remotetimecontainer.appendChild(timerzonepeer);
 
-            let timerzonepeer = document.createElement("li");
-            timerzonepeer.id = "remoteTimeZone_" + userid;
-            timerzonepeer.innerHTML = zone + " , ";
-
-            var remotetimecontainer;
-            if (!getElementById("remoteTimerArea_" + userid)) {
-                remotetimecontainer = createRemotetimeArea(userid);
-            } else {
-                remotetimecontainer = getElementById("remoteTimerArea_" + userid);
-            }
-            remotetimecontainer.appendChild(timerzonepeer);
-
-        } else {
-            webrtcdev.warn("timerobj.span.remoteTimeZone_id DOM exist , add timezone to it ");
-            let timerzonepeer = getElementById(timerobj.span.remoteTimeZone_id);
-            timerzonepeer.innerHTML = zone;
+        } else if (getElementById(timerobj.span.remoteTimeZone_id)){
+                webrtcdev.warn("timerobj.span.remoteTimeZone_id DOM exist , add timezone to it ");
+                let timerzonepeer = getElementById(timerobj.span.remoteTimeZone_id);
+                timerzonepeer.innerHTML = zone;
         }
     } catch (e) {
         webrtcdev.error(e);
@@ -25983,8 +25974,8 @@ var startPeersTime = function (date, zone, userid) {
 
             webrtcdev.debug(" [timerjs] startPeersTime for ", userid);
 
-            if (window.location.href.indexOf("conference") > -1) {
-                //if its conference , send to webworkers
+            if (timerobj.span.remoteTime_id[x]) {
+                // send to webworkers
                 webrtcdev.info(" timerobj.span.remoteTime_id exist for local and remotes, appending to tobj to send to worker cumulatively");
                 tobj.push({
                     zone: peerinfo.zone,
@@ -25995,7 +25986,7 @@ var startPeersTime = function (date, zone, userid) {
                 if (timerobj.span.remoteTime_id && Array.isArray(timerobj.span.remoteTime_id)) {
                     // conf with array in timerobj.span.remoteTime_id
                     options = {
-                        year: 'numeric', month: 'numeric', day: 'numeric',
+                        // year: 'numeric', month: 'numeric', day: 'numeric',
                         hour: 'numeric', minute: 'numeric', second: 'numeric',
                         hour12: false,
                         timeZone: peerinfo.zone
@@ -26004,18 +25995,6 @@ var startPeersTime = function (date, zone, userid) {
                     let timerspanpeer = getElementById(timerobj.span.remoteTime_id[x]);
                     timerspanpeer.innerHTML = new Date().toLocaleString('en-US', options);
                 }
-
-            } else if (timerobj.span.remoteTime_id && typeof timerobj.span.remoteTime_id === 'string' && getElementById(timerobj.span.remoteTime_id)) {
-                // one to one - update the time for p2p
-                webrtcdev.info(" timerobj.span.remoteTime_id exists and its a p2p session , hence updating it");
-                options = {
-                    //year: 'numeric', month: 'numeric', day: 'numeric',
-                    hour: 'numeric', minute: 'numeric', second: 'numeric',
-                    hour12: false,
-                    timeZone: peerinfo.zone
-                };
-                let timerspanpeer = getElementById(timerobj.span.remoteTime_id);
-                timerspanpeer.innerHTML = new Date().toLocaleString('en-US', options);
 
             } else {
                 // create the timer for p2p and conferences

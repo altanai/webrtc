@@ -138,10 +138,10 @@ function addMessageBlockFormat(messageheaderDivclass, messageheader, messageDivc
 
     var n = document.createElement("div");
     n.className = messageDivclass,
-        n.innerHTML = message,
+    n.innerHTML = message,
 
-        t.appendChild(n),
-        $("#" + parent).append(n);
+    t.appendChild(n),
+    $("#" + parent).append(n);
     /* $("#all-messages").scrollTop($("#all-messages")[0].scrollHeight) */
 }
 

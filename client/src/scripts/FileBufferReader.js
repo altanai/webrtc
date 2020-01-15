@@ -39,7 +39,11 @@
                 if(webcallpeers[x].userid == selfuserid ){
                     for( y in webcallpeers[x].filearray){
                         //console.log(" ========= fbr.getNextChunk - filearray " , webcallpeers[x].filearray[y]);
-                        if(webcallpeers[x].filearray[y].pid.includes(fileUUID) && webcallpeers[x].filearray[y].status =="stop") {
+                        if ( ! webcallpeers[x].filearray[y].pid){
+                            console.warn("[ fbr.getNextChunk ] pid does mot exist ");
+                            return;
+                        }
+                        if( webcallpeers[x].filearray[y].pid.includes(fileUUID) && webcallpeers[x].filearray[y].status =="stop") {
                             console.log("[ fbr.getNextChunk ] filename " , webcallpeers[x].filearray[y].pid , " | status " , webcallpeers[x].filearray[y].status);
                             webcallpeers[x].filearray[y].status="stopped";
                             return;

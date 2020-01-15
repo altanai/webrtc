@@ -1001,7 +1001,7 @@ function rescaleImage(dom, domparent) {
 function createFileListingBox(peerinfo, parent) {
 
     try {
-        if (document.getElementById(peerinfo.fileList.outerbox))
+        if (getElementById(peerinfo.fileList.outerbox))
             return;
 
         var fileListingBox = document.createElement("div");
@@ -1034,7 +1034,7 @@ function createFileListingBox(peerinfo, parent) {
         minButton.id = peerinfo.fileShare.minButton;
         minButton.setAttribute("lastClickedBy", '');
         minButton.onclick = function () {
-            resizeFV(peerinfo.userid, minButton.id, peerinfo.fileList.outerbox);
+            minFV(peerinfo.userid, minButton.id, peerinfo.fileList.outerbox);
         };
 
         let maxButton = document.createElement("span");
@@ -1087,13 +1087,13 @@ function createFileSharingDiv(peerinfo) {
     // When the peerinfo role is inspctor but self role is not inspector only then exit
     if (peerinfo.role == "inspector" && role != "inspector") return;
 
-    if (!document.getElementById(peerinfo.fileShare.outerbox)) {
-        var parentFileShareContainer = document.getElementById(fileshareobj.fileShareContainer);
+    if (! getElementById(peerinfo.fileShare.outerbox)) {
+        let parentFileShareContainer = getElementById(fileshareobj.fileShareContainer);
         createFileSharingBox(peerinfo, parentFileShareContainer);
     }
 
-    if (!document.getElementById(peerinfo.fileList.outerbox)) {
-        var parentFileListContainer = document.getElementById(fileshareobj.fileListContainer);
+    if (! getElementById(peerinfo.fileList.outerbox)) {
+        let parentFileListContainer = getElementById(fileshareobj.fileListContainer);
         createFileListingBox(peerinfo, parentFileListContainer);
     }
 }
@@ -1101,7 +1101,7 @@ function createFileSharingDiv(peerinfo) {
 /* --------------- file sharing container button functions --------------- */
 
 function closeFV(userid, buttonId, selectedFileSharingBox) {
-    document.getElementById(selectedFileSharingBox).innerHTML = "";
+    getElementById(selectedFileSharingBox).innerHTML = "";
     /*syncButton(buttonId);*/
 }
 
@@ -1109,30 +1109,31 @@ function resizeFV(userid, buttonId, selectedFileSharingBox) {
     for (x in webcallpeers) {
         if (webcallpeers[x].fileShare.outerbox == selectedFileSharingBox) {
             showelem(selectedFileSharingBox)
-            document.getElementById(selectedFileSharingBox).style.width = "50%";
+            getElementById(selectedFileSharingBox).style.width = "50%";
         } else {
             showelem(webcallpeers[x].fileShare.outerbox)
-            document.getElementById(webcallpeers[x].fileShare.outerbox).style.width = "50%";
+            getElementById(webcallpeers[x].fileShare.outerbox).style.width = "50%";
         }
     }
     /*syncButton(buttonId);*/
 }
 
 function minFV(userid, buttonId, selectedFileSharingBox) {
-    showelem(selectedFileSharingBox);
-    document.getElementById(selectedFileSharingBox).style.width = "50%";
-    document.getElementById(selectedFileSharingBox).style.height = "10%";
-    /*syncButton(buttonId);*/
+    for (x in webcallpeers) {
+        if (webcallpeers[x].fileShare.outerbox == selectedFileSharingBox) {
+            hideelem(selectedFileSharingBox);
+        } else {
+            showelem(webcallpeers[x].fileShare.outerbox)
+        }
+    }
 }
 
 function maxFV(userid, buttonId, selectedFileSharingBox) {
     for (x in webcallpeers) {
         if (webcallpeers[x].fileShare.outerbox == selectedFileSharingBox) {
             showelem(selectedFileSharingBox);
-            document.getElementById(selectedFileSharingBox).style.width = "100%";
         } else {
             hideelem(webcallpeers[x].fileShare.outerbox)
-            document.getElementById(webcallpeers[x].fileShare.outerbox).style.width = "0%";
         }
     }
     /*syncButton(buttonId);  */
@@ -1147,9 +1148,9 @@ function maxFV(userid, buttonId, selectedFileSharingBox) {
 function createModalPopup(filetype) {
     webrtcdev.log(" create Modal popup for filetype ", filetype);
 
-    var mainDiv = document.getElementById("mainDiv");
+    var mainDiv = getElementById("mainDiv");
 
-    if (document.getElementById("saveModal")) {
+    if (getElementById("saveModal")) {
         mainDiv.removeChild(document.getElementById("saveModal"));
     }
 
