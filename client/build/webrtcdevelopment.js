@@ -15310,21 +15310,27 @@ function createFileListingBox(peerinfo, parent) {
         fileHelpButton.innerHTML="Help";
         /*fileListControlBar.appendChild(fileHelpButton);*/
 
-        let minButton = document.createElement("span");
-        minButton.innerHTML = '<i class="fa fa-minus" ></i>';
-        minButton.id = peerinfo.fileShare.minButton;
-        minButton.setAttribute("lastClickedBy", '');
-        minButton.onclick = function () {
-            minFV(peerinfo.userid, minButton.id, peerinfo.fileList.outerbox);
-        };
+        if (fileshareobj.filelist.minicon != "none") {
+            let minButton = document.createElement("span");
+            minButton.innerHTML = '<i class="fa fa-minus" ></i>';
+            minButton.id = peerinfo.fileShare.minButton;
+            minButton.setAttribute("lastClickedBy", '');
+            minButton.onclick = function () {
+                minFV(peerinfo.userid, minButton.id, peerinfo.fileList.outerbox);
+            };
+            fileListControlBar.appendChild(minButton);
+        }
 
-        let maxButton = document.createElement("span");
-        maxButton.innerHTML = '<i class="fa fa-arrows-alt" ></i>';
-        maxButton.id = peerinfo.fileShare.maxButton;
-        maxButton.setAttribute("lastClickedBy", '');
-        maxButton.onclick = function () {
-            maxFV(peerinfo.userid, maxButton.id, peerinfo.fileList.outerbox);
-        };
+        if (fileshareobj.filelist.minicon != "none") {
+            let maxButton = document.createElement("span");
+            maxButton.innerHTML = '<i class="fa fa-arrows-alt" ></i>';
+            maxButton.id = peerinfo.fileShare.maxButton;
+            maxButton.setAttribute("lastClickedBy", '');
+            maxButton.onclick = function () {
+                maxFV(peerinfo.userid, maxButton.id, peerinfo.fileList.outerbox);
+            };
+            fileListControlBar.appendChild(maxButton);
+        }
 
         // let closeButton = document.createElement("span");
         // closeButton.innerHTML = '<i class="fa fa-times"></i>';
@@ -15333,9 +15339,6 @@ function createFileListingBox(peerinfo, parent) {
         // closeButton.onclick = function () {
         //     closeFV(peerinfo.userid, closeButton.id, peerinfo.fileList.container);
         // };
-
-        fileListControlBar.appendChild(minButton);
-        fileListControlBar.appendChild(maxButton);
         // fileListControlBar.appendChild(closeButton);
 
         /*-------------------------------- add for File List Container--------------------*/
