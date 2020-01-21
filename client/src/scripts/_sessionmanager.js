@@ -23,7 +23,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
     if (!selfuserid)
         selfuserid = rtcConn.userid;
     else
-        webrtcdev.warn("[sessionmanager] trying to overwrite sremoteobj.userdetails.usercolorelfuserid")
+        webrtcdev.warn("[sessionmanager] trying to overwrite remoteobj.userdetails.usercolorelfuserid")
 
     return new Promise((resolve, reject) => {
         try {
@@ -227,10 +227,10 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
         });
         resolve("done");
     })
-        .catch((err) => {
-            webrtcdev.error("[sessionmanager] startSocketSession error -", err);
-            reject(err);
-        });
+    .catch((err) => {
+        webrtcdev.error("[sessionmanager] startSocketSession error -", err);
+        reject(err);
+    });
 }
 
 
@@ -335,13 +335,13 @@ var setRtcConn = function (sessionid) {
                     else
                         shownotification("connnection type is neither open nor join", "warning");
 
+                    shownotification(event.extra.name + " joined session ", "info");
+                    showdesktopnotification();
+
                     if (timerobj && timerobj.active) {
                         startsessionTimer(timerobj);
                         shareTimePeer();
                     }
-                    shownotification(event.extra.name + " joined session ", "info");
-                    showdesktopnotification();
-
                     window.dispatchEvent(new CustomEvent('webrtcdev', {
                         detail: {
                             servicetype: "session",
@@ -530,8 +530,7 @@ var setRtcConn = function (sessionid) {
 
                             break;
                         case "timer":
-                            webrtcdev.log("[sessionmanager] ---------------------- timer ",  msgpeerinfo);
-                            if (msgpeerinfo ){
+                            if (msgpeerinfo){
                                 //check if the peer has stored zone and time info
                                 if (!msgpeerinfo.time) {
                                     msgpeerinfo.time = e.data.time;
@@ -546,7 +545,7 @@ var setRtcConn = function (sessionid) {
                             startPeersTime(e.data.time, e.data.zone, e.userid);
                             break;
                         case "buttonclick":
-                            var buttonElement = document.getElementById(e.data.buttonName);
+                            var buttonElement = getElementById(e.data.buttonName);
                             if (buttonElement.getAttribute("lastClickedBy") != rtcConn.userid) {
                                 buttonElement.setAttribute("lastClickedBy", e.userid);
                                 buttonElement.click();

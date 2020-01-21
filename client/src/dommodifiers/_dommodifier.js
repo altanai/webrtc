@@ -12,6 +12,16 @@ function getElementById(elem) {
     }
 }
 
+function getElementByName(elem) {
+    try {
+        if( document.getElementsByName(elem))
+            return  document.getElementsByName(elem)[0];
+    } catch (e) {
+        webrtcdev.error(e);
+        return "";
+    }
+}
+
 function isHTML(str) {
     var a = document.createElement('div');
     a.innerHTML = str;
@@ -61,14 +71,14 @@ function showelem(elem) {
         // validate its is a dom node
         elem.removeAttribute("hidden");
         elem.setAttribute("style", "display:block!important");
-    } else if (document.getElementById(elem)) {
+    } else if (getElementById(elem)) {
         // search by ID
-        elem = document.getElementById(elem);
+        elem = getElementById(elem);
         elem.removeAttribute("hidden");
         elem.setAttribute("style", "display:block");
-    } else if ( (document.getElementsByName(elem)).length >0 ){
+    } else if ( (getElementsByName(elem)).length >0 ){
         // search by name
-        elem = document.getElementsByName(elem);
+        elem = getElementsByName(elem);
         elem[0].removeAttribute("hidden");
         elem[0].setAttribute("style", "display:block");
     } else {
@@ -88,9 +98,9 @@ function hideelem(elem) {
         if (typeof elem === 'object' && elem.nodeType !== undefined) {
             elem.setAttribute("hidden", true);
             elem.setAttribute("style", "display:none!important");
-        } else if (document.getElementById(elem)) {
-            document.getElementById(elem).setAttribute("hidden", true);
-            document.getElementById(elem).setAttribute("style", "display:none");
+        } else if (getElementById(elem)) {
+            getElementById(elem).setAttribute("hidden", true);
+            getElementById(elem).setAttribute("style", "display:none");
         }
     }catch(err){
         webrtcdev.error(elem , err)
@@ -99,5 +109,5 @@ function hideelem(elem) {
 
 
 function existselem(elem){
-    return document.getElementById(elem)?true:false;
+    return getElementById(elem)?true:false;
 }

@@ -33,3 +33,72 @@ function activateButtons(timerobj) {
         }
     }
 }
+
+
+/**
+ * function to start forward increasing session timer
+ * @method
+ * @name startForwardTimer
+ */
+function startForwardTimer() {
+    webrtcdev.log("[timerjs] startForwardTimer");
+    var cd = secs;
+    var cdm = mins;
+    var c = parseInt(cd.innerHTML, 10);
+    var m = parseInt(cdm.innerHTML, 10);
+    ftimer(cd, c, cdm, m);
+}
+
+/**
+ * function to start backward decreasing session timer
+ * @method
+ * @name startBackwardTimer
+ */
+function startBackwardTimer() {
+    webrtcdev.log("[timerjs] startBackwardTimer", hours, mins, secs);
+    let cd = secs;
+    let cdm = mins;
+    let c = parseInt(cd.innerHTML, 10);
+    let m = parseInt(cdm.innerHTML, 10);
+    //alert(" Time for session validy is "+m +" minutes :"+ c+ " seconds");
+    btimer(cd, c, cdm, m);
+}
+
+/**
+ * function to start backward decreasing session timer
+ * @method
+ * @name Timer
+ * @param {cd} timerobj
+ * @param {c} timerobj
+ * @param {cdm} timerobj
+ * @param {m} timerobj
+ */
+function ftimer(cd, c, cdm, m) {
+    var interv = setInterval(function () {
+        c++;
+        secs.innerHTML = c;
+
+        if (c == 60) {
+            c = 0;
+            m++;
+            mins.innerHTML = m;
+        }
+    }, 1000);
+}
+
+function btimer(cd, c, cdm, m) {
+    var interv = setInterval(function () {
+        c--;
+        secs.innerHTML = c;
+
+        if (c == 0) {
+            c = 60;
+            m--;
+            mins.innerHTML = m;
+            if (m < 0) {
+                clearInterval(interv);
+                //alert("time over");
+            }
+        }
+    }, 1000);
+}

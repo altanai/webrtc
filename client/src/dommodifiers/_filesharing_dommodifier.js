@@ -1028,25 +1028,31 @@ function createFileListingBox(peerinfo, parent) {
         fileHelpButton.className="btn btn-default glyphicon glyphicon-question-sign closeButton";
         fileHelpButton.innerHTML="Help";
         /*fileListControlBar.appendChild(fileHelpButton);*/
+        var minButton, maxButton;
 
         if (fileshareobj.filelist.minicon != "none") {
-            let minButton = document.createElement("span");
+            minButton = document.createElement("span");
             minButton.innerHTML = '<i class="fa fa-minus" ></i>';
             minButton.id = peerinfo.fileShare.minButton;
             minButton.setAttribute("lastClickedBy", '');
             minButton.onclick = function () {
-                minFV(peerinfo.userid, minButton.id, peerinfo.fileList.outerbox);
+                minFV(peerinfo.userid, minButton.id, peerinfo.fileList.container);
+                hideelem(minButton);
+                showelem(maxButton);
             };
             fileListControlBar.appendChild(minButton);
         }
 
         if (fileshareobj.filelist.minicon != "none") {
-            let maxButton = document.createElement("span");
+            maxButton = document.createElement("span");
             maxButton.innerHTML = '<i class="fa fa-arrows-alt" ></i>';
             maxButton.id = peerinfo.fileShare.maxButton;
             maxButton.setAttribute("lastClickedBy", '');
+            maxButton.setAttribute("hidden", 'true');
             maxButton.onclick = function () {
-                maxFV(peerinfo.userid, maxButton.id, peerinfo.fileList.outerbox);
+                maxFV(peerinfo.userid, maxButton.id, peerinfo.fileList.container);
+                hideelem(maxButton);
+                showelem(minButton);
             };
             fileListControlBar.appendChild(maxButton);
         }
@@ -1122,23 +1128,26 @@ function resizeFV(userid, buttonId, selectedFileSharingBox) {
 }
 
 function minFV(userid, buttonId, selectedFileSharingBox) {
-    for (x in webcallpeers) {
-        if (webcallpeers[x].fileShare.outerbox == selectedFileSharingBox) {
-            hideelem(selectedFileSharingBox);
-        } else {
-            showelem(webcallpeers[x].fileShare.outerbox)
-        }
-    }
+    hideelem(selectedFileSharingBox);
+    // for (x in webcallpeers) {
+    //     if (webcallpeers[x].fileShare.outerbox == selectedFileSharingBox) {
+    //         hideelem(selectedFileSharingBox);
+    //     } else {
+    //         showelem(webcallpeers[x].fileShare.outerbox);
+    //     }
+    // }
 }
 
 function maxFV(userid, buttonId, selectedFileSharingBox) {
-    for (x in webcallpeers) {
-        if (webcallpeers[x].fileShare.outerbox == selectedFileSharingBox) {
-            showelem(selectedFileSharingBox);
-        } else {
-            hideelem(webcallpeers[x].fileShare.outerbox)
-        }
-    }
+    showelem(selectedFileSharingBox);
+    // const showelem1 = showelem(selectedFileSharingBox);
+    // for (x in webcallpeers) {
+    //     if (webcallpeers[x].fileShare.outerbox == selectedFileSharingBox) {
+    //         showelem1;
+    //     } else {
+    //         hideelem(webcallpeers[x].fileShare.outerbox);
+    //     }
+    // }
     /*syncButton(buttonId);  */
 }
 

@@ -16,16 +16,40 @@ var t;
 var worker = null;
 
 try {
-    //worker = new Worker('js/timekeeper.js');
-    // worker.addEventListener('message', function(e) {
-    //     if(e.data.time){
-    //         let timerspanpeer = getElementById(e.data.remotetimeid);
-    //         timerspanpeer.innerHTML = e.data.time;
-    //     }
-    // }, false);
+    // tobj.push({
+    //     zone : peerinfo.zone,
+    //     userid : peerinfo.userid,
+    //     remotetime : timerspanpeer.id
+    // });
+    worker = new Worker('js/timekeeper.js');
+    worker.addEventListener('message', function(e) {
+        if(e.data.time){
+            let timerspanpeer = getElementByName(e.data.remotetime);
+            timerspanpeer.innerHTML = e.data.time;
+        }
+    }, false);
 } catch (e) {
-    webrtcdev.error("[Timer]", e)
+    webrtcdev.error("[Timer]", e);
 }
+
+/**
+ * function to share local time and zone to other peer
+ * @name shareTimePeer
+ */
+function shareTimePeer() {
+    try {
+        var msg = {
+            type: "timer",
+            time: (today).toJSON(),
+            zone: zone
+        };
+        webrtcdev.log("[ timerobj] shareTimePeer ", msg);
+        rtcConn.send(msg);
+    } catch (e) {
+        webrtcdev.error(e);
+    }
+}
+
 
 /**
  * function to start session timer with timerobj
@@ -35,6 +59,7 @@ try {
  */
 function startsessionTimer(timerobj) {
 
+    webrtcdev.log("[ timerobj] startsessionTimer ", timerobj);
     if (timerobj.counter.hours && timerobj.counter.minutes && timerobj.counter.seconds) {
         hours = getElementById(timerobj.counter.hours);
         mins = getElementById(timerobj.counter.minutes);
@@ -53,87 +78,9 @@ function startsessionTimer(timerobj) {
             startBackwardTimer();
         }
     } else {
-        webrtcdev.error(" timerobj.counter DOM elemnts not found ");
+        webrtcdev.error(" [timerobj] counter DOM elemnents not found ");
     }
 }
-
-/**
- * function to start forward increasing session timer
- * @method
- * @name startForwardTimer
- */
-function startForwardTimer() {
-    webrtcdev.log("[timerjs] startForwardTimer");
-    var cd = secs;
-    var cdm = mins;
-    var c = parseInt(cd.innerHTML, 10);
-    var m = parseInt(cdm.innerHTML, 10);
-    ftimer(cd, c, cdm, m);
-}
-
-/**
- * function to start backward decreasing session timer
- * @method
- * @name startBackwardTimer
- */
-function startBackwardTimer() {
-    webrtcdev.log("[timerjs] startBackwardTimer", hours, mins, secs);
-    let cd = secs;
-    let cdm = mins;
-    let c = parseInt(cd.innerHTML, 10);
-    let m = parseInt(cdm.innerHTML, 10);
-    //alert(" Time for session validy is "+m +" minutes :"+ c+ " seconds");
-    btimer(cd, c, cdm, m);
-}
-
-/**
- * function to start backward decreasing session timer
- * @method
- * @name Timer
- * @param {cd} timerobj
- * @param {c} timerobj
- * @param {cdm} timerobj
- * @param {m} timerobj
- */
-function ftimer(cd, c, cdm, m) {
-    var interv = setInterval(function () {
-        c++;
-        secs.innerHTML = c;
-
-        if (c == 60) {
-            c = 0;
-            m++;
-            mins.innerHTML = m;
-        }
-    }, 1000);
-}
-
-function btimer(cd, c, cdm, m) {
-    var interv = setInterval(function () {
-        c--;
-        secs.innerHTML = c;
-
-        if (c == 0) {
-            c = 60;
-            m--;
-            mins.innerHTML = m;
-            if (m < 0) {
-                clearInterval(interv);
-                //alert("time over");
-            }
-        }
-    }, 1000);
-}
-
-function getDate() {
-    var now = new Date();
-    return now;
-}
-
-function prepareTime() {
-
-}
-
 
 /**
  * function to start local peers time based on locally captured time zone
@@ -142,15 +89,34 @@ function prepareTime() {
  */
 function startTime() {
     try {
-        if (timerobj.span.currentTime_id && getElementById(timerobj.span.currentTime_id)) {
-            let timerspanlocal = getElementById(timerobj.span.currentTime_id);
+        if (timerobj.span.currentTime && getElementByName(timerobj.span.currentTime)) {
+            let timerspanlocal = getElementByName(timerobj.span.currentTime);
             timerspanlocal.innerHTML = new Date().toLocaleTimeString();
             var t = setTimeout(startTime, 1000);
         } else {
-            webrtcdev.error(" No place for timerobj.span.currentTime_id");
+            webrtcdev.error("[timer js ] startTime - No place for timerobj.span.currentTime_id");
         }
-    } catch (e) {
-        webrtcdev.error(e);
+    } catch(err) {
+        webrtcdev.error("[timer js ]",err);
+    }
+}
+
+/**
+ * function to fetch and show local peers time zone based on locally captured values
+ * @method
+ * @name timeZone
+ */
+function timeZone() {
+    try {
+        if (timerobj.span.currentTimeZone && getElementByName(timerobj.span.currentTimeZone)) {
+            zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            let timerzonelocal = getElementByName(timerobj.span.currentTimeZone);
+            timerzonelocal.innerHTML = zone;
+        } else {
+            webrtcdev.error(" [timer js ] timerobj.span.currentTimeZone_id DOM doesnt exist ");
+        }
+    } catch (err) {
+        webrtcdev.error("[timer js ]",err);
     }
 }
 
@@ -164,39 +130,34 @@ function startTime() {
  * @param {id} userid
  */
 function peerTimeZone(zone, userid) {
+
     try {
+        var tobj = [];
 
-        console.log("timerobj.span.remoteTimeZone_id" , timerobj.span.remoteTimeZone_id , getElementById(timerobj.span.remoteTimeZone_id));
-        if (window.location.href.indexOf("conference") > -1) {
-            //if its conference , send to webworkers
+        // Starting peer timer for all peers
+        for ( x in webcallpeers) {
+            let peerinfo = webcallpeers[x];
 
-        } else if (typeof timerobj.span.remoteTimeZone_id  == "object" && timerobj.span.remoteTimeZone_id.length ==2) {
-            // one to one - update the time for p2p
+            if (getElementById("remoteTimeZone_" + peerinfo.userid))
+                return;
 
-            webrtcdev.warn("timerobj.span.remoteTimeZone_id DOM doesnt exist , creating it to add timezone");
+            let timerspanpeer;
+            if (timerobj.span.remoteTimeZone[x]) {
+                webrtcdev.info(" [timer js] startPeersTime -timerobj.span.remoteTimeZone exist for local and remotes");
+                timerspanpeer = getElementByName(timerobj.span.remoteTimeZone[x]);
+                timerspanpeer.id = "remoteTimeZone_" + peerinfo.userid;
+                timerspanpeer.innerHTML = zone + " , ";
 
-            // if (getElementById("remoteTimeZone_" + userid))
-            //     return;
-            //
-            // let timerzonepeer = document.createElement("li");
-            // timerzonepeer.id = "remoteTimeZone_" + userid;
-            // timerzonepeer.innerHTML = zone + " , ";
-            //
-            // var remotetimecontainer;
-            // if (!getElementById("remoteTimerArea_" + userid)) {
-            //     remotetimecontainer = createRemotetimeArea(userid);
-            // } else {
-            //     remotetimecontainer = getElementById("remoteTimerArea_" + userid);
-            // }
-            // remotetimecontainer.appendChild(timerzonepeer);
+            } else {
+                webrtcdev.info(" [timer js] startPeersTime -timerobj.span.remoteTimeZone getting crated  for local and remotes");
+                timerspanpeer = document.createElement("li");
+                timerspanpeer.id = "remoteTimeZone_" + peerinfo.userid;
+                timerspanpeer.innerHTML = zone + " , ";
 
-        } else if (getElementById(timerobj.span.remoteTimeZone_id)){
-                webrtcdev.warn("timerobj.span.remoteTimeZone_id DOM exist , add timezone to it ");
-                let timerzonepeer = getElementById(timerobj.span.remoteTimeZone_id);
-                timerzonepeer.innerHTML = zone;
+            }
         }
-    } catch (e) {
-        webrtcdev.error(e);
+    } catch (err) {
+        webrtcdev.error("[timerjs] ",err);
     }
 }
 
@@ -217,112 +178,64 @@ var startPeersTime = function (date, zone, userid) {
         // Starting peer timer for all peers
         for ( x in webcallpeers) {
 
-            var peerinfo = webcallpeers[x];
+            let peerinfo = webcallpeers[x];
+            let options = {
+                // year: 'numeric', month: 'numeric', day: 'numeric',
+                hour: 'numeric', minute: 'numeric', second: 'numeric',
+                hour12: false,
+                timeZone: peerinfo.zone
+            };
 
-            webrtcdev.debug(" [timerjs] startPeersTime for ", userid);
-
-            if (timerobj.span.remoteTime_id[x]) {
+            webrtcdev.debug(" [timer js] startPeersTime for ", peerinfo.userid);
+            let timerspanpeer;
+            if (timerobj.span.remoteTime[x]) {
                 // send to webworkers
-                webrtcdev.info(" timerobj.span.remoteTime_id exist for local and remotes, appending to tobj to send to worker cumulatively");
-                tobj.push({
-                    zone: peerinfo.zone,
-                    userid: peerinfo.userid,
-                    remotetimeid: timerobj.span.remoteTime_id[x]
-                });
-
-                if (timerobj.span.remoteTime_id && Array.isArray(timerobj.span.remoteTime_id)) {
-                    // conf with array in timerobj.span.remoteTime_id
-                    options = {
-                        // year: 'numeric', month: 'numeric', day: 'numeric',
-                        hour: 'numeric', minute: 'numeric', second: 'numeric',
-                        hour12: false,
-                        timeZone: peerinfo.zone
-                    };
-
-                    let timerspanpeer = getElementById(timerobj.span.remoteTime_id[x]);
-                    timerspanpeer.innerHTML = new Date().toLocaleString('en-US', options);
-                }
+                webrtcdev.info(" [timer js] startPeersTime -timerobj.span.remoteTime_id exist for local and remotes");
+                timerspanpeer = getElementByName(timerobj.span.remoteTime[x]);
+                timerspanpeer.id = "remoteTime_" + peerinfo.userid;
+                timerspanpeer.innerHTML = new Date().toLocaleString('en-US', options);
 
             } else {
                 // create the timer for p2p and conferences
                 webrtcdev.info(" timerobj.span.remoteTime_id DOM does not exist , creating it",
-                    timerobj.span.remoteTime_id, getElementById(timerobj.span.remoteTime_id));
+                    timerobj.span.remoteTime, getElementById(timerobj.span.remoteTime));
 
-                if (getElementById("remoteTimeDate_" + userid))
+                if (getElementById("remoteTimeDate_" + peerinfo.userid))
                     return;
 
-                options = {
-                    year: 'numeric', month: 'numeric', day: 'numeric',
-                    hour: 'numeric', minute: 'numeric', second: 'numeric',
-                    hour12: false,
-                    timeZone: webcallpeers[x].zone
-                };
-                let timerspanpeer = document.createElement("li");
-                timerspanpeer.id = "remoteTimeDate_" + userid;
+                timerspanpeer = document.createElement("span");
+                timerspanpeer.id = "remoteTime_" + userid;
                 timerspanpeer.innerHTML = new Date().toLocaleString('en-US', options);
 
                 var remotetimecontainer;
-                if (!getElementById("remoteTimerArea_" + userid)) {
-                    remotetimecontainer = createRemotetimeArea(userid);
+                if (!getElementById("remoteTimerArea_" + peerinfo.userid)) {
+                    remotetimecontainer = createRemotetimeArea(peerinfo.userid);
                 } else {
-                    remotetimecontainer = getElementById("remoteTimerArea_" + userid);
+                    remotetimecontainer = getElementById("remoteTimerArea_" + peerinfo.userid);
                 }
                 remotetimecontainer.appendChild(timerspanpeer);
 
-                if (window.location.href.indexOf("conference") <= -1) {
-                    // if its not conf then loop for p2p
-                    var t = setTimeout(startPeersTime, 5000);
-                }
+                var t = setTimeout(startPeersTime, 5000);
             }
+
+            tobj.push({
+                zone : peerinfo.zone,
+                userid : peerinfo.userid,
+                remotetime : timerspanpeer.id
+            });
             peerTimerStarted = true;
         }
 
-        webrtcdev.info("[timerjs] tobj ", tobj);
-        // if (tobj.length > 0) {
-        //     worker.postMessage(tobj);
-        // }
-
-    } catch (e) {
-        webrtcdev.error(e);
-    }
-}
-
-
-/**
- * function to fetch and show local peers time zone based on locally captured values
- * @method
- * @name timeZone
- */
-function timeZone() {
-    try {
-        if (timerobj.span.currentTimeZone_id && getElementById(timerobj.span.currentTimeZone_id)) {
-            zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            let timerzonelocal = getElementById(timerobj.span.currentTimeZone_id);
-            timerzonelocal.innerHTML = zone;
-        } else {
-            webrtcdev.error(" timerobj.span.currentTimeZone_id DOM doesnt exist ");
+        webrtcdev.info("[timerjs] Final tobj ", tobj);
+        if (tobj.length > 0) {
+            worker.postMessage(tobj);
         }
+
     } catch (e) {
         webrtcdev.error(e);
     }
 }
 
-/**
- * function to share local tiem and zone to other peer
- * @name shareTimePeer
- */
-function shareTimePeer() {
-    try {
-        var msg = {
-            type: "timer",
-            time: (today).toJSON(),
-            zone: zone
-        };
-        rtcConn.send(msg);
-    } catch (e) {
-        webrtcdev.error(e);
-    }
-}
 
 
 
