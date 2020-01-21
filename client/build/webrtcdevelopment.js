@@ -25861,10 +25861,11 @@ var t;
 var worker = null;
 
 try {
+    // event listener for web workers
     worker = new Worker('js/timekeeper.js');
     worker.addEventListener('message', function(e) {
         if(e.data.time){
-            let timerspanpeer = getElementById(e.data.remotetimeid);
+            let timerspanpeer = getElementByName(e.data.remotetime);
             timerspanpeer.innerHTML = e.data.time;
         }
     }, false);
@@ -26029,7 +26030,6 @@ var startPeersTime = function (date, zone, userid) {
             webrtcdev.debug(" [timer js] startPeersTime for ", peerinfo.userid);
             let timerspanpeer;
             if (timerobj.span.remoteTime[x]) {
-                // send to webworkers
                 webrtcdev.info(" [timer js] startPeersTime -timerobj.span.remoteTime_id exist for local and remotes");
                 timerspanpeer = getElementByName(timerobj.span.remoteTime[x]);
                 timerspanpeer.id = "remoteTime_" + peerinfo.userid;
@@ -26058,6 +26058,7 @@ var startPeersTime = function (date, zone, userid) {
                 var t = setTimeout(startPeersTime, 5000);
             }
 
+            // send to webworkers
             tobj.push({
                 zone : peerinfo.zone,
                 userid : peerinfo.userid,
