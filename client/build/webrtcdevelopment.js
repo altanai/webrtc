@@ -25864,8 +25864,9 @@ try {
     // event listener for web workers
     worker = new Worker('js/timekeeper.js');
     worker.addEventListener('message', function(e) {
-        if(e.data.time){
-            let timerspanpeer = getElementByName(e.data.remotetime);
+        webrtcdev.log(" webworker message " , e.data );
+        if(e.data.remotetime){
+            let timerspanpeer = getElementById(e.data.remotetime);
             timerspanpeer.innerHTML = e.data.time;
         }
     }, false);
@@ -26030,14 +26031,14 @@ var startPeersTime = function (date, zone, userid) {
             webrtcdev.debug(" [timer js] startPeersTime for ", peerinfo.userid);
             let timerspanpeer;
             if (timerobj.span.remoteTime[x]) {
-                webrtcdev.info(" [timer js] startPeersTime -timerobj.span.remoteTime_id exist for local and remotes");
+                webrtcdev.info(" [timer js] startPeersTime -timerobj.span.remoteTime exist for local and remotes");
                 timerspanpeer = getElementByName(timerobj.span.remoteTime[x]);
                 timerspanpeer.id = "remoteTime_" + peerinfo.userid;
                 timerspanpeer.innerHTML = new Date().toLocaleString('en-US', options);
 
             } else {
                 // create the timer for p2p and conferences
-                webrtcdev.info(" timerobj.span.remoteTime_id DOM does not exist , creating it",
+                webrtcdev.info(" timerobj.span.remoteTime_id DOM does not exist, creating it",
                     timerobj.span.remoteTime, getElementById(timerobj.span.remoteTime));
 
                 if (getElementById("remoteTimeDate_" + peerinfo.userid))
