@@ -75,6 +75,7 @@ var setWidgets = function (rtcConn) {
 
         // ---------------------------------- Listenin Widget --------------------------------------------------
         if (listeninobj && listeninobj.active) {
+            document.getElementById(listeninobj.button.textbox).value =  getlisteninlink();
             if (listeninobj.button.id && document.getElementById(listeninobj.button.id)) {
                 //assignButtonRedial(reconnectobj.button.id);
             } else {
@@ -171,11 +172,11 @@ var setWidgets = function (rtcConn) {
                     appendTo: function (parentNode) {
                         iframe = document.createElement('iframe');
                         iframe.id = "drawboard",
-                        iframe.src = 'widget.html?tools=' + JSON.stringify(tools) + '&selectedIcon=' + selectedIcon,
-                        iframe.style.width = "100%",
-                        iframe.style.height = "100%",
-                        iframe.allowtransparency = true,
-                        iframe.style.border = 0;
+                            iframe.src = 'widget.html?tools=' + JSON.stringify(tools) + '&selectedIcon=' + selectedIcon,
+                            iframe.style.width = "100%",
+                            iframe.style.height = "100%",
+                            iframe.allowtransparency = true,
+                            iframe.style.border = 0;
                         parentNode.appendChild(iframe);
                     },
                     destroy: function () {

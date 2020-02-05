@@ -31,14 +31,14 @@ var findPeerInfo = function (userid) {
  */
 function removePeerInfo(index) {
     return new Promise(function (resolve, reject) {
-        webrtcdev.log(" [startjs] removePeerInfo  remove index: ", index , webcallpeers[index]);
-        webcallpeers.splice(index,1);
+        webrtcdev.log(" [startjs] removePeerInfo  remove index: ", index, webcallpeers[index]);
+        webcallpeers.splice(index, 1);
         resolve("done");
     })
-    .catch((err) => {
-        webrtcdev.error("[startjs removePeerInfo] Promise rejected ", err);
-        reject("err");
-    });
+        .catch((err) => {
+            webrtcdev.error("[startjs removePeerInfo] Promise rejected ", err);
+            reject("err");
+        });
 }
 
 /**
@@ -139,6 +139,6 @@ function updatePeerInfo(userid, username, usecolor, useremail, userrole, type) {
  * @method
  * @name getwebcallpeers
  */
-this.getwebcallpeers = function(){
+this.getwebcallpeers = function () {
     return webcallpeers;
 };

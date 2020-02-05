@@ -261,7 +261,7 @@ function attachUserDetails(vid, peerinfo) {
         }
     }
     let nameBox = document.createElement("div");
-    nameBox.setAttribute("style", "background-color:" + peerinfo.color),
+    // nameBox.setAttribute("style", "background-color:" + peerinfo.color),
     nameBox.className = "videoHeaderClass",
     nameBox.innerHTML = peerinfo.name + "<br/>",
     nameBox.id = "videoheaders" + peerinfo.userid;

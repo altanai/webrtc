@@ -23,7 +23,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
     if (!selfuserid)
         selfuserid = rtcConn.userid;
     else
-        webrtcdev.warn("[sessionmanager] trying to overwrite remoteobj.userdetails.usercolorelfuserid")
+        webrtcdev.warn("[sessionmanager] trying to overwrite remoteobj.userdetails.usercolorelfuserid");
 
     return new Promise((resolve, reject) => {
         try {
@@ -175,7 +175,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
                     webrtcdev.log("[sessionmanager] channel-event : peer length " + webcallpeers.length + " is less than max capacity of session  of the session " + remoteobj.maxAllowed);
                     let participantId = event.data.sender;
                     if (!participantId) {
-                        webrtcdev.error("[sartjs] channel-event : userid not present in channel-event:" + event.type)
+                        webrtcdev.error("[sartjs] channel-event : userid not present in channel-event:" + event.type);
                         reject("userid not found");
                     }
                     let peerinfo = findPeerInfo(participantId);
@@ -218,7 +218,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
                     // max capacity of session is reached 
                     webrtcdev.error("[sartjs] channel-event : max capacity of session is reached ", remoteobj.maxAllowed);
                     shownotification("Another user is trying to join this channel but max count [ " + remoteobj.maxAllowed + " ] is reached", "warning");
-                    return;
+
                 }
 
             } else {
@@ -227,10 +227,10 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
         });
         resolve("done");
     })
-    .catch((err) => {
-        webrtcdev.error("[sessionmanager] startSocketSession error -", err);
-        reject(err);
-    });
+        .catch((err) => {
+            webrtcdev.error("[sessionmanager] startSocketSession error -", err);
+            reject(err);
+        });
 }
 
 
@@ -530,7 +530,7 @@ var setRtcConn = function (sessionid) {
 
                             break;
                         case "timer":
-                            if (msgpeerinfo){
+                            if (msgpeerinfo) {
                                 //check if the peer has stored zone and time info
                                 if (!msgpeerinfo.time) {
                                     msgpeerinfo.time = e.data.time;
@@ -600,7 +600,7 @@ var setRtcConn = function (sessionid) {
                             break;
                     }
                 }
-                return;
+
             },
 
             rtcConn.sendMessage = function (event) {
@@ -673,7 +673,7 @@ var setRtcConn = function (sessionid) {
                 uuid: rtcConn.userid,
                 name: selfusername || "",
                 // color: selfcolor || "", // user rmeote color do that joining parties can take it correctly
-                color: (typeof remoteobj.userdetails === 'undefined') ? "" : remoteobj.userdetails.usercolor ,
+                color: (typeof remoteobj.userdetails === 'undefined') ? "" : remoteobj.userdetails.usercolor,
                 email: selfemail || "",
                 role: role || "participant"
             },
@@ -706,7 +706,7 @@ var setRtcConn = function (sessionid) {
             webrtcdev.error("setRtcConn", err);
             reject(err);
         });
-}
+};
 
 /*
 * Support Session Refresh
@@ -752,7 +752,7 @@ var openWebRTC = function (channel, userid, maxallowed) {
     });
 
     shownotification(" Making a new session ");
-}
+};
 
 
 /**
@@ -769,6 +769,11 @@ var connectWebRTC = function (type, channel, selfuserid, remoteUsers) {
         " , self-Userid : ", selfuserid, " , and remote users : ", remoteUsers);
     if (debug) showUserStats();
 
+    if ( listeninobj.active && role == "inspector") {
+        webrtcdev.info(" [sessionmanage] freezing screen for role inspector ");
+        freezescreen();
+    }
+
     /*void(document.title = channel);*/
     if (fileshareobj.active) {
 
@@ -782,11 +787,11 @@ var connectWebRTC = function (type, channel, selfuserid, remoteUsers) {
                 //max diaply the local / single fileshare 
                 document.getElementById(_peerinfo.fileShare.outerbox).style.width = "100%";
                 // hide the remote fileshare
-                //document.getElementById(_peerinfo.fileShare.outerbox).style.width="100%";
+                // document.getElementById(_peerinfo.fileShare.outerbox).style.width="100%";
             } else if (fileshareobj.props.fileShare == "divided") {
 
                 // create local File sharing window 
-                //Do not create file share and file viewer for inspector's own session 
+                // Do not create file share and file viewer for inspector's own session
                 if (role != "inspector") {
                     webrtcdev.log(" [sessionmanager] creating local file sharing");
                     createFileSharingDiv(_peerinfo);
@@ -823,7 +828,6 @@ var connectWebRTC = function (type, channel, selfuserid, remoteUsers) {
         } catch (err) {
             webrtcdev.error("[sessionmanager] connectwebrtc -", err)
         }
-
     }
 };
 

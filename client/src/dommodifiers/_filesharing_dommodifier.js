@@ -783,11 +783,15 @@ function createFileSharingBox(peerinfo, parent) {
             // Minimize the File viewer box
             minButton = document.createElement("span");
             if (fileshareobj.fileshare.minicon) {
+                let minicon = fileshareobj.fileshare.minicon;
+                webrtcdev.log(" [fileShare JS ] creating custom minicon", minicon);
                 let img = document.createElement("img");
-                img.src = fileshareobj.fileshare.minicon;
+                img.src = minicon;
                 minButton.appendChild(img);
             } else {
-                minButton.innerHTML = '<i class="fa fa-minus-square"></i>';
+                let minicon = '<i class="fa fa-minus-square"></i>';
+                minicon.innerHTML = minicon;
+                webrtcdev.log(" [fileShare JS ] creating default minicon ", minicon);
             }
             minButton.id = peerinfo.fileShare.minButton;
             minButton.title = "Minimize";
@@ -823,6 +827,12 @@ function createFileSharingBox(peerinfo, parent) {
             maxButton.setAttribute("lastClickedBy", '');
             maxButton.onclick = function () {
                 maxFV(peerinfo.userid, maxButton.id, peerinfo.fileShare.outerbox);
+                if(fileshareobj.props.fileList != "single"){
+                    for(var x in webcallpeers){
+                        if(webcallpeers[x].userid != peerinfo.userid)
+                            minFV(webcallpeers[x].userid, "", webcallpeers[x].fileShare.outerbox);
+                    }
+                }
                 hideelem(maxButton);
                 showelem(minButton);
             };
@@ -1043,18 +1053,18 @@ function createFileListingBox(peerinfo, parent) {
             fileListControlBar.appendChild(minButton);
         }
 
-        if (fileshareobj.filelist.minicon != "none") {
+        if (fileshareobj.filelist.maxicon != "none") {
             maxButton = document.createElement("span");
-            maxButton.innerHTML = '<i class="fa fa-arrows-alt" ></i>';
+            maxButton.innerHTML = '<i class="fa fa-plus" ></i>';
             maxButton.id = peerinfo.fileShare.maxButton;
             maxButton.setAttribute("lastClickedBy", '');
-            maxButton.setAttribute("hidden", 'true');
             maxButton.onclick = function () {
                 maxFV(peerinfo.userid, maxButton.id, peerinfo.fileList.container);
                 hideelem(maxButton);
                 showelem(minButton);
             };
             fileListControlBar.appendChild(maxButton);
+            hideelem(maxButton);
         }
 
         // let closeButton = document.createElement("span");

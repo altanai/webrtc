@@ -8,16 +8,21 @@
  * @name getlisteninlink
  * @return {string}listeninlink
  */
-this.getlisteninlink = function () {
-    if (!sessionid) console.error("cant generate listenin link , no sessionid found ")
+function getlisteninlink() {
+    if (!sessionid) console.error("cant generate listenin link , no session id found ")
     try {
         webrtcdev.log(" Current Session ", window.origin);
         let listeninlink = window.origin + "/#" + sessionid + '?appname=webrtcwebcall&role=inspector&audio=0&video=0';
-        return listeninlink
+        return listeninlink;
     } catch (e) {
         webrtcdev.error("ListenIn :", e);
         return false;
     }
+}
+
+function freezescreen()
+{
+    document.body.setAttribute("style","pointer-events: none;");
 }
 
 /*-----------------------------------------------------------------------------------*/

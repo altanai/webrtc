@@ -3,58 +3,58 @@
 /*-----------------------------------------------------------------------------------*/
 
 /**
- * collect all webrtcStats and stream to Server to be stored in a file with seesion id as the file name 
+ * collect all webrtcStats and stream to Server to be stored in a file with seesion id as the file name
  * @method
  * @name sendCallTraces
  * @param {string} traces
- * @return Http request 
+ * @return Http request
  */
-this.sendwebrtcdevLogs= function(url, key , msg) {
-	const data = new FormData();
-	const fileField = webrtcdevlogs;
-	data.append('name', username||"no name");
-	data.append('scimage', document.getElementById("help-screenshot-body").src);
-	data.append("apikey", "dnE5aGpkUE03U1k4K3V5V0FUU3A4aGpGV2JHbkVsanhUVVBGU0NiaTZKcz0=");
-	data.append("useremail", selfemail);
-	data.append("sesionid", sesionid);
-	data.append("message", msg);
-	data.append("logfileContent", webrtcdevlogs);
+this.sendwebrtcdevLogs = function (url, key, msg) {
+    const data = new FormData();
+    const fileField = webrtcdevlogs;
+    data.append('name', username || "no name");
+    data.append('scimage', document.getElementById("help-screenshot-body").src);
+    data.append("apikey", "dnE5aGpkUE03U1k4K3V5V0FUU3A4aGpGV2JHbkVsanhUVVBGU0NiaTZKcz0=");
+    data.append("useremail", selfemail);
+    data.append("sesionid", sesionid);
+    data.append("message", msg);
+    data.append("logfileContent", webrtcdevlogs);
 
-	var helpstatus = document.getElementById("helpStatus");
+    var helpstatus = document.getElementById("helpStatus");
 
-	return fetch(url, {
-			method: 'POST',
-			body: data
-		})
-		.then(res => res.text())
+    return fetch(url, {
+        method: 'POST',
+        body: data
+    })
+        .then(res => res.text())
 
-		.then(text => console.log(text),
-	        helpstatus.innerHTML="Email sent for help",
-	        helpstatus.setAttribute("style","color:green")
-		)
-		.catch(error => console.error(error),
-			helpstatus.innerHTML="Email could not be sent for Help",
-        	helpstatus.setAttribute("style","color:red")
-		);
+        .then(text => console.log(text),
+            helpstatus.innerHTML = "Email sent for help",
+            helpstatus.setAttribute("style", "color:green")
+        )
+        .catch(error => console.error(error),
+            helpstatus.innerHTML = "Email could not be sent for Help",
+            helpstatus.setAttribute("style", "color:red")
+        );
 }
 
 
 /**
- * add user id and email and status to page header area in debug mode 
+ * add user id and email and status to page header area in debug mode
  * @method
  * @name showUserStats
  */
-this.showUserStats= showUserStats = function(){
-	var data = " userid-"+selfuserid+ 
-        " Email-"+ selfemail+ 
-        " Audio-"+ outgoing.audio + 
-        " Video-"+ outgoing.video + 
-        " Role- "+ role;
-	if(document.getElementById("userstatus")){
-		document.getElementById("userstatus").innerHTML=data;
-	}else{
-		document.getElementById("mainDiv").prepend(data);
-	}
+this.showUserStats = showUserStats = function () {
+    var data = " userid-" + selfuserid +
+        " Email-" + selfemail +
+        " Audio-" + outgoing.audio +
+        " Video-" + outgoing.video +
+        " Role- " + role;
+    if (document.getElementById("userstatus")) {
+        document.getElementById("userstatus").innerHTML = data;
+    } else {
+        document.getElementById("mainDiv").prepend(data);
+    }
 }
 
 /**
@@ -62,14 +62,14 @@ this.showUserStats= showUserStats = function(){
  * @method
  * @name getscreenshot
  */
-this.getscreenshot= function(name){
-	// "#bodyDiv"
-	var parentdom = document.querySelector(name);
-	/*html2canvas(document.querySelector("#bodyDiv")).then(canvas => {*/
-	html2canvas(parentdom).then(canvas => {
-	    /*document.getElementById("help-screenshot-body").src = canvas.toDataURL();*/
-	    return canvas.toDataURL();
-	});
+this.getscreenshot = function (name) {
+    // "#bodyDiv"
+    var parentdom = document.querySelector(name);
+    /*html2canvas(document.querySelector("#bodyDiv")).then(canvas => {*/
+    html2canvas(parentdom).then(canvas => {
+        /*document.getElementById("help-screenshot-body").src = canvas.toDataURL();*/
+        return canvas.toDataURL();
+    });
 }
 
 /**
@@ -99,4 +99,5 @@ function getScreenshotOfElement(element, posX, posY, width, height, callback) {
         allowTaint: false
     });
 }
+
 /*-----------------------------------------------------------------------------------*/

@@ -4,7 +4,7 @@
 
 var progressHelper = {};
 
-function fileSharingStarted(file){
+function fileSharingStarted(file) {
     webrtcdev.log("[flesharing JS] on File start ", file);
     webrtcdev.log("[flesharing JS] on File start description  , name :", file.name, " from -> ", file.userid, " to ->", file.remoteUserId);
 
@@ -25,7 +25,7 @@ function fileSharingStarted(file){
         // create multiple instances  , also pass file from and file to for the progress bars
         addProgressHelper(file.uuid, peerinfo, file.name, file.maxChunks, file, "fileBoxClass", file.userid, file.remoteUserId);
     }
-    window.dispatchEvent(new CustomEvent('webrtcdev',{
+    window.dispatchEvent(new CustomEvent('webrtcdev', {
         detail: {
             servicetype: "file",
             action: "onFileShareStart"
@@ -53,10 +53,10 @@ function fileSharingInprogress(e) {
     }
 }
 
-function fileSharingEnded(file){
+function fileSharingEnded(file) {
     webrtcdev.log("[flesharing JS] On file End description , file :", file, " from -> ", file.userid, " to ->", file.remoteUserId);
 
-    window.dispatchEvent(new CustomEvent('webrtcdev',{
+    window.dispatchEvent(new CustomEvent('webrtcdev', {
         detail: {
             servicetype: "file",
             action: "onFileShareEnded"
@@ -101,7 +101,7 @@ function fileSharingEnded(file){
         return;
     }
     displayList(file.uuid, peerinfo, file.url, filename, file.type);
-    window.dispatchEvent(new CustomEvent('webrtcdev',{
+    window.dispatchEvent(new CustomEvent('webrtcdev', {
         detail: {
             servicetype: "file",
             action: "onFileShareEnded"
@@ -117,20 +117,20 @@ function fileSharingEnded(file){
 }
 
 /**
- * Send File 
+ * Send File
  * @method
  * @name sendFile
  * @param {json} file
  */
-function sendFile(file){
-    webrtcdev.log(" [filehsraing js] Send file - " , file );
-    for( x in webcallpeers){
-        for(y in webcallpeers[x].filearray){
-            if(webcallpeers[x].filearray[y].status=="progress"){
-                webrtcdev.log("[flesharing JS] A file is already in progress , add the new file "+file.name+" to queue");
+function sendFile(file) {
+    webrtcdev.log(" [filehsraing js] Send file - ", file);
+    for (x in webcallpeers) {
+        for (y in webcallpeers[x].filearray) {
+            if (webcallpeers[x].filearray[y].status == "progress") {
+                webrtcdev.log("[flesharing JS] A file is already in progress , add the new file " + file.name + " to queue");
                 //alert("Allow current file to complete uploading, before selecting the next file share upload");
                 pendingFileTransfer.push(file);
-                addstaticProgressHelper(file.uuid, findPeerInfo(selfuserid), file.name, file.maxChunks, file , "fileBoxClass" , selfuserid , "" );
+                addstaticProgressHelper(file.uuid, findPeerInfo(selfuserid), file.name, file.maxChunks, file, "fileBoxClass", selfuserid, "");
                 return;
             }
         }
@@ -140,19 +140,19 @@ function sendFile(file){
 
 
 /**
- * Stop Sending File 
+ * Stop Sending File
  * @method
- * @name stop sending files and remove them form filearray 
+ * @name stop sending files and remove them form filearray
  * @param {json} file
  */
-function stopSendFile(progressid , filename , file , fileto, filefrom ){
-    webrtcdev.log(" [filehsraing js] Stop Sending file - " , file );
+function stopSendFile(progressid, filename, file, fileto, filefrom) {
+    webrtcdev.log(" [filehsraing js] Stop Sending file - ", file);
     var peerinfo = findPeerInfo(file.userid);
-    for( y in peerinfo.filearray){
-        if(peerinfo.filearray[y].pid == progressid) {
+    for (y in peerinfo.filearray) {
+        if (peerinfo.filearray[y].pid == progressid) {
             //alert(" stop senidng file progressid "+ progressid);
             peerinfo.filearray[y].status = "stop";
-            webrtcdev.log(" [filesharing js ] stopSendFile - filename " , peerinfo.filearray[y].name , " | status " , peerinfo.filearray[y].status);
+            webrtcdev.log(" [filesharing js ] stopSendFile - filename ", peerinfo.filearray[y].name, " | status ", peerinfo.filearray[y].status);
             //peerinfo.filearray.splice(y,1);
         }
     }
@@ -165,14 +165,14 @@ function stopSendFile(progressid , filename , file , fileto, filefrom ){
  * @name requestOldFiles
  * @param {json} files
  */
-function requestOldFiles(){
-    try{
-        var msg={
-            type:"syncOldFiles"
+function requestOldFiles() {
+    try {
+        var msg = {
+            type: "syncOldFiles"
         };
         rtcConn.send(msg);
-    }catch(e){
-        webrtcdev.error("[filesharing js ] syncOldFiles" , e);   
+    } catch (e) {
+        webrtcdev.error("[filesharing js ] syncOldFiles", e);
     }
 }
 
@@ -182,32 +182,32 @@ function requestOldFiles(){
  * @name sendOldFiles
  * @param {json} files
  */
-function sendOldFiles(){
+function sendOldFiles() {
     // Sync old files
     var oldfilesList = [];
-    for(x in webcallpeers){
-        webrtcdev.log("[flesharing JS] Checking Old Files in index " , x);
+    for (x in webcallpeers) {
+        webrtcdev.log("[flesharing JS] Checking Old Files in index ", x);
         var user = webcallpeers[x];
-        if(user.filearray && user.filearray.length >0 ){
-            for( y in user.filearray){
+        if (user.filearray && user.filearray.length > 0) {
+            for (y in user.filearray) {
                 // chking is file is already present in old file list 
-                for(o in oldfilesList){
-                    if(oldfilesList[o].name == user.filearray[y].name) break;
+                for (o in oldfilesList) {
+                    if (oldfilesList[o].name == user.filearray[y].name) break;
                 }
-                webrtcdev.log("[filehsraing js] user.filearray[y]" , user.filearray[y])
+                webrtcdev.log("[filehsraing js] user.filearray[y]", user.filearray[y])
                 oldfilesList.push(user.filearray[y]);
-            } 
+            }
         }
     }
 
-    setTimeout(function(){
-        if(oldfilesList.length >0 ){
-            webrtcdev.log("[filehsraing js] sendOldFiles " , oldfilesList );
-            for( f in oldfilesList ){
+    setTimeout(function () {
+        if (oldfilesList.length > 0) {
+            webrtcdev.log("[filehsraing js] sendOldFiles ", oldfilesList);
+            for (f in oldfilesList) {
                 sendFile(oldfilesList[f]);
             }
         }
-    } , 20000);
+    }, 20000);
 
 }
 

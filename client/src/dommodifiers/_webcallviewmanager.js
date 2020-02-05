@@ -24,7 +24,6 @@ function updateWebCallView(peerinfo) {
                 }
             }
 
-
             let video = document.createElement('video');
             remoteVideos[emptyvideoindex] = video;
             document.getElementById(remoteobj.videoContainer).appendChild(video);
@@ -135,7 +134,7 @@ function updateWebCallView(peerinfo) {
                 // handling remote video addition
                 if (remoteVideos) {
 
-                    let emptyvideoindex = findEmptyRemoteVideoIndex(peerinfo , remoteVideos);
+                    let emptyvideoindex = findEmptyRemoteVideoIndex(peerinfo, remoteVideos);
 
                     updateRemoteVideos(peerinfo, remoteVideos, emptyvideoindex);
 
@@ -207,12 +206,12 @@ function destroyWebCallView(peerInfo, callback) {
  * @param {json} remoteVideos
  * @param {int} emptyvideoindex
  */
-function updateRemoteVideos(peerinfo, remoteVideos, emptyvideoindex ){
-    webrtcdev.log("[webcallviewmanager updateRemoteVideos ] emptyvideoindex - " , emptyvideoindex );
+function updateRemoteVideos(peerinfo, remoteVideos, emptyvideoindex) {
+    webrtcdev.log("[webcallviewmanager updateRemoteVideos ] emptyvideoindex - ", emptyvideoindex);
 
-    if (!emptyvideoindex) return ;
+    if (!emptyvideoindex) return;
 
-    try{
+    try {
 
         if (remoteobj.maxAllowed == "unlimited") {
             // unlimitted video can be added dynamically
@@ -221,7 +220,7 @@ function updateRemoteVideos(peerinfo, remoteVideos, emptyvideoindex ){
             //  added  new video element to remoteVideos at current index
             remoteVideos[emptyvideoindex] = {
                 "userid": peerinfo.userid,
-                "stream" : peerinfo.stream,
+                "stream": peerinfo.stream,
                 "video": video
             };
             document.getElementById(remoteobj.dynamicVideos.videoContainer).appendChild(video);
@@ -231,19 +230,19 @@ function updateRemoteVideos(peerinfo, remoteVideos, emptyvideoindex ){
             webrtcdev.log("[webcallviewmanager updateRemoteVideos ] Remote video is limited to size maxAllowed , current index ", emptyvideoindex);
             //remote video is limited to size maxAllowed
             let remVideoHolder = document.getElementsByName(remoteVideos[emptyvideoindex]);
-            webrtcdev.log("[webcallviewmanager updateRemoteVideos ] searching for video with index ", emptyvideoindex , " in remote video : ", remVideoHolder);
+            webrtcdev.log("[webcallviewmanager updateRemoteVideos ] searching for video with index ", emptyvideoindex, " in remote video : ", remVideoHolder);
             if (remVideoHolder.length >= 0) {
                 if (remVideoHolder[0]) {
                     // since remvideo holder exist at current index , add video element to remoteVideos
                     remoteVideos[emptyvideoindex] = {
                         "userid": peerinfo.userid,
-                        "stream" : peerinfo.stream,
+                        "stream": peerinfo.stream,
                         "video": remVideoHolder[0]
                     };
-                    webrtcdev.log("[webcallviewmanager updateRemoteVideos ] RemoteVideos["+emptyvideoindex+"] updated " , remoteVideos[emptyvideoindex] , peerinfo.stream);
+                    webrtcdev.log("[webcallviewmanager updateRemoteVideos ] RemoteVideos[" + emptyvideoindex + "] updated ", remoteVideos[emptyvideoindex], peerinfo.stream);
                 }
 
-            } else if( remoteVideos[emptyvideoindex].userid== peerinfo.userid && remoteVideos[emptyvideoindex].stream ==""){
+            } else if (remoteVideos[emptyvideoindex].userid == peerinfo.userid && remoteVideos[emptyvideoindex].stream == "") {
                 // pre-existing video with stream ="" , update stream
                 webrtcdev.warn("[webcallviewmanager updateRemoteVideos] since remvideo holder doesnt exist with '' stream just overwrite the stream ");
                 remoteVideos[emptyvideoindex].stream = peerinfo.stream;
@@ -253,13 +252,13 @@ function updateRemoteVideos(peerinfo, remoteVideos, emptyvideoindex ){
                 // since remvideo holder doesnt exist just overwrite the last remote with the video
                 remoteVideos[remoteVideos.length - 1] = {
                     "userid": peerinfo.userid,
-                    "stream" : peerinfo.stream,
+                    "stream": peerinfo.stream,
                     "video": remVideoHolder[0]
                 };
-                webrtcdev.log("[webcallviewmanager updateRemoteVideos ] RemoteVideos["+remoteVideos.length-1+"] updated " , remoteVideos[emptyvideoindex]);
+                webrtcdev.log("[webcallviewmanager updateRemoteVideos ] RemoteVideos[" + remoteVideos.length - 1 + "] updated ", remoteVideos[emptyvideoindex]);
             }
         }
-    }catch(err){
+    } catch (err) {
         webrtcdev.error(err);
     }
     webrtcdev.log("[webcallviewmanager updateRemoteVideos ] remoteVideos before updating ", remoteVideos[emptyvideoindex])
@@ -275,16 +274,16 @@ function updateRemoteVideos(peerinfo, remoteVideos, emptyvideoindex ){
  * @param {json} remoteVideos
  * @return {int} emptyvideoindex
  */
-function findEmptyRemoteVideoIndex(peerinfo , remoteVideos){
+function findEmptyRemoteVideoIndex(peerinfo, remoteVideos) {
     /* get the next empty index of video and pointer in remote video array */
     let emptyvideoindex = 0;
     for (v in remoteVideos) {
         webrtcdev.log("[webcallviewdevmanager] Remote Video index array ", v, " || ", remoteVideos[v]);
 
         /* find of the video container of peer is already present in remoteVideos */
-        if(remoteVideos[v].userid == peerinfo.userid && remoteVideos[v].stream == "" && !!remoteVideos[v].video ){
+        if (remoteVideos[v].userid == peerinfo.userid && remoteVideos[v].stream == "" && !!remoteVideos[v].video) {
             webrtcdev.log("[webcallviewdevmanager] Remote Video dom exist already for the userid, checking for srcobject ");
-            if(!remoteVideos[v].video.srcObject) {
+            if (!remoteVideos[v].video.srcObject) {
                 webrtcdev.log("[webcallviewdevmanager] Remote Video dom exist already but without stream", remoteVideos[v].video);
                 emptyvideoindex = v;
                 break;
@@ -294,46 +293,46 @@ function findEmptyRemoteVideoIndex(peerinfo , remoteVideos){
         let vids = document.getElementsByName(remoteVideos[v]);
 
         /* video container of peer is not present in remoteVideos yet */
-        if(! remoteVideos[v].video) {
-            webrtcdev.log("[webcallviewdevmanager] ] Remote Video is not appended by json ",  vids);
+        if (!remoteVideos[v].video) {
+            webrtcdev.log("[webcallviewdevmanager] ] Remote Video is not appended by json ", vids);
             if (vids.length <= 0) {
                 webrtcdev.log("[webcallviewdevmanager] Remote video space is empty ");
                 emptyvideoindex = v;
                 break;
-            }else{
+            } else {
                 webrtcdev.log("[webcallviewdevmanager] Remote video space exists ", vids[0]);
                 vids = vids[0];
             }
-        }else{
+        } else {
             webrtcdev.log("[webcallviewdevmanager] ] Remote Video has json appended ", remoteVideos[v]);
             vids = remoteVideos[v].video;
         }
 
-        console.log(" [webcallviewdevmanager] ]  ============== vids.src ", vids.src,
+        console.log(" [webcallviewdevmanager] ] vids.src ", vids.src,
             " , vids.srcObject ", vids.srcObject,
             " , vids.readyState ", vids.readyState,
             " , vids.played.length ", vids.played.length);
-        if (vids && vids.srcObject ) {
-            if(vids.srcObject.active) {
+        if (vids && vids.srcObject) {
+            if (vids.srcObject.active) {
                 webrtcdev.log("[webcallviewdevmanager] video is already appended and playing ", vids,
-                    " vids.srcObject.active ", vids.srcObject.active ," move to next iteration");
+                    " vids.srcObject.active ", vids.srcObject.active, " move to next iteration");
                 emptyvideoindex++;
-            }else{
+            } else {
                 webrtcdev.log("[webcallviewdevmanager] video is already appended , but not playing ", vids,
-                    " vids.srcObject.active ", vids.srcObject.active ," use this index");
-                emptyvideoindex = v ;
+                    " vids.srcObject.active ", vids.srcObject.active, " use this index");
+                emptyvideoindex = v;
                 break;
             }
-        } else if(vids && !vids.srcObject){
+        } else if (vids && !vids.srcObject) {
             webrtcdev.log("[webcallviewdevmanager] video is not played ", vids, "use this index ");
-            emptyvideoindex = v ;
+            emptyvideoindex = v;
             break;
-        }else{
+        } else {
             webrtcdev.warn("[webcallviewdevmanager] Not sure whats up with the video ", vids, " move to next iteration")
-            emptyvideoindex ++;
+            emptyvideoindex++;
         }
     }
 
-    webrtcdev.log("[webcallviewmanager - findEmptyRemoteVideoIndex] emptyvideoindex ", emptyvideoindex , remoteVideos[emptyvideoindex]);
+    webrtcdev.log("[webcallviewmanager - findEmptyRemoteVideoIndex] emptyvideoindex ", emptyvideoindex, remoteVideos[emptyvideoindex]);
     return emptyvideoindex;
 }
