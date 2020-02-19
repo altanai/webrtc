@@ -3600,7 +3600,7 @@ function getUserMediaHandler(options) {
             return;
         }
 
-        console.log(" =======================KKKKKKKKKKKK ===================== ", options.localMediaConstraints );
+        console.log("localMediaConstraints : ", options.localMediaConstraints );
 
         navigator.mediaDevices.getUserMedia(options.localMediaConstraints).then(function(stream) {
             stream.streamid = stream.streamid || stream.id || getRandomString();

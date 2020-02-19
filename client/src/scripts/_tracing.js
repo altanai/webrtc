@@ -13,12 +13,14 @@ this.sendwebrtcdevLogs = function (url, key, msg) {
     const data = new FormData();
     const fileField = webrtcdevlogs;
     data.append('name', username || "no name");
-    data.append('scimage', document.getElementById("help-screenshot-body").src);
-    data.append("apikey", "dnE5aGpkUE03U1k4K3V5V0FUU3A4aGpGV2JHbkVsanhUVVBGU0NiaTZKcz0=");
+    if (document.getElementById("help-screenshot-body"))
+        data.append('scimage', document.getElementById("help-screenshot-body").src);
+    data.append("apikey", key);
     data.append("useremail", selfemail);
-    data.append("sesionid", sesionid);
+    data.append("sessionid", sessionid);
     data.append("message", msg);
-    data.append("logfileContent", webrtcdevlogs);
+    if (webrtcdevlogs)
+        data.append("logfileContent", webrtcdevlogs);
 
     var helpstatus = document.getElementById("helpStatus");
 
