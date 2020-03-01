@@ -14,6 +14,7 @@ function listDevices() {
             webrtcdev.error('[sessionmanager] checkDevices ', err.name, ": ", err.message);
         });
 }
+
 /**********************************
  Detect Webcam
  **********************************/
@@ -47,7 +48,7 @@ function detectMic(callback) {
 }
 
 
-async function getVideoPermission(){
+async function getVideoPermission() {
     // navigator.getUserMedia({ audio: false, video: true}, function(){
     //     outgoingVideo = false;
     // }, function(){
@@ -55,14 +56,14 @@ async function getVideoPermission(){
     // });
     let stream = null;
     try {
-        stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: true})
+        stream = await navigator.mediaDevices.getUserMedia({audio: false, video: true})
         if (stream.getVideoTracks().length > 0) {
             //code for when none of the devices are available
             webrtcdev.log("--------------------------------- Video Permission obtained ");
             outgoingVideo = true;
             return;
         }
-    } catch(err) {
+    } catch (err) {
         webrtcdev.error(err.name + ": " + err.message);
     }
     outgoingVideo = false;
@@ -70,22 +71,23 @@ async function getVideoPermission(){
 }
 
 
-async function getAudioPermission(){
+async function getAudioPermission() {
     let stream = null;
     try {
-        stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false})
+        stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false})
         if (stream.getAudioTracks().length > 0) {
             //code for when none of the devices are available
             webrtcdev.log("--------------------------------- Audio Permission obtained ");
             outgoingAudio = true;
             return;
         }
-    } catch(err) {
+    } catch (err) {
         webrtcdev.error(err.name + ": " + err.message);
     }
     outgoingAudio = false;
     return;
 }
+
 /************************************
  webrtc get media
  ***********************************/
@@ -98,11 +100,11 @@ async function getAudioPermission(){
  */
 function getCamMedia(rtcConn) {
     rtcConn.dontAttachStream = false,
-    rtcConn.dontGetRemoteStream = false;
+        rtcConn.dontGetRemoteStream = false;
 
     webrtcdev.log(" [startJS] getCamMedia  role :", role);
 
-    webrtcdev.log(" start getusermedia - outgoingVideo " + outgoingVideo + " outgoingAudio "+ outgoingAudio );
+    webrtcdev.log(" start getusermedia - outgoingVideo " + outgoingVideo + " outgoingAudio " + outgoingAudio);
     return new Promise(function (resolve, reject) {
         if (role == "inspector") {
             rtcConn.dontCaptureUserMedia = true;
@@ -119,7 +121,7 @@ function getCamMedia(rtcConn) {
         } else {
             rtcConn.dontCaptureUserMedia = true;
             webrtcdev.error(" [startJS] getCamMedia - dont Capture outgoing video ", outgoingVideo);
-            window.dispatchEvent(new CustomEvent('webrtcdev',{
+            window.dispatchEvent(new CustomEvent('webrtcdev', {
                 detail: {
                     servicetype: "session",
                     action: "onNoCameraCard"
@@ -181,18 +183,18 @@ function transitionToWaiting() {
 function attachMediaStream(remvid, stream) {
     try {
         let element = "";
-        webrtcdev.log("[ Mediacontrol - attachMediaStream ] element " , remvid);
-        if ((document.getElementsByName(remvid)).length > 0){
+        webrtcdev.log("[ Mediacontrol - attachMediaStream ] element ", remvid);
+        if ((document.getElementsByName(remvid)).length > 0) {
             element = document.getElementsByName(remvid)[0];
-        } else if(remvid.video){
+        } else if (remvid.video) {
             element = remvid.video;
-        } else if(remvid.nodeName == "VIDEO") {
+        } else if (remvid.nodeName == "VIDEO") {
             element = remvid;
-        }else{
-            return ;
+        } else {
+            return;
         }
 
-        webrtcdev.log("[ Mediacontrol - attachMediaStream ] stream " , stream);
+        webrtcdev.log("[ Mediacontrol - attachMediaStream ] stream ", stream);
         if (stream) {
             // if (typeof element.src == 'string') {
             //    element.src = URL.createObjectURL(stream);
@@ -214,11 +216,11 @@ function attachMediaStream(remvid, stream) {
             webrtcdev.warn("[ Mediacontrol - attachMediaStream ] Media Stream empty '' attached to ", element, " as stream is not valid ", stream);
         }
 
-    } catch(err) {
+    } catch (err) {
         webrtcdev.error(" [ Mediacontrol - attachMediaStream ]  error", err);
     }
 }
 
-function reattachMediaStream(to,from) {
+function reattachMediaStream(to, from) {
     to.src = from.src;
 }

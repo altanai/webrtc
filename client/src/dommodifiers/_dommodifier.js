@@ -76,9 +76,9 @@ function showelem(elem) {
         elem = getElementById(elem);
         elem.removeAttribute("hidden");
         elem.setAttribute("style", "display:block");
-    } else if ( (getElementsByName(elem)).length >0 ){
+    } else if ( (getElementByName(elem)).length >0 ){
         // search by name
-        elem = getElementsByName(elem);
+        elem = getElementByName(elem);
         elem[0].removeAttribute("hidden");
         elem[0].setAttribute("style", "display:block");
     } else {

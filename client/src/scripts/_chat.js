@@ -87,7 +87,7 @@ function addMessageSnapshotFormat(messageDivclass, userinfo, message, parent) {
         image.setAttribute("style", "border-radius: 50%;height:40px");
 
         var t = document.createElement("span");
-        t.className="cm-msg-text";
+        t.className = "cm-msg-text";
         t.innerHTML = replaceURLWithHTMLLinks(message);
 
         n.appendChild(image);
@@ -134,14 +134,14 @@ function addMessageBlockFormat(messageheaderDivclass, messageheader, messageDivc
 
     var t = document.createElement("div");
     t.className = messageheaderDivclass,
-        t.innerHTML = '<div class="chatusername">' + messageheader + "</div>";
+        t.innerHTML = '<div className="chatusername">' + messageheader + "</div>";
 
     var n = document.createElement("div");
     n.className = messageDivclass,
-    n.innerHTML = message,
+        n.innerHTML = message,
 
-    t.appendChild(n),
-    $("#" + parent).append(n);
+        t.appendChild(n),
+        $("#" + parent).append(n);
     /* $("#all-messages").scrollTop($("#all-messages")[0].scrollHeight) */
 }
 

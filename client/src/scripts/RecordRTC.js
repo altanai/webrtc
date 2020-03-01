@@ -338,7 +338,7 @@ function RecordRTC(mediaStream, config) {
         },
 
         /**
-         * It is equivalent to <code class="str">"recordRTC.blob"</code> property.
+         * It is equivalent to <code className="str">"recordRTC.blob"</code> property.
          * @method
          * @memberof RecordRTC
          * @instance

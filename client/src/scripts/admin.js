@@ -111,7 +111,7 @@ function clearList(element){
 }
 
 function drawList(element , listitem){
-    $("#"+element).append("<li class='list-group-item'>"+listitem+"</li>");
+    $("#"+element).append("<li className='list-group-item'>"+listitem+"</li>");
 }
 
 function drawTable(tablebody , data) {
@@ -130,7 +130,7 @@ function drawTable(tablebody , data) {
 function drawTableRow(tablebody ,i ,  channel , timestamp , users , 
     status , endtimestamp , duration) {
 
-    var row = $("<tr class='success' />");
+    var row = $("<tr className='success' />");
     row.append($("<td>" + i + "</td>"));
     row.append($("<td>" + channel + "</td>"));
     row.append($("<td>" + timestamp + "</td>"));

@@ -71,7 +71,7 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
                 let stream = event.stream;
                 attachMediaStream(video, stream);
                 //video.id = peerInfo.videoContainer;
-                console.log("========================= getElementById screenshareobj.screenshareContainer " , getElementById(screenshareobj.screenshareContainer));
+                console.log("========================= getElementById screenshareobj.screenshareContainer ", getElementById(screenshareobj.screenshareContainer));
                 getElementById(screenshareobj.screenshareContainer).appendChild(video);
                 showelem(screenshareobj.screenshareContainer);
                 rtcConn.send({
@@ -95,7 +95,7 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
             //createScreenViewButton();
 
             // Event Listener for Screen share stream started
-            window.dispatchEvent(new CustomEvent('webrtcdev',{
+            window.dispatchEvent(new CustomEvent('webrtcdev', {
                 detail: {
                     servicetype: "screenshare",
                     action: "onScreenShareStarted"
@@ -114,7 +114,7 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
             //removeScreenViewButton();
 
             // event listener for Screen share stream ended
-            window.dispatchEvent(new CustomEvent('webrtcdev',{
+            window.dispatchEvent(new CustomEvent('webrtcdev', {
                 detail: {
                     servicetype: "screenshare",
                     action: "onScreenShareEnded"

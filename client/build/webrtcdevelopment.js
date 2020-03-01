@@ -5959,10 +5959,9 @@ if (typeof define === 'function' && define.amd) {
 }
 
 /* ********************************************************
-web dev Logger 
+webdev Logger
 ****************************************************** */
 var webrtcdevlogs = [];
-
 
 /**
  * is this json
@@ -6020,65 +6019,71 @@ function getArgsJson(arg) {
 
 var webrtcdevlogger = {
     // if(debug){
-
-    log: console.log,
-    info: console.info,
-    debug: console.debug,
-    warn: console.warn,
-    error: console.error
+    // log: console.log,
+    // info: console.info,
+    // debug: console.debug,
+    // warn: console.warn,
+    // error: console.error
     // }else{
 
-    // log : function(){
-    //   // var arg = getArgsJson(arguments);
-    //   // document.getElementById("help-view-body").innerHTML += '[-]' + arg + "<br/>";
-    //   if(isJSON(arguments)){
-    //     let arg = JSON.stringify(arguments, undefined, 2);
-    //     webrtcdevlogs.push("<pre style='color:grey'>[-]" + arg + "</pre>");
-    //   }else{
-    //     let arg = getArgsJson(arguments);
-    //     webrtcdevlogs.push("<p style='color:grey'>[-]" + arg + "</p>");
-    //   }
-    //   console.log(arguments);
-    // },
-    //
-    // info : function(){
-    //   if(isJSON(arguments)){
-    //      let arg = JSON.stringify(arguments, undefined, 2);
-    //     webrtcdevlogs.push("<pre style='color:blue'>[-]" + arg + "</pre>");
-    //   }else{
-    //     let arg = getArgsJson(arguments);
-    //     webrtcdevlogs.push("<p style='color:blue'>[INFO]" + arg + "</p>");
-    //   }
-    //   console.info(arguments);
-    // },
-    //
-    // debug : function(){
-    //   if(isJSON(arguments)){
-    //     let arg = JSON.stringify(arguments, undefined, 2);
-    //     webrtcdevlogs.push( "<pre style='color:green'>[DEBUG]" + arg + "</pre>");
-    //   }else{
-    //     let arg = getArgsJson(arguments);
-    //     webrtcdevlogs.push("<p style='color:green'>[DEBUG]" + arg + "</p>");
-    //   }
-    //   console.debug(arguments);
-    // },
-    //
-    // warn : function(){
-    //   let arg = getArgsJson(arguments);
-    //   webrtcdevlogs.push("<p style='color:yellow'>[WARN]" + arg + "</p>");
-    //   console.warn(arguments);
-    // },
-    //
-    // error : function(){
-    //   if(isJSON(arguments)){
-    //     let arg = JSON.stringify(arguments, undefined, 2);
-    //     webrtcdevlogs.push("<pre style='color:grey'>[-]" + arg + "</pre>");
-    //   }else{
-    //     let arg = getArgsJson(arguments);
-    //     webrtcdevlogs.push("<p style='color:red'>[ERROR]"+ arg + "</p>");
-    //   }
-    //    console.error(arguments);
-    // }
+    log: function () {
+        let arg = getArgsJson(arguments);
+        // if (isJSON(arguments)) {
+        //     let arg = JSON.stringify(arguments, undefined, 2);
+        //     // webrtcdevlogs.push("<pre style='color:grey'>[-]" + arg + "</pre>");
+        // } else {
+        //     let arg = getArgsJson(arguments);
+        //     // webrtcdevlogs.push("<p style='color:grey'>[-]" + arg + "</p>");
+        // }
+        webrtcdevlogs.push( arg );
+        console.log(arguments);
+    },
+
+    info: function () {
+        let arg = getArgsJson(arguments);
+        // if (isJSON(arguments)) {
+        //     let arg = JSON.stringify(arguments, undefined, 2);
+        //     webrtcdevlogs.push("<pre style='color:blue'>[-]" + arg + "</pre>");
+        // } else {
+        //     let arg = getArgsJson(arguments);
+        //     webrtcdevlogs.push("<p style='color:blue'>[INFO]" + arg + "</p>");
+        // }
+        webrtcdevlogs.push( arg );
+        console.info(arguments);
+    },
+
+    debug: function () {
+        let arg = getArgsJson(arguments);
+        // if (isJSON(arguments)) {
+        //     let arg = JSON.stringify(arguments, undefined, 2);
+        //     webrtcdevlogs.push("<pre style='color:green'>[DEBUG]" + arg + "</pre>");
+        // } else {
+        //     let arg = getArgsJson(arguments);
+        //     webrtcdevlogs.push("<p style='color:green'>[DEBUG]" + arg + "</p>");
+        // }
+        webrtcdevlogs.push( arg );
+        console.debug(arguments);
+    },
+
+    warn: function () {
+        let arg = getArgsJson(arguments);
+        // webrtcdevlogs.push("<p style='color:yellow'>[WARN]" + arg + "</p>");
+        webrtcdevlogs.push( arg );
+        console.warn(arguments);
+    },
+
+    error: function () {
+        let arg = getArgsJson(arguments);
+        // if (isJSON(arguments)) {
+        //     let arg = JSON.stringify(arguments, undefined, 2);
+        //     webrtcdevlogs.push("<pre style='color:grey'>[-]" + arg + "</pre>");
+        // } else {
+        //     let arg = getArgsJson(arguments);
+        //     webrtcdevlogs.push("<p style='color:red'>[ERROR]" + arg + "</p>");
+        // }
+        webrtcdevlogs.push( arg );
+        console.error(arguments);
+    }
 
     // }
 
@@ -13915,9 +13920,9 @@ function showelem(elem) {
         elem = getElementById(elem);
         elem.removeAttribute("hidden");
         elem.setAttribute("style", "display:block");
-    } else if ( (getElementsByName(elem)).length >0 ){
+    } else if ( (getElementByName(elem)).length >0 ){
         // search by name
-        elem = getElementsByName(elem);
+        elem = getElementByName(elem);
         elem[0].removeAttribute("hidden");
         elem[0].setAttribute("style", "display:block");
     } else {
@@ -15391,7 +15396,7 @@ function createFileListingBox(peerinfo, parent) {
 
 
 function createFileSharingDiv(peerinfo) {
-    webrtcdev.log(" -------createFileSharingDiv  ", peerinfo);
+    webrtcdev.log("[filesharing dom modifier] createFileSharingDiv  ", peerinfo);
 
     // When the peerinfo role is inspctor but self role is not inspector only then exit
     if (peerinfo.role == "inspector" && role != "inspector") return;
@@ -17231,7 +17236,7 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
                 let stream = event.stream;
                 attachMediaStream(video, stream);
                 //video.id = peerInfo.videoContainer;
-                console.log("========================= getElementById screenshareobj.screenshareContainer " , getElementById(screenshareobj.screenshareContainer));
+                console.log("========================= getElementById screenshareobj.screenshareContainer ", getElementById(screenshareobj.screenshareContainer));
                 getElementById(screenshareobj.screenshareContainer).appendChild(video);
                 showelem(screenshareobj.screenshareContainer);
                 rtcConn.send({
@@ -17255,7 +17260,7 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
             //createScreenViewButton();
 
             // Event Listener for Screen share stream started
-            window.dispatchEvent(new CustomEvent('webrtcdev',{
+            window.dispatchEvent(new CustomEvent('webrtcdev', {
                 detail: {
                     servicetype: "screenshare",
                     action: "onScreenShareStarted"
@@ -17274,7 +17279,7 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
             //removeScreenViewButton();
 
             // event listener for Screen share stream ended
-            window.dispatchEvent(new CustomEvent('webrtcdev',{
+            window.dispatchEvent(new CustomEvent('webrtcdev', {
                 detail: {
                     servicetype: "screenshare",
                     action: "onScreenShareEnded"
@@ -17463,7 +17468,6 @@ function resetAlertBox() {
 }
 /*-----------------------------------------------------------------------------------*/
 /*                        webrtc checks JS                                           */
-
 /*-----------------------------------------------------------------------------------*/
 
 /**
@@ -20435,7 +20439,7 @@ function RecordRTC(mediaStream, config) {
         },
 
         /**
-         * It is equivalent to <code class="str">"recordRTC.blob"</code> property.
+         * It is equivalent to <code className="str">"recordRTC.blob"</code> property.
          * @method
          * @memberof RecordRTC
          * @instance
@@ -24331,7 +24335,7 @@ function addMessageSnapshotFormat(messageDivclass, userinfo, message, parent) {
         image.setAttribute("style", "border-radius: 50%;height:40px");
 
         var t = document.createElement("span");
-        t.className="cm-msg-text";
+        t.className = "cm-msg-text";
         t.innerHTML = replaceURLWithHTMLLinks(message);
 
         n.appendChild(image);
@@ -24378,14 +24382,14 @@ function addMessageBlockFormat(messageheaderDivclass, messageheader, messageDivc
 
     var t = document.createElement("div");
     t.className = messageheaderDivclass,
-        t.innerHTML = '<div class="chatusername">' + messageheader + "</div>";
+        t.innerHTML = '<div className="chatusername">' + messageheader + "</div>";
 
     var n = document.createElement("div");
     n.className = messageDivclass,
-    n.innerHTML = message,
+        n.innerHTML = message,
 
-    t.appendChild(n),
-    $("#" + parent).append(n);
+        t.appendChild(n),
+        $("#" + parent).append(n);
     /* $("#all-messages").scrollTop($("#all-messages")[0].scrollHeight) */
 }
 
@@ -24407,6 +24411,7 @@ function listDevices() {
             webrtcdev.error('[sessionmanager] checkDevices ', err.name, ": ", err.message);
         });
 }
+
 /**********************************
  Detect Webcam
  **********************************/
@@ -24440,7 +24445,7 @@ function detectMic(callback) {
 }
 
 
-async function getVideoPermission(){
+async function getVideoPermission() {
     // navigator.getUserMedia({ audio: false, video: true}, function(){
     //     outgoingVideo = false;
     // }, function(){
@@ -24448,14 +24453,14 @@ async function getVideoPermission(){
     // });
     let stream = null;
     try {
-        stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: true})
+        stream = await navigator.mediaDevices.getUserMedia({audio: false, video: true})
         if (stream.getVideoTracks().length > 0) {
             //code for when none of the devices are available
             webrtcdev.log("--------------------------------- Video Permission obtained ");
             outgoingVideo = true;
             return;
         }
-    } catch(err) {
+    } catch (err) {
         webrtcdev.error(err.name + ": " + err.message);
     }
     outgoingVideo = false;
@@ -24463,22 +24468,23 @@ async function getVideoPermission(){
 }
 
 
-async function getAudioPermission(){
+async function getAudioPermission() {
     let stream = null;
     try {
-        stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false})
+        stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false})
         if (stream.getAudioTracks().length > 0) {
             //code for when none of the devices are available
             webrtcdev.log("--------------------------------- Audio Permission obtained ");
             outgoingAudio = true;
             return;
         }
-    } catch(err) {
+    } catch (err) {
         webrtcdev.error(err.name + ": " + err.message);
     }
     outgoingAudio = false;
     return;
 }
+
 /************************************
  webrtc get media
  ***********************************/
@@ -24491,11 +24497,11 @@ async function getAudioPermission(){
  */
 function getCamMedia(rtcConn) {
     rtcConn.dontAttachStream = false,
-    rtcConn.dontGetRemoteStream = false;
+        rtcConn.dontGetRemoteStream = false;
 
     webrtcdev.log(" [startJS] getCamMedia  role :", role);
 
-    webrtcdev.log(" start getusermedia - outgoingVideo " + outgoingVideo + " outgoingAudio "+ outgoingAudio );
+    webrtcdev.log(" start getusermedia - outgoingVideo " + outgoingVideo + " outgoingAudio " + outgoingAudio);
     return new Promise(function (resolve, reject) {
         if (role == "inspector") {
             rtcConn.dontCaptureUserMedia = true;
@@ -24512,7 +24518,7 @@ function getCamMedia(rtcConn) {
         } else {
             rtcConn.dontCaptureUserMedia = true;
             webrtcdev.error(" [startJS] getCamMedia - dont Capture outgoing video ", outgoingVideo);
-            window.dispatchEvent(new CustomEvent('webrtcdev',{
+            window.dispatchEvent(new CustomEvent('webrtcdev', {
                 detail: {
                     servicetype: "session",
                     action: "onNoCameraCard"
@@ -24574,18 +24580,18 @@ function transitionToWaiting() {
 function attachMediaStream(remvid, stream) {
     try {
         let element = "";
-        webrtcdev.log("[ Mediacontrol - attachMediaStream ] element " , remvid);
-        if ((document.getElementsByName(remvid)).length > 0){
+        webrtcdev.log("[ Mediacontrol - attachMediaStream ] element ", remvid);
+        if ((document.getElementsByName(remvid)).length > 0) {
             element = document.getElementsByName(remvid)[0];
-        } else if(remvid.video){
+        } else if (remvid.video) {
             element = remvid.video;
-        } else if(remvid.nodeName == "VIDEO") {
+        } else if (remvid.nodeName == "VIDEO") {
             element = remvid;
-        }else{
-            return ;
+        } else {
+            return;
         }
 
-        webrtcdev.log("[ Mediacontrol - attachMediaStream ] stream " , stream);
+        webrtcdev.log("[ Mediacontrol - attachMediaStream ] stream ", stream);
         if (stream) {
             // if (typeof element.src == 'string') {
             //    element.src = URL.createObjectURL(stream);
@@ -24607,12 +24613,12 @@ function attachMediaStream(remvid, stream) {
             webrtcdev.warn("[ Mediacontrol - attachMediaStream ] Media Stream empty '' attached to ", element, " as stream is not valid ", stream);
         }
 
-    } catch(err) {
+    } catch (err) {
         webrtcdev.error(" [ Mediacontrol - attachMediaStream ]  error", err);
     }
 }
 
-function reattachMediaStream(to,from) {
+function reattachMediaStream(to, from) {
     to.src = from.src;
 }
 /*-----------------------------------------------------------------------------------*/
@@ -25519,6 +25525,7 @@ function assignButtonRedial(id){
 /*-----------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------*/
 /*                    listen-in JS                                                   */
+
 /*-----------------------------------------------------------------------------------*/
 
 /**
@@ -25539,9 +25546,8 @@ function getlisteninlink() {
     }
 }
 
-function freezescreen()
-{
-    document.body.setAttribute("style","pointer-events: none;");
+function freezescreen() {
+    document.body.setAttribute("style", "pointer-events: none;");
 }
 
 /*-----------------------------------------------------------------------------------*/
@@ -26103,6 +26109,12 @@ function checkTime(i) {
 /*                        Tracing JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 
+this.getwebrtcdevlogs = function () {
+    if (webrtcdevlogs)
+        return webrtcdevlogs;
+
+    return null;
+};
 /**
  * collect all webrtcStats and stream to Server to be stored in a file with seesion id as the file name
  * @method
@@ -26112,16 +26124,21 @@ function checkTime(i) {
  */
 this.sendwebrtcdevLogs = function (url, key, msg) {
     const data = new FormData();
-    const fileField = webrtcdevlogs;
     data.append('name', username || "no name");
     if (document.getElementById("help-screenshot-body"))
         data.append('scimage', document.getElementById("help-screenshot-body").src);
+
     data.append("apikey", key);
     data.append("useremail", selfemail);
     data.append("sessionid", sessionid);
     data.append("message", msg);
-    if (webrtcdevlogs)
-        data.append("logfileContent", webrtcdevlogs);
+    if (webrtcdevlogs && (typeof webrtcdevlogs) == "object") {
+        let logs = webrtcdevlogs;
+        data.append("logfileContent", logs);
+    } else {
+        data.append("logfileContent", ["none"]);
+        webrtcdev.error(" check if widget help is active to true ");
+    }
 
     var helpstatus = document.getElementById("helpStatus");
 
@@ -26129,17 +26146,17 @@ this.sendwebrtcdevLogs = function (url, key, msg) {
         method: 'POST',
         body: data
     })
-        .then(res => res.text())
-
-        .then(text => console.log(text),
-            helpstatus.innerHTML = "Email sent for help",
-            helpstatus.setAttribute("style", "color:green")
-        )
-        .catch(error => console.error(error),
-            helpstatus.innerHTML = "Email could not be sent for Help",
-            helpstatus.setAttribute("style", "color:red")
-        );
-}
+    .then(res => res.text())
+    .then(text => console.log(text),
+        helpstatus.innerHTML = "Email sent for help",
+        helpstatus.setAttribute("style", "color:green")
+    )
+    .catch(error => console.error(error),
+        webrtcdev.error("error in sendwebrtcdevLogs")
+        // helpstatus.innerHTML = "Email could not be sent for Help",
+        // helpstatus.setAttribute("style", "color:red")
+    );
+};
 
 
 /**
@@ -27611,7 +27628,7 @@ function clearList(element){
 }
 
 function drawList(element , listitem){
-    $("#"+element).append("<li class='list-group-item'>"+listitem+"</li>");
+    $("#"+element).append("<li className='list-group-item'>"+listitem+"</li>");
 }
 
 function drawTable(tablebody , data) {
@@ -27630,7 +27647,7 @@ function drawTable(tablebody , data) {
 function drawTableRow(tablebody ,i ,  channel , timestamp , users , 
     status , endtimestamp , duration) {
 
-    var row = $("<tr class='success' />");
+    var row = $("<tr className='success' />");
     row.append($("<td>" + i + "</td>"));
     row.append($("<td>" + channel + "</td>"));
     row.append($("<td>" + timestamp + "</td>"));

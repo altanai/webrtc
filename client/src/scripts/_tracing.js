@@ -2,6 +2,12 @@
 /*                        Tracing JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 
+this.getwebrtcdevlogs = function () {
+    if (webrtcdevlogs)
+        return webrtcdevlogs;
+
+    return null;
+};
 /**
  * collect all webrtcStats and stream to Server to be stored in a file with seesion id as the file name
  * @method
@@ -11,16 +17,21 @@
  */
 this.sendwebrtcdevLogs = function (url, key, msg) {
     const data = new FormData();
-    const fileField = webrtcdevlogs;
     data.append('name', username || "no name");
     if (document.getElementById("help-screenshot-body"))
         data.append('scimage', document.getElementById("help-screenshot-body").src);
+
     data.append("apikey", key);
     data.append("useremail", selfemail);
     data.append("sessionid", sessionid);
     data.append("message", msg);
-    if (webrtcdevlogs)
-        data.append("logfileContent", webrtcdevlogs);
+    if (webrtcdevlogs && (typeof webrtcdevlogs) == "object") {
+        let logs = webrtcdevlogs;
+        data.append("logfileContent", logs);
+    } else {
+        data.append("logfileContent", ["none"]);
+        webrtcdev.error(" check if widget help is active to true ");
+    }
 
     var helpstatus = document.getElementById("helpStatus");
 
@@ -28,17 +39,17 @@ this.sendwebrtcdevLogs = function (url, key, msg) {
         method: 'POST',
         body: data
     })
-        .then(res => res.text())
-
-        .then(text => console.log(text),
-            helpstatus.innerHTML = "Email sent for help",
-            helpstatus.setAttribute("style", "color:green")
-        )
-        .catch(error => console.error(error),
-            helpstatus.innerHTML = "Email could not be sent for Help",
-            helpstatus.setAttribute("style", "color:red")
-        );
-}
+    .then(res => res.text())
+    .then(text => console.log(text),
+        helpstatus.innerHTML = "Email sent for help",
+        helpstatus.setAttribute("style", "color:green")
+    )
+    .catch(error => console.error(error),
+        webrtcdev.error("error in sendwebrtcdevLogs")
+        // helpstatus.innerHTML = "Email could not be sent for Help",
+        // helpstatus.setAttribute("style", "color:red")
+    );
+};
 
 
 /**

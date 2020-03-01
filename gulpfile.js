@@ -162,7 +162,7 @@ gulp.task('codecss',function(done) {
     list=[ 
         "client/src/codemirror/theme/mdn-like.css",
         "client/src/codemirror/lib/codemirror.css",
-        "client/src/codemirror/style.css"
+        "client/src/codemirror/styleprojec.css"
     ]; 
     console.log(list);
     gulp.src(list)

@@ -1101,7 +1101,7 @@ function createFileListingBox(peerinfo, parent) {
 
 
 function createFileSharingDiv(peerinfo) {
-    webrtcdev.log(" -------createFileSharingDiv  ", peerinfo);
+    webrtcdev.log("[filesharing dom modifier] createFileSharingDiv  ", peerinfo);
 
     // When the peerinfo role is inspctor but self role is not inspector only then exit
     if (peerinfo.role == "inspector" && role != "inspector") return;

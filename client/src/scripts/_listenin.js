@@ -1,5 +1,6 @@
 /*-----------------------------------------------------------------------------------*/
 /*                    listen-in JS                                                   */
+
 /*-----------------------------------------------------------------------------------*/
 
 /**
@@ -20,9 +21,8 @@ function getlisteninlink() {
     }
 }
 
-function freezescreen()
-{
-    document.body.setAttribute("style","pointer-events: none;");
+function freezescreen() {
+    document.body.setAttribute("style", "pointer-events: none;");
 }
 
 /*-----------------------------------------------------------------------------------*/
