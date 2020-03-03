@@ -13842,7 +13842,6 @@ this.stopCall = function () {
 }
 
 
-
 function getElement(e) {
     return document.querySelector(e)
 }
@@ -13858,8 +13857,8 @@ function getElementById(elem) {
 
 function getElementByName(elem) {
     try {
-        if( document.getElementsByName(elem))
-            return  document.getElementsByName(elem)[0];
+        if (document.getElementsByName(elem))
+            return document.getElementsByName(elem)[0];
     } catch (e) {
         webrtcdev.error(e);
         return "";
@@ -13906,28 +13905,33 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function () {
  * @param {dom} elem
  */
 function showelem(elem) {
-    if(!elem) {
+    if (!elem) {
         webrtcdev.error("show elem undefined");
         return;
     }
-    webrtcdev.log(" [init] show elem", elem ," , type ",  typeof elem , " , nodetype " , elem.nodeType);
-    if (typeof elem === 'object' && elem.nodeType !== undefined) {
-        // validate its is a dom node
-        elem.removeAttribute("hidden");
-        elem.setAttribute("style", "display:block!important");
-    } else if (getElementById(elem)) {
-        // search by ID
-        elem = getElementById(elem);
-        elem.removeAttribute("hidden");
-        elem.setAttribute("style", "display:block");
-    } else if ( (getElementByName(elem)).length >0 ){
-        // search by name
-        elem = getElementByName(elem);
-        elem[0].removeAttribute("hidden");
-        elem[0].setAttribute("style", "display:block");
-    } else {
-        // not found
-        webrtcdev.warn("elem not found ", elem);
+    try {
+
+        webrtcdev.log(" [init] show elem", elem, " , type ", typeof elem, " , nodetype ", elem.nodeType);
+        if (typeof elem === 'object' && elem.nodeType !== undefined) {
+            // validate its is a dom node
+            elem.removeAttribute("hidden");
+            elem.setAttribute("style", "display:block!important");
+        } else if (getElementById(elem)) {
+            // search by ID
+            elem = getElementById(elem);
+            elem.removeAttribute("hidden");
+            elem.setAttribute("style", "display:block");
+        } else if (getElementByName(elem)) {
+            // search by name
+            elem = getElementByName(elem);
+            elem[0].removeAttribute("hidden");
+            elem[0].setAttribute("style", "display:block");
+        } else {
+            // not found
+            webrtcdev.warn("elem not found ", elem);
+        }
+    } catch (err) {
+        webrtcdev.error("showeleem", err);
     }
 }
 
@@ -13938,7 +13942,7 @@ function showelem(elem) {
  * @param {dom} elem
  */
 function hideelem(elem) {
-    try{
+    try {
         if (typeof elem === 'object' && elem.nodeType !== undefined) {
             elem.setAttribute("hidden", true);
             elem.setAttribute("style", "display:none!important");
@@ -13946,14 +13950,14 @@ function hideelem(elem) {
             getElementById(elem).setAttribute("hidden", true);
             getElementById(elem).setAttribute("style", "display:none");
         }
-    }catch(err){
-        webrtcdev.error(elem , err)
+    } catch (err) {
+        webrtcdev.error(elem, err)
     }
 }
 
 
-function existselem(elem){
-    return getElementById(elem)?true:false;
+function existselem(elem) {
+    return getElementById(elem) ? true : false;
 }
 /**
  * Update local cache of user sesssion based object called peerinfo
@@ -25534,7 +25538,7 @@ function assignButtonRedial(id){
  * @name getlisteninlink
  * @return {string}listeninlink
  */
-function getlisteninlink() {
+this.getlisteninlink = function() {
     if (!sessionid) console.error("cant generate listenin link , no session id found ")
     try {
         webrtcdev.log(" Current Session ", window.origin);
@@ -25544,12 +25548,48 @@ function getlisteninlink() {
         webrtcdev.error("ListenIn :", e);
         return false;
     }
-}
+};
 
 function freezescreen() {
     document.body.setAttribute("style", "pointer-events: none;");
 }
 
+/**
+ * collect all webrtcStats and stream to Server to be stored in a file with session id as the file name
+ * @method
+ * @name sendwebrtcdevLogs
+ * @param {string} url
+ * @param {string} key
+ * @param {string} senderuseremail
+ * @param {string} receiveruseremail
+ * @return Http request
+ */
+this.sendlisteninlink = function (url, key, senderuseremail, receiveruseremail) {
+
+    var dataArray = {
+        apikey: key,
+        senderuseremail: senderuseremail,
+        receiveruseremail: receiveruseremail,
+        webrtcsessionid: webrtcdevobj.sessionid,
+        connectiontype: 1
+    };
+
+    return fetch(url, {
+        method: 'post',
+        crossDomain: true,
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json',
+            'Authorization': key,
+            'Access-Control-Allow-Origin': window.location.origin,
+            'Access-Control-Allow-Credentials': 'true'
+        },
+        body: JSON.stringify(dataArray)
+    })
+        .then(apires => apires.json())
+        .then(apires => console.log("Listenin API response ", apires))
+        .catch(error => console.error("Listenin API response ", error));
+};
 /*-----------------------------------------------------------------------------------*/
 
 /*-----------------------------------------------------------------------------------*/
@@ -26115,11 +26155,14 @@ this.getwebrtcdevlogs = function () {
 
     return null;
 };
+
 /**
- * collect all webrtcStats and stream to Server to be stored in a file with seesion id as the file name
+ * collect all webrtcStats and stream to Server to be stored in a file with session id as the file name
  * @method
- * @name sendCallTraces
- * @param {string} traces
+ * @name sendwebrtcdevLogs
+ * @param {string} url
+ * @param {string} key
+ * @param {string} msg
  * @return Http request
  */
 this.sendwebrtcdevLogs = function (url, key, msg) {

@@ -8,11 +8,14 @@ this.getwebrtcdevlogs = function () {
 
     return null;
 };
+
 /**
- * collect all webrtcStats and stream to Server to be stored in a file with seesion id as the file name
+ * collect all webrtcStats and stream to Server to be stored in a file with session id as the file name
  * @method
- * @name sendCallTraces
- * @param {string} traces
+ * @name sendwebrtcdevLogs
+ * @param {string} url
+ * @param {string} key
+ * @param {string} msg
  * @return Http request
  */
 this.sendwebrtcdevLogs = function (url, key, msg) {

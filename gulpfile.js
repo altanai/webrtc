@@ -19,11 +19,11 @@ console.log("Properties " , properties);
 var folderPath="", file="";
 
 if(properties.enviornment=="production"){
-  folderPath='client/prod/';
+  folderPath='prod/';
 }else if(properties.enviornment=="test"){
-  folderPath='client/tests/';
+  folderPath='tests/';
 }else{
-  folderPath='client/build/';
+  folderPath='build/';
 }
 
 var header = require('gulp-header'),

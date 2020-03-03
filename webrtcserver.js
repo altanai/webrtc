@@ -73,7 +73,7 @@ var realtimecomm = _realtimecomm(app, properties, log, function (socket) {
 });
 
 
-var _restapi = require('./client/build/webrtcdevelopmentServer.js').restapi;
+var _restapi = require('./build/webrtcdevelopmentServer.js').restapi;
 var restapi = _restapi(realtimecomm, options, app, properties);
 
 console.log("< ------------------------ HTTPS Server -------------------> ");

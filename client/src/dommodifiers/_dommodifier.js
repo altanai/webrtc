@@ -1,4 +1,3 @@
-
 function getElement(e) {
     return document.querySelector(e)
 }
@@ -14,8 +13,8 @@ function getElementById(elem) {
 
 function getElementByName(elem) {
     try {
-        if( document.getElementsByName(elem))
-            return  document.getElementsByName(elem)[0];
+        if (document.getElementsByName(elem))
+            return document.getElementsByName(elem)[0];
     } catch (e) {
         webrtcdev.error(e);
         return "";
@@ -62,28 +61,33 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function () {
  * @param {dom} elem
  */
 function showelem(elem) {
-    if(!elem) {
+    if (!elem) {
         webrtcdev.error("show elem undefined");
         return;
     }
-    webrtcdev.log(" [init] show elem", elem ," , type ",  typeof elem , " , nodetype " , elem.nodeType);
-    if (typeof elem === 'object' && elem.nodeType !== undefined) {
-        // validate its is a dom node
-        elem.removeAttribute("hidden");
-        elem.setAttribute("style", "display:block!important");
-    } else if (getElementById(elem)) {
-        // search by ID
-        elem = getElementById(elem);
-        elem.removeAttribute("hidden");
-        elem.setAttribute("style", "display:block");
-    } else if ( (getElementByName(elem)).length >0 ){
-        // search by name
-        elem = getElementByName(elem);
-        elem[0].removeAttribute("hidden");
-        elem[0].setAttribute("style", "display:block");
-    } else {
-        // not found
-        webrtcdev.warn("elem not found ", elem);
+    try {
+
+        webrtcdev.log(" [init] show elem", elem, " , type ", typeof elem, " , nodetype ", elem.nodeType);
+        if (typeof elem === 'object' && elem.nodeType !== undefined) {
+            // validate its is a dom node
+            elem.removeAttribute("hidden");
+            elem.setAttribute("style", "display:block!important");
+        } else if (getElementById(elem)) {
+            // search by ID
+            elem = getElementById(elem);
+            elem.removeAttribute("hidden");
+            elem.setAttribute("style", "display:block");
+        } else if (getElementByName(elem)) {
+            // search by name
+            elem = getElementByName(elem);
+            elem[0].removeAttribute("hidden");
+            elem[0].setAttribute("style", "display:block");
+        } else {
+            // not found
+            webrtcdev.warn("elem not found ", elem);
+        }
+    } catch (err) {
+        webrtcdev.error("showeleem", err);
     }
 }
 
@@ -94,7 +98,7 @@ function showelem(elem) {
  * @param {dom} elem
  */
 function hideelem(elem) {
-    try{
+    try {
         if (typeof elem === 'object' && elem.nodeType !== undefined) {
             elem.setAttribute("hidden", true);
             elem.setAttribute("style", "display:none!important");
@@ -102,12 +106,12 @@ function hideelem(elem) {
             getElementById(elem).setAttribute("hidden", true);
             getElementById(elem).setAttribute("style", "display:none");
         }
-    }catch(err){
-        webrtcdev.error(elem , err)
+    } catch (err) {
+        webrtcdev.error(elem, err)
     }
 }
 
 
-function existselem(elem){
-    return getElementById(elem)?true:false;
+function existselem(elem) {
+    return getElementById(elem) ? true : false;
 }
