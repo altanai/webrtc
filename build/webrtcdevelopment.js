@@ -26486,18 +26486,21 @@ var setWidgets = function (rtcConn) {
 
         // ---------------------------------- Listenin Widget --------------------------------------------------
         if (listeninobj && listeninobj.active) {
-            document.getElementById(listeninobj.button.textbox).value =  getlisteninlink();
+            // listenintextbox = document.getElementById(listeninobj.button.textbox);
+            // webrtcdev.log("[widget js] document.getElementById(listeninobj.button.textbox) " ,listenintextbox);
+            // listenintextbox.value =  this.getlisteninlink();
+
             if (listeninobj.button.id && document.getElementById(listeninobj.button.id)) {
                 //assignButtonRedial(reconnectobj.button.id);
             } else {
                 //createButtonRedial();
             }
-            webrtcdev.log(" [sessionmanager]listen in widget loaded ");
+            webrtcdev.log("[widget js] listen in widget loaded ");
         } else if (listeninobj && !listeninobj.active) {
             if (listeninobj.button.id && document.getElementById(listeninobj.button.id)) {
                 document.getElementById(listeninobj.button.id).className = "inactiveButton";
             }
-            webrtcdev.warn("[sessionmanager] listenin widget not loaded ");
+            webrtcdev.warn("[widget js] listenin widget not loaded ");
         }
 
         // ---------------------------------- Timer Widget --------------------------------------------------
