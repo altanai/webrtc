@@ -26943,18 +26943,19 @@ var setRtcConn = function (sessionid) {
                     webrtcdev.log("[sessionmanager onopen] selfuserid ", selfuserid);
 
                     // Add remote peer userid to remoteUsers
-                    remoteUsers = rtcConn.peers.getAllParticipants(),
-                        webrtcdev.log(" [sessionmanager onopen] Collecting remote peers", remoteUsers);
+                    remoteUsers = rtcConn.peers.getAllParticipants();
+                    webrtcdev.log(" [sessionmanager onopen] Collecting remote peers", remoteUsers);
 
-                    webrtcdev.log(" [sessionmanager onopen] webcallpeers length ", webcallpeers.length);
 
                     // remove old non existing peers, excluded selfuserid
-                    webrtcdev.log(" [sessionmanager] removePeerInfo  Before  ", webcallpeers);
-                    for (x in webcallpeers) {
-                        webrtcdev.log(" [sessionmanager onopen] webcallpeers[" + x + "]", webcallpeers[x]);
-                        if (!(remoteUsers.includes(webcallpeers[x].userid)) && (webcallpeers[x].userid != selfuserid)) {
-                            console.warn("[sessionmanager remove PeerInfo - ", webcallpeers[x].userid, " which neither exists in remote peer and not is selfuserid");
-                            removePeerInfo(x);
+                    webrtcdev.log(" [sessionmanager onopen] webcallpeers length ", webcallpeers.length);
+                    if (webcallpeers.length - remoteUsers.length > 1) {
+                        for (x in webcallpeers) {
+                            webrtcdev.log(" [sessionmanager onopen] webcallpeers[" + x + "]", webcallpeers[x]);
+                            if (!(remoteUsers.includes(webcallpeers[x].userid)) && (webcallpeers[x].userid != selfuserid)) {
+                                console.warn("[sessionmanager] remove PeerInfo - ", webcallpeers[x].userid, " which neither exists in remote peer and not is selfuserid");
+                                removePeerInfo(x);
+                            }
                         }
                     }
                     webrtcdev.log(" [sessionmanager] removePeerInfo  After  ", webcallpeers);
@@ -26966,7 +26967,7 @@ var setRtcConn = function (sessionid) {
                             let remoterole = event.extra.role || "participant", // will fail in case of 2 listeners
                                 remotecolor = event.extra.color,
                                 remoteemail = event.extra.email,
-                                remoteusername = event.extra.remoteusername;
+                                remoteusername = (event.extra.name == "LOCAL"? "REMOTE": event.extra.name);
 
                             updatePeerInfo(remoteUsers[x], remoteusername, remotecolor, remoteemail, remoterole, "remote");
                             if (remoterole == "inspector") {
@@ -27441,7 +27442,7 @@ var connectWebRTC = function (type, channel, selfuserid, remoteUsers) {
         " , self-Userid : ", selfuserid, " , and remote users : ", remoteUsers);
     if (debug) showUserStats();
 
-    if ( listeninobj.active && role == "inspector") {
+    if (listeninobj.active && role == "inspector") {
         webrtcdev.info(" [sessionmanage] freezing screen for role inspector ");
         freezescreen();
     }
