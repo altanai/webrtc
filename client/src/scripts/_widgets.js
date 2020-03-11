@@ -59,7 +59,7 @@ var setWidgets = function (rtcConn) {
                 webrtcdev.log("[sessionmanager]Rconnect Button created");
                 createButtonRedial(reconnectobj);
             }
-            webrtcdev.log(" [sessionmanager]reconnect widget loacded ");
+            webrtcdev.log(" [sessionmanager]reconnect widget loaded ");
         } else if (reconnectobj && !reconnectobj.active) {
             if (reconnectobj.button && reconnectobj.button.id && document.getElementById(reconnectobj.button.id)) {
                 document.getElementById(reconnectobj.button.id).className = "inactiveButton";
@@ -68,9 +68,12 @@ var setWidgets = function (rtcConn) {
         }
 
         // ---------------------------------- Cursor Widget --------------------------------------------------
-        if (cursorobj.active) {
+        if (cursorobj && cursorobj.active) {
             hideelem("cursor1");
             hideelem("cursor2");
+            webrtcdev.log(" [sessionmanager] cursor widget not loaded ");
+        }else{
+            webrtcdev.warn(" [sessionmanager] cursor widget not loaded ");
         }
 
         // ---------------------------------- Listenin Widget --------------------------------------------------
@@ -84,9 +87,9 @@ var setWidgets = function (rtcConn) {
             } else {
                 //createButtonRedial();
             }
-            webrtcdev.log("[widget js] listen in widget loaded ");
+            webrtcdev.log("[widget js] listenin widget loaded ");
         } else if (listeninobj && !listeninobj.active) {
-            if (listeninobj.button.id && document.getElementById(listeninobj.button.id)) {
+            if (listeninobj.button && listeninobj.button.id && document.getElementById(listeninobj.button.id)) {
                 document.getElementById(listeninobj.button.id).className = "inactiveButton";
             }
             webrtcdev.warn("[widget js] listenin widget not loaded ");
@@ -102,6 +105,7 @@ var setWidgets = function (rtcConn) {
             if (timerobj.button.id && document.getElementById(timerobj.button.id)) {
                 document.getElementById(timerobj.button.id).className = "inactiveButton";
             }
+            webrtcdev.warn("[widget js] timer widget not loaded ");
         }
 
         // ---------------------------------- Draw Widget --------------------------------------------------

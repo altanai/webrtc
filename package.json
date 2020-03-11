@@ -69,5 +69,8 @@
   "bugs": {
     "url": "https://github.com/altanai/webrtc/issues"
   },
-  "homepage": "https://github.com/altanai/webrtc#readme"
+  "homepage": "https://github.com/altanai/webrtc#readme",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@altanai"
+  }
 }
