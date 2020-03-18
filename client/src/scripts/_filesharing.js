@@ -124,8 +124,8 @@ function fileSharingEnded(file) {
  */
 function sendFile(file) {
     webrtcdev.log(" [filehsraing js] Send file - ", file);
-    for (x in webcallpeers) {
-        for (y in webcallpeers[x].filearray) {
+    for (let x in webcallpeers) {
+        for (let y in webcallpeers[x].filearray) {
             if (webcallpeers[x].filearray[y].status == "progress") {
                 webrtcdev.log("[flesharing JS] A file is already in progress , add the new file " + file.name + " to queue");
                 //alert("Allow current file to complete uploading, before selecting the next file share upload");

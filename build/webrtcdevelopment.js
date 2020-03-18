@@ -15206,8 +15206,8 @@ function createFileSharingBox(peerinfo, parent) {
         fileShareContainer.className = "filesharingWidget";
         fileShareContainer.id = peerinfo.fileShare.container;
 
-        let fillerArea = document.createElement("p");
-        fillerArea.className = "filler";
+        // let fillerArea = document.createElement("p");
+        // fillerArea.className = "filler";
 
         if (debug) {
             let nameBox = document.createElement("span");
@@ -15215,13 +15215,13 @@ function createFileSharingBox(peerinfo, parent) {
             fileSharingBox.appendChild(nameBox);
         }
 
-        linebreak = document.createElement("br");
+        // linebreak = document.createElement("br");
 
         fileSharingBox.appendChild(fileControlBar);
-        fileSharingBox.appendChild(linebreak);
-        fileSharingBox.appendChild(linebreak);
+        // fileSharingBox.appendChild(linebreak);
+        // fileSharingBox.appendChild(linebreak);
         fileSharingBox.appendChild(fileShareContainer);
-        fileSharingBox.appendChild(fillerArea);
+        // fileSharingBox.appendChild(fillerArea);
 
         parent.appendChild(fileSharingBox);
     } catch (e) {
@@ -17567,22 +17567,26 @@ function checkWebRTCSupport(obj) {
 
             /* Altanai patch for trash on file upload 
             */
-            for(x in webcallpeers){
-                //console.log(" ========= fbr.getNextChunk -ids  " , userid ,  webcallpeers[x].userid , selfuserid);
-                if(webcallpeers[x].userid == selfuserid ){
-                    for( y in webcallpeers[x].filearray){
-                        //console.log(" ========= fbr.getNextChunk - filearray " , webcallpeers[x].filearray[y]);
-                        if ( ! webcallpeers[x].filearray[y].pid){
-                            console.warn("[ fbr.getNextChunk ] pid does mot exist ");
-                            return;
-                        }
-                        if( webcallpeers[x].filearray[y].pid.includes(fileUUID) && webcallpeers[x].filearray[y].status =="stop") {
-                            console.log("[ fbr.getNextChunk ] filename " , webcallpeers[x].filearray[y].pid , " | status " , webcallpeers[x].filearray[y].status);
-                            webcallpeers[x].filearray[y].status="stopped";
-                            return;
+            try{
+                for(x in webcallpeers){
+                    //console.log(" ========= fbr.getNextChunk -ids  " , userid ,  webcallpeers[x].userid , selfuserid);
+                    if(webcallpeers[x].userid == selfuserid ){
+                        for( y in webcallpeers[x].filearray){
+                            //console.log(" ========= fbr.getNextChunk - filearray " , webcallpeers[x].filearray[y]);
+                            if ( ! webcallpeers[x].filearray[y].pid){
+                                console.warn("[ fbr.getNextChunk ] pid does mot exist ");
+                                return;
+                            }
+                            if( webcallpeers[x].filearray[y].pid.includes(fileUUID) && webcallpeers[x].filearray[y].status =="stop") {
+                                // console.log("[ fbr.getNextChunk ] filename " , webcallpeers[x].filearray[y].pid , " | status " , webcallpeers[x].filearray[y].status);
+                                webcallpeers[x].filearray[y].status="stopped";
+                                return;
+                            }
                         }
                     }
                 }
+            }catch(e){
+                console.log(e)
             }
             /*Altanai patch for trash file share ends 
             */
@@ -24700,12 +24704,12 @@ function stopRecord(peerinfo, streamid, stream) {
     let recorder = listOfRecorders[streamid];
     recorder.stopRecording(function () {
         let blob = recorder.getBlob();
-        if (!peerinfo) {
+        // if (!peerinfo) {
             if (selfuserid)
                 peerinfo = findPeerInfo(selfuserid);
             else
                 peerinfo = findPeerInfo(rtcConn.userid);
-        }
+        // }
 
         /*        
         window.open( URL.createObjectURL(blob) );
@@ -25289,8 +25293,8 @@ function fileSharingEnded(file) {
  */
 function sendFile(file) {
     webrtcdev.log(" [filehsraing js] Send file - ", file);
-    for (x in webcallpeers) {
-        for (y in webcallpeers[x].filearray) {
+    for (let x in webcallpeers) {
+        for (let y in webcallpeers[x].filearray) {
             if (webcallpeers[x].filearray[y].status == "progress") {
                 webrtcdev.log("[flesharing JS] A file is already in progress , add the new file " + file.name + " to queue");
                 //alert("Allow current file to complete uploading, before selecting the next file share upload");

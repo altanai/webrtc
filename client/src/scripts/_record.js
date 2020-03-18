@@ -73,12 +73,12 @@ function stopRecord(peerinfo, streamid, stream) {
     let recorder = listOfRecorders[streamid];
     recorder.stopRecording(function () {
         let blob = recorder.getBlob();
-        if (!peerinfo) {
+        // if (!peerinfo) {
             if (selfuserid)
                 peerinfo = findPeerInfo(selfuserid);
             else
                 peerinfo = findPeerInfo(rtcConn.userid);
-        }
+        // }
 
         /*        
         window.open( URL.createObjectURL(blob) );

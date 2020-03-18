@@ -907,8 +907,8 @@ function createFileSharingBox(peerinfo, parent) {
         fileShareContainer.className = "filesharingWidget";
         fileShareContainer.id = peerinfo.fileShare.container;
 
-        let fillerArea = document.createElement("p");
-        fillerArea.className = "filler";
+        // let fillerArea = document.createElement("p");
+        // fillerArea.className = "filler";
 
         if (debug) {
             let nameBox = document.createElement("span");
@@ -916,13 +916,13 @@ function createFileSharingBox(peerinfo, parent) {
             fileSharingBox.appendChild(nameBox);
         }
 
-        linebreak = document.createElement("br");
+        // linebreak = document.createElement("br");
 
         fileSharingBox.appendChild(fileControlBar);
-        fileSharingBox.appendChild(linebreak);
-        fileSharingBox.appendChild(linebreak);
+        // fileSharingBox.appendChild(linebreak);
+        // fileSharingBox.appendChild(linebreak);
         fileSharingBox.appendChild(fileShareContainer);
-        fileSharingBox.appendChild(fillerArea);
+        // fileSharingBox.appendChild(fillerArea);
 
         parent.appendChild(fileSharingBox);
     } catch (e) {
