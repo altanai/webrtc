@@ -31,12 +31,12 @@ var findPeerInfo = function (userid) {
  */
 function removePeerInfo(index) {
     return new Promise(function (resolve, reject) {
-        webrtcdev.log(" [startjs] removePeerInfo  remove index: ", index, webcallpeers[index]);
+        webrtcdev.log(" [peerinfomanager] removePeerInfo - remove index: ", index, webcallpeers[index]);
         webcallpeers.splice(index, 1);
         resolve("done");
     })
         .catch((err) => {
-            webrtcdev.error("[startjs removePeerInfo] Promise rejected ", err);
+            webrtcdev.error("[peerinfomanager] removePeerInfo - Promise rejected ", err);
             reject("err");
         });
 }
@@ -51,13 +51,13 @@ function removePeerInfo(index) {
  * @param {string} type
  */
 function updatePeerInfo(userid, username, usecolor, useremail, userrole, type) {
-    webrtcdev.log("updating peerInfo: ", userid, username, usecolor, useremail, userrole, type);
+    webrtcdev.log("[peerinfomanager] updating peerInfo: ", userid, username, usecolor, useremail, userrole, type);
     var updateflag = -1;
 
     return new Promise(function (resolve, reject) {
         // if userid deosnt exist , exit
         if (!userid) {
-            console.error("[startjs] userid is null / undefined, cannot create PeerInfo");
+            console.error("[peerinfomanager] userid is null / undefined, cannot create PeerInfo");
             reject("userid is null / undefined, cannot create PeerInfo");
             return;
         }
@@ -65,7 +65,7 @@ function updatePeerInfo(userid, username, usecolor, useremail, userrole, type) {
         // if userid is already present in webcallpeers , exit
         for (var x in webcallpeers) {
             if (webcallpeers[x].userid == userid) {
-                webrtcdev.log("UserID is already existing in webcallpeers, update the fields only at index ", x);
+                webrtcdev.log("[peerinfomanager] UserID is already existing in webcallpeers, update the fields only at index ", x);
                 updateflag = x;
                 break;
             }
@@ -122,15 +122,15 @@ function updatePeerInfo(userid, username, usecolor, useremail, userrole, type) {
 
         if (updateflag > -1) {
             webcallpeers[updateflag] = peerInfo;
-            webrtcdev.log("[startjs] updated peerInfo: ", peerInfo);
+            webrtcdev.log("[peerinfomanager] updated peerInfo: ", peerInfo);
         } else {
             webcallpeers.push(peerInfo);
-            webrtcdev.log("[startjs] created peerInfo: ", peerInfo);
+            webrtcdev.log("[peerinfomanager] created peerInfo: ", peerInfo);
         }
         resolve("done");
     })
         .catch((err) => {
-            webrtcdev.error(" Promise rejected ", err);
+            webrtcdev.error("[peerinfomanager] Promise rejected ", err);
         });
 }
 

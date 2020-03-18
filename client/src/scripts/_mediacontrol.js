@@ -100,7 +100,7 @@ async function getAudioPermission() {
  */
 function getCamMedia(rtcConn) {
     rtcConn.dontAttachStream = false,
-        rtcConn.dontGetRemoteStream = false;
+    rtcConn.dontGetRemoteStream = false;
 
     webrtcdev.log(" [startJS] getCamMedia  role :", role);
 
@@ -108,19 +108,19 @@ function getCamMedia(rtcConn) {
     return new Promise(function (resolve, reject) {
         if (role == "inspector") {
             rtcConn.dontCaptureUserMedia = true;
-            console.log("[startJS] getCamMedia  - Joining as inspector without camera Video");
+            console.log("[_mediacontrol.js] getCamMedia  - Joining as inspector without camera Video");
         } else if (outgoingVideo && outgoingAudio) {
             rtcConn.dontCaptureUserMedia = false;
-            webrtcdev.log("[startJS] getCamMedia  - Capture Media ");
+            webrtcdev.log("[_mediacontrol.js] getCamMedia  - Capture Media ");
             rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error 
         } else if (!outgoingVideo && outgoingAudio) {
             rtcConn.dontCaptureUserMedia = false;
             // alert(" start  getCamMedia  - Dont Capture Webcam, only Mic");
-            webrtcdev.warn("[startJS] getCamMedia  - Dont Capture Webcam only Mic ");
+            webrtcdev.warn("[_mediacontrol.js] getCamMedia  - Dont Capture Webcam only Mic ");
             rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error
         } else {
             rtcConn.dontCaptureUserMedia = true;
-            webrtcdev.error(" [startJS] getCamMedia - dont Capture outgoing video ", outgoingVideo);
+            webrtcdev.error(" [_mediacontrol.js] getCamMedia - dont Capture outgoing video ", outgoingVideo);
             window.dispatchEvent(new CustomEvent('webrtcdev', {
                 detail: {
                     servicetype: "session",
@@ -131,7 +131,7 @@ function getCamMedia(rtcConn) {
         resolve("success");
     }).catch(
         (reason) => {
-            webrtcdev.error('[startJS] getCamMedia  - rejected promise (' + reason + ')');
+            webrtcdev.error('[_mediacontrol.js] getCamMedia  - rejected promise (' + reason + ')');
         });
 }
 

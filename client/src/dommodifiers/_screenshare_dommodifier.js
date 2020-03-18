@@ -188,11 +188,11 @@ function screenshareNotification(message, type) {
 
         } else if (type == "screenshareStartedViewing") {
 
-            let alertDiv = document.createElement("div");
-            resetAlertBox();
-            alertDiv.className = "alert alert-success";
-            alertDiv.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' + "Peer has started viewing screen ";
-            getElementById("alertBox").appendChild(alertDiv);
+            // let alertDiv = document.createElement("div");
+            // resetAlertBox();
+            // alertDiv.className = "alert alert-success";
+            // alertDiv.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' + "Peer has started viewing screen ";
+            // getElementById("alertBox").appendChild(alertDiv);
 
         } else if (type == "screenshareError") {
 

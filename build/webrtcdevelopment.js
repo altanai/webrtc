@@ -13967,7 +13967,7 @@ function existselem(elem) {
  */
 function updateWebCallView(peerinfo) {
     let myrole = role;
-    webrtcdev.log("[start.js - updateWebCallView] start with ",
+    webrtcdev.log("[webcallviewmanager] - updateWebCallView start with ",
         " peerinfo", peerinfo,
         " | myrole :", myrole,
         " | video indexOf : ", peerinfo.vid.indexOf("videoundefined"));
@@ -13977,7 +13977,7 @@ function updateWebCallView(peerinfo) {
         case "inspector":
             var emptyvideoindex = 0;
             for (var v = 0; v < remoteVideos.length; v++) {
-                webrtcdev.log("Remote Video index array ", v, " || ", remoteVideos[v],
+                webrtcdev.log(" [webcallviewmanager] Remote Video index array ", v, " || ", remoteVideos[v],
                     document.getElementsByName(remoteVideos[v]),
                     document.getElementsByName(remoteVideos[v]).src);
                 if (remoteVideos[v].src) {
@@ -13990,7 +13990,7 @@ function updateWebCallView(peerinfo) {
             document.getElementById(remoteobj.videoContainer).appendChild(video);
 
             let remvid = remoteVideos[emptyvideoindex];
-            webrtcdev.log(" [start.js - updateWebCallView] role-inspector , attaching stream", remvid, peerinfo.stream);
+            webrtcdev.log(" [webcallviewmanager] updateWebCallView role-inspector , attaching stream", remvid, peerinfo.stream);
             attachMediaStream(remvid, peerinfo.stream);
             if (remvid.hidden) removid.hidden = false;
             remvid.id = peerinfo.videoContainer;
@@ -14012,13 +14012,14 @@ function updateWebCallView(peerinfo) {
                 if (_templ2) _templ2.setAttribute("style", "display:none");
             }
 
-            for (t in document.getElementsByClassName("timeBox")) {
+            for (let t in document.getElementsByClassName("timeBox")) {
                 document.getElementsByClassName("timeBox")[t].hidden = true;
             }
             break;
 
         case "participant":
-
+        case "host":
+        case "guest":
             if (peerinfo.vid.indexOf("videolocal") > -1) {
 
                 // when video is local
@@ -15954,13 +15955,12 @@ function showdesktopnotification() {
   }
 
   //  Otherwise, we need to ask the user for permission
-  // else if (Notification.permission !== 'denied') {
-  //   Notification.requestPermission(function (permission) {
+  //  else if (Notification.permission !== 'denied') {
+  //  Ntification.requestPermission(function (permission) {
   //     // If the user accepts, let's create a notification
   //     if (permission === "granted") {
   //       var notification = new Notification("Web based RealTime Communication");
   //     }
-
   //   });
 
   // }
@@ -16194,11 +16194,11 @@ function screenshareNotification(message, type) {
 
         } else if (type == "screenshareStartedViewing") {
 
-            let alertDiv = document.createElement("div");
-            resetAlertBox();
-            alertDiv.className = "alert alert-success";
-            alertDiv.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' + "Peer has started viewing screen ";
-            getElementById("alertBox").appendChild(alertDiv);
+            // let alertDiv = document.createElement("div");
+            // resetAlertBox();
+            // alertDiv.className = "alert alert-success";
+            // alertDiv.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' + "Peer has started viewing screen ";
+            // getElementById("alertBox").appendChild(alertDiv);
 
         } else if (type == "screenshareError") {
 
@@ -24505,7 +24505,7 @@ async function getAudioPermission() {
  */
 function getCamMedia(rtcConn) {
     rtcConn.dontAttachStream = false,
-        rtcConn.dontGetRemoteStream = false;
+    rtcConn.dontGetRemoteStream = false;
 
     webrtcdev.log(" [startJS] getCamMedia  role :", role);
 
@@ -24513,19 +24513,19 @@ function getCamMedia(rtcConn) {
     return new Promise(function (resolve, reject) {
         if (role == "inspector") {
             rtcConn.dontCaptureUserMedia = true;
-            console.log("[startJS] getCamMedia  - Joining as inspector without camera Video");
+            console.log("[_mediacontrol.js] getCamMedia  - Joining as inspector without camera Video");
         } else if (outgoingVideo && outgoingAudio) {
             rtcConn.dontCaptureUserMedia = false;
-            webrtcdev.log("[startJS] getCamMedia  - Capture Media ");
+            webrtcdev.log("[_mediacontrol.js] getCamMedia  - Capture Media ");
             rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error 
         } else if (!outgoingVideo && outgoingAudio) {
             rtcConn.dontCaptureUserMedia = false;
             // alert(" start  getCamMedia  - Dont Capture Webcam, only Mic");
-            webrtcdev.warn("[startJS] getCamMedia  - Dont Capture Webcam only Mic ");
+            webrtcdev.warn("[_mediacontrol.js] getCamMedia  - Dont Capture Webcam only Mic ");
             rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error
         } else {
             rtcConn.dontCaptureUserMedia = true;
-            webrtcdev.error(" [startJS] getCamMedia - dont Capture outgoing video ", outgoingVideo);
+            webrtcdev.error(" [_mediacontrol.js] getCamMedia - dont Capture outgoing video ", outgoingVideo);
             window.dispatchEvent(new CustomEvent('webrtcdev', {
                 detail: {
                     servicetype: "session",
@@ -24536,7 +24536,7 @@ function getCamMedia(rtcConn) {
         resolve("success");
     }).catch(
         (reason) => {
-            webrtcdev.error('[startJS] getCamMedia  - rejected promise (' + reason + ')');
+            webrtcdev.error('[_mediacontrol.js] getCamMedia  - rejected promise (' + reason + ')');
         });
 }
 
@@ -26301,12 +26301,12 @@ var findPeerInfo = function (userid) {
  */
 function removePeerInfo(index) {
     return new Promise(function (resolve, reject) {
-        webrtcdev.log(" [startjs] removePeerInfo  remove index: ", index, webcallpeers[index]);
+        webrtcdev.log(" [peerinfomanager] removePeerInfo - remove index: ", index, webcallpeers[index]);
         webcallpeers.splice(index, 1);
         resolve("done");
     })
         .catch((err) => {
-            webrtcdev.error("[startjs removePeerInfo] Promise rejected ", err);
+            webrtcdev.error("[peerinfomanager] removePeerInfo - Promise rejected ", err);
             reject("err");
         });
 }
@@ -26321,13 +26321,13 @@ function removePeerInfo(index) {
  * @param {string} type
  */
 function updatePeerInfo(userid, username, usecolor, useremail, userrole, type) {
-    webrtcdev.log("updating peerInfo: ", userid, username, usecolor, useremail, userrole, type);
+    webrtcdev.log("[peerinfomanager] updating peerInfo: ", userid, username, usecolor, useremail, userrole, type);
     var updateflag = -1;
 
     return new Promise(function (resolve, reject) {
         // if userid deosnt exist , exit
         if (!userid) {
-            console.error("[startjs] userid is null / undefined, cannot create PeerInfo");
+            console.error("[peerinfomanager] userid is null / undefined, cannot create PeerInfo");
             reject("userid is null / undefined, cannot create PeerInfo");
             return;
         }
@@ -26335,7 +26335,7 @@ function updatePeerInfo(userid, username, usecolor, useremail, userrole, type) {
         // if userid is already present in webcallpeers , exit
         for (var x in webcallpeers) {
             if (webcallpeers[x].userid == userid) {
-                webrtcdev.log("UserID is already existing in webcallpeers, update the fields only at index ", x);
+                webrtcdev.log("[peerinfomanager] UserID is already existing in webcallpeers, update the fields only at index ", x);
                 updateflag = x;
                 break;
             }
@@ -26392,15 +26392,15 @@ function updatePeerInfo(userid, username, usecolor, useremail, userrole, type) {
 
         if (updateflag > -1) {
             webcallpeers[updateflag] = peerInfo;
-            webrtcdev.log("[startjs] updated peerInfo: ", peerInfo);
+            webrtcdev.log("[peerinfomanager] updated peerInfo: ", peerInfo);
         } else {
             webcallpeers.push(peerInfo);
-            webrtcdev.log("[startjs] created peerInfo: ", peerInfo);
+            webrtcdev.log("[peerinfomanager] created peerInfo: ", peerInfo);
         }
         resolve("done");
     })
         .catch((err) => {
-            webrtcdev.error(" Promise rejected ", err);
+            webrtcdev.error("[peerinfomanager] Promise rejected ", err);
         });
 }
 

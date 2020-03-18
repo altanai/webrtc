@@ -6,7 +6,7 @@
  */
 function updateWebCallView(peerinfo) {
     let myrole = role;
-    webrtcdev.log("[start.js - updateWebCallView] start with ",
+    webrtcdev.log("[webcallviewmanager] - updateWebCallView start with ",
         " peerinfo", peerinfo,
         " | myrole :", myrole,
         " | video indexOf : ", peerinfo.vid.indexOf("videoundefined"));
@@ -16,7 +16,7 @@ function updateWebCallView(peerinfo) {
         case "inspector":
             var emptyvideoindex = 0;
             for (var v = 0; v < remoteVideos.length; v++) {
-                webrtcdev.log("Remote Video index array ", v, " || ", remoteVideos[v],
+                webrtcdev.log(" [webcallviewmanager] Remote Video index array ", v, " || ", remoteVideos[v],
                     document.getElementsByName(remoteVideos[v]),
                     document.getElementsByName(remoteVideos[v]).src);
                 if (remoteVideos[v].src) {
@@ -29,7 +29,7 @@ function updateWebCallView(peerinfo) {
             document.getElementById(remoteobj.videoContainer).appendChild(video);
 
             let remvid = remoteVideos[emptyvideoindex];
-            webrtcdev.log(" [start.js - updateWebCallView] role-inspector , attaching stream", remvid, peerinfo.stream);
+            webrtcdev.log(" [webcallviewmanager] updateWebCallView role-inspector , attaching stream", remvid, peerinfo.stream);
             attachMediaStream(remvid, peerinfo.stream);
             if (remvid.hidden) removid.hidden = false;
             remvid.id = peerinfo.videoContainer;
@@ -51,13 +51,14 @@ function updateWebCallView(peerinfo) {
                 if (_templ2) _templ2.setAttribute("style", "display:none");
             }
 
-            for (t in document.getElementsByClassName("timeBox")) {
+            for (let t in document.getElementsByClassName("timeBox")) {
                 document.getElementsByClassName("timeBox")[t].hidden = true;
             }
             break;
 
         case "participant":
-
+        case "host":
+        case "guest":
             if (peerinfo.vid.indexOf("videolocal") > -1) {
 
                 // when video is local
