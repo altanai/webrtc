@@ -43,7 +43,7 @@ var setWidgets = function (rtcConn) {
                 assignScreenShareButton(screenshareobj.button.shareButton);
             } else {
                 webrtcdev.log("[sessionmanager] Create Record Button ");
-                createScreenShareButton();
+                createScreenShareButton(screenshareobj);
             }
             webrtcdev.log(" [sessionmanager]screen share widget loaded ");
         } else {

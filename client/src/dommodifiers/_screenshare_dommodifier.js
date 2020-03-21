@@ -1,3 +1,4 @@
+var screenShareButton;
 
 /**
  * find if view button is provided or need to be created
@@ -104,7 +105,7 @@ function createOrAssignScreenshareButton(screenshareobj) {
  * @method
  * @name createScreenshareButton
  */
-function createScreenshareButton() {
+function createScreenshareButton(screenshareobj) {
     screenShareButton = document.createElement("span");
     screenShareButton.className = screenshareobj.button.shareButton.class_off;
     screenShareButton.innerHTML = screenshareobj.button.shareButton.html_off;

@@ -1,11 +1,13 @@
 .remoteVideoControlBarClass{
     display: inline-table;
     font: icon;
+    cursor: pointer;
 }
 
 .localVideoControlBarClass{
     display: inline-table;
     font: icon;
+    cursor: pointer;
 }
 
 .videoButtonClass{

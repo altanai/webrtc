@@ -16004,6 +16004,7 @@ function spawnNotification(theBody,theIcon,theTitle) {
 /*-----------------------------------------------------------------------------------*/
 
 
+var screenShareButton;
 
 /**
  * find if view button is provided or need to be created
@@ -16110,7 +16111,7 @@ function createOrAssignScreenshareButton(screenshareobj) {
  * @method
  * @name createScreenshareButton
  */
-function createScreenshareButton() {
+function createScreenshareButton(screenshareobj) {
     screenShareButton = document.createElement("span");
     screenShareButton.className = screenshareobj.button.shareButton.class_off;
     screenShareButton.innerHTML = screenshareobj.button.shareButton.html_off;
@@ -16221,7 +16222,7 @@ function screenshareNotification(message, type) {
  * @method
  * @name assignScreenRecordButton
  */
-function assignScreenRecordButton() {
+function assignScreenRecordButton(screenrecordobj) {
 
     let recordButton = document.getElementById(screenrecordobj.button.id);
 
@@ -17180,7 +17181,6 @@ var isChrome = !!window.chrome && !isOpera;
 var screenCallback;
 var iceServers = [];
 var signaler, screen, screenRoomid;
-var screenShareButton;
 var screenShareStreamLocal = null;
 
 
@@ -17276,9 +17276,10 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
             if (event)
                 webrtcdev.log("[screenshare JS] onstreamended -", event);
 
-            if (screenShareButton) {
-                screenShareButton.className = screenshareobj.button.shareButton.class_off;
-                screenShareButton.innerHTML = screenshareobj.button.shareButton.html_off;
+            let screenShareButton = screenshareobj.button.shareButton.id;
+            if (screenShareButton && document.getElementById(screenShareButton)) {
+                document.getElementById(screenShareButton).className = screenshareobj.button.shareButton.class_off;
+                document.getElementById(screenShareButton).innerHTML = screenshareobj.button.shareButton.html_off;
             }
             //removeScreenViewButton();
 
@@ -17406,7 +17407,7 @@ function webrtcdevStopShareScreen() {
 
         scrConn.closeEntireSession();
         webrtcdev.log("[screenshare JS] Sender stopped: screenRoomid ", screenRoomid,
-            "| Screen stoppped ", scrConn,
+            "| Screen stopped ", scrConn,
             "| container ", getElementById(screenshareobj.screenshareContainer));
 
         if (screenShareStreamLocal) {
@@ -26458,7 +26459,7 @@ var setWidgets = function (rtcConn) {
                 assignScreenShareButton(screenshareobj.button.shareButton);
             } else {
                 webrtcdev.log("[sessionmanager] Create Record Button ");
-                createScreenShareButton();
+                createScreenShareButton(screenshareobj);
             }
             webrtcdev.log(" [sessionmanager]screen share widget loaded ");
         } else {
