@@ -337,7 +337,7 @@ var setRtcConn = function (sessionid) {
                         shownotification("connnection type is neither open nor join", "warning");
 
                     shownotification(event.extra.name + " joined session ", "info");
-                    showdesktopnotification();
+                    this.showdesktopnotification( document.title ,event.extra.name + " joined session ");
 
                     if (timerobj && timerobj.active) {
                         startsessionTimer(timerobj);
