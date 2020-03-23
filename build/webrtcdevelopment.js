@@ -5958,7 +5958,7 @@ if (typeof define === 'function' && define.amd) {
     });
 }
 
-/* ********************************************************
+/*********************************************************
 webdev Logger
 ****************************************************** */
 var webrtcdevlogs = [];
@@ -6027,41 +6027,37 @@ var webrtcdevlogger = {
     // }else{
 
     log: function () {
-        let arg = getArgsJson(arguments);
-        // if (isJSON(arguments)) {
-        //     let arg = JSON.stringify(arguments, undefined, 2);
-        //     // webrtcdevlogs.push("<pre style='color:grey'>[-]" + arg + "</pre>");
-        // } else {
-        //     let arg = getArgsJson(arguments);
-        //     // webrtcdevlogs.push("<p style='color:grey'>[-]" + arg + "</p>");
-        // }
-        webrtcdevlogs.push( arg );
+        if (isJSON(arguments)) {
+            let arg = JSON.stringify(arguments, undefined, 2);
+            webrtcdevlogs.push("<pre style='color:grey'>[-]" + arg + "</pre>");
+        } else {
+            let arg = getArgsJson(arguments);
+            webrtcdevlogs.push("<p style='color:grey'>[-]" + arg + "</p>");
+        }
+        // let arg = getArgsJson(arguments);
+        // webrtcdevlogs.push( arg );
         console.log(arguments);
     },
 
     info: function () {
-        let arg = getArgsJson(arguments);
-        // if (isJSON(arguments)) {
-        //     let arg = JSON.stringify(arguments, undefined, 2);
-        //     webrtcdevlogs.push("<pre style='color:blue'>[-]" + arg + "</pre>");
-        // } else {
-        //     let arg = getArgsJson(arguments);
-        //     webrtcdevlogs.push("<p style='color:blue'>[INFO]" + arg + "</p>");
-        // }
-        webrtcdevlogs.push( arg );
+        if (isJSON(arguments)) {
+            let arg = JSON.stringify(arguments, undefined, 2);
+            webrtcdevlogs.push("<pre style='color:blue'>[-]" + arg + "</pre>");
+        } else {
+            let arg = getArgsJson(arguments);
+            webrtcdevlogs.push("<p style='color:blue'>[INFO]" + arg + "</p>");
+        }
         console.info(arguments);
     },
 
     debug: function () {
-        let arg = getArgsJson(arguments);
-        // if (isJSON(arguments)) {
-        //     let arg = JSON.stringify(arguments, undefined, 2);
-        //     webrtcdevlogs.push("<pre style='color:green'>[DEBUG]" + arg + "</pre>");
-        // } else {
-        //     let arg = getArgsJson(arguments);
-        //     webrtcdevlogs.push("<p style='color:green'>[DEBUG]" + arg + "</p>");
-        // }
-        webrtcdevlogs.push( arg );
+        if (isJSON(arguments)) {
+            let arg = JSON.stringify(arguments, undefined, 2);
+            webrtcdevlogs.push("<pre style='color:green'>[DEBUG]" + arg + "</pre>");
+        } else {
+            let arg = getArgsJson(arguments);
+            webrtcdevlogs.push("<p style='color:green'>[DEBUG]" + arg + "</p>");
+        }
         console.debug(arguments);
     },
 
@@ -6073,15 +6069,13 @@ var webrtcdevlogger = {
     },
 
     error: function () {
-        let arg = getArgsJson(arguments);
-        // if (isJSON(arguments)) {
-        //     let arg = JSON.stringify(arguments, undefined, 2);
-        //     webrtcdevlogs.push("<pre style='color:grey'>[-]" + arg + "</pre>");
-        // } else {
-        //     let arg = getArgsJson(arguments);
-        //     webrtcdevlogs.push("<p style='color:red'>[ERROR]" + arg + "</p>");
-        // }
-        webrtcdevlogs.push( arg );
+        if (isJSON(arguments)) {
+            let arg = JSON.stringify(arguments, undefined, 2);
+            webrtcdevlogs.push("<pre style='color:grey'>[-]" + arg + "</pre>");
+        } else {
+            let arg = getArgsJson(arguments);
+            webrtcdevlogs.push("<p style='color:red'>[ERROR]" + arg + "</p>");
+        }
         console.error(arguments);
     }
 
@@ -14393,8 +14387,8 @@ function addstaticProgressHelper(uuid, peerinfo, filename, fileSize, file, progr
         let stopuploadButton = document.createElement("li");
         stopuploadButton.id = "stopuploadButton" + filename;
         stopuploadButton.innerHTML = '<i class="fa fa-trash-o" style="color: #615aa8;padding: 10px; font-size: larger;"></i>';
-        stopuploadButton.onclick = function (event) {
-            //alert( " addstaticProgressHelper stopuploadButton "+ filename);
+        stopuploadButton.onclick = function (event){
+            webrtcdev.log("Remove evenet.target " , event.target);
             if (repeatFlagStopuploadButton != filename) {
                 hideFile(progressid);
                 //var tobeHiddenElement = event.target.parentNode.id;
@@ -14404,9 +14398,7 @@ function addstaticProgressHelper(uuid, peerinfo, filename, fileSize, file, progr
                 repeatFlagStopuploadButton = "";
             }
             //Once the button is clicked , remove the button
-            stopuploadButton.remove();
-            //stopuploadButton.hidden = true;
-            //stopuploadButton.hide();
+            event.target.remove();
             for (x in pendingFileTransfer) {
                 if (pendingFileTransfer[x].name == filename) {
                     webrtcdev.log(" removing pendingFileTransfer element ", pendingFileTransfer[x])
@@ -14414,7 +14406,7 @@ function addstaticProgressHelper(uuid, peerinfo, filename, fileSize, file, progr
                 }
             }
         },
-            progressul.appendChild(stopuploadButton);
+        progressul.appendChild(stopuploadButton);
 
         //document.getElementById(peerinfo.fileList.container).appendChild(progressul);
         parentDom = document.getElementById(peerinfo.fileList.container);
@@ -14493,9 +14485,11 @@ function addProgressHelper(uuid, peerinfo, filename, fileSize, file, progressHel
             webrtcdev.log(" [startjs] addProgressHelper - remove progressid ", progressid, " dom : ", document.getElementById(progressid));
             hideFile(progressid);
             stopSendFile(progressid, filename, file, fileto, filefrom);
+            //Once the button is clicked , remove the button
+            event.target.remove();
             removeFile(progressid);
 
-            // If file has been hidden already then stop senidng the message shareFileStopUpload
+            // If file has been hidden already then stop sending the message shareFileStopUpload
             if (repeatFlagStopuploadButton != filename) {
                 //var tobeHiddenElement = event.target.parentNode.id;
                 rtcConn.send({
@@ -14508,10 +14502,9 @@ function addProgressHelper(uuid, peerinfo, filename, fileSize, file, progressHel
             } else if (repeatFlagStopuploadButton == filename) {
                 repeatFlagStopuploadButton = "";
             }
-            //Once the button is clicked , remove the button
-            stopuploadButton.remove();
+
         },
-            progressul.appendChild(stopuploadButton);
+        progressul.appendChild(stopuploadButton);
 
         parentDom = document.getElementById(peerinfo.fileList.container);
         parentDom.insertBefore(progressul, parentDom.firstChild);
@@ -15935,7 +15928,7 @@ function shownotificationWarning(message) {
  * @function
  * @name showdesktopnotification
  */
-this.showdesktopnotification = function (title, description) {
+this.showdesktopnotification = showdesktopnotification = function (title, description) {
     // Let's check if the browser supports notifications
     if (!("Notification" in window)) {
         alert("This browser does not support desktop notification");
@@ -15963,7 +15956,6 @@ this.showdesktopnotification = function (title, description) {
     //       var notification = new Notification("Web based RealTime Communication");
     //     }
     //   });
-
     // }
 
     // At last, if the user has denied notifications, and you
@@ -15992,7 +15984,6 @@ if (typeof Notification != undefined) {
     }
 
 }
-
 
 function spawnNotification(theBody, theIcon, theTitle) {
     var options = {
@@ -25278,9 +25269,11 @@ function fileSharingEnded(file) {
             action: "onFileShareEnded"
         }
     }));
+
+    console.log(" ----------------------- pendingFileTransfer ", pendingFileTransfer);
     //start the pending transfer from pendingFileTransfer.push(file);
     if (pendingFileTransfer.length >= pendingFileTransferlimit) {
-        webrtcdev.log("resuming pending/paused file ", pendingFileTransfer[0]);
+        webrtcdev.log("[flesharing JS] resuming pending/paused file ", pendingFileTransfer[0]);
         hideelem(pendingFileTransfer[0].name);
         sendFile(pendingFileTransfer[0]);
         pendingFileTransfer.pop();
@@ -26189,22 +26182,13 @@ this.sendwebrtcdevLogs = function (url, key, msg) {
         webrtcdev.error(" check if widget help is active to true ");
     }
 
-    var helpstatus = document.getElementById("helpStatus");
-
     return fetch(url, {
         method: 'POST',
         body: data
     })
-    .then(res => res.text())
-    .then(text => console.log(text),
-        helpstatus.innerHTML = "Email sent for help",
-        helpstatus.setAttribute("style", "color:green")
-    )
-    .catch(error => console.error(error),
-        webrtcdev.error("error in sendwebrtcdevLogs")
-        // helpstatus.innerHTML = "Email could not be sent for Help",
-        // helpstatus.setAttribute("style", "color:red")
-    );
+    .then(apires => apires.json())
+    .then(apires => console.log("Listenin API response ", apires))
+    .catch(error => console.error("Listenin API response ", error));
 };
 
 
@@ -26977,7 +26961,7 @@ var setRtcConn = function (sessionid) {
                             let remoterole = event.extra.role || "participant", // will fail in case of 2 listeners
                                 remotecolor = event.extra.color,
                                 remoteemail = event.extra.email,
-                                remoteusername = (event.extra.name == "LOCAL"? "REMOTE": event.extra.name);
+                                remoteusername = (event.extra.name == "LOCAL" ? "REMOTE" : event.extra.name);
 
                             updatePeerInfo(remoteUsers[x], remoteusername, remotecolor, remoteemail, remoterole, "remote");
                             if (remoterole == "inspector") {
@@ -27019,7 +27003,7 @@ var setRtcConn = function (sessionid) {
                         shownotification("connnection type is neither open nor join", "warning");
 
                     shownotification(event.extra.name + " joined session ", "info");
-                    this.showdesktopnotification( document.title ,event.extra.name + " joined session ");
+                    showdesktopnotification(document.title, event.extra.name + " joined session ");
 
                     if (timerobj && timerobj.active) {
                         startsessionTimer(timerobj);

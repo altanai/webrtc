@@ -295,7 +295,7 @@ var setRtcConn = function (sessionid) {
                             let remoterole = event.extra.role || "participant", // will fail in case of 2 listeners
                                 remotecolor = event.extra.color,
                                 remoteemail = event.extra.email,
-                                remoteusername = (event.extra.name == "LOCAL"? "REMOTE": event.extra.name);
+                                remoteusername = (event.extra.name == "LOCAL" ? "REMOTE" : event.extra.name);
 
                             updatePeerInfo(remoteUsers[x], remoteusername, remotecolor, remoteemail, remoterole, "remote");
                             if (remoterole == "inspector") {
@@ -337,7 +337,7 @@ var setRtcConn = function (sessionid) {
                         shownotification("connnection type is neither open nor join", "warning");
 
                     shownotification(event.extra.name + " joined session ", "info");
-                    this.showdesktopnotification( document.title ,event.extra.name + " joined session ");
+                    showdesktopnotification(document.title, event.extra.name + " joined session ");
 
                     if (timerobj && timerobj.active) {
                         startsessionTimer(timerobj);

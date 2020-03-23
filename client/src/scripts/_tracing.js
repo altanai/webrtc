@@ -36,22 +36,13 @@ this.sendwebrtcdevLogs = function (url, key, msg) {
         webrtcdev.error(" check if widget help is active to true ");
     }
 
-    var helpstatus = document.getElementById("helpStatus");
-
     return fetch(url, {
         method: 'POST',
         body: data
     })
-    .then(res => res.text())
-    .then(text => console.log(text),
-        helpstatus.innerHTML = "Email sent for help",
-        helpstatus.setAttribute("style", "color:green")
-    )
-    .catch(error => console.error(error),
-        webrtcdev.error("error in sendwebrtcdevLogs")
-        // helpstatus.innerHTML = "Email could not be sent for Help",
-        // helpstatus.setAttribute("style", "color:red")
-    );
+    .then(apires => apires.json())
+    .then(apires => console.log("Listenin API response ", apires))
+    .catch(error => console.error("Listenin API response ", error));
 };
 
 

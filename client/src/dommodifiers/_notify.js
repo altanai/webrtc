@@ -72,7 +72,7 @@ function shownotificationWarning(message) {
  * @function
  * @name showdesktopnotification
  */
-this.showdesktopnotification = function (title, description) {
+this.showdesktopnotification = showdesktopnotification = function (title, description) {
     // Let's check if the browser supports notifications
     if (!("Notification" in window)) {
         alert("This browser does not support desktop notification");
@@ -100,7 +100,6 @@ this.showdesktopnotification = function (title, description) {
     //       var notification = new Notification("Web based RealTime Communication");
     //     }
     //   });
-
     // }
 
     // At last, if the user has denied notifications, and you
@@ -129,7 +128,6 @@ if (typeof Notification != undefined) {
     }
 
 }
-
 
 function spawnNotification(theBody, theIcon, theTitle) {
     var options = {

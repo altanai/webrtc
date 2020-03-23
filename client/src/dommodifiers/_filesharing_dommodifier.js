@@ -93,8 +93,8 @@ function addstaticProgressHelper(uuid, peerinfo, filename, fileSize, file, progr
         let stopuploadButton = document.createElement("li");
         stopuploadButton.id = "stopuploadButton" + filename;
         stopuploadButton.innerHTML = '<i class="fa fa-trash-o" style="color: #615aa8;padding: 10px; font-size: larger;"></i>';
-        stopuploadButton.onclick = function (event) {
-            //alert( " addstaticProgressHelper stopuploadButton "+ filename);
+        stopuploadButton.onclick = function (event){
+            webrtcdev.log("Remove evenet.target " , event.target);
             if (repeatFlagStopuploadButton != filename) {
                 hideFile(progressid);
                 //var tobeHiddenElement = event.target.parentNode.id;
@@ -104,9 +104,7 @@ function addstaticProgressHelper(uuid, peerinfo, filename, fileSize, file, progr
                 repeatFlagStopuploadButton = "";
             }
             //Once the button is clicked , remove the button
-            stopuploadButton.remove();
-            //stopuploadButton.hidden = true;
-            //stopuploadButton.hide();
+            event.target.remove();
             for (x in pendingFileTransfer) {
                 if (pendingFileTransfer[x].name == filename) {
                     webrtcdev.log(" removing pendingFileTransfer element ", pendingFileTransfer[x])
@@ -114,7 +112,7 @@ function addstaticProgressHelper(uuid, peerinfo, filename, fileSize, file, progr
                 }
             }
         },
-            progressul.appendChild(stopuploadButton);
+        progressul.appendChild(stopuploadButton);
 
         //document.getElementById(peerinfo.fileList.container).appendChild(progressul);
         parentDom = document.getElementById(peerinfo.fileList.container);
@@ -193,9 +191,11 @@ function addProgressHelper(uuid, peerinfo, filename, fileSize, file, progressHel
             webrtcdev.log(" [startjs] addProgressHelper - remove progressid ", progressid, " dom : ", document.getElementById(progressid));
             hideFile(progressid);
             stopSendFile(progressid, filename, file, fileto, filefrom);
+            //Once the button is clicked , remove the button
+            event.target.remove();
             removeFile(progressid);
 
-            // If file has been hidden already then stop senidng the message shareFileStopUpload
+            // If file has been hidden already then stop sending the message shareFileStopUpload
             if (repeatFlagStopuploadButton != filename) {
                 //var tobeHiddenElement = event.target.parentNode.id;
                 rtcConn.send({
@@ -208,10 +208,9 @@ function addProgressHelper(uuid, peerinfo, filename, fileSize, file, progressHel
             } else if (repeatFlagStopuploadButton == filename) {
                 repeatFlagStopuploadButton = "";
             }
-            //Once the button is clicked , remove the button
-            stopuploadButton.remove();
+
         },
-            progressul.appendChild(stopuploadButton);
+        progressul.appendChild(stopuploadButton);
 
         parentDom = document.getElementById(peerinfo.fileList.container);
         parentDom.insertBefore(progressul, parentDom.firstChild);

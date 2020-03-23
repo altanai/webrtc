@@ -107,9 +107,11 @@ function fileSharingEnded(file) {
             action: "onFileShareEnded"
         }
     }));
+
+    console.log(" ----------------------- pendingFileTransfer ", pendingFileTransfer);
     //start the pending transfer from pendingFileTransfer.push(file);
     if (pendingFileTransfer.length >= pendingFileTransferlimit) {
-        webrtcdev.log("resuming pending/paused file ", pendingFileTransfer[0]);
+        webrtcdev.log("[flesharing JS] resuming pending/paused file ", pendingFileTransfer[0]);
         hideelem(pendingFileTransfer[0].name);
         sendFile(pendingFileTransfer[0]);
         pendingFileTransfer.pop();
