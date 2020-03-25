@@ -89,3 +89,20 @@ video::-webkit-media-controls-current-time-display {}*/
 
 .video-block::-webkit-media-controls-current-time-display {}
 /*-------------------------------------------------------------*/
+
+.remoteVideoControlBarClass{
+    display: inline-table;
+    font: icon;
+    cursor: pointer;
+}
+
+.localVideoControlBarClass{
+    display: inline-table;
+    font: icon;
+    cursor: pointer;
+}
+
+.videoButtonClass{
+    padding-left: 10px;
+    /*padding-right: 5px;*/
+}

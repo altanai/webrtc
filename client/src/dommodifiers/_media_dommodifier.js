@@ -93,7 +93,12 @@ function attachControlButtons(vid, peerinfo) {
 
     if (minmaxobj.active) {
         controlBar.appendChild(createFullScreenButton(controlBarName, peerinfo, streamid, stream));
-        controlBar.appendChild(createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream));
+        // controlBar.appendChild(createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream));
+
+        // attach minimize button to header instaed of widgets in footer
+        nameBoxid = "videoheaders" + peerinfo.userid;
+        let nameBox = document.getElementById(nameBoxid);
+        nameBox.appendChild(createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream));
     }
 
     vid.parentNode.appendChild(controlBar);
@@ -151,11 +156,13 @@ function createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream) {
     var vid = document.getElementById(peerinfo.videoContainer);
     button.onclick = function () {
         if (button.className == minmaxobj.min.button.class_off) {
-            vid.hidden = true;
+            // vid.hidden = true;
+            hideelem(vid);
             button.className = minmaxobj.min.button.class_on;
             button.innerHTML = minmaxobj.min.button.html_on;
         } else {
-            vid.hidden = false;
+            // vid.hidden = false;
+            showelem(vid);
             button.className = minmaxobj.min.button.class_off;
             button.innerHTML = minmaxobj.min.button.html_off;
         }
@@ -237,7 +244,7 @@ function createVideoMuteButton(controlBarName, peerinfo) {
 
 
 /**********************************************
- User Detail attachmenet to Video Element
+ User Detail attachment to Video Element
  *******************************************/
 
 /**
@@ -263,8 +270,9 @@ function attachUserDetails(vid, peerinfo) {
     let nameBox = document.createElement("div");
     // nameBox.setAttribute("style", "background-color:" + peerinfo.color),
     nameBox.className = "videoHeaderClass",
-    nameBox.innerHTML = peerinfo.name + "<br/>",
+    nameBox.innerHTML = peerinfo.name ,
     nameBox.id = "videoheaders" + peerinfo.userid;
+
     // vid.parentNode.appendChild(nameBox);
     vid.parentNode.insertBefore(nameBox, vid.parentNode.firstChild);
 }

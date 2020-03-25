@@ -106,10 +106,6 @@ function updateWebCallView(peerinfo) {
                         } else {
                             attachMediaStream(selfvid, webcallpeers[0].stream);
                         }
-                        selfvid.id = webcallpeers[0].videoContainer;
-                        selfvid.className = remoteobj.videoClass;
-                        selfvid.muted = true;
-                        attachControlButtons(selfvid, webcallpeers[0]);
 
                         if (localobj.userDisplay && webcallpeers[0].name) {
                             attachUserDetails(selfvid, webcallpeers[0]);
@@ -118,6 +114,12 @@ function updateWebCallView(peerinfo) {
                         if (localobj.userMetaDisplay && webcallpeers[0].userid) {
                             attachMetaUserDetails(selfvid, webcallpeers[0]);
                         }
+
+                        selfvid.id = webcallpeers[0].videoContainer;
+                        selfvid.className = remoteobj.videoClass;
+                        selfvid.muted = true;
+                        attachControlButtons(selfvid, webcallpeers[0]);
+
                     } else {
                         webrtcdev.log(" not updating self video as it is already playing ");
                     }
@@ -143,10 +145,6 @@ function updateWebCallView(peerinfo) {
                     //if(remoteVideos[vi].video.hidden) remoteVideos[vi].video.hidden = false;
                     showelem(remoteVideos[emptyvideoindex].video);
 
-                    remoteVideos[emptyvideoindex].video.id = peerinfo.videoContainer;
-                    remoteVideos[emptyvideoindex].video.className = remoteobj.videoClass;
-                    attachControlButtons(remoteVideos[emptyvideoindex].video, peerinfo);
-
                     if (remoteobj.userDisplay && peerinfo.name) {
                         attachUserDetails(remoteVideos[emptyvideoindex].video, peerinfo);
                     }
@@ -154,6 +152,10 @@ function updateWebCallView(peerinfo) {
                     if (remoteobj.userMetaDisplay && peerinfo.userid) {
                         attachMetaUserDetails(remoteVideos[emptyvideoindex].video, peerInfo);
                     }
+
+                    remoteVideos[emptyvideoindex].video.id = peerinfo.videoContainer;
+                    remoteVideos[emptyvideoindex].video.className = remoteobj.videoClass;
+                    attachControlButtons(remoteVideos[emptyvideoindex].video, peerinfo);
 
                 } else {
                     alert("remote Video containers not defined");

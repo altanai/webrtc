@@ -5960,7 +5960,7 @@ if (typeof define === 'function' && define.amd) {
 
 /*********************************************************
 webdev Logger
-****************************************************** */
+*******************************************************/
 var webrtcdevlogs = [];
 
 /**
@@ -13470,7 +13470,9 @@ var localVideoStreaming = null;
 var turn = "none";
 var localobj = {}, remoteobj = {};
 var pendingFileTransfer = [];
+var connectionStatus = null;
 
+this.connectionStatus = connectionStatus;
 
 function isData(session) {
     return !session.audio && !session.video && !session.screen && session.data;
@@ -13832,6 +13834,8 @@ this.stopCall = function () {
     if (!localStorage.getItem("remoteUsers"))
         localStorage.removeItem("remoteUsers");
 
+    this.connectionStatus = "closed";
+
     return;
 }
 
@@ -14061,10 +14065,6 @@ function updateWebCallView(peerinfo) {
                         } else {
                             attachMediaStream(selfvid, webcallpeers[0].stream);
                         }
-                        selfvid.id = webcallpeers[0].videoContainer;
-                        selfvid.className = remoteobj.videoClass;
-                        selfvid.muted = true;
-                        attachControlButtons(selfvid, webcallpeers[0]);
 
                         if (localobj.userDisplay && webcallpeers[0].name) {
                             attachUserDetails(selfvid, webcallpeers[0]);
@@ -14073,6 +14073,12 @@ function updateWebCallView(peerinfo) {
                         if (localobj.userMetaDisplay && webcallpeers[0].userid) {
                             attachMetaUserDetails(selfvid, webcallpeers[0]);
                         }
+
+                        selfvid.id = webcallpeers[0].videoContainer;
+                        selfvid.className = remoteobj.videoClass;
+                        selfvid.muted = true;
+                        attachControlButtons(selfvid, webcallpeers[0]);
+
                     } else {
                         webrtcdev.log(" not updating self video as it is already playing ");
                     }
@@ -14098,10 +14104,6 @@ function updateWebCallView(peerinfo) {
                     //if(remoteVideos[vi].video.hidden) remoteVideos[vi].video.hidden = false;
                     showelem(remoteVideos[emptyvideoindex].video);
 
-                    remoteVideos[emptyvideoindex].video.id = peerinfo.videoContainer;
-                    remoteVideos[emptyvideoindex].video.className = remoteobj.videoClass;
-                    attachControlButtons(remoteVideos[emptyvideoindex].video, peerinfo);
-
                     if (remoteobj.userDisplay && peerinfo.name) {
                         attachUserDetails(remoteVideos[emptyvideoindex].video, peerinfo);
                     }
@@ -14109,6 +14111,10 @@ function updateWebCallView(peerinfo) {
                     if (remoteobj.userMetaDisplay && peerinfo.userid) {
                         attachMetaUserDetails(remoteVideos[emptyvideoindex].video, peerInfo);
                     }
+
+                    remoteVideos[emptyvideoindex].video.id = peerinfo.videoContainer;
+                    remoteVideos[emptyvideoindex].video.className = remoteobj.videoClass;
+                    attachControlButtons(remoteVideos[emptyvideoindex].video, peerinfo);
 
                 } else {
                     alert("remote Video containers not defined");
@@ -15662,7 +15668,12 @@ function attachControlButtons(vid, peerinfo) {
 
     if (minmaxobj.active) {
         controlBar.appendChild(createFullScreenButton(controlBarName, peerinfo, streamid, stream));
-        controlBar.appendChild(createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream));
+        // controlBar.appendChild(createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream));
+
+        // attach minimize button to header instaed of widgets in footer
+        nameBoxid = "videoheaders" + peerinfo.userid;
+        let nameBox = document.getElementById(nameBoxid);
+        nameBox.appendChild(createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream));
     }
 
     vid.parentNode.appendChild(controlBar);
@@ -15720,11 +15731,13 @@ function createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream) {
     var vid = document.getElementById(peerinfo.videoContainer);
     button.onclick = function () {
         if (button.className == minmaxobj.min.button.class_off) {
-            vid.hidden = true;
+            // vid.hidden = true;
+            hideelem(vid);
             button.className = minmaxobj.min.button.class_on;
             button.innerHTML = minmaxobj.min.button.html_on;
         } else {
-            vid.hidden = false;
+            // vid.hidden = false;
+            showelem(vid);
             button.className = minmaxobj.min.button.class_off;
             button.innerHTML = minmaxobj.min.button.html_off;
         }
@@ -15806,7 +15819,7 @@ function createVideoMuteButton(controlBarName, peerinfo) {
 
 
 /**********************************************
- User Detail attachmenet to Video Element
+ User Detail attachment to Video Element
  *******************************************/
 
 /**
@@ -15832,8 +15845,9 @@ function attachUserDetails(vid, peerinfo) {
     let nameBox = document.createElement("div");
     // nameBox.setAttribute("style", "background-color:" + peerinfo.color),
     nameBox.className = "videoHeaderClass",
-    nameBox.innerHTML = peerinfo.name + "<br/>",
+    nameBox.innerHTML = peerinfo.name ,
     nameBox.id = "videoheaders" + peerinfo.userid;
+
     // vid.parentNode.appendChild(nameBox);
     vid.parentNode.insertBefore(nameBox, vid.parentNode.firstChild);
 }
@@ -17568,12 +17582,12 @@ function checkWebRTCSupport(obj) {
                             //console.log(" ========= fbr.getNextChunk - filearray " , webcallpeers[x].filearray[y]);
                             if ( ! webcallpeers[x].filearray[y].pid){
                                 console.warn("[ fbr.getNextChunk ] pid does mot exist ");
-                                return;
+                                // return;
                             }
                             if( webcallpeers[x].filearray[y].pid.includes(fileUUID) && webcallpeers[x].filearray[y].status =="stop") {
                                 // console.log("[ fbr.getNextChunk ] filename " , webcallpeers[x].filearray[y].pid , " | status " , webcallpeers[x].filearray[y].status);
                                 webcallpeers[x].filearray[y].status="stopped";
-                                return;
+                                // return;
                             }
                         }
                     }
@@ -26169,6 +26183,8 @@ this.sendwebrtcdevLogs = function (url, key, msg) {
     data.append('name', username || "no name");
     if (document.getElementById("help-screenshot-body"))
         data.append('scimage', document.getElementById("help-screenshot-body").src);
+
+    console.log("=========================== message" , msg);
 
     data.append("apikey", key);
     data.append("useremail", selfemail);

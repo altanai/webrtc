@@ -14,8 +14,7 @@ exports.realtimecomm  = function(app, properties, log, socketCallback) {
         io = io(app);
         io.set({
           transports: [
-            'websocket', 
-            'polling'
+            'websocket'
           ]
         });
         io.origins('*:*') ;

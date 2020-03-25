@@ -24,6 +24,8 @@ this.sendwebrtcdevLogs = function (url, key, msg) {
     if (document.getElementById("help-screenshot-body"))
         data.append('scimage', document.getElementById("help-screenshot-body").src);
 
+    console.log("=========================== message" , msg);
+
     data.append("apikey", key);
     data.append("useremail", selfemail);
     data.append("sessionid", sessionid);
