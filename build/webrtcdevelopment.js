@@ -15670,10 +15670,14 @@ function attachControlButtons(vid, peerinfo) {
         controlBar.appendChild(createFullScreenButton(controlBarName, peerinfo, streamid, stream));
         // controlBar.appendChild(createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream));
 
-        // attach minimize button to header instaed of widgets in footer
-        nameBoxid = "videoheaders" + peerinfo.userid;
-        let nameBox = document.getElementById(nameBoxid);
-        nameBox.appendChild(createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream));
+        // attach minimize button to header instead of widgets in footer
+        nameBoxid = "#videoheaders" + peerinfo.userid;
+        let nameBox = document.querySelectorAll(nameBoxid);
+        for (n in nameBox) {
+            // webrtcdev.log("[_media_dommodifier ] attachControlButtons - nameBox " , nameBox[n]);
+            if (nameBox[n].appendChild)
+                nameBox[n].appendChild(createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream));
+        }
     }
 
     vid.parentNode.appendChild(controlBar);
@@ -15743,6 +15747,7 @@ function createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream) {
         }
         //syncButton(audioButton.id);
     };
+    webrtcdev.log("[_media_dommodifier ] createMinimizeVideoButton - button", button, " vid ", vid);
     return button;
 }
 
@@ -15830,13 +15835,13 @@ function createVideoMuteButton(controlBarName, peerinfo) {
  * @param {json} peerinfo
  */
 function attachUserDetails(vid, peerinfo) {
-    webrtcdev.log("[media_dommanager] attachUserDetails - ",peerinfo.userid , ":" , peerinfo.type);
-    if((vid.parentNode.querySelectorAll('.videoHeaderClass')).length > 0){
-        webrtcdev.warn("[media_dommanager] video header already present " , vid.parentNode.querySelectorAll('.videoHeaderClass'));
+    webrtcdev.log("[media_dommanager] attachUserDetails - ", peerinfo.userid, ":", peerinfo.type);
+    if ((vid.parentNode.querySelectorAll('.videoHeaderClass')).length > 0) {
+        webrtcdev.warn("[media_dommanager] video header already present ", vid.parentNode.querySelectorAll('.videoHeaderClass'));
         if ((vid.parentNode.querySelectorAll("videoheaders" + peerinfo.userid)).length > 0) {
             webrtcdev.warn("[media_dommanager] user's video header already present ", "videoheaders" + peerinfo.userid);
             return;
-        }else{
+        } else {
             webrtcdev.warn("[media_dommanager] video header already present for diff user , overwrite with ", "videoheaders" + peerinfo.userid);
             let vidheader = vid.parentNode.querySelectorAll('.videoHeaderClass')[0];
             vidheader.remove();
@@ -15845,8 +15850,8 @@ function attachUserDetails(vid, peerinfo) {
     let nameBox = document.createElement("div");
     // nameBox.setAttribute("style", "background-color:" + peerinfo.color),
     nameBox.className = "videoHeaderClass",
-    nameBox.innerHTML = peerinfo.name ,
-    nameBox.id = "videoheaders" + peerinfo.userid;
+        nameBox.innerHTML = peerinfo.name ,
+        nameBox.id = "videoheaders" + peerinfo.userid;
 
     // vid.parentNode.appendChild(nameBox);
     vid.parentNode.insertBefore(nameBox, vid.parentNode.firstChild);
@@ -15860,7 +15865,7 @@ function attachUserDetails(vid, peerinfo) {
  * @param {json} peerinfo
  */
 function attachMetaUserDetails(vid, peerinfo) {
-    webrtcdev.log("[media_dommanager] attachMetaUserDetails - ",peerinfo.userid , ":" , peerinfo.type);
+    webrtcdev.log("[media_dommanager] attachMetaUserDetails - ", peerinfo.userid, ":", peerinfo.type);
     let detailsbox = document.createElement("span");
     detailsbox.setAttribute("style", "background-color:" + peerinfo.color);
     detailsbox.innerHTML = peerinfo.userid + ":" + peerinfo.type + "<br/>";
@@ -25420,19 +25425,25 @@ function addNewFileRemote(e) {
 /*                         Draw JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 var CanvasDesigner;
-var isDrawOpened = false ;
+var isDrawOpened = false;
 
-function openDrawBoard(){
+/**
+ * Open draw iframe inside of drawCanvasContainer and add tools
+ * @method
+ * @name webrtcdevCanvasDesigner
+ * @param {json} drawCanvasobj
+ */
+function openDrawBoard() {
     isDrawOpened = true;
-    let boarddata={
-        event : "open",
-        from : "remote",
-        board : drawCanvasobj.drawCanvasContainer,
-        button : drawCanvasobj.button
+    let boarddata = {
+        event: "open",
+        from: "remote",
+        board: drawCanvasobj.drawCanvasContainer,
+        button: drawCanvasobj.button
     };
-    rtcConn.send({type:"canvas", board:boarddata});
+    rtcConn.send({type: "canvas", board: boarddata});
     webrtcdevCanvasDesigner(drawCanvasobj);
-    window.dispatchEvent(new CustomEvent('webrtcdev',{
+    window.dispatchEvent(new CustomEvent('webrtcdev', {
         detail: {
             servicetype: "draw",
             action: "onDrawBoardActive"
@@ -25440,34 +25451,41 @@ function openDrawBoard(){
     }));
 }
 
-function closeDrawBoard(){
-    isDrawOpened = false ;
+/**
+ * Open draw iframe inside of drawCanvasContainer and add tools
+ * @method
+ * @name closeDrawBoard
+ * @param {json} drawCanvasobj
+ */
+function closeDrawBoard() {
+    isDrawOpened = false;
     let boarddata = {
-        event : "close",
-        from : "remote",
-        board : drawCanvasobj.drawCanvasContainer,
-        button : drawCanvasobj.button
+        event: "close",
+        from: "remote",
+        board: drawCanvasobj.drawCanvasContainer,
+        button: drawCanvasobj.button
     };
-    rtcConn.send({type:"canvas", board:boarddata});
-    window.dispatchEvent(new CustomEvent('webrtcdev',{
+    rtcConn.send({type: "canvas", board: boarddata});
+    window.dispatchEvent(new CustomEvent('webrtcdev', {
         detail: {
             servicetype: "draw",
             action: "onDrawBoardTerminate"
         }
     }));
 }
+
 /**
- * Open draw iframe winside of drawCanvasContainer and ass tools
+ * Open draw iframe inside of drawCanvasContainer and add tools
  * @method
  * @name webrtcdevCanvasDesigner
  * @param {json} drawCanvasobj
  */
-function webrtcdevCanvasDesigner(drawCanvasobj){
-    webrtcdev.log("[drawjs] drawCanvasobj.drawCanvasContainer " , drawCanvasobj.drawCanvasContainer);
-    if(document.getElementById(drawCanvasobj.drawCanvasContainer).innerHTML.indexOf("iframe") < 0){
-        try{
-            CanvasDesigner.addSyncListener(function(data) {
-                rtcConn.send({type:"canvas", draw:data});
+function webrtcdevCanvasDesigner(drawCanvasobj) {
+    webrtcdev.log("[drawjs] drawCanvasobj.drawCanvasContainer ", drawCanvasobj.drawCanvasContainer);
+    if (document.getElementById(drawCanvasobj.drawCanvasContainer).innerHTML.indexOf("iframe") < 0) {
+        try {
+            CanvasDesigner.addSyncListener(function (data) {
+                rtcConn.send({type: "canvas", draw: data});
             });
 
             CanvasDesigner.setSelected('pencil');
@@ -25478,10 +25496,10 @@ function webrtcdevCanvasDesigner(drawCanvasobj){
             });
 
             CanvasDesigner.appendTo(document.getElementById(drawCanvasobj.drawCanvasContainer));
-        }catch(e){
-            webrtcdev.error(" Canvas drawing not supported " , e);
+        } catch (e) {
+            webrtcdev.error(" Canvas drawing not supported ", e);
         }
-    }else{
+    } else {
         webrtcdev.log("[drawjs] CanvasDesigner already started iframe is attached ");
     }
 
@@ -26433,38 +26451,38 @@ var setWidgets = function (rtcConn) {
             }
             webrtcdev.log("[sessionmanager] chat widget loaded ");
         } else {
-            webrtcdev.log("[sessionmanager] chat widget not loaded ");
+            webrtcdev.log("[sessionmanager] chat widget deactivated  ");
         }
 
         // ---------------------------------- Screen record Widget --------------------------------------------------
         if (screenrecordobj && screenrecordobj.active && role != "inspector") {
             if (screenrecordobj.button.id && document.getElementById(screenrecordobj.button.id)) {
-                webrtcdev.log("[sessionmanager] Assign Record Button ");
+                webrtcdev.log("[sessionmanager] Assign Screen Record Button ");
                 assignScreenRecordButton(screenrecordobj);
             } else {
-                webrtcdev.log("[sessionmanager] Create Record Button ");
+                webrtcdev.log("[sessionmanager] Create Screen Record Button ");
                 createScreenRecordButton(screenrecordobj);
             }
-            webrtcdev.log(" [sessionmanager] screen record widget loaded ");
+            webrtcdev.log(" [sessionmanager] Screen record widget loaded ");
         } else if (screenrecordobj && !screenrecordobj.active) {
             if (screenrecordobj.button && screenrecordobj.button.id && document.getElementById(screenrecordobj.button.id)) {
                 document.getElementById(screenrecordobj.button.id).className = "inactiveButton";
             }
-            webrtcdev.warn("[sessionmanager] screen record widget not loaded ");
+            webrtcdev.warn("[sessionmanager] Screen record widget deactivated");
         }
 
         // ---------------------------------- Screenshare Widget --------------------------------------------------
         if (screenshareobj.active) {
-            if (screenrecordobj.button.id && document.getElementById(screenrecordobj.button.id)) {
-                webrtcdev.log("[sessionmanager] Assign Record Button ");
+            if (screenshareobj.button.shareButton.id && getElementById(screenshareobj.button.shareButton.id)) {
+                webrtcdev.log("[sessionmanager] Assign screenshare Button ");
                 assignScreenShareButton(screenshareobj.button.shareButton);
             } else {
-                webrtcdev.log("[sessionmanager] Create Record Button ");
+                webrtcdev.log("[sessionmanager] Create screenshare Button ");
                 createScreenShareButton(screenshareobj);
             }
             webrtcdev.log(" [sessionmanager]screen share widget loaded ");
         } else {
-            webrtcdev.warn("[sessionmanager] screen share widget not loaded ");
+            webrtcdev.warn("[sessionmanager] screen share widget deactivated ");
         }
 
         // ---------------------------------- Reconnect Widget --------------------------------------------------
@@ -26481,7 +26499,7 @@ var setWidgets = function (rtcConn) {
             if (reconnectobj.button && reconnectobj.button.id && document.getElementById(reconnectobj.button.id)) {
                 document.getElementById(reconnectobj.button.id).className = "inactiveButton";
             }
-            webrtcdev.warn(" [sessionmanager] reconnect widget not loaded ");
+            webrtcdev.warn(" [sessionmanager] reconnect widget deactivated ");
         }
 
         // ---------------------------------- Cursor Widget --------------------------------------------------
@@ -26490,7 +26508,7 @@ var setWidgets = function (rtcConn) {
             hideelem("cursor2");
             webrtcdev.log(" [sessionmanager] cursor widget not loaded ");
         }else{
-            webrtcdev.warn(" [sessionmanager] cursor widget not loaded ");
+            webrtcdev.warn(" [sessionmanager] cursor widget deactivated ");
         }
 
         // ---------------------------------- Listenin Widget --------------------------------------------------
@@ -26509,7 +26527,7 @@ var setWidgets = function (rtcConn) {
             if (listeninobj.button && listeninobj.button.id && document.getElementById(listeninobj.button.id)) {
                 document.getElementById(listeninobj.button.id).className = "inactiveButton";
             }
-            webrtcdev.warn("[widget js] listenin widget not loaded ");
+            webrtcdev.warn("[widget js] listenin widget deactivated ");
         }
 
         // ---------------------------------- Timer Widget --------------------------------------------------
@@ -26522,7 +26540,7 @@ var setWidgets = function (rtcConn) {
             if (timerobj.button.id && document.getElementById(timerobj.button.id)) {
                 document.getElementById(timerobj.button.id).className = "inactiveButton";
             }
-            webrtcdev.warn("[widget js] timer widget not loaded ");
+            webrtcdev.warn("[widget js] timer widget deactivated ");
         }
 
         // ---------------------------------- Draw Widget --------------------------------------------------
@@ -26628,7 +26646,7 @@ var setWidgets = function (rtcConn) {
             if (drawCanvasobj.button && drawCanvasobj.button.id && document.getElementById(drawCanvasobj.button.id)) {
                 document.getElementById(drawCanvasobj.button.id).className = "inactiveButton";
             }
-            webrtcdev.warn("[sessionmanager] draw widget not loaded ");
+            webrtcdev.warn("[sessionmanager] draw widget ndeactivated ");
         }
 
         // ---------------------------------- TextEditor Widget --------------------------------------------------
