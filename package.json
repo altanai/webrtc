@@ -4,7 +4,7 @@
   "description": "webrtc based communication and collaboration client. Contains lot of experiments modules ",
   "main": "webrtcserver.js",
   "engines": {
-    "node": "12.4.*"
+    "node": "12.*"
   },
   "dependencies": {
     "bootstrap": "^4.3.1",
@@ -23,6 +23,9 @@
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
+    "esdoc": "^1.1.0",
+    "esdoc-standard-plugin": "^1.0.0",
+    "gulp-babel": "^7.0.1",
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
     "del": "^5.1.0",
@@ -75,6 +78,6 @@
   },
   "homepage": "https://github.com/altanai/webrtc#readme",
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/@altanai"
+    "registry": "https://registry.npmjs.org "
   }
 }
