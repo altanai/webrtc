@@ -45,7 +45,10 @@ gulp.task('clean', function (done) {
 });
 
 gulp.task('vendorjs', function (done) {
-    vendorJsList = [
+    let list = [
+        "node_modules/jquery/dist/jquery.min.js",
+        "node_modules/bootstrap/dist/js/bootstrap.bundle.js",
+        "node_modules/socket.io-client/dist/socket.io.js"
         // "https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js",
         // "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
         // "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js",
@@ -53,13 +56,22 @@ gulp.task('vendorjs', function (done) {
         // "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
     ];
 
-    remoteSrc(vendorJsList, {base: null})
+    console.log(list);
+    gulp.src(list)
         .pipe(rev({strict: true}))
         .pipe(header(headerComment))
         .pipe(uglify())
         .pipe(concat('webrtcdevelopment_header.js'))
         .pipe(gulp.dest(folderPath));
     done();
+
+    // remoteSrc(vendorJsList, {base: null})
+    //     .pipe(rev({strict: true}))
+    //     .pipe(header(headerComment))
+    //     .pipe(uglify())
+    //     .pipe(concat('webrtcdevelopment_header.js'))
+    //     .pipe(gulp.dest(folderPath));
+    // done();
 });
 
 // gulp.task('screensharejs',function(done) {
@@ -119,7 +131,7 @@ gulp.task('drawjs', function (done) {
     ];
     console.log(list);
     gulp.src(list)
-        .pipe(uglify())
+        // .pipe(uglify())
         .pipe(concat('drawBoardScript.js'))
         .pipe(gulp.dest(folderPath));
     done();
@@ -162,7 +174,7 @@ gulp.task('codecss', function (done) {
     list = [
         "client/src/codemirror/theme/mdn-like.css",
         "client/src/codemirror/lib/codemirror.css",
-        "client/src/codemirror/styleprojec.css"
+        "client/src/codemirror/style.css"
     ];
     console.log(list);
     gulp.src(list)
@@ -172,9 +184,6 @@ gulp.task('codecss', function (done) {
 });
 
 var scriptList = [
-    "node_modules/bootstrap/dist/js/bootstrap.min.js",
-    "node_modules/jquery/dist/jquery.min.js",
-    "node_modules/socket.io-client/dist/socket.io.js",
 
     "client/src/scripts/RTCM.js",
     "client/src/scripts/_logger.js",
@@ -252,12 +261,12 @@ gulp.task('webrtcdevelopmentjs', function (done) {
     console.log(scriptList);
     gulp.src(scriptList, {allowEmpty: true})
         .pipe(header(headerComment))
-        .pipe(babel({
-            presets: ['es2015']
-        }))
-        .pipe(uglify())
+        // .pipe(babel({
+        //     presets: ['es2015']
+        // }))
+        // .pipe(uglify())
         .pipe(concat('webrtcdevelopment.js'))
-        // .pipe(replace(/use strict/g, ''))
+        .pipe(replace(/use strict/g, ''))
         .pipe(gulp.dest(folderPath));
     done();
 });
@@ -266,15 +275,25 @@ gulp.task('webrtcdevelopmentjs', function (done) {
 gulp.task('mainstyle', function (done) {
     console.log(" gulping main stylesheets css  ");
     cssList = [
-        "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css",
-        "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css",
-        "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css",
-        "https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css"
+        "node_modules/bootstrap/dist/css/bootstrap.min.css",
+        "node_modules/font-awesome/css/font-awesome.min.css",
+        "node_modules/remodal/dist/remodal.css",
+        "node_modules/remodal/dist/remodal-default-theme.css"
+        // "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css",
+        // "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css",
+        // "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css",
+        // "https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css"
         // "https://www.gstatic.com/firebasejs/4.2.0/firebase.js"
     ];
     console.log(cssList);
-    remoteSrc(cssList, {base: null})
-        .pipe(rev({strict: true}))
+    // remoteSrc(cssList, {base: null})
+    //     .pipe(rev({strict: true}))
+    //     .pipe(header(headerComment))
+    //     .pipe(concat('webrtcdevelopment_header.css'))
+    //     .pipe(gulp.dest(folderPath));
+    // done();
+    gulp.src(cssList)
+        .pipe( rev({strict: true}) )
         .pipe(header(headerComment))
         .pipe(concat('webrtcdevelopment_header.css'))
         .pipe(gulp.dest(folderPath));
@@ -341,10 +360,10 @@ gulp.task('vendorjs', gulp.series(
     'mainstyle'
 ));
 
-//gulp aall components to make it production ready
+//gulp all components to make it production ready
 gulp.task('production', gulp.series(
     'clean',
-    // 'vendorjs',
+    'vendorjs',
     'drawjs',
     'drawcss',
     'codejs',

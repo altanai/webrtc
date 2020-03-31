@@ -2,63 +2,63 @@
 common 
 *********************************************/
 
-function fitToContainer(parent , canvas){
-    try{
+function fitToContainer(parent, canvas) {
+    try {
         /*  canvas.style.width ='100%';
         canvas.style.height='100%';*/
-        canvas.width  = parent.offsetWidth;
+        canvas.width = parent.offsetWidth;
         canvas.height = parent.offsetHeight;
-    }catch(e){
+    } catch (e) {
         console.log(e);
     }
 }
 
 function setContext(canv) {
-    var ctx=null;
-    try{ 
-         ctx = canv.getContext('2d');
-         ctx.lineWidth = lineWidth;
-         ctx.strokeStyle = strokeStyle;
-         ctx.fillStyle = fillStyle;
-         ctx.font = font;
-    }catch(e){
-        console.error(" canvas context not set " , canv);
+    var ctx = null;
+    try {
+        ctx = canv.getContext('2d');
+        ctx.lineWidth = lineWidth;
+        ctx.strokeStyle = strokeStyle;
+        ctx.fillStyle = fillStyle;
+        ctx.font = font;
+    } catch (e) {
+        console.error(" canvas context not set ", canv);
         console.error(e);
     }
     return ctx;
 }
 
-let mainCanvas  = document.getElementById("main-canvas");
-let canvas  = document.getElementById("temp-canvas");
+let mainCanvas = document.getElementById("main-canvas");
+let canvas = document.getElementById("temp-canvas");
 let context = setContext(mainCanvas);
 let tempContext = setContext(canvas);
 let parentBox = document.getElementById("drawBox");
 
-console.log("Main Canvas : " , mainCanvas , context);
-console.log("Temp Canvas : " , canvas , tempContext );
+console.log("Main Canvas : ", mainCanvas, context);
+console.log("Temp Canvas : ", canvas, tempContext);
 
 
-fitToContainer( parentBox , mainCanvas );
-fitToContainer( parentBox , canvas );
+fitToContainer(parentBox, mainCanvas);
+fitToContainer(parentBox, canvas);
 
-if(document.getElementById("trashBtn")){
-    document.getElementById("trashBtn").onclick = function() {
+if (document.getElementById("trashBtn")) {
+    document.getElementById("trashBtn").onclick = function () {
         tempContext.clearRect(0, 0, canvas.width, canvas.height);
-        console.log(" cleared temp canvas" , canvas  );
+        console.log(" cleared temp canvas", canvas);
 
         context.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
-        console.log(" cleared main canvas " , mainCanvas);
+        console.log(" cleared main canvas ", mainCanvas);
 
         window.location.reload();
     };
-}else{
+} else {
     console.error("trash button not found");
 }
 
 
-if(document.getElementById("saveBtn")){
+if (document.getElementById("saveBtn")) {
 
-    document.getElementById("saveBtn").onclick = function() {
+    document.getElementById("saveBtn").onclick = function () {
 
         /*        
         var aref = document.createElement("a");
@@ -67,9 +67,9 @@ if(document.getElementById("saveBtn")){
         aref.click();*/
 
         parent.postMessage({
-            modalpopup : {
-                filetype : "blobcanvas" ,   
-            }, 
+            modalpopup: {
+                filetype: "blobcanvas",
+            },
             sender: selfId
         }, '*');
 
@@ -79,7 +79,7 @@ if(document.getElementById("saveBtn")){
         a = window.open("about:blank", "image from canvas");
         a.document.write("<img src='" + e + "' alt='from canvas'/>");*/
     };
-}else{
+} else {
     console.error("save button not found");
 }
 
@@ -97,7 +97,7 @@ var is = {
     isEraser: false,
     isText: false,
 
-    set: function(shape) {
+    set: function (shape) {
         var cache = this;
         cache.isLine = cache.isArc = cache.isDragLastPath = cache.isDragAllPaths = cache.isRectangle = cache.isQuadraticCurve = cache.isBezierCurve = is.isPencil = is.isEraser = is.isText = false;
         cache['is' + shape] = true;
@@ -137,7 +137,7 @@ var points = [],
 
 var common = {
 
-    updateTextArea: function() {
+    updateTextArea: function () {
         var c = common,
             toFixed = c.toFixed,
             getPoint = c.getPoint,
@@ -152,12 +152,12 @@ var common = {
     },
 
 
-    toFixed: function(input) {
+    toFixed: function (input) {
         return Number(input).toFixed(1);
     },
 
 
-    getPoint: function(pointToCompare, compareWith, prefix) {
+    getPoint: function (pointToCompare, compareWith, prefix) {
         if (pointToCompare > compareWith) pointToCompare = prefix + ' + ' + (pointToCompare - compareWith);
         else if (pointToCompare < compareWith) pointToCompare = prefix + ' - ' + (compareWith - pointToCompare);
         else pointToCompare = prefix;
@@ -166,8 +166,7 @@ var common = {
     },
 
 
-
-    absoluteShortened: function() {
+    absoluteShortened: function () {
 
         var output = '',
             length = points.length,
@@ -185,7 +184,7 @@ var common = {
     },
 
 
-    absoluteNOTShortened: function(toFixed) {
+    absoluteNOTShortened: function (toFixed) {
         var tempArray = [],
             i, point, p;
 
@@ -232,7 +231,7 @@ var common = {
     },
 
 
-    relativeShortened: function(toFixed, getPoint) {
+    relativeShortened: function (toFixed, getPoint) {
         var i = 0,
             point, p, length = points.length,
             output = '',
@@ -339,7 +338,7 @@ var common = {
     },
 
 
-    relativeNOTShortened: function(toFixed, getPoint) {
+    relativeNOTShortened: function (toFixed, getPoint) {
         var i, point, p, length = points.length,
             output = '',
             x = 0,
@@ -364,25 +363,25 @@ var common = {
             if (p[0] === 'arc') {
                 output += 'context.beginPath();\n' + 'context.arc(' + getPoint(point[0], x, 'x') + ', ' + getPoint(point[1], y, 'y') + ', ' + point[2] + ', ' + point[3] + ', 0, ' + point[4] + ');\n'
 
-                + this.strokeOrFill(p[2]);
+                    + this.strokeOrFill(p[2]);
             }
 
             if (p[0] === 'pencil') {
                 output += 'context.beginPath();\n' + 'context.moveTo(' + getPoint(point[0], x, 'x') + ', ' + getPoint(point[1], y, 'y') + ');\n' + 'context.lineTo(' + getPoint(point[2], x, 'x') + ', ' + getPoint(point[3], y, 'y') + ');\n'
 
-                + this.strokeOrFill(p[2]);
+                    + this.strokeOrFill(p[2]);
             }
 
             if (p[0] === 'eraser') {
                 output += 'context.beginPath();\n' + 'context.moveTo(' + getPoint(point[0], x, 'x') + ', ' + getPoint(point[1], y, 'y') + ');\n' + 'context.lineTo(' + getPoint(point[2], x, 'x') + ', ' + getPoint(point[3], y, 'y') + ');\n'
 
-                + this.strokeOrFill(p[2]);
+                    + this.strokeOrFill(p[2]);
             }
 
             if (p[0] === 'line') {
                 output += 'context.beginPath();\n' + 'context.moveTo(' + getPoint(point[0], x, 'x') + ', ' + getPoint(point[1], y, 'y') + ');\n' + 'context.lineTo(' + getPoint(point[2], x, 'x') + ', ' + getPoint(point[3], y, 'y') + ');\n'
 
-                + this.strokeOrFill(p[2]);
+                    + this.strokeOrFill(p[2]);
             }
 
             if (p[0] === 'text') {
@@ -396,13 +395,13 @@ var common = {
             if (p[0] === 'quadratic') {
                 output += 'context.beginPath();\n' + 'context.moveTo(' + getPoint(point[0], x, 'x') + ', ' + getPoint(point[1], y, 'y') + ');\n' + 'context.quadraticCurveTo(' + getPoint(point[2], x, 'x') + ', ' + getPoint(point[3], y, 'y') + ', ' + getPoint(point[4], x, 'x') + ', ' + getPoint(point[5], y, 'y') + ');\n'
 
-                + this.strokeOrFill(p[2]);
+                    + this.strokeOrFill(p[2]);
             }
 
             if (p[0] === 'bezier') {
                 output += 'context.beginPath();\n' + 'context.moveTo(' + getPoint(point[0], x, 'x') + ', ' + getPoint(point[1], y, 'y') + ');\n' + 'context.bezierCurveTo(' + getPoint(point[2], x, 'x') + ', ' + getPoint(point[3], y, 'y') + ', ' + getPoint(point[4], x, 'x') + ', ' + getPoint(point[5], y, 'y') + ', ' + getPoint(point[6], x, 'x') + ', ' + getPoint(point[7], y, 'y') + ');\n'
 
-                + this.strokeOrFill(p[2]);
+                    + this.strokeOrFill(p[2]);
             }
 
             if (i !== length - 1) output += '\n\n';
@@ -413,21 +412,20 @@ var common = {
     },
 
 
-
     forLoop: 'for(i; i < length; i++) {\n' + '\t p = points[i];\n' + '\t point = p[1];\n' + '\t context.beginPath();\n\n'
 
-   
+
         + '\t if(p[2]) { \n' + '\t\t context.lineWidth = p[2][0];\n' + '\t\t context.strokeStyle = p[2][1];\n' + '\t\t context.fillStyle = p[2][2];\n'
 
         + '\t\t context.globalAlpha = p[2][3];\n' + '\t\t context.globalCompositeOperation = p[2][4];\n' + '\t\t context.lineCap = p[2][5];\n' + '\t\t context.lineJoin = p[2][6];\n' + '\t\t context.font = p[2][7];\n' + '\t }\n\n'
 
-    
+
         + '\t if(p[0] === "line") { \n' + '\t\t context.moveTo(point[0], point[1]);\n' + '\t\t context.lineTo(point[2], point[3]);\n' + '\t }\n\n'
 
-   
+
         + '\t if(p[0] === "pencil") { \n' + '\t\t context.moveTo(point[0], point[1]);\n' + '\t\t context.lineTo(point[2], point[3]);\n' + '\t }\n\n'
 
-    
+
         + '\t if(p[0] === "text") { \n' + '\t\t context.fillText(point[0], point[1], point[2]);\n' + '\t }\n\n'
 
 
@@ -457,7 +455,7 @@ var common = {
         + '}',
 
 
-    strokeOrFill: function(p) {
+    strokeOrFill: function (p) {
         if (!this.prevProps || this.prevProps !== p.join(',')) {
             this.prevProps = p.join(',');
 
@@ -469,7 +467,7 @@ var common = {
 
 
     prevProps: null,
-    shortenHelper: function(name, p1, p2) {
+    shortenHelper: function (name, p1, p2) {
         var result = '["' + name + '", [' + p1.join(', ') + ']';
 
         if (!this.prevProps || this.prevProps !== p2.join(',')) {
