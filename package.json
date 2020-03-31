@@ -1,12 +1,17 @@
 {
   "name": "webrtcdevelopment",
-  "version": "4.8.30",
+  "version": "4.9.0",
   "description": "webrtc based communication and collaboration client. Contains lot of experiments modules ",
   "main": "webrtcserver.js",
   "engines": {
     "node": "5.*"
   },
   "dependencies": {
+    "bootstrap": "^4.3.1",
+    "font-awesome": "^4.7.0",
+    "glyphicons": "^0.2.0",
+    "jquery": "^3.4.1",
+    "jquery-ui": "^1.12.1",
     "babel-core": "^6.26.3",
     "esdoc": "^1.1.0",
     "esdoc-standard-plugin": "^1.0.0",
