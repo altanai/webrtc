@@ -1,7 +1,6 @@
 var gulp = require('gulp');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
-let babel = require('gulp-babel');
 // var uglify = require("uglify-js");
 var replace = require('gulp-replace');
 var less = require('gulp-less');
@@ -293,7 +292,7 @@ gulp.task('mainstyle', function (done) {
     //     .pipe(gulp.dest(folderPath));
     // done();
     gulp.src(cssList)
-        .pipe( rev({strict: true}) )
+        .pipe(rev({strict: true}))
         .pipe(header(headerComment))
         .pipe(concat('webrtcdevelopment_header.css'))
         .pipe(gulp.dest(folderPath));
@@ -316,7 +315,7 @@ gulp.task('webrtcdevelopmentcss', function (done) {
     console.log(cssList);
     gulp.src(cssList)
         // .pipe(uglify())
-        // .pipe( rev({strict: true}) )
+        .pipe(rev({strict: true}))
         .pipe(header(headerComment))
         .pipe(concat('webrtcdevelopment.css'))
         .pipe(less().on('error', function (error) {
@@ -339,6 +338,14 @@ gulp.task('git_pull', function (cb) {
     });
 });
 
+gulp.task('fonts', function (cb) {
+    console.log(" copying fonts to home dir ");
+    execute('cp -r client/src/fonts .'  , function (resp) {
+        console.log(resp);
+        cb();
+    });
+});
+
 // gulp webrtc dev css and js along with server changes 
 gulp.task('default', gulp.series(
     'betawebrtcdevelopmentjs',
@@ -357,7 +364,8 @@ gulp.task('develop', gulp.series(
 // only gulp vendor js
 gulp.task('vendorjs', gulp.series(
     'vendorjs',
-    'mainstyle'
+    'mainstyle',
+    'fonts'
 ));
 
 //gulp all components to make it production ready
@@ -369,7 +377,8 @@ gulp.task('production', gulp.series(
     'codejs',
     'codecss',
     'webrtcdevelopmentjs',
-    // 'mainstyle',
+    'mainstyle',
     'webrtcdevelopmentcss',
-    'webrtcdevelopmentServer'
+    'webrtcdevelopmentServer',
+    'fonts'
 )); 

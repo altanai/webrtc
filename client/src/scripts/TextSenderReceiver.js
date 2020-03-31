@@ -31,7 +31,7 @@ function TextReceiver(connection) {
 
             if (connection.autoTranslateText) {
                 e.original = e.data;
-                connection.Translator.TranslateText(e.data, function(translatedText) {
+                connection.Translator.TranslateText(e.data, function (translatedText) {
                     e.data = translatedText;
                     connection.onmessage(e);
                 });
@@ -50,7 +50,7 @@ function TextReceiver(connection) {
 
 // TextSender.js
 var TextSender = {
-    send: function(config) {
+    send: function (config) {
         var connection = config.connection;
 
         var channel = config.channel,
@@ -96,7 +96,7 @@ var TextSender = {
             textToTransfer = text.slice(data.message.length);
 
             if (textToTransfer.length) {
-                setTimeout(function() {
+                setTimeout(function () {
                     sendText(null, textToTransfer);
                 }, connection.chunkInterval || 100);
             }

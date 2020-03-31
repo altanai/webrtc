@@ -1,12 +1,13 @@
 {
   "name": "webrtcdevelopment",
-  "version": "4.9.1",
+  "version": "4.9.2",
   "description": "webrtc based communication and collaboration client. Contains lot of experiments modules ",
   "main": "webrtcserver.js",
   "engines": {
     "node": "12.*"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.28",
     "bootstrap": "^4.3.1",
     "font-awesome": "^4.7.0",
     "glyphicons": "^0.2.0",
