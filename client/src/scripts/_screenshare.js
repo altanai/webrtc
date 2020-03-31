@@ -11,7 +11,6 @@ var isChrome = !!window.chrome && !isOpera;
 var screenCallback;
 var iceServers = [];
 var signaler, screen, screenRoomid;
-var screenShareButton;
 var screenShareStreamLocal = null;
 
 
@@ -107,9 +106,10 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
             if (event)
                 webrtcdev.log("[screenshare JS] onstreamended -", event);
 
-            if (screenShareButton) {
-                screenShareButton.className = screenshareobj.button.shareButton.class_off;
-                screenShareButton.innerHTML = screenshareobj.button.shareButton.html_off;
+            let screenShareButton = screenshareobj.button.shareButton.id;
+            if (screenShareButton && document.getElementById(screenShareButton)) {
+                document.getElementById(screenShareButton).className = screenshareobj.button.shareButton.class_off;
+                document.getElementById(screenShareButton).innerHTML = screenshareobj.button.shareButton.html_off;
             }
             //removeScreenViewButton();
 
@@ -237,7 +237,7 @@ function webrtcdevStopShareScreen() {
 
         scrConn.closeEntireSession();
         webrtcdev.log("[screenshare JS] Sender stopped: screenRoomid ", screenRoomid,
-            "| Screen stoppped ", scrConn,
+            "| Screen stopped ", scrConn,
             "| container ", getElementById(screenshareobj.screenshareContainer));
 
         if (screenShareStreamLocal) {

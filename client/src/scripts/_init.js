@@ -37,7 +37,9 @@ var localVideoStreaming = null;
 var turn = "none";
 var localobj = {}, remoteobj = {};
 var pendingFileTransfer = [];
+var connectionStatus = null;
 
+this.connectionStatus = connectionStatus;
 
 function isData(session) {
     return !session.audio && !session.video && !session.screen && session.data;
@@ -398,6 +400,8 @@ this.stopCall = function () {
 
     if (!localStorage.getItem("remoteUsers"))
         localStorage.removeItem("remoteUsers");
+
+    this.connectionStatus = "closed";
 
     return;
 }

@@ -3,7 +3,7 @@
  * @method
  * @name assignScreenRecordButton
  */
-function assignScreenRecordButton() {
+function assignScreenRecordButton(screenrecordobj) {
 
     let recordButton = document.getElementById(screenrecordobj.button.id);
 

@@ -16,38 +16,38 @@ var setWidgets = function (rtcConn) {
             }
             webrtcdev.log("[sessionmanager] chat widget loaded ");
         } else {
-            webrtcdev.log("[sessionmanager] chat widget not loaded ");
+            webrtcdev.log("[sessionmanager] chat widget deactivated  ");
         }
 
         // ---------------------------------- Screen record Widget --------------------------------------------------
         if (screenrecordobj && screenrecordobj.active && role != "inspector") {
             if (screenrecordobj.button.id && document.getElementById(screenrecordobj.button.id)) {
-                webrtcdev.log("[sessionmanager] Assign Record Button ");
+                webrtcdev.log("[sessionmanager] Assign Screen Record Button ");
                 assignScreenRecordButton(screenrecordobj);
             } else {
-                webrtcdev.log("[sessionmanager] Create Record Button ");
+                webrtcdev.log("[sessionmanager] Create Screen Record Button ");
                 createScreenRecordButton(screenrecordobj);
             }
-            webrtcdev.log(" [sessionmanager] screen record widget loaded ");
+            webrtcdev.log(" [sessionmanager] Screen record widget loaded ");
         } else if (screenrecordobj && !screenrecordobj.active) {
             if (screenrecordobj.button && screenrecordobj.button.id && document.getElementById(screenrecordobj.button.id)) {
                 document.getElementById(screenrecordobj.button.id).className = "inactiveButton";
             }
-            webrtcdev.warn("[sessionmanager] screen record widget not loaded ");
+            webrtcdev.warn("[sessionmanager] Screen record widget deactivated");
         }
 
         // ---------------------------------- Screenshare Widget --------------------------------------------------
         if (screenshareobj.active) {
-            if (screenrecordobj.button.id && document.getElementById(screenrecordobj.button.id)) {
-                webrtcdev.log("[sessionmanager] Assign Record Button ");
+            if (screenshareobj.button.shareButton.id && getElementById(screenshareobj.button.shareButton.id)) {
+                webrtcdev.log("[sessionmanager] Assign screenshare Button ");
                 assignScreenShareButton(screenshareobj.button.shareButton);
             } else {
-                webrtcdev.log("[sessionmanager] Create Record Button ");
-                createScreenShareButton();
+                webrtcdev.log("[sessionmanager] Create screenshare Button ");
+                createScreenShareButton(screenshareobj);
             }
             webrtcdev.log(" [sessionmanager]screen share widget loaded ");
         } else {
-            webrtcdev.warn("[sessionmanager] screen share widget not loaded ");
+            webrtcdev.warn("[sessionmanager] screen share widget deactivated ");
         }
 
         // ---------------------------------- Reconnect Widget --------------------------------------------------
@@ -64,7 +64,7 @@ var setWidgets = function (rtcConn) {
             if (reconnectobj.button && reconnectobj.button.id && document.getElementById(reconnectobj.button.id)) {
                 document.getElementById(reconnectobj.button.id).className = "inactiveButton";
             }
-            webrtcdev.warn(" [sessionmanager] reconnect widget not loaded ");
+            webrtcdev.warn(" [sessionmanager] reconnect widget deactivated ");
         }
 
         // ---------------------------------- Cursor Widget --------------------------------------------------
@@ -73,7 +73,7 @@ var setWidgets = function (rtcConn) {
             hideelem("cursor2");
             webrtcdev.log(" [sessionmanager] cursor widget not loaded ");
         }else{
-            webrtcdev.warn(" [sessionmanager] cursor widget not loaded ");
+            webrtcdev.warn(" [sessionmanager] cursor widget deactivated ");
         }
 
         // ---------------------------------- Listenin Widget --------------------------------------------------
@@ -92,7 +92,7 @@ var setWidgets = function (rtcConn) {
             if (listeninobj.button && listeninobj.button.id && document.getElementById(listeninobj.button.id)) {
                 document.getElementById(listeninobj.button.id).className = "inactiveButton";
             }
-            webrtcdev.warn("[widget js] listenin widget not loaded ");
+            webrtcdev.warn("[widget js] listenin widget deactivated ");
         }
 
         // ---------------------------------- Timer Widget --------------------------------------------------
@@ -105,7 +105,7 @@ var setWidgets = function (rtcConn) {
             if (timerobj.button.id && document.getElementById(timerobj.button.id)) {
                 document.getElementById(timerobj.button.id).className = "inactiveButton";
             }
-            webrtcdev.warn("[widget js] timer widget not loaded ");
+            webrtcdev.warn("[widget js] timer widget deactivated ");
         }
 
         // ---------------------------------- Draw Widget --------------------------------------------------
@@ -211,7 +211,7 @@ var setWidgets = function (rtcConn) {
             if (drawCanvasobj.button && drawCanvasobj.button.id && document.getElementById(drawCanvasobj.button.id)) {
                 document.getElementById(drawCanvasobj.button.id).className = "inactiveButton";
             }
-            webrtcdev.warn("[sessionmanager] draw widget not loaded ");
+            webrtcdev.warn("[sessionmanager] draw widget ndeactivated ");
         }
 
         // ---------------------------------- TextEditor Widget --------------------------------------------------

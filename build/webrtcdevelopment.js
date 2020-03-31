@@ -5958,9 +5958,9 @@ if (typeof define === 'function' && define.amd) {
     });
 }
 
-/* ********************************************************
+/*********************************************************
 webdev Logger
-****************************************************** */
+*******************************************************/
 var webrtcdevlogs = [];
 
 /**
@@ -6027,41 +6027,37 @@ var webrtcdevlogger = {
     // }else{
 
     log: function () {
-        let arg = getArgsJson(arguments);
-        // if (isJSON(arguments)) {
-        //     let arg = JSON.stringify(arguments, undefined, 2);
-        //     // webrtcdevlogs.push("<pre style='color:grey'>[-]" + arg + "</pre>");
-        // } else {
-        //     let arg = getArgsJson(arguments);
-        //     // webrtcdevlogs.push("<p style='color:grey'>[-]" + arg + "</p>");
-        // }
-        webrtcdevlogs.push( arg );
+        if (isJSON(arguments)) {
+            let arg = JSON.stringify(arguments, undefined, 2);
+            webrtcdevlogs.push("<pre style='color:grey'>[-]" + arg + "</pre>");
+        } else {
+            let arg = getArgsJson(arguments);
+            webrtcdevlogs.push("<p style='color:grey'>[-]" + arg + "</p>");
+        }
+        // let arg = getArgsJson(arguments);
+        // webrtcdevlogs.push( arg );
         console.log(arguments);
     },
 
     info: function () {
-        let arg = getArgsJson(arguments);
-        // if (isJSON(arguments)) {
-        //     let arg = JSON.stringify(arguments, undefined, 2);
-        //     webrtcdevlogs.push("<pre style='color:blue'>[-]" + arg + "</pre>");
-        // } else {
-        //     let arg = getArgsJson(arguments);
-        //     webrtcdevlogs.push("<p style='color:blue'>[INFO]" + arg + "</p>");
-        // }
-        webrtcdevlogs.push( arg );
+        if (isJSON(arguments)) {
+            let arg = JSON.stringify(arguments, undefined, 2);
+            webrtcdevlogs.push("<pre style='color:blue'>[-]" + arg + "</pre>");
+        } else {
+            let arg = getArgsJson(arguments);
+            webrtcdevlogs.push("<p style='color:blue'>[INFO]" + arg + "</p>");
+        }
         console.info(arguments);
     },
 
     debug: function () {
-        let arg = getArgsJson(arguments);
-        // if (isJSON(arguments)) {
-        //     let arg = JSON.stringify(arguments, undefined, 2);
-        //     webrtcdevlogs.push("<pre style='color:green'>[DEBUG]" + arg + "</pre>");
-        // } else {
-        //     let arg = getArgsJson(arguments);
-        //     webrtcdevlogs.push("<p style='color:green'>[DEBUG]" + arg + "</p>");
-        // }
-        webrtcdevlogs.push( arg );
+        if (isJSON(arguments)) {
+            let arg = JSON.stringify(arguments, undefined, 2);
+            webrtcdevlogs.push("<pre style='color:green'>[DEBUG]" + arg + "</pre>");
+        } else {
+            let arg = getArgsJson(arguments);
+            webrtcdevlogs.push("<p style='color:green'>[DEBUG]" + arg + "</p>");
+        }
         console.debug(arguments);
     },
 
@@ -6073,15 +6069,13 @@ var webrtcdevlogger = {
     },
 
     error: function () {
-        let arg = getArgsJson(arguments);
-        // if (isJSON(arguments)) {
-        //     let arg = JSON.stringify(arguments, undefined, 2);
-        //     webrtcdevlogs.push("<pre style='color:grey'>[-]" + arg + "</pre>");
-        // } else {
-        //     let arg = getArgsJson(arguments);
-        //     webrtcdevlogs.push("<p style='color:red'>[ERROR]" + arg + "</p>");
-        // }
-        webrtcdevlogs.push( arg );
+        if (isJSON(arguments)) {
+            let arg = JSON.stringify(arguments, undefined, 2);
+            webrtcdevlogs.push("<pre style='color:grey'>[-]" + arg + "</pre>");
+        } else {
+            let arg = getArgsJson(arguments);
+            webrtcdevlogs.push("<p style='color:red'>[ERROR]" + arg + "</p>");
+        }
         console.error(arguments);
     }
 
@@ -13476,7 +13470,9 @@ var localVideoStreaming = null;
 var turn = "none";
 var localobj = {}, remoteobj = {};
 var pendingFileTransfer = [];
+var connectionStatus = null;
 
+this.connectionStatus = connectionStatus;
 
 function isData(session) {
     return !session.audio && !session.video && !session.screen && session.data;
@@ -13838,6 +13834,8 @@ this.stopCall = function () {
     if (!localStorage.getItem("remoteUsers"))
         localStorage.removeItem("remoteUsers");
 
+    this.connectionStatus = "closed";
+
     return;
 }
 
@@ -14067,10 +14065,6 @@ function updateWebCallView(peerinfo) {
                         } else {
                             attachMediaStream(selfvid, webcallpeers[0].stream);
                         }
-                        selfvid.id = webcallpeers[0].videoContainer;
-                        selfvid.className = remoteobj.videoClass;
-                        selfvid.muted = true;
-                        attachControlButtons(selfvid, webcallpeers[0]);
 
                         if (localobj.userDisplay && webcallpeers[0].name) {
                             attachUserDetails(selfvid, webcallpeers[0]);
@@ -14079,6 +14073,12 @@ function updateWebCallView(peerinfo) {
                         if (localobj.userMetaDisplay && webcallpeers[0].userid) {
                             attachMetaUserDetails(selfvid, webcallpeers[0]);
                         }
+
+                        selfvid.id = webcallpeers[0].videoContainer;
+                        selfvid.className = remoteobj.videoClass;
+                        selfvid.muted = true;
+                        attachControlButtons(selfvid, webcallpeers[0]);
+
                     } else {
                         webrtcdev.log(" not updating self video as it is already playing ");
                     }
@@ -14104,10 +14104,6 @@ function updateWebCallView(peerinfo) {
                     //if(remoteVideos[vi].video.hidden) remoteVideos[vi].video.hidden = false;
                     showelem(remoteVideos[emptyvideoindex].video);
 
-                    remoteVideos[emptyvideoindex].video.id = peerinfo.videoContainer;
-                    remoteVideos[emptyvideoindex].video.className = remoteobj.videoClass;
-                    attachControlButtons(remoteVideos[emptyvideoindex].video, peerinfo);
-
                     if (remoteobj.userDisplay && peerinfo.name) {
                         attachUserDetails(remoteVideos[emptyvideoindex].video, peerinfo);
                     }
@@ -14115,6 +14111,10 @@ function updateWebCallView(peerinfo) {
                     if (remoteobj.userMetaDisplay && peerinfo.userid) {
                         attachMetaUserDetails(remoteVideos[emptyvideoindex].video, peerInfo);
                     }
+
+                    remoteVideos[emptyvideoindex].video.id = peerinfo.videoContainer;
+                    remoteVideos[emptyvideoindex].video.className = remoteobj.videoClass;
+                    attachControlButtons(remoteVideos[emptyvideoindex].video, peerinfo);
 
                 } else {
                     alert("remote Video containers not defined");
@@ -14393,8 +14393,8 @@ function addstaticProgressHelper(uuid, peerinfo, filename, fileSize, file, progr
         let stopuploadButton = document.createElement("li");
         stopuploadButton.id = "stopuploadButton" + filename;
         stopuploadButton.innerHTML = '<i class="fa fa-trash-o" style="color: #615aa8;padding: 10px; font-size: larger;"></i>';
-        stopuploadButton.onclick = function (event) {
-            //alert( " addstaticProgressHelper stopuploadButton "+ filename);
+        stopuploadButton.onclick = function (event){
+            webrtcdev.log("Remove evenet.target " , event.target);
             if (repeatFlagStopuploadButton != filename) {
                 hideFile(progressid);
                 //var tobeHiddenElement = event.target.parentNode.id;
@@ -14404,9 +14404,7 @@ function addstaticProgressHelper(uuid, peerinfo, filename, fileSize, file, progr
                 repeatFlagStopuploadButton = "";
             }
             //Once the button is clicked , remove the button
-            stopuploadButton.remove();
-            //stopuploadButton.hidden = true;
-            //stopuploadButton.hide();
+            event.target.remove();
             for (x in pendingFileTransfer) {
                 if (pendingFileTransfer[x].name == filename) {
                     webrtcdev.log(" removing pendingFileTransfer element ", pendingFileTransfer[x])
@@ -14414,7 +14412,7 @@ function addstaticProgressHelper(uuid, peerinfo, filename, fileSize, file, progr
                 }
             }
         },
-            progressul.appendChild(stopuploadButton);
+        progressul.appendChild(stopuploadButton);
 
         //document.getElementById(peerinfo.fileList.container).appendChild(progressul);
         parentDom = document.getElementById(peerinfo.fileList.container);
@@ -14493,9 +14491,11 @@ function addProgressHelper(uuid, peerinfo, filename, fileSize, file, progressHel
             webrtcdev.log(" [startjs] addProgressHelper - remove progressid ", progressid, " dom : ", document.getElementById(progressid));
             hideFile(progressid);
             stopSendFile(progressid, filename, file, fileto, filefrom);
+            //Once the button is clicked , remove the button
+            event.target.remove();
             removeFile(progressid);
 
-            // If file has been hidden already then stop senidng the message shareFileStopUpload
+            // If file has been hidden already then stop sending the message shareFileStopUpload
             if (repeatFlagStopuploadButton != filename) {
                 //var tobeHiddenElement = event.target.parentNode.id;
                 rtcConn.send({
@@ -14508,10 +14508,9 @@ function addProgressHelper(uuid, peerinfo, filename, fileSize, file, progressHel
             } else if (repeatFlagStopuploadButton == filename) {
                 repeatFlagStopuploadButton = "";
             }
-            //Once the button is clicked , remove the button
-            stopuploadButton.remove();
+
         },
-            progressul.appendChild(stopuploadButton);
+        progressul.appendChild(stopuploadButton);
 
         parentDom = document.getElementById(peerinfo.fileList.container);
         parentDom.insertBefore(progressul, parentDom.firstChild);
@@ -15669,7 +15668,16 @@ function attachControlButtons(vid, peerinfo) {
 
     if (minmaxobj.active) {
         controlBar.appendChild(createFullScreenButton(controlBarName, peerinfo, streamid, stream));
-        controlBar.appendChild(createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream));
+        // controlBar.appendChild(createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream));
+
+        // attach minimize button to header instead of widgets in footer
+        nameBoxid = "#videoheaders" + peerinfo.userid;
+        let nameBox = document.querySelectorAll(nameBoxid);
+        for (n in nameBox) {
+            // webrtcdev.log("[_media_dommodifier ] attachControlButtons - nameBox " , nameBox[n]);
+            if (nameBox[n].appendChild)
+                nameBox[n].appendChild(createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream));
+        }
     }
 
     vid.parentNode.appendChild(controlBar);
@@ -15727,16 +15735,19 @@ function createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream) {
     var vid = document.getElementById(peerinfo.videoContainer);
     button.onclick = function () {
         if (button.className == minmaxobj.min.button.class_off) {
-            vid.hidden = true;
+            // vid.hidden = true;
+            hideelem(vid);
             button.className = minmaxobj.min.button.class_on;
             button.innerHTML = minmaxobj.min.button.html_on;
         } else {
-            vid.hidden = false;
+            // vid.hidden = false;
+            showelem(vid);
             button.className = minmaxobj.min.button.class_off;
             button.innerHTML = minmaxobj.min.button.html_off;
         }
         //syncButton(audioButton.id);
     };
+    webrtcdev.log("[_media_dommodifier ] createMinimizeVideoButton - button", button, " vid ", vid);
     return button;
 }
 
@@ -15813,7 +15824,7 @@ function createVideoMuteButton(controlBarName, peerinfo) {
 
 
 /**********************************************
- User Detail attachmenet to Video Element
+ User Detail attachment to Video Element
  *******************************************/
 
 /**
@@ -15824,13 +15835,13 @@ function createVideoMuteButton(controlBarName, peerinfo) {
  * @param {json} peerinfo
  */
 function attachUserDetails(vid, peerinfo) {
-    webrtcdev.log("[media_dommanager] attachUserDetails - ",peerinfo.userid , ":" , peerinfo.type);
-    if((vid.parentNode.querySelectorAll('.videoHeaderClass')).length > 0){
-        webrtcdev.warn("[media_dommanager] video header already present " , vid.parentNode.querySelectorAll('.videoHeaderClass'));
+    webrtcdev.log("[media_dommanager] attachUserDetails - ", peerinfo.userid, ":", peerinfo.type);
+    if ((vid.parentNode.querySelectorAll('.videoHeaderClass')).length > 0) {
+        webrtcdev.warn("[media_dommanager] video header already present ", vid.parentNode.querySelectorAll('.videoHeaderClass'));
         if ((vid.parentNode.querySelectorAll("videoheaders" + peerinfo.userid)).length > 0) {
             webrtcdev.warn("[media_dommanager] user's video header already present ", "videoheaders" + peerinfo.userid);
             return;
-        }else{
+        } else {
             webrtcdev.warn("[media_dommanager] video header already present for diff user , overwrite with ", "videoheaders" + peerinfo.userid);
             let vidheader = vid.parentNode.querySelectorAll('.videoHeaderClass')[0];
             vidheader.remove();
@@ -15839,8 +15850,9 @@ function attachUserDetails(vid, peerinfo) {
     let nameBox = document.createElement("div");
     // nameBox.setAttribute("style", "background-color:" + peerinfo.color),
     nameBox.className = "videoHeaderClass",
-    nameBox.innerHTML = peerinfo.name + "<br/>",
-    nameBox.id = "videoheaders" + peerinfo.userid;
+        nameBox.innerHTML = peerinfo.name ,
+        nameBox.id = "videoheaders" + peerinfo.userid;
+
     // vid.parentNode.appendChild(nameBox);
     vid.parentNode.insertBefore(nameBox, vid.parentNode.firstChild);
 }
@@ -15853,7 +15865,7 @@ function attachUserDetails(vid, peerinfo) {
  * @param {json} peerinfo
  */
 function attachMetaUserDetails(vid, peerinfo) {
-    webrtcdev.log("[media_dommanager] attachMetaUserDetails - ",peerinfo.userid , ":" , peerinfo.type);
+    webrtcdev.log("[media_dommanager] attachMetaUserDetails - ", peerinfo.userid, ":", peerinfo.type);
     let detailsbox = document.createElement("span");
     detailsbox.setAttribute("style", "background-color:" + peerinfo.color);
     detailsbox.innerHTML = peerinfo.userid + ":" + peerinfo.type + "<br/>";
@@ -15863,39 +15875,40 @@ function attachMetaUserDetails(vid, peerinfo) {
 
 /*-----------------------------------------------------------------------------------*/
 /*                    Notify JS                                                     */
+
 /*-----------------------------------------------------------------------------------*/
 
 /**
  * function to show bootstrap based notification to client
  * @constructor
- * @param {string} message - message passed inside the notification 
- * @param {string} type - type of message passed inside the notification 
+ * @param {string} message - message passed inside the notification
+ * @param {string} type - type of message passed inside the notification
  */
-function shownotification(message , type){
+function shownotification(message, type) {
 
-  if(!message || message =="undefined") return ;
+    if (!message || message == "undefined") return;
 
-  if(document.getElementById("alertBox")){
-    var alertDiv =document.createElement("div");
-    if(type=="warning")
-      alertDiv.className="alert alert-warning fade in";
-    else if (type=="crtical")
-      alertDiv.className="alert alert-crtical";
-    else
-      alertDiv.className="alert alert-success fade in";
-    
-    alertDiv.innerHTML='<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'+ message;
+    if (document.getElementById("alertBox")) {
+        var alertDiv = document.createElement("div");
+        if (type == "warning")
+            alertDiv.className = "alert alert-warning fade in";
+        else if (type == "crtical")
+            alertDiv.className = "alert alert-crtical";
+        else
+            alertDiv.className = "alert alert-success fade in";
 
-    document.getElementById("alertBox").hidden=false;
-    // document.getElementById("alertBox").innerHTML="";
-    document.getElementById("alertBox").appendChild(alertDiv);
+        alertDiv.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' + message;
 
-    setTimeout(function() {
-      document.getElementById("alertBox").hidden=true;
-    }, 3000);
-  }else{
-    alert(message);
-  }
+        document.getElementById("alertBox").hidden = false;
+        // document.getElementById("alertBox").innerHTML="";
+        document.getElementById("alertBox").appendChild(alertDiv);
+
+        setTimeout(function () {
+            document.getElementById("alertBox").hidden = true;
+        }, 3000);
+    } else {
+        alert(message);
+    }
 
 }
 
@@ -15903,29 +15916,29 @@ function shownotification(message , type){
  * function to show notification warning
  * @function
  * @name shownotificationWarning
- * @param {string} message - message passed inside the notification 
+ * @param {string} message - message passed inside the notification
  */
-function shownotificationWarning(message){
+function shownotificationWarning(message) {
 
-  if(!message || message =="undefined") return ;
+    if (!message || message == "undefined") return;
 
-  if(!debug) return ;
+    if (!debug) return;
 
-  if(document.getElementById("alertBox")){
-    var alertDiv =document.createElement("div");
-    alertDiv.className="alert alert-warning fade in";
-    alertDiv.innerHTML='<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'+ message;
+    if (document.getElementById("alertBox")) {
+        var alertDiv = document.createElement("div");
+        alertDiv.className = "alert alert-warning fade in";
+        alertDiv.innerHTML = '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' + message;
 
-    document.getElementById("alertBox").hidden=false;
-    document.getElementById("alertBox").innerHTML="";
-    document.getElementById("alertBox").appendChild(alertDiv);
+        document.getElementById("alertBox").hidden = false;
+        document.getElementById("alertBox").innerHTML = "";
+        document.getElementById("alertBox").appendChild(alertDiv);
 
-    setTimeout(function() {
-      document.getElementById("alertBox").hidden=true;
-    }, 3000);
-  }else{
-    alert(message);
-  }
+        setTimeout(function () {
+            document.getElementById("alertBox").hidden = true;
+        }, 3000);
+    } else {
+        alert(message);
+    }
 
 }
 
@@ -15934,76 +15947,75 @@ function shownotificationWarning(message){
  * @function
  * @name showdesktopnotification
  */
-function showdesktopnotification() {
-  // Let's check if the browser supports notifications
-  if (!("Notification" in window)) {
-     alert("This browser does not support desktop notification");
-  }
+this.showdesktopnotification = showdesktopnotification = function (title, description) {
+    // Let's check if the browser supports notifications
+    if (!("Notification" in window)) {
+        alert("This browser does not support desktop notification");
+    }
 
-  // Let's check whether notification permissions have already been granted
-  else if (Notification.permission === "granted") {
-     // If it's okay let's create a notification
-      var options = {
-          body: "The remote has joined the session"
-          /*icon: "images/villagexpertslogo2.png"*/
-      };
+    // Let's check whether notification permissions have already been granted
+    else if (Notification.permission === "granted") {
+        // If it's okay let's create a notification
+        var options = {
+            body: description
+            /*icon: "images/villagexpertslogo2.png"*/
+        };
 
-     var notification = new Notification("Vilageexperts" , options);
-  }
-  else if (Notification.permission !== 'denied') {
-    webrtcdev.warn(" [notify.js] notification deined")
-  }
+        let notification = new Notification(title, options);
 
-  //  Otherwise, we need to ask the user for permission
-  //  else if (Notification.permission !== 'denied') {
-  //  Ntification.requestPermission(function (permission) {
-  //     // If the user accepts, let's create a notification
-  //     if (permission === "granted") {
-  //       var notification = new Notification("Web based RealTime Communication");
-  //     }
-  //   });
+    } else if (Notification.permission !== 'denied') {
+        webrtcdev.warn(" [notify.js] notification denied");
+    }
 
-  // }
+    //  Otherwise, we need to ask the user for permission
+    //  else if (Notification.permission !== 'denied') {
+    //  Ntification.requestPermission(function (permission) {
+    //     // If the user accepts, let's create a notification
+    //     if (permission === "granted") {
+    //       var notification = new Notification("Web based RealTime Communication");
+    //     }
+    //   });
+    // }
 
-  // At last, if the user has denied notifications, and you 
-  // want to be respectful there is no need to bother them any more.
-}
+    // At last, if the user has denied notifications, and you
+    // want to be respectful there is no need to bother them any more.
+};
 
 
 // not a very good pracise i know
 // need this to inform user of session updates when he/she is on another tab/widnow 
-if(typeof Notification != undefined){
-    try{
-        Notification.requestPermission().then(function(result) {
-            webrtcdev.log("[notify.js] notification requestPermission " , result);
-        }); 
+if (typeof Notification != undefined) {
+    try {
+        Notification.requestPermission().then(function (result) {
+            webrtcdev.log("[notify.js] notification requestPermission ", result);
+        });
     } catch (error) {
         // Safari doesn't return a promise for requestPermissions and it                                                                                                                                       
         // throws a TypeError. It takes a callback as the first argument                                                                                                                                       
         // instead.
         if (error instanceof TypeError) {
-            Notification.requestPermission((result) => {                                                                                                                                                             
-                webrtcdev.log("[notify.js] notification requestPermission safari" , result);
+            Notification.requestPermission((result) => {
+                webrtcdev.log("[notify.js] notification requestPermission safari", result);
             });
         } else {
-            throw error;                                                                                                                                                                                       
-        }                                                                                                                                                                                                      
-    }      
- 
+            throw error;
+        }
+    }
+
 }
 
-
-function spawnNotification(theBody,theIcon,theTitle) {
-  var options = {
-    body: theBody,
-    icon: theIcon
-  }
-  var n = new Notification(theTitle,options);
+function spawnNotification(theBody, theIcon, theTitle) {
+    var options = {
+        body: theBody,
+        icon: theIcon
+    }
+    var n = new Notification(theTitle, options);
 }
 
 /*-----------------------------------------------------------------------------------*/
 
 
+var screenShareButton;
 
 /**
  * find if view button is provided or need to be created
@@ -16110,7 +16122,7 @@ function createOrAssignScreenshareButton(screenshareobj) {
  * @method
  * @name createScreenshareButton
  */
-function createScreenshareButton() {
+function createScreenshareButton(screenshareobj) {
     screenShareButton = document.createElement("span");
     screenShareButton.className = screenshareobj.button.shareButton.class_off;
     screenShareButton.innerHTML = screenshareobj.button.shareButton.html_off;
@@ -16221,7 +16233,7 @@ function screenshareNotification(message, type) {
  * @method
  * @name assignScreenRecordButton
  */
-function assignScreenRecordButton() {
+function assignScreenRecordButton(screenrecordobj) {
 
     let recordButton = document.getElementById(screenrecordobj.button.id);
 
@@ -17180,7 +17192,6 @@ var isChrome = !!window.chrome && !isOpera;
 var screenCallback;
 var iceServers = [];
 var signaler, screen, screenRoomid;
-var screenShareButton;
 var screenShareStreamLocal = null;
 
 
@@ -17276,9 +17287,10 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
             if (event)
                 webrtcdev.log("[screenshare JS] onstreamended -", event);
 
-            if (screenShareButton) {
-                screenShareButton.className = screenshareobj.button.shareButton.class_off;
-                screenShareButton.innerHTML = screenshareobj.button.shareButton.html_off;
+            let screenShareButton = screenshareobj.button.shareButton.id;
+            if (screenShareButton && document.getElementById(screenShareButton)) {
+                document.getElementById(screenShareButton).className = screenshareobj.button.shareButton.class_off;
+                document.getElementById(screenShareButton).innerHTML = screenshareobj.button.shareButton.html_off;
             }
             //removeScreenViewButton();
 
@@ -17406,7 +17418,7 @@ function webrtcdevStopShareScreen() {
 
         scrConn.closeEntireSession();
         webrtcdev.log("[screenshare JS] Sender stopped: screenRoomid ", screenRoomid,
-            "| Screen stoppped ", scrConn,
+            "| Screen stopped ", scrConn,
             "| container ", getElementById(screenshareobj.screenshareContainer));
 
         if (screenShareStreamLocal) {
@@ -17575,12 +17587,12 @@ function checkWebRTCSupport(obj) {
                             //console.log(" ========= fbr.getNextChunk - filearray " , webcallpeers[x].filearray[y]);
                             if ( ! webcallpeers[x].filearray[y].pid){
                                 console.warn("[ fbr.getNextChunk ] pid does mot exist ");
-                                return;
+                                // return;
                             }
                             if( webcallpeers[x].filearray[y].pid.includes(fileUUID) && webcallpeers[x].filearray[y].status =="stop") {
                                 // console.log("[ fbr.getNextChunk ] filename " , webcallpeers[x].filearray[y].pid , " | status " , webcallpeers[x].filearray[y].status);
                                 webcallpeers[x].filearray[y].status="stopped";
-                                return;
+                                // return;
                             }
                         }
                     }
@@ -25276,9 +25288,11 @@ function fileSharingEnded(file) {
             action: "onFileShareEnded"
         }
     }));
+
+    console.log(" ----------------------- pendingFileTransfer ", pendingFileTransfer);
     //start the pending transfer from pendingFileTransfer.push(file);
     if (pendingFileTransfer.length >= pendingFileTransferlimit) {
-        webrtcdev.log("resuming pending/paused file ", pendingFileTransfer[0]);
+        webrtcdev.log("[flesharing JS] resuming pending/paused file ", pendingFileTransfer[0]);
         hideelem(pendingFileTransfer[0].name);
         sendFile(pendingFileTransfer[0]);
         pendingFileTransfer.pop();
@@ -25411,19 +25425,25 @@ function addNewFileRemote(e) {
 /*                         Draw JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 var CanvasDesigner;
-var isDrawOpened = false ;
+var isDrawOpened = false;
 
-function openDrawBoard(){
+/**
+ * Open draw iframe inside of drawCanvasContainer and add tools
+ * @method
+ * @name webrtcdevCanvasDesigner
+ * @param {json} drawCanvasobj
+ */
+function openDrawBoard() {
     isDrawOpened = true;
-    let boarddata={
-        event : "open",
-        from : "remote",
-        board : drawCanvasobj.drawCanvasContainer,
-        button : drawCanvasobj.button
+    let boarddata = {
+        event: "open",
+        from: "remote",
+        board: drawCanvasobj.drawCanvasContainer,
+        button: drawCanvasobj.button
     };
-    rtcConn.send({type:"canvas", board:boarddata});
+    rtcConn.send({type: "canvas", board: boarddata});
     webrtcdevCanvasDesigner(drawCanvasobj);
-    window.dispatchEvent(new CustomEvent('webrtcdev',{
+    window.dispatchEvent(new CustomEvent('webrtcdev', {
         detail: {
             servicetype: "draw",
             action: "onDrawBoardActive"
@@ -25431,34 +25451,41 @@ function openDrawBoard(){
     }));
 }
 
-function closeDrawBoard(){
-    isDrawOpened = false ;
+/**
+ * Open draw iframe inside of drawCanvasContainer and add tools
+ * @method
+ * @name closeDrawBoard
+ * @param {json} drawCanvasobj
+ */
+function closeDrawBoard() {
+    isDrawOpened = false;
     let boarddata = {
-        event : "close",
-        from : "remote",
-        board : drawCanvasobj.drawCanvasContainer,
-        button : drawCanvasobj.button
+        event: "close",
+        from: "remote",
+        board: drawCanvasobj.drawCanvasContainer,
+        button: drawCanvasobj.button
     };
-    rtcConn.send({type:"canvas", board:boarddata});
-    window.dispatchEvent(new CustomEvent('webrtcdev',{
+    rtcConn.send({type: "canvas", board: boarddata});
+    window.dispatchEvent(new CustomEvent('webrtcdev', {
         detail: {
             servicetype: "draw",
             action: "onDrawBoardTerminate"
         }
     }));
 }
+
 /**
- * Open draw iframe winside of drawCanvasContainer and ass tools
+ * Open draw iframe inside of drawCanvasContainer and add tools
  * @method
  * @name webrtcdevCanvasDesigner
  * @param {json} drawCanvasobj
  */
-function webrtcdevCanvasDesigner(drawCanvasobj){
-    webrtcdev.log("[drawjs] drawCanvasobj.drawCanvasContainer " , drawCanvasobj.drawCanvasContainer);
-    if(document.getElementById(drawCanvasobj.drawCanvasContainer).innerHTML.indexOf("iframe") < 0){
-        try{
-            CanvasDesigner.addSyncListener(function(data) {
-                rtcConn.send({type:"canvas", draw:data});
+function webrtcdevCanvasDesigner(drawCanvasobj) {
+    webrtcdev.log("[drawjs] drawCanvasobj.drawCanvasContainer ", drawCanvasobj.drawCanvasContainer);
+    if (document.getElementById(drawCanvasobj.drawCanvasContainer).innerHTML.indexOf("iframe") < 0) {
+        try {
+            CanvasDesigner.addSyncListener(function (data) {
+                rtcConn.send({type: "canvas", draw: data});
             });
 
             CanvasDesigner.setSelected('pencil');
@@ -25469,10 +25496,10 @@ function webrtcdevCanvasDesigner(drawCanvasobj){
             });
 
             CanvasDesigner.appendTo(document.getElementById(drawCanvasobj.drawCanvasContainer));
-        }catch(e){
-            webrtcdev.error(" Canvas drawing not supported " , e);
+        } catch (e) {
+            webrtcdev.error(" Canvas drawing not supported ", e);
         }
-    }else{
+    } else {
         webrtcdev.log("[drawjs] CanvasDesigner already started iframe is attached ");
     }
 
@@ -26175,6 +26202,8 @@ this.sendwebrtcdevLogs = function (url, key, msg) {
     if (document.getElementById("help-screenshot-body"))
         data.append('scimage', document.getElementById("help-screenshot-body").src);
 
+    console.log("=========================== message" , msg);
+
     data.append("apikey", key);
     data.append("useremail", selfemail);
     data.append("sessionid", sessionid);
@@ -26187,22 +26216,13 @@ this.sendwebrtcdevLogs = function (url, key, msg) {
         webrtcdev.error(" check if widget help is active to true ");
     }
 
-    var helpstatus = document.getElementById("helpStatus");
-
     return fetch(url, {
         method: 'POST',
         body: data
     })
-    .then(res => res.text())
-    .then(text => console.log(text),
-        helpstatus.innerHTML = "Email sent for help",
-        helpstatus.setAttribute("style", "color:green")
-    )
-    .catch(error => console.error(error),
-        webrtcdev.error("error in sendwebrtcdevLogs")
-        // helpstatus.innerHTML = "Email could not be sent for Help",
-        // helpstatus.setAttribute("style", "color:red")
-    );
+    .then(apires => apires.json())
+    .then(apires => console.log("Listenin API response ", apires))
+    .catch(error => console.error("Listenin API response ", error));
 };
 
 
@@ -26431,38 +26451,38 @@ var setWidgets = function (rtcConn) {
             }
             webrtcdev.log("[sessionmanager] chat widget loaded ");
         } else {
-            webrtcdev.log("[sessionmanager] chat widget not loaded ");
+            webrtcdev.log("[sessionmanager] chat widget deactivated  ");
         }
 
         // ---------------------------------- Screen record Widget --------------------------------------------------
         if (screenrecordobj && screenrecordobj.active && role != "inspector") {
             if (screenrecordobj.button.id && document.getElementById(screenrecordobj.button.id)) {
-                webrtcdev.log("[sessionmanager] Assign Record Button ");
+                webrtcdev.log("[sessionmanager] Assign Screen Record Button ");
                 assignScreenRecordButton(screenrecordobj);
             } else {
-                webrtcdev.log("[sessionmanager] Create Record Button ");
+                webrtcdev.log("[sessionmanager] Create Screen Record Button ");
                 createScreenRecordButton(screenrecordobj);
             }
-            webrtcdev.log(" [sessionmanager] screen record widget loaded ");
+            webrtcdev.log(" [sessionmanager] Screen record widget loaded ");
         } else if (screenrecordobj && !screenrecordobj.active) {
             if (screenrecordobj.button && screenrecordobj.button.id && document.getElementById(screenrecordobj.button.id)) {
                 document.getElementById(screenrecordobj.button.id).className = "inactiveButton";
             }
-            webrtcdev.warn("[sessionmanager] screen record widget not loaded ");
+            webrtcdev.warn("[sessionmanager] Screen record widget deactivated");
         }
 
         // ---------------------------------- Screenshare Widget --------------------------------------------------
         if (screenshareobj.active) {
-            if (screenrecordobj.button.id && document.getElementById(screenrecordobj.button.id)) {
-                webrtcdev.log("[sessionmanager] Assign Record Button ");
+            if (screenshareobj.button.shareButton.id && getElementById(screenshareobj.button.shareButton.id)) {
+                webrtcdev.log("[sessionmanager] Assign screenshare Button ");
                 assignScreenShareButton(screenshareobj.button.shareButton);
             } else {
-                webrtcdev.log("[sessionmanager] Create Record Button ");
-                createScreenShareButton();
+                webrtcdev.log("[sessionmanager] Create screenshare Button ");
+                createScreenShareButton(screenshareobj);
             }
             webrtcdev.log(" [sessionmanager]screen share widget loaded ");
         } else {
-            webrtcdev.warn("[sessionmanager] screen share widget not loaded ");
+            webrtcdev.warn("[sessionmanager] screen share widget deactivated ");
         }
 
         // ---------------------------------- Reconnect Widget --------------------------------------------------
@@ -26479,7 +26499,7 @@ var setWidgets = function (rtcConn) {
             if (reconnectobj.button && reconnectobj.button.id && document.getElementById(reconnectobj.button.id)) {
                 document.getElementById(reconnectobj.button.id).className = "inactiveButton";
             }
-            webrtcdev.warn(" [sessionmanager] reconnect widget not loaded ");
+            webrtcdev.warn(" [sessionmanager] reconnect widget deactivated ");
         }
 
         // ---------------------------------- Cursor Widget --------------------------------------------------
@@ -26488,7 +26508,7 @@ var setWidgets = function (rtcConn) {
             hideelem("cursor2");
             webrtcdev.log(" [sessionmanager] cursor widget not loaded ");
         }else{
-            webrtcdev.warn(" [sessionmanager] cursor widget not loaded ");
+            webrtcdev.warn(" [sessionmanager] cursor widget deactivated ");
         }
 
         // ---------------------------------- Listenin Widget --------------------------------------------------
@@ -26507,7 +26527,7 @@ var setWidgets = function (rtcConn) {
             if (listeninobj.button && listeninobj.button.id && document.getElementById(listeninobj.button.id)) {
                 document.getElementById(listeninobj.button.id).className = "inactiveButton";
             }
-            webrtcdev.warn("[widget js] listenin widget not loaded ");
+            webrtcdev.warn("[widget js] listenin widget deactivated ");
         }
 
         // ---------------------------------- Timer Widget --------------------------------------------------
@@ -26520,7 +26540,7 @@ var setWidgets = function (rtcConn) {
             if (timerobj.button.id && document.getElementById(timerobj.button.id)) {
                 document.getElementById(timerobj.button.id).className = "inactiveButton";
             }
-            webrtcdev.warn("[widget js] timer widget not loaded ");
+            webrtcdev.warn("[widget js] timer widget deactivated ");
         }
 
         // ---------------------------------- Draw Widget --------------------------------------------------
@@ -26626,7 +26646,7 @@ var setWidgets = function (rtcConn) {
             if (drawCanvasobj.button && drawCanvasobj.button.id && document.getElementById(drawCanvasobj.button.id)) {
                 document.getElementById(drawCanvasobj.button.id).className = "inactiveButton";
             }
-            webrtcdev.warn("[sessionmanager] draw widget not loaded ");
+            webrtcdev.warn("[sessionmanager] draw widget ndeactivated ");
         }
 
         // ---------------------------------- TextEditor Widget --------------------------------------------------
@@ -26975,7 +26995,7 @@ var setRtcConn = function (sessionid) {
                             let remoterole = event.extra.role || "participant", // will fail in case of 2 listeners
                                 remotecolor = event.extra.color,
                                 remoteemail = event.extra.email,
-                                remoteusername = (event.extra.name == "LOCAL"? "REMOTE": event.extra.name);
+                                remoteusername = (event.extra.name == "LOCAL" ? "REMOTE" : event.extra.name);
 
                             updatePeerInfo(remoteUsers[x], remoteusername, remotecolor, remoteemail, remoterole, "remote");
                             if (remoterole == "inspector") {
@@ -27017,7 +27037,7 @@ var setRtcConn = function (sessionid) {
                         shownotification("connnection type is neither open nor join", "warning");
 
                     shownotification(event.extra.name + " joined session ", "info");
-                    showdesktopnotification();
+                    showdesktopnotification(document.title, event.extra.name + " joined session ");
 
                     if (timerobj && timerobj.active) {
                         startsessionTimer(timerobj);

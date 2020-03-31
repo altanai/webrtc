@@ -93,7 +93,16 @@ function attachControlButtons(vid, peerinfo) {
 
     if (minmaxobj.active) {
         controlBar.appendChild(createFullScreenButton(controlBarName, peerinfo, streamid, stream));
-        controlBar.appendChild(createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream));
+        // controlBar.appendChild(createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream));
+
+        // attach minimize button to header instead of widgets in footer
+        nameBoxid = "#videoheaders" + peerinfo.userid;
+        let nameBox = document.querySelectorAll(nameBoxid);
+        for (n in nameBox) {
+            // webrtcdev.log("[_media_dommodifier ] attachControlButtons - nameBox " , nameBox[n]);
+            if (nameBox[n].appendChild)
+                nameBox[n].appendChild(createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream));
+        }
     }
 
     vid.parentNode.appendChild(controlBar);
@@ -151,16 +160,19 @@ function createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream) {
     var vid = document.getElementById(peerinfo.videoContainer);
     button.onclick = function () {
         if (button.className == minmaxobj.min.button.class_off) {
-            vid.hidden = true;
+            // vid.hidden = true;
+            hideelem(vid);
             button.className = minmaxobj.min.button.class_on;
             button.innerHTML = minmaxobj.min.button.html_on;
         } else {
-            vid.hidden = false;
+            // vid.hidden = false;
+            showelem(vid);
             button.className = minmaxobj.min.button.class_off;
             button.innerHTML = minmaxobj.min.button.html_off;
         }
         //syncButton(audioButton.id);
     };
+    webrtcdev.log("[_media_dommodifier ] createMinimizeVideoButton - button", button, " vid ", vid);
     return button;
 }
 
@@ -237,7 +249,7 @@ function createVideoMuteButton(controlBarName, peerinfo) {
 
 
 /**********************************************
- User Detail attachmenet to Video Element
+ User Detail attachment to Video Element
  *******************************************/
 
 /**
@@ -248,13 +260,13 @@ function createVideoMuteButton(controlBarName, peerinfo) {
  * @param {json} peerinfo
  */
 function attachUserDetails(vid, peerinfo) {
-    webrtcdev.log("[media_dommanager] attachUserDetails - ",peerinfo.userid , ":" , peerinfo.type);
-    if((vid.parentNode.querySelectorAll('.videoHeaderClass')).length > 0){
-        webrtcdev.warn("[media_dommanager] video header already present " , vid.parentNode.querySelectorAll('.videoHeaderClass'));
+    webrtcdev.log("[media_dommanager] attachUserDetails - ", peerinfo.userid, ":", peerinfo.type);
+    if ((vid.parentNode.querySelectorAll('.videoHeaderClass')).length > 0) {
+        webrtcdev.warn("[media_dommanager] video header already present ", vid.parentNode.querySelectorAll('.videoHeaderClass'));
         if ((vid.parentNode.querySelectorAll("videoheaders" + peerinfo.userid)).length > 0) {
             webrtcdev.warn("[media_dommanager] user's video header already present ", "videoheaders" + peerinfo.userid);
             return;
-        }else{
+        } else {
             webrtcdev.warn("[media_dommanager] video header already present for diff user , overwrite with ", "videoheaders" + peerinfo.userid);
             let vidheader = vid.parentNode.querySelectorAll('.videoHeaderClass')[0];
             vidheader.remove();
@@ -263,8 +275,9 @@ function attachUserDetails(vid, peerinfo) {
     let nameBox = document.createElement("div");
     // nameBox.setAttribute("style", "background-color:" + peerinfo.color),
     nameBox.className = "videoHeaderClass",
-    nameBox.innerHTML = peerinfo.name + "<br/>",
-    nameBox.id = "videoheaders" + peerinfo.userid;
+        nameBox.innerHTML = peerinfo.name ,
+        nameBox.id = "videoheaders" + peerinfo.userid;
+
     // vid.parentNode.appendChild(nameBox);
     vid.parentNode.insertBefore(nameBox, vid.parentNode.firstChild);
 }
@@ -277,7 +290,7 @@ function attachUserDetails(vid, peerinfo) {
  * @param {json} peerinfo
  */
 function attachMetaUserDetails(vid, peerinfo) {
-    webrtcdev.log("[media_dommanager] attachMetaUserDetails - ",peerinfo.userid , ":" , peerinfo.type);
+    webrtcdev.log("[media_dommanager] attachMetaUserDetails - ", peerinfo.userid, ":", peerinfo.type);
     let detailsbox = document.createElement("span");
     detailsbox.setAttribute("style", "background-color:" + peerinfo.color);
     detailsbox.innerHTML = peerinfo.userid + ":" + peerinfo.type + "<br/>";
