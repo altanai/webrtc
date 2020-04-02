@@ -775,8 +775,11 @@ function createFileSharingBox(peerinfo, parent) {
 
         let fileControlBar = document.createElement("p");
         fileControlBar.id = peerinfo.fileShare.container + "controlBar";
-        fileControlBar.appendChild(document.createTextNode(peerinfo.name));
-        //fileControlBar.appendChild(document.createTextNode("File Viewer " + peerinfo.name));
+        // show name only in  non sinhle file share object view
+        if (fileshareobj.props.fileList != "single") {
+            fileControlBar.appendChild(document.createTextNode(peerinfo.name));
+            // fileControlBar.appendChild(document.createTextNode("File Viewer " + peerinfo.name));
+        }
 
         if (fileshareobj.fileshare.minicon != "none") {
             // Minimize the File viewer box
@@ -1029,8 +1032,12 @@ function createFileListingBox(peerinfo, parent) {
         let fileListControlBar = document.createElement("div");
         fileListControlBar.id = "widget-filelisting-container-header";
         fileListControlBar.setAttribute("style", "background-color:" + peerinfo.color);
-        fileListControlBar.appendChild(document.createTextNode(peerinfo.name + "     "));
-        //fileListControlBar.appendChild(document.createTextNode("Uploaded Files " + peerinfo.name + "     "));
+
+        //Show name in file list conrol bar when view id not single
+        if (fileshareobj.props.fileList != "single") {
+            fileListControlBar.appendChild(document.createTextNode(peerinfo.name + "     "));
+            //fileListControlBar.appendChild(document.createTextNode("Uploaded Files " + peerinfo.name + "     "));
+        }
 
         /*
         var fileHelpButton= document.createElement("span");s
