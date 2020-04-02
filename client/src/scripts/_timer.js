@@ -48,40 +48,17 @@ function startsessionTimer(timerobj) {
 }
 
 /**
- * function to start local peers time based on locally captured time zone
- * @method
- * @name startTime
- */
-function startTime() {
-    try {
-        if (timerobj.span.currentTime && getElementByName(timerobj.span.currentTime)) {
-            let timerspanlocal = getElementByName(timerobj.span.currentTime);
-            timerspanlocal.innerHTML = new Date().toLocaleTimeString();
-            var t = setTimeout(startTime, 1000);
-        } else {
-            webrtcdev.error("[timer js ] startTime - No place for timerobj.span.currentTime_id");
-        }
-    } catch(err) {
-        webrtcdev.error("[timer js ]",err);
-    }
-}
-
-/**
  * function to fetch and show local peers time zone based on locally captured values
  * @method
  * @name timeZone
  */
 function timeZone() {
     try {
-        if (timerobj.span.currentTimeZone && getElementByName(timerobj.span.currentTimeZone)) {
-            zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-            let timerzonelocal = getElementByName(timerobj.span.currentTimeZone);
-            timerzonelocal.innerHTML = zone;
-        } else {
-            webrtcdev.error(" [timer js ] timerobj.span.currentTimeZone DOM doesnt exist ");
-        }
+        zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        webcallpeers[0].zone = zone;
+        return zone;
     } catch (err) {
-        webrtcdev.error("[timer js ]",err);
+        webrtcdev.error("[timer js ]", err);
     }
 }
 
@@ -93,8 +70,9 @@ function shareTimePeer() {
     try {
         var msg = {
             type: "timer",
+            userid: webcallpeers[0].userid,
             time: (new Date()).toJSON(),
-            zone: zone
+            zone: webcallpeers[0].zone
         };
         webrtcdev.log("[timerjs] shareTimePeer ", msg);
         rtcConn.send(msg);
@@ -103,15 +81,15 @@ function shareTimePeer() {
     }
 }
 
-/////////////////////////////////////////// peeer ///////////////////////////////////////////
+/////////////////////////////////////////// peer ///////////////////////////////////////////
 
 try {
     // event listener for web workers
     worker = new Worker('js/timekeeper.js');
-    worker.addEventListener('message', function(e) {
-        webrtcdev.log("[timerjs] webworker message " , e.data );
+    worker.addEventListener('message', function (e) {
+        webrtcdev.log("[timerjs] webworker message ", e.data);
         let timerspanpeer = getElementById(e.data.remotetime);
-        if(e.data.remotetime && timerspanpeer){
+        if (e.data.remotetime && timerspanpeer) {
             timerspanpeer.innerHTML = e.data.time;
         }
     }, false);
@@ -120,7 +98,7 @@ try {
 }
 
 /**
- * function to fetch and show Peers peers time based on onmesaage val
+ * function to fetch and show Peers peers time based on onmessage val
  * @name startPeersTime
  * @param {date} date
  * @param {str} zone
@@ -133,49 +111,18 @@ var startPeersTime = function (date, zone, userid) {
         var tobj = [];
 
         // Starting peer timer for all peers
-        for ( var x in webcallpeers) {
-            let peerinfo = webcallpeers[Number(x)+1];
+        for (x in webcallpeers) {
+            let peerinfo = webcallpeers[Number(x) + 1];
             if (!peerinfo) break;
-            let options = {
-                // year: 'numeric', month: 'numeric', day: 'numeric',
-                hour: 'numeric', minute: 'numeric', second: 'numeric',
-                hour12: false,
-                timeZone: peerinfo.zone
-            };
 
             webrtcdev.debug(" [timer js] startPeersTime for ", peerinfo.userid);
-            let timerspanpeer;
-            if (timerobj.span.remoteTime[x]) {
-                webrtcdev.info(" [timer js] startPeersTime - timerobj.span.remoteTime dom ", timerobj.span.remoteTime[x]," exist for remotes");
-                timerspanpeer = getElementByName(timerobj.span.remoteTime[x]);
-                timerspanpeer.id = "remoteTime_" + peerinfo.userid;
-                timerspanpeer.innerHTML = new Date().toLocaleString('en-US', options);
-
-            } else {
-                // create the timer for p2p and conferences
-                webrtcdev.info(" timerobj.span.remoteTime - timerobj.span.remoteTime dom  ", timerobj.span.remoteTime[x]," does not exist, creating it");
-
-                if (getElementById("remoteTimeDate_" + peerinfo.userid))
-                    return;
-
-                timerspanpeer = document.createElement("span");
-                timerspanpeer.id = "remoteTime_" + peerinfo.userid;
-                timerspanpeer.innerHTML = new Date().toLocaleString('en-US', options);
-
-                var remotetimecontainer;
-                if (!getElementById("remoteTimerArea_" + peerinfo.userid)) {
-                    remotetimecontainer = createRemotetimeArea(peerinfo.userid);
-                } else {
-                    remotetimecontainer = getElementById("remoteTimerArea_" + peerinfo.userid);
-                }
-                remotetimecontainer.appendChild(timerspanpeer);
-            }
+            showRemoteTimer(peerinfo);
 
             // send to webworkers
             tobj.push({
-                zone : peerinfo.zone,
-                userid : peerinfo.userid,
-                remotetime : timerspanpeer.id
+                zone: peerinfo.zone,
+                userid: peerinfo.userid,
+                remotetime: timerspanpeer.id
             });
             peerTimerStarted = true;
         }
@@ -191,7 +138,6 @@ var startPeersTime = function (date, zone, userid) {
 }
 
 
-
 /**
  * function to fetch and show local peers time zone based on locally captured values
  * @method
@@ -202,32 +148,14 @@ var startPeersTime = function (date, zone, userid) {
 function peerTimeZone(zone, userid) {
 
     try {
-        var tobj = [];
+        // set peers zone in webcallpeers
+        appendToPeerValue(userid , "zone" ,  zone);
 
         // Starting peer timer for all peers
-        for ( var x in webcallpeers) {
-            let peerinfo = webcallpeers[Number(x)+1];
-            if (!peerinfo) break;
-
-            if (getElementById("remoteTimeZone_" + peerinfo.userid))
-                return;
-
-            let timerspanpeer;
-            if (timerobj.span.remoteTimeZone[x]) {
-                webrtcdev.info(" [timer js] startPeersTime -timerobj.span.remoteTimeZone", timerobj.span.remoteTimeZone[x] ," exist for remote");
-                timerspanpeer = getElementByName(timerobj.span.remoteTimeZone[x]);
-                timerspanpeer.id = "remoteTimeZone_" + peerinfo.userid;
-                timerspanpeer.innerHTML = zone + " , ";
-
-            } else {
-                webrtcdev.info(" [timer js] startPeersTime -timerobj.span.remoteTimeZone getting crated  for local and remotes");
-                timerspanpeer = document.createElement("li");
-                timerspanpeer.id = "remoteTimeZone_" + peerinfo.userid;
-                timerspanpeer.innerHTML = zone + " , ";
-            }
-        }
+        var peerinfo = findPeerInfo(userid);
+        showRemoteTimeZone(peerinfo);
     } catch (err) {
-        webrtcdev.error("[timerjs] ",err);
+        webrtcdev.error("[timerjs] ", err);
     }
 }
 

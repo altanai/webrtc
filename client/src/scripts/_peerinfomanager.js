@@ -5,7 +5,6 @@
  * @param {string} userid
  */
 var findPeerInfo = function (userid) {
-    //var peerInfo;
     /*    
     if(rtcConn.userid==userid){
         webrtcdev.log("PeerInfo is found for initiator", webcallpeers[0]);
@@ -18,6 +17,21 @@ var findPeerInfo = function (userid) {
         }
     }
     return null;
+};
+
+/**
+ * update already ecisting webcallpeers obj by appending a value , mostly used for timer zone
+ * @method
+ * @name appendToPeerValue
+ * @param {string} userid
+ * @param {json} value
+ */
+function appendToPeerValue(userid, value) {
+    for (x in webcallpeers) {
+        if (webcallpeers[x].userid == userid) {
+            webcallpeers[x].key = value;
+        }
+    }
 }
 
 /**

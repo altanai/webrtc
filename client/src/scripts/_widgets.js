@@ -97,8 +97,8 @@ var setWidgets = function (rtcConn) {
 
         // ---------------------------------- Timer Widget --------------------------------------------------
         if (timerobj && timerobj.active) {
-            startTime();
-            timeZone();
+            // startTime();
+            // showTimeZone();
             activateButtons(timerobj);
             hideelem(timerobj.container.id)
         } else if (timerobj && !timerobj.active) {
@@ -254,6 +254,7 @@ var setWidgets = function (rtcConn) {
         // ---------------------------------- Help Widget --------------------------------------------------
         if (helpobj && helpobj.active) {
             try {
+
                 document.getElementById(helpobj.helpContainer).innerHTML = "";
             } catch (err) {
                 webrtcdev.error("[sessionmanager] helpobj helpContainer not found", err);

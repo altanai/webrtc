@@ -770,12 +770,14 @@ var connectWebRTC = function (type, channel, selfuserid, remoteUsers) {
         " , self-Userid : ", selfuserid, " , and remote users : ", remoteUsers);
     if (debug) showUserStats();
 
+    // if the Listene is active then freeze the screen
     if (listeninobj.active && role == "inspector") {
         webrtcdev.info(" [sessionmanage] freezing screen for role inspector ");
         freezescreen();
     }
 
     /*void(document.title = channel);*/
+    // File share object
     if (fileshareobj.active) {
 
         try {
@@ -829,6 +831,12 @@ var connectWebRTC = function (type, channel, selfuserid, remoteUsers) {
         } catch (err) {
             webrtcdev.error("[sessionmanager] connectwebrtc -", err)
         }
+    }
+
+    // kick start the timer
+    if (timerobj && timerobj.active) {
+        startTime();
+        showTimeZone();
     }
 };
 
