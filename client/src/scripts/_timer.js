@@ -118,11 +118,11 @@ var startPeersTime = function (date, zone, userid) {
             webrtcdev.debug(" [timer js] startPeersTime for ", peerinfo.userid);
             showRemoteTimer(peerinfo);
 
-            // send to webworkers
+            // send to webworkers maintaining time in background activity
             tobj.push({
                 zone: peerinfo.zone,
                 userid: peerinfo.userid,
-                remotetime: timerspanpeer.id
+                remotetime: "remoteTime_" + peerinfo.userid
             });
             peerTimerStarted = true;
         }
