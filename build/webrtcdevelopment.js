@@ -16845,17 +16845,20 @@ function showTimeZone() {
 function showRemoteTimeZone(peerinfo) {
     if (getElementById("remoteTimeZone_" + peerinfo.userid))
         return;
-
-    let timerspanpeer;
-    if (timerobj.span.remoteTimeZone[x]) {
-        webrtcdev.info(" [timer js] startPeersTime -timerobj.span.remoteTimeZone", timerobj.span.remoteTimeZone[x], " exist for remote");
-        timerspanpeer = getElementByName(timerobj.span.remoteTimeZone[x]);
-    } else {
-        webrtcdev.info(" [timer js] startPeersTime -timerobj.span.remoteTimeZone getting crated for local and remotes");
-        timerspanpeer = document.createElement("li");
+    for (x in timerobj.span.remoteTimeZone) {
+        let y = x + 1;
+        if (y > webcallpeers.length) return;
+        let timerspanpeer;
+        if (timerobj.span.remoteTimeZone[x]) {
+            webrtcdev.info(" [timer js] showRemoteTimeZone -timerobj.span.remoteTimeZone", timerobj.span.remoteTimeZone[x], " exist for remote");
+            timerspanpeer = getElementByName(timerobj.span.remoteTimeZone[x]);
+        } else {
+            webrtcdev.info(" [timer js] showRemoteTimeZone -timerobj.span.remoteTimeZone getting created for local and remotes");
+            timerspanpeer = document.createElement("li");
+        }
+        timerspanpeer.id = "remoteTimeZone_" + peerinfo.userid;
+        timerspanpeer.innerHTML = peerinfo.zone + " , ";
     }
-    timerspanpeer.id = "remoteTimeZone_" + peerinfo.userid;
-    timerspanpeer.innerHTML = peerinfo.zone + " , ";
 }
 
 /**
@@ -26182,11 +26185,13 @@ var startPeersTime = function (date, zone, userid) {
 function peerTimeZone(zone, userid) {
 
     try {
+        webrtcdev.log("[timerjs] peerTimeZone -- " , zone , userid);
         // set peers zone in webcallpeers
         appendToPeerValue(userid , "zone" ,  zone);
 
         // Starting peer timer for all peers
         var peerinfo = findPeerInfo(userid);
+        webrtcdev.log("[timerjs] peerTimeZone , updated peerinfo with zone-- " , peerinfo);
         showRemoteTimeZone(peerinfo);
     } catch (err) {
         webrtcdev.error("[timerjs] ", err);
