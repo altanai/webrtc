@@ -105,4 +105,5 @@ video::-webkit-media-controls-current-time-display {}*/
 .videoButtonClass{
     padding-left: 10px;
     /*padding-right: 5px;*/
+    cursor: pointer;
 }
