@@ -1112,6 +1112,51 @@ function createFileSharingDiv(peerinfo) {
     // When the peerinfo role is inspctor but self role is not inspector only then exit
     if (peerinfo.role == "inspector" && role != "inspector") return;
 
+    if (fileshareobj.props.fileList != "single") {
+
+        // list of all active user ids
+        let activeRemotepeerids= "";
+        for (i in webcallpeers) {
+            if(webcallpeers[i].type == "remote")
+                activeRemotepeerids += webcapppeers[i].userid;
+        }
+
+        // if it is p2p session and only 2 File Listing boxes are already present remove the already existing remote file listing box
+        if(document.getElementById("fileListingRow").childElementCount>=2) {
+            webrtcdev.warn("more than 1 file listing rows prresent , remove the ones for peers that are no longer in session  ")
+            let filelistingrow = document.getElementById("fileListingRow");
+            let filelistingboxes = filelistingrow.childNodes;
+
+            for (x in filelistingboxes) {
+                webrtcdev.log(" check if this dom by id is required .  filelistingboxes[x].id " , filelistingboxes[x]);
+                if( !filelistingboxes[x].id ) break;
+                fid= filelistingboxes[x].id.split("widget-filelisting-box");
+                if(!activeRemotepeerids.includes(fid[1])){
+                    webrtcdev.warn(" File list boxes belonging to userid " , fid[1] , " need to be removed  ");
+                    filelistingrow.removeChild(filelistingboxes[x]);
+                }
+            }
+        }
+
+        // if it is p2p session and only 2 File sharing boxes are already present remove the already existing remote file sharing box
+        if(document.getElementById("fileSharingRow").childElementCount>=2) {
+            webrtcdev.warn("more than 1 file listing rows present , remove the ones for peers that are no longer in session  ")
+            let fileSharingrow = document.getElementById("fileSharingRow");
+            let fileSharingboxes = fileSharingrow.childNodes;
+
+            for (x in fileSharingboxes) {
+                webrtcdev.log(" check if this dom by id is required .filelistingboxes[x].id " , fileSharingboxes[x]);
+                if( !fileSharingboxes[x].id ) break;
+                fid= fileSharingboxes[x].id.split("widget-sharing-box");
+                if(!activeRemotepeerids.includes(fid[1])){
+                    webrtcdev.warn(" File list boxes belonging to userid " , fid[1] , " need to be removed  ");
+                    fileSharingrow.removeChild(fileSharingboxes[x]);
+                }
+            }
+        }
+
+    }
+
     if (! getElementById(peerinfo.fileShare.outerbox)) {
         let parentFileShareContainer = getElementById(fileshareobj.fileShareContainer);
         createFileSharingBox(peerinfo, parentFileShareContainer);
