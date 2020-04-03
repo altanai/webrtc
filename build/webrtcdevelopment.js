@@ -25443,14 +25443,14 @@ function fileSharingEnded(file) {
         }
     }));
 
-    console.log(" ----------------------- pendingFileTransfer ", pendingFileTransfer);
-    //start the pending transfer from pendingFileTransfer.push(file);
-    if (pendingFileTransfer.length >= pendingFileTransferlimit) {
-        webrtcdev.log("[flesharing JS] resuming pending/paused file ", pendingFileTransfer[0]);
-        hideelem(pendingFileTransfer[0].name);
-        sendFile(pendingFileTransfer[0]);
-        pendingFileTransfer.pop();
-    }
+    // console.log(" ----------------------- pendingFileTransfer ", pendingFileTransfer , pendingFileTransfer.length , pendingFileTransferlimit);
+    // //start the pending transfer from pendingFileTransfer.push(file);
+    // //if (pendingFileTransfer.length >= pendingFileTransferlimit) {
+    //     webrtcdev.log("[flesharing JS] resuming pending/paused file ", pendingFileTransfer[0]);
+    //     hideelem(pendingFileTransfer[0].name);
+    //     sendFile(pendingFileTransfer[0]);
+    //     pendingFileTransfer.pop();
+    // //}
 }
 
 /**
@@ -25461,17 +25461,17 @@ function fileSharingEnded(file) {
  */
 function sendFile(file) {
     webrtcdev.log(" [filehsraing js] Send file - ", file);
-    for (let x in webcallpeers) {
-        for (let y in webcallpeers[x].filearray) {
-            if (webcallpeers[x].filearray[y].status == "progress") {
-                webrtcdev.log("[flesharing JS] A file is already in progress , add the new file " + file.name + " to queue");
-                //alert("Allow current file to complete uploading, before selecting the next file share upload");
-                pendingFileTransfer.push(file);
-                addstaticProgressHelper(file.uuid, findPeerInfo(selfuserid), file.name, file.maxChunks, file, "fileBoxClass", selfuserid, "");
-                return;
-            }
-        }
-    }
+    // for (let x in webcallpeers) {
+    //     for (let y in webcallpeers[x].filearray) {
+    //         if (webcallpeers[x].filearray[y].status == "progress") {
+    //             webrtcdev.log("[flesharing JS] A file is already in progress , add the new file " + file.name + " to queue");
+    //             //alert("Allow current file to complete uploading, before selecting the next file share upload");
+    //             pendingFileTransfer.push(file);
+    //             addstaticProgressHelper(file.uuid, findPeerInfo(selfuserid), file.name, file.maxChunks, file, "fileBoxClass", selfuserid, "");
+    //             return;
+    //         }
+    //     }
+    // }
     rtcConn.send(file);
 }
 
