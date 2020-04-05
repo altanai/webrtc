@@ -26,7 +26,7 @@ this.makesessionid = function (autoload, callback) {
         sessionid = prompt("Enter session ", "");
         callback(sessionid);
     }
-}
+};
 
 /**************************************************************************************
  peerconnection
@@ -135,13 +135,13 @@ function bytesToSize(e) {
  ********************************************/
 function loadjscssfile(filename, filetype) {
     if (filetype == "js") { //if filename is a external JavaScript file
-        var fileref = document.createElement('script')
-        fileref.setAttribute("type", "text/javascript")
+        var fileref = document.createElement('script');
+        fileref.setAttribute("type", "text/javascript");
         fileref.setAttribute("src", filename)
     } else if (filetype == "css") { //if filename is an external CSS file
-        var fileref = document.createElement("link")
-        fileref.setAttribute("rel", "stylesheet")
-        fileref.setAttribute("type", "text/css")
+        var fileref = document.createElement("link");
+        fileref.setAttribute("rel", "stylesheet");
+        fileref.setAttribute("type", "text/css");
         fileref.setAttribute("href", filename)
     }
     if (typeof fileref != "undefined")
@@ -201,7 +201,7 @@ this.setsession = function (_localobj, _remoteobj, incoming, outgoing, session, 
 
         webrtcdev.log(" WebRTCdev - widgets  ", widgets);
 
-        if (widgets.debug) debug = widgets.debug || false
+        if (widgets.debug) debug = widgets.debug || false;
 
         if (widgets.chat) chatobj = widgets.chat || null;
 
@@ -246,7 +246,7 @@ this.setsession = function (_localobj, _remoteobj, incoming, outgoing, session, 
         startwebrtcdev: funcStartWebrtcdev,
         rtcConn: rtcConn
     };
-}
+};
 
 /**
  * function to return chain of promises for webrtc session to start
@@ -273,11 +273,11 @@ function funcStartWebrtcdev() {
             outgoingData = outgoing.data;
         }
 
-        if (role != "inspector"){
+        if (role != "inspector") {
 
             detectWebcam(function (hasWebcam) {
                 console.log('Has Webcam: ' + (hasWebcam ? 'yes' : 'no'));
-                if(!hasWebcam) {
+                if (!hasWebcam) {
                     alert(" you dont have access to webcam ");
                     outgoingVideo = false;
                 }
@@ -289,16 +289,16 @@ function funcStartWebrtcdev() {
                     }
 
                     // Try getting permission again and ask your to restart
-                    if(outgoingAudio) getAudioPermission();
-                    if(outgoingVideo) getVideoPermission();
+                    if (outgoingAudio) getAudioPermission();
+                    if (outgoingVideo) getVideoPermission();
 
-                    setTimeout(function() {
-                        webrtcdev.log(" outgoingAudio ", outgoingAudio , " outgoingVideo ",outgoingVideo);
+                    setTimeout(function () {
+                        webrtcdev.log(" outgoingAudio ", outgoingAudio, " outgoingVideo ", outgoingVideo);
                         resolve("done");
                     }, 2000);
                 });
             });
-        }else{
+        } else {
             resolve("done");
         }
 
@@ -326,15 +326,15 @@ function funcStartWebrtcdev() {
             localVideo = localobj.video;
 
             /* when user is in conference */
-            let _remotearr = remoteobj.videoarr;
+            var remotearr = remoteobj.videoarr;
             /* first video container in remotearr belongs to user */
             if (outgoingVideo) {
-                selfVideo = _remotearr[0];
+                selfVideo = remotearr[0];
             }
             /* create arr for remote peers videos */
             if (!remoteobj.dynamicVideos) {
-                for (var x = 1; x < _remotearr.length; x++) {
-                    remoteVideos.push(_remotearr[x]);
+                for (let x = 1; x < remotearr.length; x++) {
+                    remoteVideos.push(remotearr[x]);
                 }
             }
             resolve("done");
@@ -380,8 +380,8 @@ this.startCall = function (obj) {
     // }else if(turn!=null){
     //     repeatInitilization = window.setInterval(obj.startwebrtcdev, 2000);     
     // }
-    return;
-}
+
+};
 
 /**
  * stops a call and removes loalstorage items
@@ -403,6 +403,6 @@ this.stopCall = function () {
 
     this.connectionStatus = "closed";
 
-    return;
-}
+
+};
 

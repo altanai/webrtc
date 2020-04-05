@@ -880,6 +880,14 @@ Because this error can occur even when the user has not yet granted permission t
 
 ref : https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
 
+Errors on gulp 
+**sourcemap related **
+USe gulp-babel@8.0.0
+
+**arrow functions realted**
+use tarnscompiler with preset env plugin for changes arraow function to normals ones before minifying
+
+
      
 ### License
 ----

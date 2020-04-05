@@ -1,17 +1,21 @@
-var gulp = require('gulp');
-var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
-// var uglify = require("uglify-js");
-var replace = require('gulp-replace');
-var less = require('gulp-less');
-var exec = require('child_process').exec;
+const gulp = require('gulp');
+const concat = require('gulp-concat');
+const uglify = require('gulp-babel-minify');
+const pipeline = require('readable-stream').pipeline;
+const minify = require('gulp-minify-css');
+const replace = require('gulp-replace');
+const less = require('gulp-less');
+
+const iife = require("gulp-iife");
+const babel = require('gulp-babel');
+const exec = require('child_process').exec;
 var remoteSrc = require('gulp-remote-src');
 var rev = require('gulp-rev-timestamp');
-var del = require('del');
-var fs = require('fs');
+const del = require('del');
+const fs = require('fs');
 
-var _properties = require('./env.js')(fs).readEnv();
-var properties = JSON.parse(_properties);
+const _properties = require('./env.js')(fs).readEnv();
+const properties = JSON.parse(_properties);
 console.log("Properties ", properties);
 
 var folderPath = "", file = "";
@@ -188,7 +192,7 @@ var scriptList = [
     "client/src/scripts/_logger.js",
 
     // --------------------- helper libs
-    "client/src/helperlibs/html2canvas.js",
+    // "client/src/helperlibs/html2canvas.js",
     "client/src/scripts/head.js",
     "client/src/scripts/globals.js",
     "client/src/scripts/_init.js",
@@ -247,7 +251,7 @@ gulp.task('betawebrtcdevelopmentjs', function (done) {
         // .pipe( rev({strict: true}) )
         .pipe(concat('webrtcdevelopment.js'))
         .pipe(replace(/"use strict"/g, ''))
-        .pipe(gulp.dest(folderPath))
+        .pipe(gulp.dest(folderPath));
     done();
 
 });
@@ -255,20 +259,82 @@ gulp.task('betawebrtcdevelopmentjs', function (done) {
 // .pipe( rev({strict: true}) )
 gulp.task('webrtcdevelopmentjs', function (done) {
     console.log(" gulping main webrtc development scripts ");
-    scriptList.push("client/src/scripts/start.js");
     scriptList.push("client/src/scripts/admin.js");
     console.log(scriptList);
-    gulp.src(scriptList, {allowEmpty: true})
-        .pipe(header(headerComment))
-        // .pipe(babel({
-        //     presets: ['es2015']
-        // }))
-        // .pipe(uglify())
-        .pipe(concat('webrtcdevelopment.js'))
-        .pipe(replace(/use strict/g, ''))
-        .pipe(gulp.dest(folderPath));
+
+    return pipeline(gulp.src(scriptList, {allowEmpty: true}),
+        // iife(),
+        replace(/use strict/g, ''),
+        header(headerComment),
+        concat('webrtcdevelopment.js'),
+        gulp.dest(folderPath),
+        // babel({
+        //     "presets": [["minify", {
+        //         "mangle": {
+        //             "exclude": ["MyCustomError"]
+        //         },
+        //        /* "unsafe": {
+        //             "typeConstructors": false
+        //         },*/
+        //         "keepFnName": true
+        //     }]]
+        //     // "plugins": ["transform-es2015-arrow-functions"]
+        //     // plugins: [
+        //     //     {strictMode: false}
+        //     // ]
+        //     // "plugins": ["@babel/plugin-transform-arrow-functions"],
+        //     // "compact": false
+        //     // "presets": ["es2015", {"modules": false}]
+        //     // "env": {
+        //     //     "production": {
+        //     //         "presets": ["minify"]
+        //     //     }
+        //     // }
+        // }),
+        uglify({
+            mangle: {
+                keepClassName: true
+            }
+        }),
+        rev(),
+        // iife({
+        //     useStrict: false,
+        //     trimCode: true,
+        //     prependSemicolon: false,
+        //     bindThis: false,
+        //     params: ["window", "document", "$", "undefined"],
+        //     args: ["window", "document", "jQuery"]
+        // }),
+        concat('webrtcdevelopment_min.js'),
+        gulp.dest(folderPath)
+    );
     done();
 });
+
+// gulp.task('webrtcdevelopmentjs_uglify', function () {
+//     return pipeline(
+//         gulp.src(folderPath + "webrtcdevelopment.js"),
+//         babel({
+//             "plugins": ["@babel/plugin-transform-arrow-functions"]
+//             // presets: ['@babel/env']
+//             // sourceMap: false
+//         }),
+//         uglify(),
+//         gulp.dest('webrtcdevelopment_min.js')
+//     );
+// });
+
+// gulp.task('webrtcdevelopmentjs_uglify', function (done) {
+//     console.log("minifying webrtc development script ");
+//     gulp.src(folderPath + "webrtcdevelopment.js")
+//         .pipe(babel({
+//             "plugins": ["@babel/plugin-transform-arrow-functions"]
+//         }))
+//         .pipe(uglify())
+//         .pipe(gulp.dest(folderPath))
+//         .pipe(concat('webrtcdevelopment_min.js'));
+//     done();
+// });
 
 
 gulp.task('mainstyle', function (done) {
@@ -302,7 +368,7 @@ gulp.task('mainstyle', function (done) {
 gulp.task('webrtcdevelopmentcss', function (done) {
     console.log(" gulping custom stylesheets css  ");
     cssList = [
-        "client/src/css/styles.css",
+        // "client/src/css/styles.css",
         "client/src/css/media.css",
         "client/src/css/chat.css",
         "client/src/css/cursor.css",
@@ -314,10 +380,10 @@ gulp.task('webrtcdevelopmentcss', function (done) {
     ];
     console.log(cssList);
     gulp.src(cssList)
-        // .pipe(uglify())
         .pipe(rev({strict: true}))
         .pipe(header(headerComment))
         .pipe(concat('webrtcdevelopment.css'))
+        .pipe(minify())
         .pipe(less().on('error', function (error) {
             console.error(error)
         }))
@@ -330,7 +396,7 @@ function execute(command, callback) {
     exec(command, function (error, stdout, stderr) {
         callback(stdout, stderr);
     });
-};
+}
 
 gulp.task('git_pull', function (cb) {
     execute('git pull', function (resp) {
@@ -340,7 +406,7 @@ gulp.task('git_pull', function (cb) {
 
 gulp.task('fonts', function (cb) {
     console.log(" copying fonts to home dir ");
-    execute('cp -r client/src/fonts .'  , function (resp) {
+    execute('cp -r client/src/fonts .', function (resp) {
         console.log(resp);
         cb();
     });
@@ -348,7 +414,7 @@ gulp.task('fonts', function (cb) {
 
 // gulp webrtc dev css and js along with server changes 
 gulp.task('default', gulp.series(
-    'betawebrtcdevelopmentjs',
+    'webrtcdevelopmentjs',
     'webrtcdevelopmentcss',
     'webrtcdevelopmentServer'
 ));
@@ -381,4 +447,5 @@ gulp.task('production', gulp.series(
     'webrtcdevelopmentcss',
     'webrtcdevelopmentServer',
     'fonts'
+    // 'webrtcdevelopmentjs_uglify'
 )); 

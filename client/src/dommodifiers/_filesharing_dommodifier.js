@@ -7,17 +7,17 @@
 function createFileShareButton(fileshareobj) {
     widgetholder = "topIconHolder_ul";
 
-    var button = document.createElement("span");
+    const button = document.createElement("span");
     button.setAttribute("data-provides", "fileinput");
     button.className = fileshareobj.button.class;
     button.innerHTML = fileshareobj.button.html;
     button.onclick = function () {
-        var fileSelector = new FileSelector();
+        const fileSelector = new FileSelector();
         fileSelector.selectSingleFile(function (file) {
             sendFile(file);
         });
     };
-    var li = document.createElement("li");
+    const li = document.createElement("li");
     li.appendChild(button);
     document.getElementById(widgetholder).appendChild(li);
 }
@@ -31,7 +31,7 @@ function createFileShareButton(fileshareobj) {
 function assignFileShareButton(fileshareobj) {
     let button = document.getElementById(fileshareobj.button.id);
     button.onclick = function () {
-        var fileSelector = new FileSelector();
+        const fileSelector = new FileSelector();
         fileSelector.selectSingleFile(function (file) {
             sendFile(file);
         });
@@ -52,10 +52,10 @@ function assignFileShareButton(fileshareobj) {
 function addstaticProgressHelper(uuid, peerinfo, filename, fileSize, file, progressHelperclassName, filefrom, fileto) {
     try {
         if (!peerinfo) {
-            webrtcdev.error(" [filehsraingJs] Progress helpler cannot be added for one peer as its absent")
+            webrtcdev.error(" [filehsraingJs] Progress helpler cannot be added for one peer as its absent");
             return;
         } else if (!peerinfo.fileList.container || !document.getElementById(peerinfo.fileList.container)) {
-            webrtcdev.error(" [filehsraingJs] Progress helpler cannot be added , missing fileListcontainer ")
+            webrtcdev.error(" [filehsraingJs] Progress helpler cannot be added , missing fileListcontainer ");
             return;
         }
 
@@ -71,11 +71,11 @@ function addstaticProgressHelper(uuid, peerinfo, filename, fileSize, file, progr
         let progressul = document.createElement("ul");
         //progressul.id = progressid,
         progressul.setAttribute("class", "row"),
-        progressul.id = filename,
-        progressul.title = filename + " size - " + file.size + " type - " + file.type + " last modified on -" + file.lastModifiedDate;
+            progressul.id = filename,
+            progressul.title = filename + " size - " + file.size + " type - " + file.type + " last modified on -" + file.lastModifiedDate;
 
         if (debug) {
-            var progressDebug = document.createElement("li");
+            const progressDebug = document.createElement("li");
             progressDebug.innerHTML = filename + " size - " + file.size + " type - " + file.type + " last modified on -" + file.lastModifiedDate
                 + " from :" + filefrom + " --> to :" + fileto;
             progressul.appendChild(progressDebug);
@@ -93,8 +93,8 @@ function addstaticProgressHelper(uuid, peerinfo, filename, fileSize, file, progr
         let stopuploadButton = document.createElement("li");
         stopuploadButton.id = "stopuploadButton" + filename;
         stopuploadButton.innerHTML = '<i class="fa fa-trash-o" style="color: #615aa8;padding: 10px; font-size: larger;"></i>';
-        stopuploadButton.onclick = function (event){
-            webrtcdev.log("Remove evenet.target " , event.target);
+        stopuploadButton.onclick = function (event) {
+            webrtcdev.log("Remove evenet.target ", event.target);
             if (repeatFlagStopuploadButton != filename) {
                 hideFile(progressid);
                 //var tobeHiddenElement = event.target.parentNode.id;
@@ -107,12 +107,12 @@ function addstaticProgressHelper(uuid, peerinfo, filename, fileSize, file, progr
             event.target.remove();
             for (x in pendingFileTransfer) {
                 if (pendingFileTransfer[x].name == filename) {
-                    webrtcdev.log(" removing pendingFileTransfer element ", pendingFileTransfer[x])
+                    webrtcdev.log(" removing pendingFileTransfer element ", pendingFileTransfer[x]);
                     pendingFileTransfer.splice(x, 1);
                 }
             }
         },
-        progressul.appendChild(stopuploadButton);
+            progressul.appendChild(stopuploadButton);
 
         //document.getElementById(peerinfo.fileList.container).appendChild(progressul);
         parentDom = document.getElementById(peerinfo.fileList.container);
@@ -141,10 +141,10 @@ function addstaticProgressHelper(uuid, peerinfo, filename, fileSize, file, progr
 function addProgressHelper(uuid, peerinfo, filename, fileSize, file, progressHelperclassName, filefrom, fileto) {
     try {
         if (!peerinfo) {
-            webrtcdev.error(" [filehsraingJs] Progress helpler cannot be added for one peer as its absent")
+            webrtcdev.error(" [filehsraingJs] Progress helpler cannot be added for one peer as its absent");
             return;
         } else if (!peerinfo.fileList.container || !document.getElementById(peerinfo.fileList.container)) {
-            webrtcdev.error(" [filehsraingJs] Progress helpler cannot be added , missing fileListcontainer ")
+            webrtcdev.error(" [filehsraingJs] Progress helpler cannot be added , missing fileListcontainer ");
             return;
         }
 
@@ -161,11 +161,11 @@ function addProgressHelper(uuid, peerinfo, filename, fileSize, file, progressHel
 
         let progressul = document.createElement("ul");
         progressul.id = progressid,
-        progressul.title = filename + " size - " + file.size + " type - " + file.type + " last modified on -" + file.lastModifiedDate,
-        progressul.setAttribute("type", "progressbar"),
-        progressul.setAttribute("class", "row");
+            progressul.title = filename + " size - " + file.size + " type - " + file.type + " last modified on -" + file.lastModifiedDate,
+            progressul.setAttribute("type", "progressbar"),
+            progressul.setAttribute("class", "row");
         if (debug) {
-            var progressDebug = document.createElement("li");
+            const progressDebug = document.createElement("li");
             progressDebug.innerHTML = filename + "size - " + file.size + " type - " + file.type + " last modified on -" + file.lastModifiedDate
                 + " from :" + filefrom + " --> to :" + fileto + "</br>";
             progressul.appendChild(progressDebug);
@@ -210,7 +210,7 @@ function addProgressHelper(uuid, peerinfo, filename, fileSize, file, progressHel
             }
 
         },
-        progressul.appendChild(stopuploadButton);
+            progressul.appendChild(stopuploadButton);
 
         parentDom = document.getElementById(peerinfo.fileList.container);
         parentDom.insertBefore(progressul, parentDom.firstChild);
@@ -226,7 +226,7 @@ function addProgressHelper(uuid, peerinfo, filename, fileSize, file, progressHel
 
 function updateLabel(e, r) {
     if (-1 != e.position) {
-        var n = +e.position.toFixed(2).split(".")[1] || 100;
+        const n = +e.position.toFixed(2).split(".")[1] || 100;
         r.innerHTML = n + "%"
     }
 }
@@ -248,51 +248,45 @@ function simulateClick(buttonName) {
  * @param {string} filetype
  */
 function displayList(uuid, peerinfo, fileurl, filename, filetype) {
+
+    //get parent DOM and remove progress bar
+    let parentdom;
+    const elementDisplay = peerinfo.fileShare.container;
+    const elementList = peerinfo.fileList.container;
+    let showdownbtn = true;
+    let showdelbtn = true;
+
     try {
         if (!fileshareobj.active) return;
 
         webrtcdev.log("[filesharing js] displayList - uuid: ", uuid, " peerinfo :", peerinfo,
             "file url : ", fileurl, " file name : ", filename, " file type :", filetype);
-        var showDownloadButton = true, showRemoveButton = true;
 
-        var elementList = peerinfo.fileList.container;
-        var elementDisplay = peerinfo.fileShare.container;
-        var listlength = peerinfo.filearray.length;
-
-        /*
-        if(peerinfo.name=="localVideo"){
-            showRemoveButton=false;
-        }else{
-            showRemoveButton=false;
-        }*/
         let _filename = null;
         if (filetype == "sessionRecording") {
             filename = filename.videoname + "_" + filename.audioname;
             _filename = filename;
         }
+        let fileprogress = document.querySelectorAll('ul[id^="' + uuid + '"]');
 
-        //get parent DOM and remove progress bar
-        var parentdom, filedom;
-        let fileprogressbar = document.querySelectorAll('ul[id^="' + uuid + '"]');
-
-        if (fileprogressbar.length > 0) {
-            for (x in fileprogressbar) {
-                webrtcdev.log("[filesharing js] displayList remove progress bar index - ", x, " file dom - ", fileprogressbar[x]);
-                if ((typeof fileprogressbar[x]) == "object" &&
-                        (fileprogressbar[x].type == "progressbar" || fileprogressbar[x].indexOf("progressbar") > -1)) {
+        if (fileprogress.length > 0) {
+            for (x in fileprogress) {
+                webrtcdev.log("[filesharing js] displayList remove progress bar index - ", x, " file dom - ", fileprogress[x]);
+                if ((typeof fileprogress[x]) == "object" &&
+                    (fileprogress[x].type == "progressbar" || fileprogress[x].indexOf("progressbar") > -1)) {
                     // if the progress bar exist , remove the progress bar div and create the ul
-                    // fileprogressbar[x].getAttribute("type")=="progressbar" /removed due to not a function error
+                    // fileprogress[x].getAttribute("type")=="progressbar" /removed due to not a function error
                     if (peerinfo.fileList.container && document.getElementById(peerinfo.fileList.container)) {
                         parentdom = document.getElementById(peerinfo.fileList.container);
                         webrtcdev.log("[ filesharing js ] displayList, set up parent dom ", parentdom);
-                        parentdom.removeChild(fileprogressbar[x]);
+                        parentdom.removeChild(fileprogress[x]);
                     } else {
-                        webrtcdev.log("[ filesharing js ] displayList, Not sure what does this do ", fileprogressbar[x]);
-                        parentdom = fileprogressbar[x].parentNode.parentNode;
-                        //parentdom.removeChild(fileprogressbar[x].parentNode);
+                        webrtcdev.log("[ filesharing js ] displayList, Not sure what does this do ", fileprogress[x]);
+                        parentdom = fileprogress[x].parentNode.parentNode;
+                        //parentdom.removeChild(fileprogress[x].parentNode);
                     }
                 } else {
-                    console.log("[filesharing js] displayList - cannot remove since , elem is not of type progressbar  ", fileprogressbar[x]);
+                    console.log("[filesharing js] displayList - cannot remove since , elem is not of type progressbar  ", fileprogress[x]);
                 }
             }
         } else {
@@ -308,7 +302,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     //append progress bar to parent dom
     webrtcdev.log(" [filesharing js] displayList set up parent dom  ", parentdom);
 
-    filedom = document.createElement("ul");
+    let filedom = document.createElement("ul");
     filedom.id = filename + uuid;
     filedom.type = peerinfo.type;  // local or remote ,
     filedom.innerHTML = "";
@@ -408,7 +402,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     removeButton.onclick = function (event) {
         if (repeatFlagRemoveButton != filename) {
             //var tobeHiddenElement = event.target.parentNode.id;
-            var tobeHiddenElement = filename + uuid;
+            const tobeHiddenElement = filename + uuid;
             hideFile(elementDisplay, filename);
             rtcConn.send({
                 type: "shareFileRemove",
@@ -429,7 +423,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     }
 
     if (role == "inspector") {
-        showDownloadButton.hidden = true;
+        showdownbtn.hidden = true;
         showButton.hidden = true;
         saveButton.hidden = true;
         filedom.appendChild(name);
@@ -438,12 +432,12 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
 
     //Append all of the above components into file list view
     filedom.appendChild(name);
-    if (showDownloadButton)
+    if (showdownbtn)
         filedom.appendChild(downloadButton);
     filedom.appendChild(showButton);
     filedom.appendChild(saveButton);
     //filedom.appendChild(hideButton);
-    if (showRemoveButton)
+    if (showdelbtn)
         filedom.appendChild(removeButton);
 
     webrtcdev.log("[filesharing dom modifier JS ] filedom ", filedom, " | parentdom ", parentdom);
@@ -476,7 +470,7 @@ function getFileElementDisplayByType(filetype, fileurl, filename) {
 
     webrtcdev.log(" [filehsaring js]  - getFileElementDisplayByType ",
         "file type :", filetype, "file url : ", fileurl, ", file name : ", filename);
-    var elementDisplay;
+    let elementDisplay;
 
     if (filetype.indexOf("msword") > -1 || filetype.indexOf("officedocument") > -1) {
         let divNitofcation = document.createElement("div");
@@ -497,7 +491,7 @@ function getFileElementDisplayByType(filetype, fileurl, filename) {
     } else if (filetype == "sessionRecording") {
 
         let filename = filename.videoname + "_" + filename.audioname;
-        var div = document.createElement("div");
+        const div = document.createElement("div");
         div.setAttribute("background-color", "black");
         div.id = "display" + filename;
         div.title = filename;
@@ -585,8 +579,8 @@ function displayFile(uuid, peerinfo, fileurl, filename, filetype) {
 
         } else if (role == "inspector") {
             for (peer in webcallpeers) {
-                var i = ++peer;
-                var parentdominspector = document.getElementById(webcallpeers[i].fileShare.container);
+                const i = ++peer;
+                const parentdominspector = document.getElementById(webcallpeers[i].fileShare.container);
                 if (parentdominspector) {
                     showFile(webcallpeers[i].fileShare.container, fileurl, filename, filetype);
                     break;
@@ -607,7 +601,7 @@ function displayFile(uuid, peerinfo, fileurl, filename, filetype) {
 }
 
 function syncButton(buttonId) {
-    var buttonElement = document.getElementById(buttonId);
+    const buttonElement = document.getElementById(buttonId);
 
     for (x in webcallpeers) {
         if (buttonElement.getAttribute("lastClickedBy") == webcallpeers[x].userid) {
@@ -669,7 +663,7 @@ function showHideFile(uuid, elementDisplay, fileurl, filename, filetype, showHid
 
 function showFile(element, fileurl, filename, filetype) {
     webrtcdev.log("[filehsaring js]  showFile container - ", element, document.getElementById(element));
-    var filedom = getFileElementDisplayByType(filetype, fileurl, filename);
+    const filedom = getFileElementDisplayByType(filetype, fileurl, filename);
     webrtcdev.log("[filehsaring js]  showFile  filedom - ", filedom);
     if (existselem(element)) {
         document.getElementById(element).innerHTML = "";
@@ -711,7 +705,7 @@ function removeFile(element) {
 function downloadFile(uuid, element, fileurl, _filename, filetype) {
     webrtcdev.log(" downloadButton _filename ", _filename, "  filetype ", filetype);
     if (filetype == "sessionRecording") {
-        var a = document.createElement("a");
+        const a = document.createElement("a");
         document.body.appendChild(a);
         a.style = "display: none";
         a.href = fileurl.audiofileurl;
@@ -720,7 +714,7 @@ function downloadFile(uuid, element, fileurl, _filename, filetype) {
         a.click();
         window.URL.revokeObjectURL(fileurl.audiofileurl);
 
-        var v = document.createElement("a");
+        const v = document.createElement("a");
         document.body.appendChild(v);
         v.style = "display: none";
         v.href = fileurl.videofileurl;
@@ -760,7 +754,7 @@ function createFileSharingBox(peerinfo, parent) {
         if (document.getElementById(peerinfo.fileShare.outerbox))
             return;
 
-        var fileSharingBox = document.createElement("div");
+        const fileSharingBox = document.createElement("div");
 
         if (fileshareobj.props.fileList == "single") {
             fileSharingBox.className = "col-md-12 fileviewing-box";
@@ -771,7 +765,7 @@ function createFileSharingBox(peerinfo, parent) {
         fileSharingBox.id = peerinfo.fileShare.outerbox;
 
         /*-------------------------------- add for File Share control Bar --------------------*/
-        var minButton , maxButton;
+        let minButton, maxButton;
 
         let fileControlBar = document.createElement("p");
         fileControlBar.id = peerinfo.fileShare.container + "controlBar";
@@ -805,7 +799,7 @@ function createFileSharingBox(peerinfo, parent) {
                 showelem(maxButton);
             };
             fileControlBar.appendChild(minButton);
-        }else {
+        } else {
             webrtcdev.warn(" [fileShare JS ] minicon is none");
         }
 
@@ -829,9 +823,9 @@ function createFileSharingBox(peerinfo, parent) {
             maxButton.setAttribute("lastClickedBy", '');
             maxButton.onclick = function () {
                 maxFV(peerinfo.userid, maxButton.id, peerinfo.fileShare.outerbox);
-                if(fileshareobj.props.fileList != "single"){
-                    for(var x in webcallpeers){
-                        if(webcallpeers[x].userid != peerinfo.userid)
+                if (fileshareobj.props.fileList != "single") {
+                    for (let x in webcallpeers) {
+                        if (webcallpeers[x].userid != peerinfo.userid)
                             minFV(webcallpeers[x].userid, "", webcallpeers[x].fileShare.outerbox);
                     }
                 }
@@ -861,7 +855,8 @@ function createFileSharingBox(peerinfo, parent) {
         fileControlBar.appendChild(closeButton);
 
         // rotate the content of file viewer box
-        var angle = 0, orientation = null;
+        let angle = 0;
+        const orientation = null;
         let rotateButton = document.createElement("span");
         if (fileshareobj.fileshare.rotateicon) {
             let img = document.createElement("img");
@@ -899,7 +894,7 @@ function createFileSharingBox(peerinfo, parent) {
                 webrtcdev.error(" [filehsraing ] rotateButton  , dom doesnt exist");
             }
             // dom.className = "col rotate" + angle + dom.getAttribute("orientation");
-        }
+        };
 
         fileControlBar.appendChild(rotateButton);
 
@@ -934,7 +929,7 @@ function createFileSharingBox(peerinfo, parent) {
 
 
 function rescaleVideo(dom, domparent) {
-    var angle = dom.getAttribute("angle") || 0;
+    const angle = dom.getAttribute("angle") || 0;
 
     if (dom.videoWidth > dom.videoHeight) {
         dom.setAttribute("style", "height:" + domparent.clientWidth + "px;margin-left: 0px");
@@ -945,12 +940,12 @@ function rescaleVideo(dom, domparent) {
     dom.setAttribute("orientation", orientation);
     dom.className = "col rotate" + angle + dom.getAttribute("orientation");
 
-    return;
+
 }
 
 
 function rescaleIFrame(dom, domparent) {
-    var angle = dom.getAttribute("angle") || 0;
+    const angle = dom.getAttribute("angle") || 0;
 
     dom.setAttribute("style", "height:" + domparent.clientWidth + "px !important;width:100%");
     dom.setAttribute("orientation", "portrait");
@@ -959,14 +954,14 @@ function rescaleIFrame(dom, domparent) {
     //     dom.setAttribute("orientation",  "landscape");
     dom.className = "col rotate" + angle + dom.getAttribute("orientation");
 
-    return;
+
 }
 
 
 function rescaleImage(dom, domparent) {
 
-    var orientation;
-    var angle = dom.getAttribute("angle") || 0;
+    let orientation;
+    const angle = dom.getAttribute("angle") || 0;
 
     if (dom.width > dom.height) {
         orientation = "landscape";
@@ -999,7 +994,6 @@ function rescaleImage(dom, domparent) {
     dom.setAttribute("orientation", orientation);
     dom.className = "col rotate" + angle + dom.getAttribute("orientation");
 
-    return;
 
 }
 
@@ -1016,7 +1010,7 @@ function createFileListingBox(peerinfo, parent) {
         if (getElementById(peerinfo.fileList.outerbox))
             return;
 
-        var fileListingBox = document.createElement("div");
+        const fileListingBox = document.createElement("div");
 
         if (fileshareobj.props.fileList == "single") {
             fileListingBox.className = "col-sm-12 filesharing-box";
@@ -1044,7 +1038,7 @@ function createFileListingBox(peerinfo, parent) {
         fileHelpButton.className="btn btn-default glyphicon glyphicon-question-sign closeButton";
         fileHelpButton.innerHTML="Help";
         /*fileListControlBar.appendChild(fileHelpButton);*/
-        var minButton, maxButton;
+        let minButton, maxButton;
 
         if (fileshareobj.filelist.minicon != "none") {
             minButton = document.createElement("span");
@@ -1083,7 +1077,7 @@ function createFileListingBox(peerinfo, parent) {
         // fileListControlBar.appendChild(closeButton);
 
         /*-------------------------------- add for File List Container--------------------*/
-        var fileListContainer = document.createElement("div");
+        const fileListContainer = document.createElement("div");
         fileListContainer.id = peerinfo.fileList.container;
 
         /*-------------------------------- add for File progress bar --------------------*/
@@ -1115,41 +1109,41 @@ function createFileSharingDiv(peerinfo) {
     if (fileshareobj.props.fileList != "single") {
 
         // list of all active user ids
-        let activeRemotepeerids= "";
+        let activeRemotepeerids = "";
         for (i in webcallpeers) {
-            if(webcallpeers[i].type == "remote")
+            if (webcallpeers[i].type == "remote")
                 activeRemotepeerids += webcapppeers[i].userid;
         }
 
         // if it is p2p session and only 2 File Listing boxes are already present remove the already existing remote file listing box
-        if(document.getElementById("fileListingRow").childElementCount>=2) {
-            webrtcdev.warn("more than 1 file listing rows prresent , remove the ones for peers that are no longer in session  ")
+        if (document.getElementById("fileListingRow").childElementCount >= 2) {
+            webrtcdev.warn("more than 1 file listing rows prresent , remove the ones for peers that are no longer in session  ");
             let filelistingrow = document.getElementById("fileListingRow");
             let filelistingboxes = filelistingrow.childNodes;
 
             for (x in filelistingboxes) {
-                webrtcdev.log(" check if this dom by id is required .  filelistingboxes[x].id " , filelistingboxes[x]);
-                if( !filelistingboxes[x].id ) break;
-                fid= filelistingboxes[x].id.split("widget-filelisting-box");
-                if(!activeRemotepeerids.includes(fid[1])){
-                    webrtcdev.warn(" File list boxes belonging to userid " , fid[1] , " need to be removed  ");
+                webrtcdev.log(" check if this dom by id is required .  filelistingboxes[x].id ", filelistingboxes[x]);
+                if (!filelistingboxes[x].id) break;
+                fid = filelistingboxes[x].id.split("widget-filelisting-box");
+                if (!activeRemotepeerids.includes(fid[1])) {
+                    webrtcdev.warn(" File list boxes belonging to userid ", fid[1], " need to be removed  ");
                     filelistingrow.removeChild(filelistingboxes[x]);
                 }
             }
         }
 
         // if it is p2p session and only 2 File sharing boxes are already present remove the already existing remote file sharing box
-        if(document.getElementById("fileSharingRow").childElementCount>=2) {
-            webrtcdev.warn("more than 1 file listing rows present , remove the ones for peers that are no longer in session  ")
+        if (document.getElementById("fileSharingRow").childElementCount >= 2) {
+            webrtcdev.warn("more than 1 file listing rows present , remove the ones for peers that are no longer in session  ");
             let fileSharingrow = document.getElementById("fileSharingRow");
             let fileSharingboxes = fileSharingrow.childNodes;
 
             for (x in fileSharingboxes) {
-                webrtcdev.log(" check if this dom by id is required .filelistingboxes[x].id " , fileSharingboxes[x]);
-                if( !fileSharingboxes[x].id ) break;
-                fid= fileSharingboxes[x].id.split("widget-sharing-box");
-                if(!activeRemotepeerids.includes(fid[1])){
-                    webrtcdev.warn(" File list boxes belonging to userid " , fid[1] , " need to be removed  ");
+                webrtcdev.log(" check if this dom by id is required .filelistingboxes[x].id ", fileSharingboxes[x]);
+                if (!fileSharingboxes[x].id) break;
+                fid = fileSharingboxes[x].id.split("widget-sharing-box");
+                if (!activeRemotepeerids.includes(fid[1])) {
+                    webrtcdev.warn(" File list boxes belonging to userid ", fid[1], " need to be removed  ");
                     fileSharingrow.removeChild(fileSharingboxes[x]);
                 }
             }
@@ -1157,12 +1151,12 @@ function createFileSharingDiv(peerinfo) {
 
     }
 
-    if (! getElementById(peerinfo.fileShare.outerbox)) {
+    if (!getElementById(peerinfo.fileShare.outerbox)) {
         let parentFileShareContainer = getElementById(fileshareobj.fileShareContainer);
         createFileSharingBox(peerinfo, parentFileShareContainer);
     }
 
-    if (! getElementById(peerinfo.fileList.outerbox)) {
+    if (!getElementById(peerinfo.fileList.outerbox)) {
         let parentFileListContainer = getElementById(fileshareobj.fileListContainer);
         createFileListingBox(peerinfo, parentFileListContainer);
     }
@@ -1178,10 +1172,10 @@ function closeFV(userid, buttonId, selectedFileSharingBox) {
 function resizeFV(userid, buttonId, selectedFileSharingBox) {
     for (x in webcallpeers) {
         if (webcallpeers[x].fileShare.outerbox == selectedFileSharingBox) {
-            showelem(selectedFileSharingBox)
+            showelem(selectedFileSharingBox);
             getElementById(selectedFileSharingBox).style.width = "50%";
         } else {
-            showelem(webcallpeers[x].fileShare.outerbox)
+            showelem(webcallpeers[x].fileShare.outerbox);
             getElementById(webcallpeers[x].fileShare.outerbox).style.width = "50%";
         }
     }
@@ -1221,43 +1215,43 @@ function maxFV(userid, buttonId, selectedFileSharingBox) {
 function createModalPopup(filetype) {
     webrtcdev.log(" create Modal popup for filetype ", filetype);
 
-    var mainDiv = getElementById("mainDiv");
+    const mainDiv = getElementById("mainDiv");
 
     if (getElementById("saveModal")) {
         mainDiv.removeChild(document.getElementById("saveModal"));
     }
 
-    var modalBox = document.createElement("div");
+    const modalBox = document.createElement("div");
     modalBox.className = "modal fade";
     modalBox.setAttribute("role", "dialog");
     modalBox.id = "saveModal";
 
-    var modalinnerBox = document.createElement("div");
+    const modalinnerBox = document.createElement("div");
     modalinnerBox.className = "modal-dialog";
 
-    var modal = document.createElement("div");
+    const modal = document.createElement("div");
     modal.className = "modal-content";
 
-    var modalheader = document.createElement("div");
+    const modalheader = document.createElement("div");
     modalheader.className = "modal-header";
 
-    var closeButton = document.createElement("button");
+    const closeButton = document.createElement("button");
     closeButton.className = "close";
     closeButton.setAttribute("data-dismiss", "modal");
     closeButton.innerHTML = "&times;";
 
-    var title = document.createElement("h4");
+    const title = document.createElement("h4");
     title.className = "modal-title";
     title.innerHTML = "Save File";
     title.setAttribute("float", "left");
     modalheader.appendChild(title);
     modalheader.appendChild(closeButton);
 
-    var modalbody = document.createElement("div");
+    const modalbody = document.createElement("div");
     modalbody.className = "modal-body";
     modalbody.innerHTML = "";
 
-    var body = document.createElement("div");
+    const body = document.createElement("div");
     switch (filetype) {
         case  "blobcanvas":
             title.innerHTML = "Save Drawing";
@@ -1269,7 +1263,7 @@ function createModalPopup(filetype) {
             title.innerHTML = "Save PDF";
             var d1 = document.createElement("div");
             d1.innerHTML = 'Click DOWNLOAD on top of the doc . Click SAVE AS when window opens up';
-            var i1 = document.createElement("img");
+            const i1 = document.createElement("img");
             i1.src = "images/savefile.PNG";
             body.appendChild(d1);
             body.appendChild(i1);

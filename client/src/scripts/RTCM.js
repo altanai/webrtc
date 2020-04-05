@@ -1,17 +1,5 @@
 // 'use strict';
 
-// Last time updated: 2019-07-08 4:54:27 PM UTC
-
-// _________________________
-// RTCMultiConnection v3.6.9
-
-// Open-Sourced: https://github.com/muaz-khan/RTCMultiConnection
-
-// --------------------------------------------------
-// Muaz Khan     - www.MuazKhan.com
-// MIT License   - www.WebRTC-Experiment.com/licence
-// --------------------------------------------------
-
 var RTCMultiConnection = function(roomid, forceOptions) {
 
 var browserFakeUserAgent = 'Fake/5.0 (FakeOS) AppleWebKit/123 (KHTML, like Gecko) Fake/12.3.4567.89 Fake/123.45';
