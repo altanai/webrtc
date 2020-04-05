@@ -21,11 +21,12 @@ this.getwebrtcdevlogs = function () {
 this.sendwebrtcdevLogs = function (url, key, msg) {
     const data = new FormData();
     data.append('name', username || "no name");
-    if (document.getElementById("help-screenshot-body"))
-        data.append('scimage', document.getElementById("help-screenshot-body").src);
-
-    console.log("=========================== message" , msg);
-
+    if (document.getElementById(helpobj.screenshotContainer)) {
+        data.append('scimage', document.getElementById(helpobj.screenshotContainer).src);
+    }
+    if (document.getElementById(helpobj.logsContainer)) {
+        document.getElementById(helpobj.logsContainer).innerText = webrtcdevlogs;
+    }
     data.append("apikey", key);
     data.append("useremail", selfemail);
     data.append("sessionid", sessionid);
@@ -41,16 +42,17 @@ this.sendwebrtcdevLogs = function (url, key, msg) {
     return fetch(url, {
         method: 'POST',
         body: data
-    })
-    .then(apires => apires.json())
-    .then(apires => console.log("Listenin API response ", apires))
-    .catch(error => console.error("Listenin API response ", error));
+    });
+    // .then(apires => apires.json())
+    // .then(apires => console.log("HelpLogs API response ", apires))
+    // .catch(error => console.error("HelpLogs API response ", error));
 };
 
 
 /**
  * add user id and email and status to page header area in debug mode
- * @method
+ * @method    .then(apires => console.log("HelpLogs API response ", apires))
+    .catch(error => console.error("HelpLogs API response ", error));
  * @name showUserStats
  */
 this.showUserStats = showUserStats = function () {
@@ -74,7 +76,6 @@ this.showUserStats = showUserStats = function () {
 this.getscreenshot = function (name) {
     // "#bodyDiv"
     var parentdom = document.querySelector(name);
-    /*html2canvas(document.querySelector("#bodyDiv")).then(canvas => {*/
     html2canvas(parentdom).then(canvas => {
         /*document.getElementById("help-screenshot-body").src = canvas.toDataURL();*/
         return canvas.toDataURL();

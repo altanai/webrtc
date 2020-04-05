@@ -1,4 +1,4 @@
-/* Generated on:Thu Apr 02 2020 16:54:38 GMT+0530 (India Standard Time) || version: 4.9.4 - Altanai , License : MIT  */
+/* Generated on:Sun Apr 05 2020 12:12:16 GMT+0530 (India Standard Time) || version: 4.9.6 - Altanai , License : MIT  */
 .glyphicon {
   cursor: pointer;
 }
@@ -241,7 +241,7 @@
 .blink_me {
   animation: blinker 1s linear infinite;
 }
-/* Generated on:Thu Apr 02 2020 16:54:38 GMT+0530 (India Standard Time) || version: 4.9.4 - Altanai , License : MIT  */
+/* Generated on:Sun Apr 05 2020 12:12:16 GMT+0530 (India Standard Time) || version: 4.9.6 - Altanai , License : MIT  */
 /*-----------------------------------------------------------------------------------*/
 /*              Video and media Related style                                        */
 /*-----------------------------------------------------------------------------------*/
@@ -330,7 +330,7 @@ video::-webkit-media-controls-current-time-display {}*/
   /*padding-right: 5px;*/
   cursor: pointer;
 }
-/* Generated on:Thu Apr 02 2020 16:54:38 GMT+0530 (India Standard Time) || version: 4.9.4 - Altanai , License : MIT  */
+/* Generated on:Sun Apr 05 2020 12:12:16 GMT+0530 (India Standard Time) || version: 4.9.6 - Altanai , License : MIT  */
 /*-----------------------------------------------------------------------------------*/
 /*                    Chat Related style                                        */
 /*-----------------------------------------------------------------------------------*/
@@ -403,7 +403,7 @@ video::-webkit-media-controls-current-time-display {}*/
   font-style: italic;
 }
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Thu Apr 02 2020 16:54:38 GMT+0530 (India Standard Time) || version: 4.9.4 - Altanai , License : MIT  */
+/* Generated on:Sun Apr 05 2020 12:12:16 GMT+0530 (India Standard Time) || version: 4.9.6 - Altanai , License : MIT  */
 /*-----------------------------------------------------------------------------------*/
 /*              Cursr share    Related style                                        */
 /*-----------------------------------------------------------------------------------*/
@@ -424,7 +424,7 @@ video::-webkit-media-controls-current-time-display {}*/
   border-right: 10px solid transparent;
 }
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Thu Apr 02 2020 16:54:38 GMT+0530 (India Standard Time) || version: 4.9.4 - Altanai , License : MIT  */
+/* Generated on:Sun Apr 05 2020 12:12:16 GMT+0530 (India Standard Time) || version: 4.9.6 - Altanai , License : MIT  */
 /*-----------------------------------------------------------------------------------*/
 /*              Draw and paint Related style                                        */
 /*-----------------------------------------------------------------------------------*/
@@ -488,7 +488,7 @@ video::-webkit-media-controls-current-time-display {}*/
   color: #C5C5C5;
 }
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Thu Apr 02 2020 16:54:38 GMT+0530 (India Standard Time) || version: 4.9.4 - Altanai , License : MIT  */
+/* Generated on:Sun Apr 05 2020 12:12:16 GMT+0530 (India Standard Time) || version: 4.9.6 - Altanai , License : MIT  */
 /*-----------------------------------------------------------------------------------*/
 /*                    Fileshare Related style                                        */
 /*-----------------------------------------------------------------------------------*/
@@ -557,81 +557,64 @@ video::-webkit-media-controls-current-time-display {}*/
     color: #968787;
 }*/
 /* ---------------image rotate -----------------------------*/
-.rotate0portrait {
-  transform-origin: top left;
-  /* IE 10+, Firefox, etc. */
-  -webkit-transform-origin: top left;
-  /* Chrome */
-  -ms-transform-origin: top left;
-  /* IE 9 */
-  height: 100%;
-  width: 100%;
-}
-.rotate0landscape {
-  transform-origin: top left;
-  /* IE 10+, Firefox, etc. */
-  -webkit-transform-origin: top left;
-  /* Chrome */
-  -ms-transform-origin: top left;
-  /* IE 9 */
-  height: 100%;
-  width: 100%;
-}
-.rotate90portrait {
-  transform: rotate(90deg) translateY(-100%);
-  -webkit-transform: rotate(90deg);
-  /*-webkit-transform: rotate(90deg) translateY(-100%);*/
-  -ms-transform: rotate(90deg) translateY(-100%);
-  margin-top: 50px;
-  height: -webkit-fill-available;
-}
-.rotate90landscape {
-  transform: rotate(90deg) translateY(-100%);
-  -webkit-transform: rotate(90deg);
-  /*-webkit-transform: rotate(90deg) translateY(-100%);*/
-  -ms-transform: rotate(90deg) translateY(-100%);
-  /*    margin-top: 150px;
-    margin-bottom: -100px;
-    margin-left: -150px; */
-  /*margin-top: 30%;*/
-}
-.rotate180portrait {
-  transform: rotate(180deg) translate(-100%, -100%);
-  -webkit-transform: rotate(180deg);
-  /*-webkit-transform: rotate(180deg) translate(-100%,-100%);*/
-  -ms-transform: rotate(180deg) translateX(-100%, -100%);
-  /*    height: 100%;
-    margin-top: 60px;
-    width: auto !important;*/
-  /*height: -webkit-fill-available;*/
-}
-.rotate180landscape {
-  transform: rotate(180deg) translate(-100%, -100%);
-  -webkit-transform: rotate(180deg);
-  /*-webkit-transform: rotate(180deg) translate(-100%,-100%);*/
-  -ms-transform: rotate(180deg) translateX(-100%, -100%);
-  /*margin-top: 50px;*/
-}
-.rotate270portrait {
-  transform: rotate(270deg) translateX(-100%);
-  -webkit-transform: rotate(270deg);
-  /*-webkit-transform: rotate(270deg) translateX(-100%);*/
-  -ms-transform: rotate(270deg) translateX(-100%);
-  /*    height: 100%;*/
-  /*margin-top: 50px;*/
-  height: -webkit-fill-available;
-}
-.rotate270landscape {
-  transform: rotate(270deg) translateX(-100%);
-  -webkit-transform: rotate(270deg);
-  /*-webkit-transform: rotate(270deg) translateX(-100%);*/
-  -ms-transform: rotate(270deg) translateX(-100%);
-  /*    margin-top: 150px;
-    margin-bottom: -100px;
-    margin-left: -150px; */
-}
+/*.rotate0portrait {*/
+/*    transform-origin: top left; !* IE 10+, Firefox, etc. *!*/
+/*    -webkit-transform-origin: top left; !* Chrome *!*/
+/*    -ms-transform-origin: top left; !* IE 9 *!*/
+/*    height: 100%;*/
+/*    width: 100%;*/
+/*}*/
+/*.rotate0landscape {*/
+/*    transform-origin: top left; !* IE 10+, Firefox, etc. *!*/
+/*    -webkit-transform-origin: top left; !* Chrome *!*/
+/*    -ms-transform-origin: top left; !* IE 9 *!*/
+/*    height: 100%;*/
+/*    width: 100%;*/
+/*}*/
+/*.rotate90portrait {*/
+/*    transform: rotate(90deg) translateY(-100%);*/
+/*    -webkit-transform: rotate(90deg) ;*/
+/*    !*-webkit-transform: rotate(90deg) translateY(-100%);*!*/
+/*    -ms-transform: rotate(90deg) translateY(-100%);*/
+/*    margin-top: 50px;*/
+/*    height: -webkit-fill-available;*/
+/*    */
+/*}*/
+/*.rotate90landscape {*/
+/*    transform: rotate(90deg) translateY(-100%);*/
+/*    -webkit-transform: rotate(90deg) ;*/
+/*    !*-webkit-transform: rotate(90deg) translateY(-100%);*!*/
+/*    -ms-transform: rotate(90deg) translateY(-100%);*/
+/*}*/
+/*.rotate180portrait {*/
+/*    transform: rotate(180deg) translate(-100%!*    margin-top: 150px;*/
+/*    margin-bottom: -100px;*/
+/*    margin-left: -150px; *!,-100%);*/
+/*    -webkit-transform: rotate(180deg) ;*/
+/*    !*-webkit-transform: rotate(180deg) translate(-100%,-100%);*!*/
+/*    -ms-transform: rotate(180deg) translateX(-100%,-100%);*/
+/*}*/
+/*.rotate180landscape {*/
+/*    transform: rotate(180deg) translate(-100%,-100%);*/
+/*    -webkit-transform: rotate(180deg) ;*/
+/*    !*-webkit-transform: rotate(180deg) translate(-100%,-100%);*!*/
+/*    -ms-transform: rotate(180deg) translateX(-100%,-100%);*/
+/*}*/
+/*.rotate270portrait {*/
+/*    transform: rotate(270deg) translateX(-100%);*/
+/*     -webkit-transform: rotate(270deg) ;*/
+/*    !*-webkit-transform: rotate(270deg) translateX(-100%);*!*/
+/*    -ms-transform: rotate(270deg) translateX(-100%);*/
+/*   !* height: -webkit-fill-available;*!*/
+/*}*/
+/*.rotate270landscape {*/
+/*    transform: rotate(270deg) translateX(-100%);*/
+/*     -webkit-transform: rotate(270deg) ;*/
+/*    !*-webkit-transform: rotate(270deg) translateX(-100%);*!*/
+/*    -ms-transform: rotate(270deg) translateX(-100%);*/
+/*}*/
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Thu Apr 02 2020 16:54:38 GMT+0530 (India Standard Time) || version: 4.9.4 - Altanai , License : MIT  */
+/* Generated on:Sun Apr 05 2020 12:12:16 GMT+0530 (India Standard Time) || version: 4.9.6 - Altanai , License : MIT  */
 /*-----------------------------------------------------------------------------------*/
 /*              Screenshare Related style                                        */
 /*-----------------------------------------------------------------------------------*/
@@ -643,7 +626,7 @@ video::-webkit-media-controls-current-time-display {}*/
   /* Firefox */
 }
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Thu Apr 02 2020 16:54:38 GMT+0530 (India Standard Time) || version: 4.9.4 - Altanai , License : MIT  */
+/* Generated on:Sun Apr 05 2020 12:12:16 GMT+0530 (India Standard Time) || version: 4.9.6 - Altanai , License : MIT  */
 .time {
   color: black;
 }
@@ -653,4 +636,4 @@ video::-webkit-media-controls-current-time-display {}*/
 .timer li {
   float: right;
 }
-/* Generated on:Thu Apr 02 2020 16:54:38 GMT+0530 (India Standard Time) || version: 4.9.4 - Altanai , License : MIT  */
+/* Generated on:Sun Apr 05 2020 12:12:16 GMT+0530 (India Standard Time) || version: 4.9.6 - Altanai , License : MIT  */

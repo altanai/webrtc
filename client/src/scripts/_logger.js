@@ -10,12 +10,18 @@ var webrtcdevlogs = [];
  * @return {str}text
  */
 function isJSON(text) {
+    // if (/^[\],:{}\s]*$/.test(text.replace(/\\["\\\/bfnrtu]/g, '@').
+    // replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']').
+    // replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+    //     return true;
+    // }
+    // return false;
     if (typeof text !== "string") {
         return false;
     }
     try {
-        JSON.parse(text);
-        return true;
+        var json = JSON.parse(text);
+        return (typeof json === 'object');
     } catch (error) {
         return false;
     }
@@ -48,9 +54,9 @@ function toStr(obj) {
  */
 function getArgsJson(arg) {
     var str = "";
-    for (i in arg.length) {
+    for (i in arg) {
         if (arg[i]) {
-            str += toStr(arg[i])
+            str += toStr(arg[i]);
         }
     }
     return str;
@@ -67,24 +73,22 @@ var webrtcdevlogger = {
     // }else{
 
     log: function () {
-        var arg = "";
+        let arg ;
         if (isJSON(arguments)) {
             arg = JSON.stringify(arguments, undefined, 2);
-            webrtcdevlogs.push("<pre style='color:grey'>[-]" + arg + "</pre>")
+            webrtcdevlogs.push("<pre style='color:grey'>[LOG]" + arg + "</pre>")
         } else {
             arg = getArgsJson(arguments);
-            webrtcdevlogs.push("<p style='color:grey'>[-]" + arg + "</p>");
+            webrtcdevlogs.push("<p style='color:grey'>[LOG]" + arg + "</p>");
         }
-        // let arg = getArgsJson(arguments);
-        // webrtcdevlogs.push( arg );
-        console.log(arguments);
+        // console.log(arguments);
     },
 
     info: function () {
-        var arg = "";
+        let arg = "";
         if (isJSON(arguments)) {
             arg = JSON.stringify(arguments, undefined, 2);
-            webrtcdevlogs.push("<pre style='color:blue'>[-]" + arg + "</pre>");
+            webrtcdevlogs.push("<pre style='color:blue'>[INFO]" + arg + "</pre>");
         } else {
             arg = getArgsJson(arguments);
             webrtcdevlogs.push("<p style='color:blue'>[INFO]" + arg + "</p>");
@@ -93,7 +97,7 @@ var webrtcdevlogger = {
     },
 
     debug: function () {
-        var arg = "";
+        let arg = "";
         if (isJSON(arguments)) {
             arg = JSON.stringify(arguments, undefined, 2);
             webrtcdevlogs.push("<pre style='color:green'>[DEBUG]" + arg + "</pre>");
@@ -105,17 +109,22 @@ var webrtcdevlogger = {
     },
 
     warn: function () {
-        var arg = getArgsJson(arguments);
-        // webrtcdevlogs.push("<p style='color:yellow'>[WARN]" + arg + "</p>");
-        webrtcdevlogs.push(arg);
+        let arg = "";
+        if (isJSON(arguments)) {
+            arg = JSON.stringify(arguments, undefined, 2);
+            webrtcdevlogs.push("<pre style='color:orange'>[WARN]" + arg + "</pre>");
+        } else {
+            arg = getArgsJson(arguments);
+            webrtcdevlogs.push("<p style='color:orange'>[WARN]" + arg + "</p>");
+        }
         console.warn(arguments);
     },
 
     error: function () {
-        var arg = "";
+        let arg = "";
         if (isJSON(arguments)) {
             arg = JSON.stringify(arguments, undefined, 2);
-            webrtcdevlogs.push("<pre style='color:grey'>[-]" + arg + "</pre>");
+            webrtcdevlogs.push("<pre style='color:red'>[ERROR]" + arg + "</pre>");
         } else {
             arg = getArgsJson(arguments);
             webrtcdevlogs.push("<p style='color:red'>[ERROR]" + arg + "</p>");

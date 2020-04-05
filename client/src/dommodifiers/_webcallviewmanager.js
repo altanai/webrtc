@@ -143,19 +143,21 @@ function updateWebCallView(peerinfo) {
 
                     attachMediaStream(remoteVideos[emptyvideoindex], peerinfo.stream);
                     //if(remoteVideos[vi].video.hidden) remoteVideos[vi].video.hidden = false;
-                    showelem(remoteVideos[emptyvideoindex].video);
+                    if(remoteVideos[emptyvideoindex]){
+                        showelem(remoteVideos[emptyvideoindex].video);
 
-                    if (remoteobj.userDisplay && peerinfo.name) {
-                        attachUserDetails(remoteVideos[emptyvideoindex].video, peerinfo);
+                        if (remoteobj.userDisplay && peerinfo.name) {
+                            attachUserDetails(remoteVideos[emptyvideoindex].video, peerinfo);
+                        }
+
+                        if (remoteobj.userMetaDisplay && peerinfo.userid) {
+                            attachMetaUserDetails(remoteVideos[emptyvideoindex].video, peerInfo);
+                        }
+
+                        remoteVideos[emptyvideoindex].video.id = peerinfo.videoContainer;
+                        remoteVideos[emptyvideoindex].video.className = remoteobj.videoClass;
+                        attachControlButtons(remoteVideos[emptyvideoindex].video, peerinfo);
                     }
-
-                    if (remoteobj.userMetaDisplay && peerinfo.userid) {
-                        attachMetaUserDetails(remoteVideos[emptyvideoindex].video, peerInfo);
-                    }
-
-                    remoteVideos[emptyvideoindex].video.id = peerinfo.videoContainer;
-                    remoteVideos[emptyvideoindex].video.className = remoteobj.videoClass;
-                    attachControlButtons(remoteVideos[emptyvideoindex].video, peerinfo);
 
                 } else {
                     alert("remote Video containers not defined");

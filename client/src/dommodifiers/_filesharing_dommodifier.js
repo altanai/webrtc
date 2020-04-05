@@ -488,8 +488,8 @@ function getFileElementDisplayByType(filetype, fileurl, filename) {
     } else if (filetype.indexOf("image") > -1) {
         let image = document.createElement("img");
         image.src = fileurl;
-        image.style.width = "100%";
-        image.style.height = "100%";
+        // image.style.width = "100%";
+        // image.style.height = "100%";
         image.title = filename;
         image.id = "display" + filename;
         elementDisplay = image;
@@ -765,7 +765,7 @@ function createFileSharingBox(peerinfo, parent) {
         if (fileshareobj.props.fileList == "single") {
             fileSharingBox.className = "col-md-12 fileviewing-box";
         } else {
-            fileSharingBox.className = "fileviewing-box";
+            fileSharingBox.className = "col-md-6 fileviewing-box";
         }
         // fileSharingBox.setAttribute("style", "background-color:" + peerinfo.color);
         fileSharingBox.id = peerinfo.fileShare.outerbox;
@@ -909,21 +909,21 @@ function createFileSharingBox(peerinfo, parent) {
         fileShareContainer.className = "filesharingWidget";
         fileShareContainer.id = peerinfo.fileShare.container;
 
-        // let fillerArea = document.createElement("p");
-        // fillerArea.className = "filler";
-
         if (debug) {
             let nameBox = document.createElement("span");
             nameBox.innerHTML = "<br/>" + fileShareContainer.id + "<br/>";
             fileSharingBox.appendChild(nameBox);
         }
 
-        // linebreak = document.createElement("br");
-
         fileSharingBox.appendChild(fileControlBar);
+
+        // linebreak = document.createElement("br");
         // fileSharingBox.appendChild(linebreak);
-        // fileSharingBox.appendChild(linebreak);
+
         fileSharingBox.appendChild(fileShareContainer);
+
+        // let fillerArea = document.createElement("p");
+        // fillerArea.className = "filler";
         // fileSharingBox.appendChild(fillerArea);
 
         parent.appendChild(fileSharingBox);
@@ -971,28 +971,28 @@ function rescaleImage(dom, domparent) {
     if (dom.width > dom.height) {
         orientation = "landscape";
 
-        if (angle == "90" || angle == "270") {
-            // new width / new height  = old width/old height
-            // thus new width = old width / old height * new height
-            newwidth = (dom.width / dom.height) * domparent.clientWidth;
-            dom.setAttribute("style", "width:" + newwidth + "px; height:" + domparent.clientWidth + "px");
-        }
-        // if(angle =="180" || angle == "0"){
-        //     dom.setAttribute("style","width:100%; height:100%");
+        // if (angle == "90" || angle == "270") {
+        //     // new width / new height  = old width/old height
+        //     // thus new width = old width / old height * new height
+        //     newwidth = (dom.width / dom.height) * domparent.clientWidth;
+        //     dom.setAttribute("style", "width:" + newwidth + "px; height:" + domparent.clientWidth + "px");
         // }
+        // // if(angle =="180" || angle == "0"){
+        // //     dom.setAttribute("style","width:100%; height:100%");
+        // // }
 
     } else {
         orientation = "portrait";
 
-        if (angle == "90" || angle == "270") {
-            // old width/old height = new width / new height
-            // thus new width = old width / old height * new height
-            newwidth = (dom.width / dom.height) * domparent.clientWidth;
-            dom.setAttribute("style", "height:" + domparent.clientWidth + "px; max-width:" + newwidth + "px;");
-        }
-        // if(angle =="180" || angle == "0"){
-        //     dom.setAttribute("style","width:100%; height:100%");
+        // if (angle == "90" || angle == "270") {
+        //     // old width/old height = new width / new height
+        //     // thus new width = old width / old height * new height
+        //     newwidth = (dom.width / dom.height) * domparent.clientWidth;
+        //     dom.setAttribute("style", "height:" + domparent.clientWidth + "px; max-width:" + newwidth + "px;");
         // }
+        // // if(angle =="180" || angle == "0"){
+        // //     dom.setAttribute("style","width:100%; height:100%");
+        // // }
 
     }
 
@@ -1019,6 +1019,7 @@ function createFileListingBox(peerinfo, parent) {
         var fileListingBox = document.createElement("div");
 
         if (fileshareobj.props.fileList == "single") {
+
             fileListingBox.className = "col-sm-12 filesharing-box";
         } else {
             fileListingBox.className = "col-sm-6 filesharing-box";
@@ -1178,11 +1179,11 @@ function closeFV(userid, buttonId, selectedFileSharingBox) {
 function resizeFV(userid, buttonId, selectedFileSharingBox) {
     for (x in webcallpeers) {
         if (webcallpeers[x].fileShare.outerbox == selectedFileSharingBox) {
-            showelem(selectedFileSharingBox)
-            getElementById(selectedFileSharingBox).style.width = "50%";
+            showelem(selectedFileSharingBox);
+            selectedFileSharingBox.className = "col-md-6 fileviewing-box";
         } else {
-            showelem(webcallpeers[x].fileShare.outerbox)
-            getElementById(webcallpeers[x].fileShare.outerbox).style.width = "50%";
+            showelem(webcallpeers[x].fileShare.outerbox);
+            webcallpeers[x].fileShare.outerbox.className = "col-md-6 fileviewing-box";
         }
     }
     /*syncButton(buttonId);*/
