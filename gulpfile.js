@@ -63,33 +63,11 @@ gulp.task('vendorjs', function (done) {
     gulp.src(list)
         .pipe(rev({strict: true}))
         .pipe(header(headerComment))
-        .pipe(uglify())
+        // .pipe(uglify())
         .pipe(concat('webrtcdevelopment_header.js'))
         .pipe(gulp.dest(folderPath));
     done();
-
-    // remoteSrc(vendorJsList, {base: null})
-    //     .pipe(rev({strict: true}))
-    //     .pipe(header(headerComment))
-    //     .pipe(uglify())
-    //     .pipe(concat('webrtcdevelopment_header.js'))
-    //     .pipe(gulp.dest(folderPath));
-    // done();
 });
-
-// gulp.task('screensharejs',function(done) {
-//     console.log(" gulping screensharing  ");
-//     list=[ 
-//         "client/build/scripts/screensharing.js",
-//     ]; 
-//     console.log(list);
-//     gulp.src(list)
-//         .pipe(rev({strict: true}) )
-//         .pipe(uglify())
-//         .pipe(concat('webrtcdevelopment_screenshare.js'))  
-//         .pipe(gulp.dest(folderPath+'minScripts/')); 
-//     done();
-// });
 
 /*gulp.task('adminjs',function() {
     console.log(" gulping admin script  ");
@@ -192,7 +170,7 @@ var scriptList = [
     "client/src/scripts/_logger.js",
 
     // --------------------- helper libs
-    // "client/src/helperlibs/html2canvas.js",
+    "client/src/helperlibs/html2canvas.js",
     "client/src/scripts/head.js",
     "client/src/scripts/globals.js",
     "client/src/scripts/_init.js",
@@ -253,44 +231,19 @@ gulp.task('betawebrtcdevelopmentjs', function (done) {
         .pipe(replace(/"use strict"/g, ''))
         .pipe(gulp.dest(folderPath));
     done();
-
 });
 
 // .pipe( rev({strict: true}) )
 gulp.task('webrtcdevelopmentjs', function (done) {
     console.log(" gulping main webrtc development scripts ");
-    scriptList.push("client/src/scripts/admin.js");
+    // scriptList.push("client/src/scripts/admin.js");
     console.log(scriptList);
 
     return pipeline(gulp.src(scriptList, {allowEmpty: true}),
-        // iife(),
         replace(/use strict/g, ''),
         header(headerComment),
         concat('webrtcdevelopment.js'),
         gulp.dest(folderPath),
-        // babel({
-        //     "presets": [["minify", {
-        //         "mangle": {
-        //             "exclude": ["MyCustomError"]
-        //         },
-        //        /* "unsafe": {
-        //             "typeConstructors": false
-        //         },*/
-        //         "keepFnName": true
-        //     }]]
-        //     // "plugins": ["transform-es2015-arrow-functions"]
-        //     // plugins: [
-        //     //     {strictMode: false}
-        //     // ]
-        //     // "plugins": ["@babel/plugin-transform-arrow-functions"],
-        //     // "compact": false
-        //     // "presets": ["es2015", {"modules": false}]
-        //     // "env": {
-        //     //     "production": {
-        //     //         "presets": ["minify"]
-        //     //     }
-        //     // }
-        // }),
         uglify({
             mangle: {
                 keepClassName: true
@@ -311,32 +264,6 @@ gulp.task('webrtcdevelopmentjs', function (done) {
     done();
 });
 
-// gulp.task('webrtcdevelopmentjs_uglify', function () {
-//     return pipeline(
-//         gulp.src(folderPath + "webrtcdevelopment.js"),
-//         babel({
-//             "plugins": ["@babel/plugin-transform-arrow-functions"]
-//             // presets: ['@babel/env']
-//             // sourceMap: false
-//         }),
-//         uglify(),
-//         gulp.dest('webrtcdevelopment_min.js')
-//     );
-// });
-
-// gulp.task('webrtcdevelopmentjs_uglify', function (done) {
-//     console.log("minifying webrtc development script ");
-//     gulp.src(folderPath + "webrtcdevelopment.js")
-//         .pipe(babel({
-//             "plugins": ["@babel/plugin-transform-arrow-functions"]
-//         }))
-//         .pipe(uglify())
-//         .pipe(gulp.dest(folderPath))
-//         .pipe(concat('webrtcdevelopment_min.js'));
-//     done();
-// });
-
-
 gulp.task('mainstyle', function (done) {
     console.log(" gulping main stylesheets css  ");
     cssList = [
@@ -352,11 +279,6 @@ gulp.task('mainstyle', function (done) {
     ];
     console.log(cssList);
     // remoteSrc(cssList, {base: null})
-    //     .pipe(rev({strict: true}))
-    //     .pipe(header(headerComment))
-    //     .pipe(concat('webrtcdevelopment_header.css'))
-    //     .pipe(gulp.dest(folderPath));
-    // done();
     gulp.src(cssList)
         .pipe(rev({strict: true}))
         .pipe(header(headerComment))
