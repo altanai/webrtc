@@ -56,7 +56,7 @@ async function getVideoPermission() {
     // });
     let stream = null;
     try {
-        stream = await navigator.mediaDevices.getUserMedia({audio: false, video: true})
+        stream = await navigator.mediaDevices.getUserMedia({audio: false, video: true});
         if (stream.getVideoTracks().length > 0) {
             //code for when none of the devices are available
             webrtcdev.log("--------------------------------- Video Permission obtained ");
@@ -74,7 +74,7 @@ async function getVideoPermission() {
 async function getAudioPermission() {
     let stream = null;
     try {
-        stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false})
+        stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
         if (stream.getAudioTracks().length > 0) {
             //code for when none of the devices are available
             webrtcdev.log("--------------------------------- Audio Permission obtained ");
@@ -100,7 +100,7 @@ async function getAudioPermission() {
  */
 function getCamMedia(rtcConn) {
     rtcConn.dontAttachStream = false,
-    rtcConn.dontGetRemoteStream = false;
+        rtcConn.dontGetRemoteStream = false;
 
     webrtcdev.log(" [startJS] getCamMedia  role :", role);
 
@@ -182,7 +182,7 @@ function transitionToWaiting() {
  */
 function attachMediaStream(remvid, stream) {
     try {
-        let element = "";
+        var element = "";
         webrtcdev.log("[ Mediacontrol - attachMediaStream ] element ", remvid);
         if ((document.getElementsByName(remvid)).length > 0) {
             element = document.getElementsByName(remvid)[0];
@@ -196,16 +196,7 @@ function attachMediaStream(remvid, stream) {
 
         webrtcdev.log("[ Mediacontrol - attachMediaStream ] stream ", stream);
         if (stream) {
-            // if (typeof element.src == 'string') {
-            //    element.src = URL.createObjectURL(stream);
-            // }else if (typeof element.srcObject == 'object') {
-            //     element.srcObject = stream;
-            // }else{
-            //    webrtcdev.log('Error attaching stream to element.' , element , stream);
-            // }
             element.srcObject = stream;
-            element.play();
-            webrtcdev.log("[ Mediacontrol - attachMediaStream ] Media Stream attached to ", element, " successfully");
         } else {
             if ('srcObject' in element) {
                 element.srcObject = null;

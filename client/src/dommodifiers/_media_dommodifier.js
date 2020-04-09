@@ -2,23 +2,40 @@
  video handling
  *********************************************************/
 
+/*Create a video contaioner and attach it to remote obj */
 function appendVideo(e, style) {
     createVideoContainer(e, style, function (div) {
-        var video = document.createElement('video');
+        let video = document.createElement('video');
         video.className = style;
-        video.setAttribute('style', 'height:auto;opacity:1;');
+        // video.setAttribute('style', 'height:auto;opacity:1;');
         video.controls = false;
         video.id = e.userid;
         video.src = URL.createObjectURL(e.stream);
-        viden.hidden = false;
-        var remote = document.getElementById('remote');
+
+        let remote = document.getElementById('remote');
         div.appendChild(video);
+
         video.play();
+        // Show loading animation.
+        // let playPromise = video.play();
+        // if (playPromise !== undefined) {
+        //     playPromise.then(_ => {
+        //         // Automatic playback started!
+        //         // Show playing UI.
+        //         webrtcdev.log('[media dom modifier] appendVideo - Successfully attached stream to element.', video);
+        //     })
+        //         .catch(error => {
+        //             // Auto-play was prevented
+        //             // Show paused UI.
+        //             webrtcdev.error('[media dom modifier] appendVideo - Error attaching stream to element.', video, error);
+        //         });
+        // }
     });
 }
 
+//*create empty container */
 function createVideoContainer(e, style, callback) {
-    var div = document.createElement('div');
+    let div = document.createElement('div');
     div.setAttribute('style', style || 'float:left;opacity: 1;width: 32%;');
     remote.insertBefore(div, remote.firstChild);
     if (callback) callback(div);
@@ -29,7 +46,7 @@ function createVideoContainer(e, style, callback) {
  *********************************************************/
 
 /**
- * function to attach control bar to video for minmax , record etc
+ * function to attach control bar to video for minmax , record  , snapshot , cursor , mute/unmute etc
  * @method
  * @name attachControlButtons
  * @param {dom} vid
@@ -37,19 +54,22 @@ function createVideoContainer(e, style, callback) {
  */
 function attachControlButtons(vid, peerinfo) {
 
-    var stream = peerinfo.stream;
-    var streamid = peerinfo.streamid;
-    var controlBarName = peerinfo.controlBarName;
-    var snapshotViewer = peerinfo.fileSharingContainer;
+    const stream = peerinfo.stream;
+    const streamid = peerinfo.streamid;
+    const controlBarName = peerinfo.controlBarName;
+    const snapshotViewer = peerinfo.fileSharingContainer;
 
-    //Preventing multiple control bars
-    var c = vid.parentNode.childNodes;
-    for (i = 0; i < c.length; i++) {
-        //webrtcdev.log("ChildNode of video Parent " , c[i]);
-        if (c[i].nodeName == "DIV" && c[i].id != undefined) {
-            if (c[i].id.indexOf("control") > -1) {
-                webrtcdev.log("control bar exists already  , delete the previous one before adding new one");
-                vid.parentNode.removeChild(c[i]);
+    // Preventing multiple control bars
+    var p = vid.parentNode;
+    webrtcdev.log(" ====== attachControlButtons parent Node of video  ", p);
+    if (p) {
+        let c = p.childNodes;
+        for (i = 0; i < c.length; i++) {
+            if (c[i].nodeName == "DIV" && c[i].id != undefined) {
+                if (c[i].id.indexOf("control") > -1) {
+                    webrtcdev.warn("[media dom modifier] control bar exists already, delete the previous one , before adding new one", c[i]);
+                    p.removeChild(c[i]);
+                }
             }
         }
     }
@@ -105,8 +125,7 @@ function attachControlButtons(vid, peerinfo) {
         }
     }
 
-    vid.parentNode.appendChild(controlBar);
-    return;
+    p.appendChild(controlBar);
 }
 
 /**
@@ -130,7 +149,7 @@ function createFullScreenButton(controlBarName, peerinfo, streamid, stream) {
 
     button.onclick = function () {
         if (button.className == minmaxobj.max.button.class_off) {
-            var vid = document.getElementById(peerinfo.videoContainer);
+            let vid = document.getElementById(peerinfo.videoContainer);
             vid.webkitRequestFullScreen();
             button.className = minmaxobj.max.button.class_on;
             button.innerHTML = minmaxobj.max.button.html_on;
@@ -152,7 +171,7 @@ function createFullScreenButton(controlBarName, peerinfo, streamid, stream) {
  * @return {dom} button
  */
 function createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream) {
-    let button = document.createElement("span");
+    var button = document.createElement("span");
     button.id = controlBarName + "minmizevideoButton";
     button.setAttribute("title", "Minimize Video");
     button.className = minmaxobj.min.button.class_off;
@@ -160,12 +179,10 @@ function createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream) {
     var vid = document.getElementById(peerinfo.videoContainer);
     button.onclick = function () {
         if (button.className == minmaxobj.min.button.class_off) {
-            // vid.hidden = true;
             hideelem(vid);
             button.className = minmaxobj.min.button.class_on;
             button.innerHTML = minmaxobj.min.button.html_on;
         } else {
-            // vid.hidden = false;
             showelem(vid);
             button.className = minmaxobj.min.button.class_off;
             button.innerHTML = minmaxobj.min.button.html_off;

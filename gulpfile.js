@@ -6,8 +6,8 @@ const minify = require('gulp-minify-css');
 const replace = require('gulp-replace');
 const less = require('gulp-less');
 
-const iife = require("gulp-iife");
-const babel = require('gulp-babel');
+// const iife = require("gulp-iife");
+// const babel = require('gulp-babel');
 const exec = require('child_process').exec;
 var remoteSrc = require('gulp-remote-src');
 var rev = require('gulp-rev-timestamp');

@@ -62,14 +62,13 @@ function updateWebCallView(peerinfo) {
             if (peerinfo.vid.indexOf("videolocal") > -1) {
 
                 // when video is local
-                webrtcdev.info(" [start.js - updateWebCallView] role-participant , peerinfo Vid is Local");
+                webrtcdev.info("[webcallviewdevmanager] - role-participant , peerinfo Vid is Local");
 
                 if (localVideo && document.getElementsByName(localVideo)[0]) {
                     let vid = document.getElementsByName(localVideo)[0];
                     vid.muted = true;
                     vid.className = localobj.videoClass;
                     attachMediaStream(vid, peerinfo.stream);
-
                     // if(localobj.userDisplay && peerInfo.name)
                     //     attachUserDetails( vid, peerInfo );
 
@@ -79,29 +78,29 @@ function updateWebCallView(peerinfo) {
                     if (localobj.userMetaDisplay && peerinfo.userid)
                         attachMetaUserDetails(vid, peerinfo);
 
-                    webrtcdev.info(" User is alone in the session  , hiding remote video container",
+                    webrtcdev.info("[webcallviewdevmanager] User is alone in the session  , hiding remote video container",
                         "showing users single video container and attaching attachMediaStream and attachUserDetails ");
 
                 } else {
                     //alert(" Please Add a video container in config for single");
-                    webrtcdev.error(" No local video container in localobj -> ", localobj);
+                    webrtcdev.error("[webcallviewdevmanager] No local video container in localobj -> ", localobj);
                 }
 
             } else if (peerinfo.vid.indexOf("videoremote") > -1) {
 
                 //when video is remote
-                webrtcdev.info(" [start.js - updateWebCallView] role-participant , peerinfo Vid is Remote");
+                webrtcdev.info("[webcallviewdevmanager] updateWebCallView-  role-", peerinfo.role, " peerinfo Vid type - ", peerinfo.type);
 
                 // handling local video transition to active
                 if (outgoingVideo && localVideo && selfVideo) {
                     /*chk if local video is added to conf , else adding local video to index 0 */
                     //localvid : video container before p2p session
-                    var localvid = document.getElementsByName(localVideo)[0];
+                    const localvid = document.getElementsByName(localVideo)[0];
                     // selfvid : local video in a p2p session
-                    var selfvid = document.getElementsByName(selfVideo)[0];
+                    const selfvid = document.getElementsByName(selfVideo)[0];
 
                     if (selfvid.played.length == 0) {
-                        if (localvid.played.lebth > 0) {
+                        if (localvid.played.length > 0) {
                             reattachMediaStream(selfvid, localvid);
                         } else {
                             attachMediaStream(selfvid, webcallpeers[0].stream);
@@ -121,17 +120,17 @@ function updateWebCallView(peerinfo) {
                         attachControlButtons(selfvid, webcallpeers[0]);
 
                     } else {
-                        webrtcdev.log(" not updating self video as it is already playing ");
+                        webrtcdev.log("[webcallviewdevmanager] updateWebCallView- not updating self video as it is already playing ");
                     }
 
-                    webrtcdev.info(" User is joined by a remote peer , hiding local video container",
+                    webrtcdev.info("[webcallviewdevmanager] updateWebCallView - User is joined by a remote peer , hiding local video container",
                         "showing users conf video container and attaching attachMediaStream and attachUserDetails ");
 
                 } else if (!outgoingVideo) {
-                    webrtcdev.error(" Outgoing Local video is ", outgoingVideo);
+                    webrtcdev.error("[webcallviewdevmanager] updateWebCallView - Outgoing Local video is ", outgoingVideo);
                 } else {
                     //alert(" Please Add a video container in config for video call ");
-                    webrtcdev.error(" Local video container not defined ");
+                    webrtcdev.error("[webcallviewdevmanager] updateWebCallView - Local video container not defined ");
                 }
 
                 // handling remote video addition
@@ -142,8 +141,10 @@ function updateWebCallView(peerinfo) {
                     updateRemoteVideos(peerinfo, remoteVideos, emptyvideoindex);
 
                     attachMediaStream(remoteVideos[emptyvideoindex], peerinfo.stream);
-                    //if(remoteVideos[vi].video.hidden) remoteVideos[vi].video.hidden = false;
-                    if(remoteVideos[emptyvideoindex]){
+
+                    webrtcdev.info('[ webcallviewdevmanager ] updateWebCallView - Done attaching stream to element');
+
+                    if (remoteVideos[emptyvideoindex]) {
                         showelem(remoteVideos[emptyvideoindex].video);
 
                         if (remoteobj.userDisplay && peerinfo.name) {
@@ -160,19 +161,20 @@ function updateWebCallView(peerinfo) {
                     }
 
                 } else {
+                    webrtcdev.error("[webcallviewdevmanager] updateWebCallView - remote Video containers not defined ");
                     alert("remote Video containers not defined");
                 }
 
             } else {
-                webrtcdev.error("[webcallviewdevmanager]  PeerInfo vid didnt match either case ");
+                webrtcdev.error("[webcallviewdevmanager] updateWebCallView-  PeerInfo vid didnt match either case ");
             }
             break;
 
         default:
-            webrtcdev.log("[start.js - updateWebCallView] Switch default case");
+            webrtcdev.warn("[webcallviewdevmanager] updateWebCallView -  Switch default case");
     }
 
-    webrtcdev.log(" [start.js - updateWebCallView] - finish");
+    webrtcdev.log("[webcallviewdevmanager] updateWebCallView - finish");
 }
 
 
@@ -212,7 +214,7 @@ function destroyWebCallView(peerInfo, callback) {
  * @param {int} emptyvideoindex
  */
 function updateRemoteVideos(peerinfo, remoteVideos, emptyvideoindex) {
-    webrtcdev.log("[webcallviewmanager updateRemoteVideos ] emptyvideoindex - ", emptyvideoindex);
+    webrtcdev.log("[webcallviewmanager ] updateRemoteVideos - emptyvideoindex - ", emptyvideoindex);
 
     if (!emptyvideoindex) return;
 
@@ -220,7 +222,7 @@ function updateRemoteVideos(peerinfo, remoteVideos, emptyvideoindex) {
 
         if (remoteobj.maxAllowed == "unlimited") {
             // unlimitted video can be added dynamically
-            webrtcdev.log("[webcallviewmanager updateRemoteVideos ] remote video is unlimited , creating video for remoteVideos array ");
+            webrtcdev.log("[webcallviewmanager ] updateRemoteVideos - remote video is unlimited , creating video for remoteVideos array ");
             let video = document.createElement('video');
             //  added  new video element to remoteVideos at current index
             remoteVideos[emptyvideoindex] = {
@@ -232,10 +234,10 @@ function updateRemoteVideos(peerinfo, remoteVideos, emptyvideoindex) {
 
         } else {
 
-            webrtcdev.log("[webcallviewmanager updateRemoteVideos ] Remote video is limited to size maxAllowed , current index ", emptyvideoindex);
+            webrtcdev.log("[webcallviewmanager ]updateRemoteVideos - Remote video is limited to size maxAllowed , current index ", emptyvideoindex);
             //remote video is limited to size maxAllowed
             let remVideoHolder = document.getElementsByName(remoteVideos[emptyvideoindex]);
-            webrtcdev.log("[webcallviewmanager updateRemoteVideos ] searching for video with index ", emptyvideoindex, " in remote video : ", remVideoHolder);
+            webrtcdev.log("[webcallviewmanager] updateRemoteVideos - searching for video with index ", emptyvideoindex, " in remote video : ", remVideoHolder);
             if (remVideoHolder.length >= 0) {
                 if (remVideoHolder[0]) {
                     // since remvideo holder exist at current index , add video element to remoteVideos
@@ -244,7 +246,7 @@ function updateRemoteVideos(peerinfo, remoteVideos, emptyvideoindex) {
                         "stream": peerinfo.stream,
                         "video": remVideoHolder[0]
                     };
-                    webrtcdev.log("[webcallviewmanager updateRemoteVideos ] RemoteVideos[" + emptyvideoindex + "] updated ", remoteVideos[emptyvideoindex], peerinfo.stream);
+                    webrtcdev.log("[webcallviewmanager] updateRemoteVideos - RemoteVideos[" + emptyvideoindex + "] updated ", remoteVideos[emptyvideoindex], peerinfo.stream);
                 }
 
             } else if (remoteVideos[emptyvideoindex].userid == peerinfo.userid && remoteVideos[emptyvideoindex].stream == "") {
@@ -253,20 +255,20 @@ function updateRemoteVideos(peerinfo, remoteVideos, emptyvideoindex) {
                 remoteVideos[emptyvideoindex].stream = peerinfo.stream;
 
             } else {
-                webrtcdev.warn("[webcallviewmanager updateRemoteVideos] since remvideo holder doesnt exist just overwrite the last remote with the video ");
+                webrtcdev.warn("[webcallviewmanager] updateRemoteVideos - since remvideo holder doesnt exist just overwrite the last remote with the video ");
                 // since remvideo holder doesnt exist just overwrite the last remote with the video
                 remoteVideos[remoteVideos.length - 1] = {
                     "userid": peerinfo.userid,
                     "stream": peerinfo.stream,
                     "video": remVideoHolder[0]
                 };
-                webrtcdev.log("[webcallviewmanager updateRemoteVideos ] RemoteVideos[" + remoteVideos.length - 1 + "] updated ", remoteVideos[emptyvideoindex]);
+                webrtcdev.log("[webcallviewmanager ] updateRemoteVideos - RemoteVideos[" + remoteVideos.length - 1 + "] updated ", remoteVideos[emptyvideoindex]);
             }
         }
     } catch (err) {
         webrtcdev.error(err);
     }
-    webrtcdev.log("[webcallviewmanager updateRemoteVideos ] remoteVideos before updating ", remoteVideos[emptyvideoindex])
+    webrtcdev.log("[webcallviewmanager ] updateRemoteVideos - remoteVideos before updating ", remoteVideos[emptyvideoindex])
 
 }
 
@@ -313,7 +315,7 @@ function findEmptyRemoteVideoIndex(peerinfo, remoteVideos) {
             vids = remoteVideos[v].video;
         }
 
-        console.log(" [webcallviewdevmanager] ] vids.src ", vids.src,
+        console.log("[webcallviewdevmanager] ] vids.src ", vids.src,
             " , vids.srcObject ", vids.srcObject,
             " , vids.readyState ", vids.readyState,
             " , vids.played.length ", vids.played.length);
@@ -333,7 +335,7 @@ function findEmptyRemoteVideoIndex(peerinfo, remoteVideos) {
             emptyvideoindex = v;
             break;
         } else {
-            webrtcdev.warn("[webcallviewdevmanager] Not sure whats up with the video ", vids, " move to next iteration")
+            webrtcdev.warn("[webcallviewdevmanager] Not sure whats up with the video ", vids, " move to next iteration");
             emptyvideoindex++;
         }
     }
