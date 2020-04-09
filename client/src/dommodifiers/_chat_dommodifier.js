@@ -1,4 +1,3 @@
-
 /*
  * creates chat button DOM
  * @method
@@ -15,7 +14,7 @@ function createChatButton(obj) {
             button.className = chatobj.button.class_on;
             button.innerHTML = chatobj.button.html_on;
         } else if (button.className == chatobj.button.class_on) {
-            showelem(chatobj.container.id)
+            showelem(chatobj.container.id);
             button.className = chatobj.button.class_off;
             button.innerHTML = chatobj.button.html_off;
         }
@@ -50,7 +49,7 @@ function createChatButton(obj) {
  */
 function createChatBox(obj) {
 
-    var mainInputBox = document.createElement("div");
+    let mainInputBox = document.createElement("div");
 
     let chatInput = document.createElement("input");
     chatInput.setAttribute("type", "text");
@@ -95,7 +94,7 @@ function createChatBox(obj) {
  * @name assignChatBox
  * @param {json} chat widget object
  */
-function assignChatBox(obj) {
+function assignChatBox(chatobj) {
 
     var chatInput = document.getElementById(chatobj.inputBox.text_id);
     chatInput.onkeypress = function (e) {
@@ -108,9 +107,8 @@ function assignChatBox(obj) {
     };
 
     if (document.getElementById(chatobj.inputBox.sendbutton_id)) {
-        var chatButton = document.getElementById(chatobj.inputBox.sendbutton_id);
+        let chatButton = document.getElementById(chatobj.inputBox.sendbutton_id);
         chatButton.onclick = function (e) {
-
             var peerinfo = findPeerInfo(selfuserid);
             var chatInput = document.getElementById(chatobj.inputBox.text_id);
             sendChatMessage(chatInput.value, peerinfo);

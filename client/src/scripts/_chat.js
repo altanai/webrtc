@@ -2,7 +2,9 @@
 /*.                        Chat JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 
-/* 
+var chatcounter = 0;
+
+/*
  * Sends chat messages
  * @method
  * @name sendChatMessage
@@ -78,21 +80,25 @@ function addNewMessage(e) {
  */
 function addMessageSnapshotFormat(messageDivclass, userinfo, message, parent) {
     var n = document.createElement("div");
-    n.className = messageDivclass;
+    n.className = messageDivclass + " chat-msg-" + chatcounter;
     webrtcdev.log("addNewMessagelocal", userinfo);
 
     takeSnapshot(userinfo, function (datasnapshot) {
-        var image = document.createElement("img");
+
+        let image = document.createElement("img");
         image.src = datasnapshot;
         image.setAttribute("style", "border-radius: 50%;height:40px");
 
-        var t = document.createElement("span");
-        t.className = "cm-msg-text";
+        let span = document.createElement("span");
+        span.className = "msg-avatar";
+        span.appendChild(image);
+
+        let t = document.createElement("span");
+        t.className = "cm-msg-text ";
         t.innerHTML = replaceURLWithHTMLLinks(message);
 
-        n.appendChild(image);
+        n.appendChild(span);
         n.appendChild(t);
-        //n.innerHTML = image +" : "+ replaceURLWithHTMLLinks(message);
         // displayFile(peerinfo.uuid , peerinfo, datasnapshot , snapshotname, "imagesnapshot");
     });
 
