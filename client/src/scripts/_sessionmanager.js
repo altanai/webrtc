@@ -95,15 +95,14 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
                             webrtcdev.log(" [sessionmanager] offer/answer webrtc ", selfuserid, " with role ", role);
                         });
                     resolve("ok");
-                }).then(function (res) {
-                    updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local"),
-                        webrtcdev.log(" [sessionmanager] updated local peerinfo for open-channel ");
-                }).catch((reason) => {
+                }).then(
+                    updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local")
+                ).then(
+                    getCamMedia(rtcConn)
+                ).catch((reason) => {
                     webrtcdev.error(' [sessionmanager] Handle rejected promise (' + reason + ')');
                 });
 
-                getCamMedia(rtcConn);
-                webrtcdev.log(" [sessionmanager] open-channel-resp -  done cam media ");
             } else {
                 // signaller doesnt allow channel open
                 alert("Could not open this channel, Server refused");
@@ -146,14 +145,12 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
                     webrtcdev.info(" [sessionmanager] offer/answer webrtc  ", selfuserid, " with role ", role)
                 ).then(
                     // for a new joiner , update his local info 
-                    updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local"),
-                    webrtcdev.log(" [sessionmanager] updated local peerinfo for join-channel ")
+                    updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local")
+                ).then(
+                    getCamMedia(rtcConn)
                 ).catch((reason) => {
                     webrtcdev.error('Handle rejected promise (' + reason + ')');
                 });
-
-                getCamMedia(rtcConn),
-                    webrtcdev.log(" [sessionmanager] join-channel-resp -  done cam media ");
 
                 if (event.message)
                     shownotification(event.msgtype + " : " + event.message);

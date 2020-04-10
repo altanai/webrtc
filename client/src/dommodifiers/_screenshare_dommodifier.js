@@ -90,11 +90,9 @@ function removeScreenViewButton() {
  * @param {json} screenshareobject
  */
 function createOrAssignScreenshareButton(screenshareobj) {
-    webrtcdev.log("createOrAssignScreenshareButton ", screenshareobj);
+    webrtcdev.log("[screenshare dommodifier] createOrAssignScreenshareButton ", screenshareobj);
     if (screenshareobj.button.shareButton.id && getElementById(screenshareobj.button.shareButton.id)) {
         assignScreenShareButton(screenshareobj.button.shareButton);
-        hideScreenInstallButton();
-        showScreenShareButton();
     } else {
         createScreenShareButton();
     }
@@ -105,7 +103,8 @@ function createOrAssignScreenshareButton(screenshareobj) {
  * @method
  * @name createScreenshareButton
  */
-function createScreenshareButton(screenshareobj) {
+function createScreenShareButton(screenshareobj) {
+    webrtcdev.log("[screenshare dommodifier] create ScreenshareButton ", screenshareobj);
     screenShareButton = document.createElement("span");
     screenShareButton.className = screenshareobj.button.shareButton.class_off;
     screenShareButton.innerHTML = screenshareobj.button.shareButton.html_off;

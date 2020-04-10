@@ -9,7 +9,7 @@
  * @param {string} autoload
  * @return {string}sessionid
  */
-this.makesessionid = function (autoload, callback) {
+this.makesessionid = function (autoload) {
     if (autoload && !location.hash.replace('#', '').length) {
         // When Session should autogenerate ssid and locationbar doesnt have a session name
         location.href = location.href.split('#')[0] + '#' + (Math.random() * 100).toString().replace('.', '');
@@ -21,10 +21,10 @@ this.makesessionid = function (autoload, callback) {
         } else {
             sessionid = location.hash.replace(/\/|:|#|\?|\$|\^|%|\.|`|~|!|\+|@|\[|\||]|\|*. /g, '').split('\n').join('').split('\r').join('');
         }
-        callback(sessionid);
+        return sessionid;
     } else {
         sessionid = prompt("Enter session ", "");
-        callback(sessionid);
+        return sessionid;
     }
 };
 
@@ -156,8 +156,115 @@ function loadScript(src, onload) {
 }
 
 
-/*-----------------------------------------------------------------------------------*/
+/**********************************
+ Detect Webcam
+ **********************************/
 
+/**
+ * Detect if webcam is accesible by browser
+ * @method
+ * @name detectWebcam
+ * @param {function} callback
+ */
+function detectWebcam(callback) {
+    let md = navigator.mediaDevices;
+    webrtcdev.log(" detectwebcam ", md);
+
+    if (!md || !md.enumerateDevices)
+        callback(false);
+
+    md.enumerateDevices().then(devices => {
+        callback(devices.some(device => 'videoinput' === device.kind));
+    });
+}
+
+/**
+ * Detect if Mic is accesible by browser
+ * @method
+ * @name detectMic
+ * @param {function} callback
+ */
+function detectMic(callback) {
+    let md = navigator.mediaDevices;
+    if (!md || !md.enumerateDevices)
+        callback(false);
+
+    md.enumerateDevices().then(devices => {
+        callback(devices.some(device => 'audioinput' === device.kind));
+    });
+}
+
+
+function getConnectedDevices(type, callback) {
+    navigator.mediaDevices.enumerateDevices()
+        .then(devices => {
+            const filtered = devices.filter(device => device.kind === type);
+            callback(filtered);
+        });
+}
+
+function listDevices() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+        webrtcdev.warn("enumerateDevices() not supported.");
+        return;
+    }
+    //List cameras and microphones.
+    navigator.mediaDevices.enumerateDevices()
+        .then(function (devices) {
+            devices.forEach(function (device) {
+                webrtcdev.log("[sessionmanager] checkDevices ", device.kind, ": ", device.label, " id = ", device.deviceId);
+            });
+        })
+        .catch(function (err) {
+            webrtcdev.error('[sessionmanager] checkDevices ', err.name, ": ", err.message);
+        });
+}
+
+
+async function getVideoPermission() {
+    // navigator.getUserMedia({ audio: false, video: true}, function(){
+    //     outgoingVideo = false;
+    // }, function(){
+    //  outgoingVideo = false;
+    // });
+    let stream = null;
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({audio: false, video: true});
+        if (stream.getVideoTracks().length > 0) {
+            //code for when none of the devices are available
+            webrtcdev.log("--------------------------------- Video Permission obtained ");
+            outgoingVideo = true;
+            return;
+        }
+    } catch (err) {
+        webrtcdev.error(err.name + ": " + err.message);
+    }
+    outgoingVideo = false;
+
+}
+
+
+async function getAudioPermission() {
+    let stream = null;
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
+        if (stream.getAudioTracks().length > 0) {
+            //code for when none of the devices are available
+            webrtcdev.log("--------------------------------- Audio Permission obtained ");
+            outgoingAudio = true;
+            return;
+        }
+    } catch (err) {
+        webrtcdev.error(err.name + ": " + err.message);
+    }
+    outgoingAudio = false;
+
+}
+
+
+this.issafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+/*-----------------------------------------------------------------------------------*/
 
 /**
  * Assigns session varables, ICE gateways and widgets
@@ -170,36 +277,24 @@ function loadScript(src, onload) {
  * @param {json} widgets - widgets object.
  */
 this.setsession = function (_localobj, _remoteobj, incoming, outgoing, session, widgets) {
-    //try{
+
     this.sessionid = sessionid = session.sessionid;
     socketAddr = session.socketAddr;
     localobj = _localobj;
     remoteobj = _remoteobj;
-    webrtcdev.log("[startjs] WebRTCdev Session - ", session);
-    // }catch(e){
-    //     webrtcdev.error(e);
-    //     alert(" Session object doesnt have all parameters ");
-    // }
 
     turn = (session.hasOwnProperty('turn') ? session.turn : null);
-    webrtcdev.log("[ startjs] WebRTCdev TURN - ", turn);
     if (turn && turn != "none") {
         if (turn.active && turn.iceServers) {
-            webrtcdev.log("WebRTCdev - Getting preset static ICE servers ", turn.iceServers);
             webrtcdevIceServers = turn.iceServers;
         } else {
-            webrtcdev.info("WebRTCdev - Calling API to fetch dynamic ICE servers ");
             getICEServer();
             // getICEServer( turn.username ,turn.secretkey , turn.domain,
             //                 turn.application , turn.room , turn.secure);                
         }
-    } else {
-        webrtcdev.log("WebRTCdev - TURN not applied ");
     }
 
     if (widgets) {
-
-        webrtcdev.log(" WebRTCdev - widgets  ", widgets);
 
         if (widgets.debug) debug = widgets.debug || false;
 
@@ -241,10 +336,10 @@ this.setsession = function (_localobj, _remoteobj, incoming, outgoing, session, 
     return {
         sessionid: sessionid,
         socketAddr: socketAddr,
+        localobj: localobj,
+        remoteobj: remoteobj,
         turn: turn,
-        widgets: widgets,
-        startwebrtcdev: funcStartWebrtcdev,
-        rtcConn: rtcConn
+        widgets: widgets
     };
 };
 
@@ -253,136 +348,137 @@ this.setsession = function (_localobj, _remoteobj, incoming, outgoing, session, 
  * @method
  * @name funcStartWebrtcdev
  */
-function funcStartWebrtcdev() {
-    console.log(" [initjs] funcStartWebrtcdev - webrtcdev", webrtcdev);
+this.startCall = function (sessionobj) {
 
-    return new Promise(function (resolve, reject) {
-        webrtcdev.log(" [ startJS webrtcdom ] : begin  checkDevices for outgoing and incoming");
-        listDevices();
+    if(!sessionobj){
+        webrtcdev.error("Cannot initiatoe startcall without session object ");
+        return;
+    }
+    webrtcdev.log(" [initjs] startwebrtcdev begin processing ", sessionobj);
 
-        webrtcdev.log(" [ startJS webrtcdom ] : incoming ", incoming);
-        webrtcdev.log(" [ startJS webrtcdom ] : outgoing ", outgoing);
-        if (incoming) {
-            incomingAudio = incoming.audio;
-            incomingVideo = incoming.video;
-            incomingData = incoming.data;
-        }
-        if (outgoing) {
-            outgoingAudio = outgoing.audio;
-            outgoingVideo = outgoing.video;
-            outgoingData = outgoing.data;
-        }
+    webrtcdev.log(" [ initjs  ] : begin  checkDevices for outgoing and incoming");
+    // listDevices();
 
-        if (role != "inspector") {
+    webrtcdev.log(" [ initjs  ] : incoming ", incoming);
+    webrtcdev.log(" [ initjs  ] : outgoing ", outgoing);
 
-            detectWebcam(function (hasWebcam) {
-                console.log('Has Webcam: ' + (hasWebcam ? 'yes' : 'no'));
-                if (!hasWebcam) {
-                    alert(" you dont have access to webcam ");
-                    outgoingVideo = false;
-                }
-                detectMic(function (hasMic) {
-                    console.log('Has Mic: ' + (hasMic ? 'yes' : 'no'));
-                    if (!hasMic) {
-                        alert(" you dont have access to Mic ");
-                        outgoingAudio = false;
-                    }
+    if (incoming) {
+        incomingAudio = incoming.audio;
+        incomingVideo = incoming.video;
+        incomingData = incoming.data;
+    }
+    if (outgoing) {
+        outgoingAudio = outgoing.audio;
+        outgoingVideo = outgoing.video;
+        outgoingData = outgoing.data;
+    }
 
-                    // Try getting permission again and ask your to restart
-                    if (outgoingAudio) getAudioPermission();
-                    if (outgoingVideo) getVideoPermission();
+    webrtcdev.log(" [ initjs  ] : role ", role);
+    if (role != "inspector") {
+        getConnectedDevices('videoinput', cameras => {
+            if (!cameras) {
+                alert(" you dont have access to webcam ");
+                outgoingVideo = false;
+            } else {
+                console.log('Cameras found', cameras);
+            }
+        });
 
-                    setTimeout(function () {
-                        webrtcdev.log(" outgoingAudio ", outgoingAudio, " outgoingVideo ", outgoingVideo);
-                        resolve("done");
-                    }, 2000);
-                });
-            });
+        getConnectedDevices('audioinput', microphones => {
+            if (!microphones) {
+                alert(" you dont have access to microphones ");
+                outgoingAudio = false;
+            } else {
+                console.log('Cameras found', microphones);
+            }
+        });
+    }
+
+    return new Promise((resolve, reject) => {
+
+        webrtcdev.log(" [ initjs ] : sessionid : " + sessionid + " and localStorage  ", localStorage);
+
+        if (localStorage.length >= 1 && localStorage.getItem("channel") != sessionid) {
+            webrtcdev.log("[startjs] Current Session ID " + sessionid + " doesnt match cached channel id " + localStorage.getItem("channel") + "-> clearCaches()");
+            clearCaches();
         } else {
-            resolve("done");
+            webrtcdev.log(" no action taken on localStorage");
         }
 
-    }).then((res) => {
+        webrtcdev.log(" [ initjs ] : localobj ", localobj);
+        webrtcdev.log(" [ initjs ] : remoteobj ", remoteobj);
 
-        webrtcdev.log(" [ startJS webrtcdom ] : sessionid : " + sessionid + " and localStorage  ", localStorage);
+        /* When user is single */
+        localVideo = localobj.video;
 
-        return new Promise(function (resolve, reject) {
-            if (localStorage.length >= 1 && localStorage.getItem("channel") != sessionid) {
-                webrtcdev.log("[startjs] Current Session ID " + sessionid + " doesnt match cached channel id " + localStorage.getItem("channel") + "-> clearCaches()");
-                clearCaches();
-            } else {
-                webrtcdev.log(" no action taken on localStorage");
+        /* when user is in conference */
+        let remotearr = remoteobj.videoarr;
+        /* first video container in remotearr belongs to user */
+        if (outgoingVideo) {
+            selfVideo = remotearr[0];
+        }
+        /* create arr for remote peers videos */
+        if (!remoteobj.dynamicVideos) {
+            for (let x = 1; x < remotearr.length; x++) {
+                remoteVideos.push(remotearr[x]);
             }
-            resolve("done");
-        });
+        }
 
-    }).then((res) => {
+        //* set self global variables  */
+        if (localobj.hasOwnProperty('userdetails')) {
+            let obj = localobj.userdetails;
+            webrtcdev.info("localobj userdetails ", obj);
+            selfusername = obj.username || "LOCAL";
+            selfcolor = obj.usercolor || "";
+            selfemail = obj.useremail || "";
+            role = obj.role || "participant";
+        } else {
+            webrtcdev.warn("localobj has no userdetails ");
+        }
 
-        webrtcdev.log(" [ startJS webrtcdom ] : localobj ", localobj);
-        webrtcdev.log(" [ startJS webrtcdom ] : remoteobj ", remoteobj);
-
-        return new Promise(function (resolve, reject) {
-            /* When user is single */
-            localVideo = localobj.video;
-
-            /* when user is in conference */
-            var remotearr = remoteobj.videoarr;
-            /* first video container in remotearr belongs to user */
-            if (outgoingVideo) {
-                selfVideo = remotearr[0];
-            }
-            /* create arr for remote peers videos */
-            if (!remoteobj.dynamicVideos) {
-                for (let x = 1; x < remotearr.length; x++) {
-                    remoteVideos.push(remotearr[x]);
-                }
-            }
-            resolve("done");
-        });
-    }).then((res) => {
-        return new Promise(function (resolve, reject) {
-
-            if (localobj.hasOwnProperty('userdetails')) {
-                let obj = localobj.userdetails;
-                webrtcdev.info("localobj userdetails ", obj);
-                selfusername = obj.username || "LOCAL";
-                selfcolor = obj.usercolor || "";
-                selfemail = obj.useremail || "";
-                role = obj.role || "participant";
-            } else {
-                webrtcdev.warn("localobj has no userdetails ");
-            }
-            resolve("done");
-        });
-    }).then(() => setRtcConn(sessionid)
-    ).then((result) => setWidgets(rtcConn)
-    ).then((result) => startSocketSession(rtcConn, socketAddr, sessionid)
+        // detectWebcam((hasWebcam) => {
+        //     webrtcdev.log('Has Webcam: ' + (hasWebcam ? 'yes' : 'no'));
+        //     if (!hasWebcam) {
+        //         alert(" you dont have access to webcam ");
+        //         outgoingVideo = false;
+        //     }
+        //     detectMic((hasMic) => {
+        //         webrtcdev.log('Has Mic: ' + (hasMic ? 'yes' : 'no'));
+        //         if (!hasMic) {
+        //             alert(" you dont have access to Mic ");
+        //             outgoingAudio = false;
+        //         }
+        //
+        //         // Try getting permission again and ask your to restart
+        //         if (outgoingAudio) {
+        //             webrtcdev.log(" get permission for audio access ");
+        //             getAudioPermission();
+        //         }
+        //         if (outgoingVideo) {
+        //             webrtcdev.log(" get permission for video Access ");
+        //             getVideoPermission();
+        //         }
+        //
+        //         resolve("done");
+        //     });
+        // });
+        resolve("done");
+    }).then(
+        setRtcConn(sessionid)
+    ).then(
+        setWidgets(rtcConn, sessionobj.widgets)
+    ).then(
+        startSocketSession(rtcConn, socketAddr, sessionid)
     ).catch((err) => {
-        webrtcdev.error(" Promise rejected ", err);
+        webrtcdev.error(" [ initjs ] : Promise rejected ", err);
     });
-}
-
-this.issafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-/**********************************************************************************
- Session call and Updating Peer Info
- ************************************************************************************/
-/**
- * starts a call
- * @method
- * @name startCall
- * @param {json} obj
- */
-this.startCall = function (obj) {
-    webrtcdev.log(" startCall obj", obj);
-    webrtcdev.log(" TURN ", turn);
-    //if(turn=='none'){
-    obj.startwebrtcdev();
-    // }else if(turn!=null){
-    //     repeatInitilization = window.setInterval(obj.startwebrtcdev, 2000);     
-    // }
 
 };
 
+
+/**********************************************************************************
+ Session call and Updating Peer Info
+ ************************************************************************************/
 /**
  * stops a call and removes loalstorage items
  * @method
@@ -402,7 +498,5 @@ this.stopCall = function () {
         localStorage.removeItem("remoteUsers");
 
     this.connectionStatus = "closed";
-
-
 };
 

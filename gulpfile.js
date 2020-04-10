@@ -238,7 +238,6 @@ gulp.task('webrtcdevelopmentjs', function (done) {
     console.log(" gulping main webrtc development scripts ");
     // scriptList.push("client/src/scripts/admin.js");
     console.log(scriptList);
-
     return pipeline(gulp.src(scriptList, {allowEmpty: true}),
         replace(/use strict/g, ''),
         header(headerComment),
@@ -250,14 +249,6 @@ gulp.task('webrtcdevelopmentjs', function (done) {
             }
         }),
         rev(),
-        // iife({
-        //     useStrict: false,
-        //     trimCode: true,
-        //     prependSemicolon: false,
-        //     bindThis: false,
-        //     params: ["window", "document", "$", "undefined"],
-        //     args: ["window", "document", "jQuery"]
-        // }),
         concat('webrtcdevelopment_min.js'),
         gulp.dest(folderPath)
     );
@@ -343,9 +334,6 @@ gulp.task('default', gulp.series(
 
 // onlu gulp webrtcdev js changes 
 gulp.task('develop', gulp.series(
-    // 'vendorjs',
-    // 'drawjs' ,
-    // 'codejs',
     'betawebrtcdevelopmentjs'
 ));
 
@@ -369,5 +357,4 @@ gulp.task('production', gulp.series(
     'webrtcdevelopmentcss',
     'webrtcdevelopmentServer',
     'fonts'
-    // 'webrtcdevelopmentjs_uglify'
 )); 

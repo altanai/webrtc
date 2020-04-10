@@ -47,7 +47,10 @@ function createChatButton(obj) {
  * @name createChatBox
  * @param {json} chat widget object
  */
-function createChatBox(obj) {
+function createChatBox(chatobj) {
+
+    webrtcdev.log("[chat dom modifier] create Chat Box ", chatobj);
+    if(!chatobj) return;
 
     let mainInputBox = document.createElement("div");
 

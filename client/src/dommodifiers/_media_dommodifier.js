@@ -15,6 +15,8 @@ function appendVideo(e, style) {
         let remote = document.getElementById('remote');
         div.appendChild(video);
 
+        webrtcdev.log("[_media_dommodifier ] appendVideo");
+
         video.play();
         // Show loading animation.
         // let playPromise = video.play();

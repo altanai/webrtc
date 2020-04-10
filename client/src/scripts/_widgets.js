@@ -1,17 +1,20 @@
 /**
  * set Widgets.
  */
-var setWidgets = function (rtcConn) {
+var setWidgets = function (rtcConn, widgetsobj) {
+
+    webrtcdev.log(" ------------------ widgetsobj ", widgetsobj, chatobj, screenrecordobj, screenshareobj);
 
     return new Promise(function (resolve, reject) {
 
         // ---------------------------------- Chat Widget --------------------------------------------------
         if (chatobj.active) {
-            if (chatobj.inputBox && chatobj.inputBox.text_id && document.getElementById(chatobj.inputBox.text_id)) {
-                webrtcdev.log("[sessionmanager]Assign chat Box ");
+            webrtcdev.log(" chat objs ", chatobj.inputBox, chatobj.inputBox.text_id, document.getElementById(chatobj.inputBox.text_id));
+            if (chatobj.inputBox && chatobj.inputBox.text_id) {
+                webrtcdev.log("[sessionmanager] chatObj - Assign chat Box ");
                 assignChatBox(chatobj);
             } else {
-                webrtcdev.log("[sessionmanager]Create chat Box ");
+                webrtcdev.log("[sessionmanager] chatobj - Create chat Box ");
                 createChatBox(chatobj);
             }
             webrtcdev.log("[sessionmanager] chat widget loaded ");
@@ -72,7 +75,7 @@ var setWidgets = function (rtcConn) {
             hideelem("cursor1");
             hideelem("cursor2");
             webrtcdev.log(" [sessionmanager] cursor widget not loaded ");
-        }else{
+        } else {
             webrtcdev.warn(" [sessionmanager] cursor widget deactivated ");
         }
 
@@ -227,7 +230,7 @@ var setWidgets = function (rtcConn) {
         // ---------------------------------- Fileshare Widget --------------------------------------------------
         if (fileshareobj.active) {
 
-            webrtcdev.log("[sessionmnagare] fileshareobj "),
+            webrtcdev.log("[sessionmnagare] fileshareobj ", fileshareobj),
                 rtcConn.enableFileSharing = true;
             // rtcConn.filesContainer = document.body || document.documentElement;
             // /*setFileProgressBarHandlers(rtcConn);*/
@@ -245,6 +248,7 @@ var setWidgets = function (rtcConn) {
         // ---------------------------------- stats Widget --------------------------------------------------
         if (statisticsobj && statisticsobj.active) {
             try {
+                webrtcdev.log("[sessionmnagare] statisticsobj ", statisticsobj);
                 document.getElementById(statisticsobj.statsConainer).innerHTML = "";
             } catch (e) {
                 webrtcdev.error("[sessionmanager] statisticsobj statsConainer not found", e);
@@ -254,7 +258,7 @@ var setWidgets = function (rtcConn) {
         // ---------------------------------- Help Widget --------------------------------------------------
         if (helpobj && helpobj.active) {
             try {
-
+                webrtcdev.log("[sessionmnagare] helpobj ", helpobj);
                 document.getElementById(helpobj.helpContainer).innerHTML = "";
             } catch (err) {
                 webrtcdev.error("[sessionmanager] helpobj helpContainer not found", err);

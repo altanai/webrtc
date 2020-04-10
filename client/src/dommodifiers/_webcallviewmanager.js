@@ -66,18 +66,19 @@ function updateWebCallView(peerinfo) {
 
                 if (localVideo && document.getElementsByName(localVideo)[0]) {
                     let vid = document.getElementsByName(localVideo)[0];
-                    vid.muted = true;
-                    vid.className = localobj.videoClass;
-                    attachMediaStream(vid, peerinfo.stream);
-                    // if(localobj.userDisplay && peerInfo.name)
-                    //     attachUserDetails( vid, peerInfo );
+                    attachMediaStream(vid, peerinfo.stream).then(_ => {
+                        webrtcdev.log(' ========================================= [ webcallviewdevmanager ] updateWebCallView - Done attaching .local stream to element');
+                        // if(localobj.userDisplay && peerInfo.name)
+                        //     attachUserDetails( vid, peerInfo );
+                        vid.muted = true;
+                        vid.className = localobj.videoClass;
+                        
+                        if (localobj.userDisplay && peerinfo.name)
+                            attachUserDetails(vid, peerinfo);
 
-                    if (localobj.userDisplay && peerinfo.name)
-                        attachUserDetails(vid, peerinfo);
-
-                    if (localobj.userMetaDisplay && peerinfo.userid)
-                        attachMetaUserDetails(vid, peerinfo);
-
+                        if (localobj.userMetaDisplay && peerinfo.userid)
+                            attachMetaUserDetails(vid, peerinfo);
+                    });
                     webrtcdev.info("[webcallviewdevmanager] User is alone in the session  , hiding remote video container",
                         "showing users single video container and attaching attachMediaStream and attachUserDetails ");
 
@@ -140,25 +141,26 @@ function updateWebCallView(peerinfo) {
 
                     updateRemoteVideos(peerinfo, remoteVideos, emptyvideoindex);
 
-                    attachMediaStream(remoteVideos[emptyvideoindex], peerinfo.stream);
+                    attachMediaStream(remoteVideos[emptyvideoindex], peerinfo.stream)
+                        .then(_ => {
+                            webrtcdev.log(' ========================================= [ webcallviewdevmanager ] updateWebCallView - Done attaching remote stream to element');
 
-                    webrtcdev.info('[ webcallviewdevmanager ] updateWebCallView - Done attaching stream to element');
+                            if (remoteVideos[emptyvideoindex]) {
+                                showelem(remoteVideos[emptyvideoindex].video);
 
-                    if (remoteVideos[emptyvideoindex]) {
-                        showelem(remoteVideos[emptyvideoindex].video);
+                                if (remoteobj.userDisplay && peerinfo.name) {
+                                    attachUserDetails(remoteVideos[emptyvideoindex].video, peerinfo);
+                                }
 
-                        if (remoteobj.userDisplay && peerinfo.name) {
-                            attachUserDetails(remoteVideos[emptyvideoindex].video, peerinfo);
-                        }
+                                if (remoteobj.userMetaDisplay && peerinfo.userid) {
+                                    attachMetaUserDetails(remoteVideos[emptyvideoindex].video, peerInfo);
+                                }
 
-                        if (remoteobj.userMetaDisplay && peerinfo.userid) {
-                            attachMetaUserDetails(remoteVideos[emptyvideoindex].video, peerInfo);
-                        }
-
-                        remoteVideos[emptyvideoindex].video.id = peerinfo.videoContainer;
-                        remoteVideos[emptyvideoindex].video.className = remoteobj.videoClass;
-                        attachControlButtons(remoteVideos[emptyvideoindex].video, peerinfo);
-                    }
+                                remoteVideos[emptyvideoindex].video.id = peerinfo.videoContainer;
+                                remoteVideos[emptyvideoindex].video.className = remoteobj.videoClass;
+                                attachControlButtons(remoteVideos[emptyvideoindex].video, peerinfo);
+                            }
+                        });
 
                 } else {
                     webrtcdev.error("[webcallviewdevmanager] updateWebCallView - remote Video containers not defined ");
