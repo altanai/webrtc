@@ -87,7 +87,7 @@ try {
     // event listener for web workers
     worker = new Worker('js/timekeeper.js');
     worker.addEventListener('message', function (e) {
-        webrtcdev.log("[timerjs] webworker message ", e.data);
+        // webrtcdev.log("[timerjs] webworker message ", e.data);
         let timerspanpeer = getElementById(e.data.remotetime);
         if (e.data.remotetime && timerspanpeer) {
             timerspanpeer.innerHTML = e.data.time;

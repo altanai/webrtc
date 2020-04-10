@@ -111,10 +111,11 @@ function attachMediaStream(remvid, stream) {
             let pr = new Promise(function (resolve, reject) {
                 element.srcObject = stream;
                 webrtcdev.log(' ========================================= [  Mediacontrol - attachMediaStream  ] added src object for valid stream ', element, stream);
-                resolve(1);
+                element.play().then(
+                    resolve(1)
+                );
             });
             return pr;
-            // element.play();
         } else {
             let pr = new Promise(function (resolve, reject) {
                 if ('srcObject' in element) {
@@ -139,8 +140,16 @@ function attachMediaStream(remvid, stream) {
 
 function reattachMediaStream(to, from) {
     try {
-        to.src = from.src;
+        let pr = new Promise(function (resolve, reject) {
+            to.srcObject = from.srcObject;
+            webrtcdev.log(' [  Mediacontrol] reattachMediaStream - added src object for valid stream ', to);
+            to.play().then(
+                resolve(1)
+            );
+        });
+        return pr;
+
     } catch (err) {
-        webrtcdev.error("reattachMediaStream err ", err)
+        webrtcdev.error("[media control] reattachMediaStream err ", err)
     }
 }

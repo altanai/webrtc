@@ -16,7 +16,6 @@ function appendVideo(e, style) {
         div.appendChild(video);
 
         webrtcdev.log("[_media_dommodifier ] appendVideo");
-
         video.play();
         // Show loading animation.
         // let playPromise = video.play();
@@ -64,17 +63,17 @@ function attachControlButtons(vid, peerinfo) {
     // Preventing multiple control bars
     var p = vid.parentNode;
     webrtcdev.log(" ====== attachControlButtons parent Node of video  ", p);
-    if (p) {
-        let c = p.childNodes;
-        for (i = 0; i < c.length; i++) {
-            if (c[i].nodeName == "DIV" && c[i].id != undefined) {
-                if (c[i].id.indexOf("control") > -1) {
-                    webrtcdev.warn("[media dom modifier] control bar exists already, delete the previous one , before adding new one", c[i]);
-                    p.removeChild(c[i]);
-                }
-            }
-        }
-    }
+    // if (p) {
+    //     let c = p.childNodes;
+    //     for (i = 0; i < c.length; i++) {
+    //         if (c[i].nodeName == "DIV" && c[i].id != undefined) {
+    //             if (c[i].id.indexOf("control") > -1) {
+    //                 webrtcdev.warn("[media dom modifier] control bar exists already, delete the previous one , before adding new one", c[i]);
+    //                 p.removeChild(c[i]);
+    //             }
+    //         }
+    //     }
+    // }
 
     // Control bar holds media control elements like , mute unmute , fillscreen ,. recird , snapshot
     let controlBar = document.createElement("div");

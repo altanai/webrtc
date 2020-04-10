@@ -374,25 +374,25 @@ this.startCall = function (sessionobj) {
     }
 
     webrtcdev.log(" [ initjs  ] : role ", role);
-    if (role != "inspector") {
-        getConnectedDevices('videoinput', cameras => {
-            if (!cameras) {
-                alert(" you dont have access to webcam ");
-                outgoingVideo = false;
-            } else {
-                console.log('Cameras found', cameras);
-            }
-        });
-
-        getConnectedDevices('audioinput', microphones => {
-            if (!microphones) {
-                alert(" you dont have access to microphones ");
-                outgoingAudio = false;
-            } else {
-                console.log('Cameras found', microphones);
-            }
-        });
-    }
+    // if (role != "inspector") {
+    //     getConnectedDevices('videoinput', cameras => {
+    //         if (!cameras) {
+    //             alert(" you dont have access to webcam ");
+    //             outgoingVideo = false;
+    //         } else {
+    //             console.log('Cameras found', cameras);
+    //         }
+    //     });
+    //
+    //     getConnectedDevices('audioinput', microphones => {
+    //         if (!microphones) {
+    //             alert(" you dont have access to microphones ");
+    //             outgoingAudio = false;
+    //         } else {
+    //             console.log('Cameras found', microphones);
+    //         }
+    //     });
+    // }
 
     return new Promise((resolve, reject) => {
 
@@ -436,33 +436,36 @@ this.startCall = function (sessionobj) {
             webrtcdev.warn("localobj has no userdetails ");
         }
 
-        // detectWebcam((hasWebcam) => {
-        //     webrtcdev.log('Has Webcam: ' + (hasWebcam ? 'yes' : 'no'));
-        //     if (!hasWebcam) {
-        //         alert(" you dont have access to webcam ");
-        //         outgoingVideo = false;
-        //     }
-        //     detectMic((hasMic) => {
-        //         webrtcdev.log('Has Mic: ' + (hasMic ? 'yes' : 'no'));
-        //         if (!hasMic) {
-        //             alert(" you dont have access to Mic ");
-        //             outgoingAudio = false;
-        //         }
-        //
-        //         // Try getting permission again and ask your to restart
-        //         if (outgoingAudio) {
-        //             webrtcdev.log(" get permission for audio access ");
-        //             getAudioPermission();
-        //         }
-        //         if (outgoingVideo) {
-        //             webrtcdev.log(" get permission for video Access ");
-        //             getVideoPermission();
-        //         }
-        //
-        //         resolve("done");
-        //     });
-        // });
-        resolve("done");
+        if (role == "inspector") {
+            resolve("done");
+        }
+        detectWebcam((hasWebcam) => {
+            webrtcdev.log('Has Webcam: ' + (hasWebcam ? 'yes' : 'no'));
+            if (!hasWebcam) {
+                alert(" you dont have access to webcam ");
+                outgoingVideo = false;
+            }
+            detectMic((hasMic) => {
+                webrtcdev.log('Has Mic: ' + (hasMic ? 'yes' : 'no'));
+                if (!hasMic) {
+                    alert(" youcamera  dont have access to Mic ");
+                    outgoingAudio = false;
+                }
+
+                // Try getting permission again and ask your to restart
+                if (outgoingAudio) {
+                    webrtcdev.log(" get permission for audio access ");
+                    getAudioPermission();
+                }
+                if (outgoingVideo) {
+                    webrtcdev.log(" get permission for video Access ");
+                    getVideoPermission();
+                }
+
+                resolve("done");
+            });
+        });
+        // resolve("done");
     }).then(
         setRtcConn(sessionid)
     ).then(

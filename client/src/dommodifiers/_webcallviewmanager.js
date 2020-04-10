@@ -117,7 +117,6 @@ function updateWebCallView(peerinfo) {
 
                         selfvid.id = webcallpeers[0].videoContainer;
                         selfvid.className = remoteobj.videoClass;
-                        selfvid.muted = true;
                         attachControlButtons(selfvid, webcallpeers[0]);
 
                     } else {
