@@ -10,19 +10,23 @@
  * @return {string}sessionid
  */
 this.makesessionid = function (autoload) {
-    if (autoload && !location.hash.replace('#', '').length) {
-        // When Session should autogenerate ssid and locationbar doesnt have a session name
-        location.href = location.href.split('#')[0] + '#' + (Math.random() * 100).toString().replace('.', '');
-        location.reload();
-    } else if (autoload && location.href.replace('#', '').length) {
-        // When Session should autogenerate ssid and locationbar doesnt have a session name
+
+    if (location.href.replace('#', '').length) {
+        // When Session should have a session name
         if (location.href.indexOf('?') > -1) {
             sessionid = (location.hash.substring(0, location.hash.indexOf('?'))).replace(/\/|:|#|\?|\$|\^|%|\.|`|~|!|\+|@|\[|\||]|\|*. /g, '').split('\n').join('').split('\r').join('');
         } else {
             sessionid = location.hash.replace(/\/|:|#|\?|\$|\^|%|\.|`|~|!|\+|@|\[|\||]|\|*. /g, '').split('\n').join('').split('\r').join('');
         }
         return sessionid;
+    }
+
+    if (autoload =="reload" && !location.hash.replace('#', '').length) {
+        // When Session should autogenerate ssid and locationbar doesnt have a session name
+        location.href = location.href.split('#')[0] + '#' + (Math.random() * 100).toString().replace('.', '');
+        location.reload();
     } else {
+        // if reload is false , ask the user for session ID
         sessionid = prompt("Enter session ", "");
         return sessionid;
     }

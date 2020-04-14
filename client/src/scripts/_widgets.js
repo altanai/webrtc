@@ -3,7 +3,7 @@
  */
 var setWidgets = function (rtcConn, widgetsobj) {
 
-    webrtcdev.log(" ------------------ widgetsobj ", widgetsobj, chatobj, screenrecordobj, screenshareobj);
+    webrtcdev.log(" ------------------ widgetsobj ", widgetsobj );
 
     return new Promise(function (resolve, reject) {
 
@@ -148,7 +148,7 @@ var setWidgets = function (rtcConn, widgetsobj) {
                 }
 
                 var syncDataListener = function (data) {
-                    webrtcdev.log("syncDataListener", data);
+                    webrtcdev.log("[widget js] syncDataListener", data);
                 };
 
                 function onMessage() {
@@ -164,7 +164,7 @@ var setWidgets = function (rtcConn, widgetsobj) {
 
                 // Listen to message from child window
                 eventer(messageEvent, function (e) {
-                    webrtcdev.log("CanvasDesigner parent received message : ", e.data);
+                    webrtcdev.log(" [widget js] CanvasDesigner parent received message : ", e.data);
 
                     if (e.data.modalpopup) {
                         saveButtonCanvas.click();
@@ -172,7 +172,7 @@ var setWidgets = function (rtcConn, widgetsobj) {
                     } else if (e.data || e.data.canvasDesignerSyncData) {
                         syncDataListener(e.data.canvasDesignerSyncData);
                     } else if (!e.data || !e.data.canvasDesignerSyncData) {
-                        webrtcdev.log("parent received unexpected message");
+                        webrtcdev.log("[widget js] parent received unexpected message");
                         //return;
                     }
 
@@ -209,12 +209,12 @@ var setWidgets = function (rtcConn, widgetsobj) {
                     }
                 };
             })();
-            webrtcdev.log("[sessionmanager] draw widget loaded ");
+            webrtcdev.log("[widget js] draw widget loaded ");
         } else if (drawCanvasobj && !drawCanvasobj.active) {
             if (drawCanvasobj.button && drawCanvasobj.button.id && document.getElementById(drawCanvasobj.button.id)) {
                 document.getElementById(drawCanvasobj.button.id).className = "inactiveButton";
             }
-            webrtcdev.warn("[sessionmanager] draw widget ndeactivated ");
+            webrtcdev.warn("[widget js] draw widget deactivated ");
         }
 
         // ---------------------------------- TextEditor Widget --------------------------------------------------
@@ -230,7 +230,7 @@ var setWidgets = function (rtcConn, widgetsobj) {
         // ---------------------------------- Fileshare Widget --------------------------------------------------
         if (fileshareobj.active) {
 
-            webrtcdev.log("[sessionmnagare] fileshareobj ", fileshareobj),
+            webrtcdev.log("[widget js] fileshareobj ", fileshareobj),
                 rtcConn.enableFileSharing = true;
             // rtcConn.filesContainer = document.body || document.documentElement;
             // /*setFileProgressBarHandlers(rtcConn);*/
@@ -240,28 +240,28 @@ var setWidgets = function (rtcConn, widgetsobj) {
             } else {
                 createFileShareButton(fileshareobj);
             }
-            webrtcdev.log(" [sessionmanager] File sharing widget loaded ");
+            webrtcdev.log(" [widget js] File sharing widget loaded ");
         } else {
-            webrtcdev.warn("[sessionmanager] File sharing widget not loaded ");
+            webrtcdev.warn("[widget js] File sharing widget not loaded ");
         }
 
         // ---------------------------------- stats Widget --------------------------------------------------
         if (statisticsobj && statisticsobj.active) {
             try {
-                webrtcdev.log("[sessionmnagare] statisticsobj ", statisticsobj);
+                webrtcdev.log("[widget js]statisticsobj ", statisticsobj);
                 document.getElementById(statisticsobj.statsConainer).innerHTML = "";
             } catch (e) {
-                webrtcdev.error("[sessionmanager] statisticsobj statsConainer not found", e);
+                webrtcdev.error("[widget js] statisticsobj statsConainer not found", e);
             }
         }
 
         // ---------------------------------- Help Widget --------------------------------------------------
         if (helpobj && helpobj.active) {
             try {
-                webrtcdev.log("[sessionmnagare] helpobj ", helpobj);
+                webrtcdev.log("[widget js] helpobj ", helpobj, document.getElementById(helpobj.helpContainer));
                 document.getElementById(helpobj.helpContainer).innerHTML = "";
             } catch (err) {
-                webrtcdev.error("[sessionmanager] helpobj helpContainer not found", err);
+                webrtcdev.error("[widget js] helpobj helpContainer not found", err);
             }
         }
         resolve("success");

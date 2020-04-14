@@ -50,7 +50,7 @@ function createChatButton(obj) {
 function createChatBox(chatobj) {
 
     webrtcdev.log("[chat dom modifier] create Chat Box ", chatobj);
-    if(!chatobj) return;
+    if (!chatobj) return;
 
     let mainInputBox = document.createElement("div");
 
@@ -100,6 +100,11 @@ function createChatBox(chatobj) {
 function assignChatBox(chatobj) {
 
     var chatInput = document.getElementById(chatobj.inputBox.text_id);
+    webrtcdev.log(" chchatInputat ", chatInput);
+    if (!chatInput || chatInput == null) {
+        webrtcdev.warn("[chatdom modifier ] chatinput not defiend - ", chatobj.inputBox.text_id);
+        return;
+    }
     chatInput.onkeypress = function (e) {
         if (e.keyCode == 13) {
             var peerinfo = findPeerInfo(selfuserid);

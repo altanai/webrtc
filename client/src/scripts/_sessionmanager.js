@@ -598,7 +598,6 @@ var setRtcConn = function (sessionid) {
                             break;
                     }
                 }
-
             },
 
             rtcConn.sendMessage = function (event) {

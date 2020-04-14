@@ -59,10 +59,10 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
                 webrtcdev.log("[screensharejs] on stream remote ");
 
                 if (event.stream.streamid) {
-                    webrtcdev.log("remote screen event.stream.streamId " + event.stream.streamId);
+                    webrtcdev.log("[screensharejs] remote screen event.stream.streamId " + event.stream.streamId);
                     screenStreamId = event.stream.streamid;
                 } else if (event.streamid) {
-                    webrtcdev.log("remote screen event.streamid " + event.streamid);
+                    webrtcdev.log("[screensharejs] remote screen event.streamid " + event.streamid);
                     screenStreamId = event.streamid;
                 }
 
@@ -70,7 +70,7 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
                 let stream = event.stream;
                 attachMediaStream(video, stream);
                 //video.id = peerInfo.videoContainer;
-                console.log("========================= getElementById screenshareobj.screenshareContainer ", getElementById(screenshareobj.screenshareContainer));
+                console.log("[screenshareJS] getElementById screenshareobj.screenshareContainer ", screenshareobj.screenshareContainer);
                 getElementById(screenshareobj.screenshareContainer).appendChild(video);
                 showelem(screenshareobj.screenshareContainer);
                 rtcConn.send({
