@@ -80,7 +80,7 @@ function addNewMessage(e) {
  */
 function addMessageSnapshotFormat(messageDivclass, userinfo, message, parent) {
     var n = document.createElement("div");
-    n.className = messageDivclass + " chat-msg-" + chatcounter;
+    n.className = messageDivclass + " chat-msg-" + chatcounter++ ;
     webrtcdev.log("addNewMessagelocal", userinfo);
 
     takeSnapshot(userinfo, function (datasnapshot) {
