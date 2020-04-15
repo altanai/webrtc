@@ -19,15 +19,18 @@ function getCamMedia(rtcConn) {
         if (role == "inspector") {
             rtcConn.dontCaptureUserMedia = true;
             console.log("[_mediacontrol.js] getCamMedia  - Joining as inspector without camera Video");
+
         } else if (outgoingVideo && outgoingAudio) {
             rtcConn.dontCaptureUserMedia = false;
             webrtcdev.log("[_mediacontrol.js] getCamMedia  - Capture Media ");
-            rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error 
+            rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error
+
         } else if (!outgoingVideo && outgoingAudio) {
             rtcConn.dontCaptureUserMedia = false;
             // alert(" start  getCamMedia  - Dont Capture Webcam, only Mic");
             webrtcdev.warn("[_mediacontrol.js] getCamMedia  - Dont Capture Webcam only Mic ");
             rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error
+
         } else {
             rtcConn.dontCaptureUserMedia = true;
             webrtcdev.error(" [_mediacontrol.js] getCamMedia - dont Capture outgoing video ", outgoingVideo);

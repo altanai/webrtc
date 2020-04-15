@@ -19,13 +19,17 @@ function openDrawBoard() {
         button: drawCanvasobj.button
     };
     rtcConn.send({type: "canvas", board: boarddata});
+    webrtcdev.log("[drawJS] send canvas data on rtc")
+
     webrtcdevCanvasDesigner(drawCanvasobj);
+
     window.dispatchEvent(new CustomEvent('webrtcdev', {
         detail: {
-            servicetype: "draw",
+            servicetype: "drawboard",
             action: "onDrawBoardActive"
         }
     }));
+    webrtcdev.log("[drawJS] send ondrawboard active data on webrtcdev")
 }
 
 /**
@@ -45,7 +49,7 @@ function closeDrawBoard() {
     rtcConn.send({type: "canvas", board: boarddata});
     window.dispatchEvent(new CustomEvent('webrtcdev', {
         detail: {
-            servicetype: "draw",
+            servicetype: "drawboard",
             action: "onDrawBoardTerminate"
         }
     }));

@@ -157,7 +157,7 @@ function webrtcdevSharescreen(scrroomid) {
     webrtcdev.log("[screenshareJS] webrtcdevSharescreen, preparing screenshare by initiating ScrConn , scrroomid - ", scrroomid);
 
     return new Promise((resolve, reject) => {
-        scrConn = webrtcdevPrepareScreenShare(scrroomid)
+        scrConn = webrtcdevPrepareScreenShare(scrroomid);
         resolve(scrroomid);
     })
         .then(function (scrroomid) {
@@ -197,7 +197,7 @@ function connectScrWebRTC(type, scrroomid) {
     webrtcdev.log("[screenshareJS] connectScrWebRTC, first preparing screenshare by initiating ScrConn , scrroomid - ", scrroomid);
 
     return new Promise((resolve, reject) => {
-        webrtcdevPrepareScreenShare(scrroomid)
+        webrtcdevPrepareScreenShare(scrroomid);
         resolve(scrroomid);
     })
         .then(function (scrroomid) {
@@ -245,7 +245,7 @@ function webrtcdevStopShareScreen() {
             screenShareStreamLocal = null;
         }
 
-        let stream1 = scrConn.streamEvents.selectFirst()
+        let stream1 = scrConn.streamEvents.selectFirst();
         stream1.stream.getTracks().forEach(track => track.stop());
 
         webrtcdevCleanShareScreen();
@@ -289,7 +289,7 @@ this.showScrConn = function () {
     } else {
         webrtcdev.debug(" Screen share is not active ");
     }
-}
+};
 
 
 /**

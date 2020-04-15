@@ -146,19 +146,24 @@ function assignScreenShareButton(scrshareBtn) {
             let time = new Date().getUTCMilliseconds();
             screenRoomid = "screenshare" + "_" + sessionid + "_" + time;
             // after posting message to obtain source Id from chrome extension wait for response
+
             webrtcdevSharescreen(screenRoomid);
+
             button.className = scrshareBtn.class_on;
             button.innerHTML = scrshareBtn.html_on;
             //f(debug) getElementById(button.id+"buttonstatus").innerHTML("Off");
+
         } else if (button.className == scrshareBtn.class_on) {
+
             button.className = scrshareBtn.class_off;
             button.innerHTML = scrshareBtn.html_off;
+
             webrtcdevStopShareScreen();
             //if(debug) getElementById(button.id+"buttonstatus").innerHTML("On");
         } else {
             webrtcdev.warn("[screenshare js] createScreenshareButton,classname neither on nor off", scrshareBtn.className);
         }
-    }
+    };
     return button;
 }
 
@@ -186,7 +191,7 @@ function screenshareNotification(message, type) {
                 getElementById("alertBox").appendChild(alertDiv);
             }, 20000);
 
-        } else if (type == "screenshareStartedViewing") {
+        } else if (type == "screclass_offenshareStartedViewing") {
 
             // let alertDiv = document.createElement("div");
             // resetAlertBox();
