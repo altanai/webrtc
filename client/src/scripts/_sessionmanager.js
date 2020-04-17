@@ -14,8 +14,10 @@
 /**
  * function to start session with socket
  * @method
- * @name startSession
- * @param {object} connection
+ * @name startSocketSession
+ * @param {object} rtcConn rtc connection object
+ * @param {string} socketAddr
+ * @param {id} sessionid
  */
 function startSocketSession(rtcConn, socketAddr, sessionid) {
     webrtcdev.log("[sessionmanager] startSocketSession , set selfuserid ", rtcConn.userid);
@@ -171,7 +173,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
                     webrtcdev.log("[sessionmanager] channel-event : peer length " + webcallpeers.length + " is less than max capacity of session  of the session " + remoteobj.maxAllowed);
                     let participantId = event.data.sender;
                     if (!participantId) {
-                        webrtcdev.error("[sartjs] channel-event : userid not present in channel-event:" + event.type);
+                        webrtcdev.error("[sessionmanager] channel-event : userid not present in channel-event:" + event.type);
                         reject("userid not found");
                     }
                     let peerinfo = findPeerInfo(participantId);
@@ -180,7 +182,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
                         email = event.data.extra.email,
                         role = event.data.extra.role;
                     if (!peerinfo) {
-                        webrtcdev.log(" [sartjs] channel-event : PeerInfo not already present, create new peerinfo");
+                        webrtcdev.log("[sessionmanager] channel-event : PeerInfo not already present, create new peerinfo");
                         // If peerinfo is not present for new participant , treat him as Remote
                         if (name == "LOCAL") {
                             name = "REMOTE";
@@ -189,7 +191,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
                         shownotification(event.data.extra.role + "  " + event.type);
                     } else {
                         // Peer was already present, this is s rejoin 
-                        webrtcdev.log(" [sartjs] channel-event : PeerInfo was already present, this is s rejoin, update the peerinfo ");
+                        webrtcdev.log("[sessionmanager] channel-event : PeerInfo was already present, this is s rejoin, update the peerinfo ");
                         updatePeerInfo(participantId, name, color, email, role, "remote");
                         shownotification(event.data.extra.role + " " + event.type);
                     }
@@ -212,7 +214,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
 
                 } else {
                     // max capacity of session is reached 
-                    webrtcdev.error("[sartjs] channel-event : max capacity of session is reached ", remoteobj.maxAllowed);
+                    webrtcdev.error("[sessionmanager] channel-event : max capacity of session is reached ", remoteobj.maxAllowed);
                     shownotification("Another user is trying to join this channel but max count [ " + remoteobj.maxAllowed + " ] is reached", "warning");
 
                 }
@@ -238,7 +240,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
 */
 var setRtcConn = function (sessionid) {
 
-    webrtcdev.log("[sessionmanager - setRtcConn] initiating RtcConn"),
+    webrtcdev.log("[sessionmanager] setRtcConn - initiating RtcConn"),
 
         rtcConn = new RTCMultiConnection(),
 
@@ -694,9 +696,11 @@ var setRtcConn = function (sessionid) {
     // }
 };
 
-/*
-* Support Session Refresh
-*/
+/**
+ * Support Session Refresh
+ * @method
+ * @name supportSessionRefresh
+ */
 function supportSessionRefresh() {
     //alert(" old Userid " + localStorage.getItem("userid") + " | old channel  "+ localStorage.getItem("channel") );
     webrtcdev.log(" [sessionmanager ] check for session refresh/user refreshed",

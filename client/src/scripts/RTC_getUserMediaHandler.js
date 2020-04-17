@@ -39,6 +39,13 @@ window.currentUserMediaRequest = {
     }
 };
 
+
+/**
+ * Handles media obtained after getusermedia webrtc API using callback functions
+ * @method
+ * @name getUserMediaHandler
+ * @param {options} json - media capture options
+ */
 function getUserMediaHandler(options) {
     if (currentUserMediaRequest.mutex === true) {
         currentUserMediaRequest.queueRequests.push(options);
@@ -84,7 +91,9 @@ function getUserMediaHandler(options) {
     } else {
         var isBlackBerry = !!(/BB10|BlackBerry/i.test(navigator.userAgent || ''));
         if (isBlackBerry || typeof navigator.mediaDevices === 'undefined' || typeof navigator.mediaDevices.getUserMedia !== 'function') {
+
             navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
             navigator.getUserMedia(options.localMediaConstraints, function (stream) {
                 stream.streamid = stream.streamid || stream.id || getRandomString();
                 stream.idInstance = idInstance;
@@ -163,7 +172,7 @@ function getUserMediaHandler(options) {
             return;
         }
 
-        console.log("localMediaConstraints : ", options.localMediaConstraints);
+        webrtcdev.log("[ getusermediahandler ] localMediaConstraints : ", options.localMediaConstraints);
 
         navigator.mediaDevices.getUserMedia(options.localMediaConstraints).then(function (stream) {
             stream.streamid = stream.streamid || stream.id || getRandomString();

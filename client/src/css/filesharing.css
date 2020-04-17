@@ -1,8 +1,9 @@
 /*-----------------------------------------------------------------------------------*/
 /*                    Fileshare Related style                                        */
 /*-----------------------------------------------------------------------------------*/
-/*
 
+/* ---------------  progress bars -----------------------------*/
+/*
 #file-progress1{
     color:#FFF;
     height:20px;
@@ -13,30 +14,78 @@
 }
 */
 
-.filesharing-box{
+/* ------------------------------ File Listing containers --------------------------*/
+
+.fileviewing-box {
+    display: block;
+    height: 100vh;
+    margin-bottom: 50px;
+}
+
+.fileviewing-box span {
+    float: right;
+}
+
+/* ------------------------------ File sharing containers --------------------------*/
+.filesharing-box {
     height: 60%;
     max-height: 200px;
     overflow-x: scroll;
-    font-size :small;
-    padding:0px;
+    font-size: small;
+    padding: 0px;
 }
 
-.filesharing-box li{
+.filesharing-box li {
     color: #615aa8;
     padding: 10px;
     font-size: small;
     float: right;
 }
 
-.filesharing-box i{
+.filesharing-box i {
     padding-right: 10px;
     float: right;
 }
 
-.fileviewing-box span{
-    float:right;
+.filesharing-box span {
+    display: initial !important;
+    float: right;
 }
-.fileinputClass{
+
+[class*="filesharingWidget"] {
+    /*height: auto;*/
+    /*width: 100%;*/
+    /*margin-bottom: 50px;*/
+    /*position: relative;*/
+    height: auto;
+    width: 100%;
+    display: inline-grid !important;
+    overflow-y: scroll;
+    margin-bottom: 50px;
+    position: relative;
+}
+
+[class*="filesharingWidget"] iframe {
+    height: 100vh;
+}
+
+/* apply seprate height fpr single and divided*/
+[class*="filesharingWidget"] img {
+    height: auto !important;
+    width: 100%;
+    display: inline-grid !important;
+    margin-bottom: 20px;
+    object-fit: contain;
+    cursor: pointer;
+}
+
+[class*="filesharingWidget"] video {
+    width: auto;
+    height: -webkit-fill-available;
+    object-fit: contain;
+}
+
+.fileinputClass {
     background: transparent;
     border: none;
     bottom: 10px;
@@ -55,11 +104,13 @@
     height: inherit;
 }*/
 
-.fileBoxClass{
+.fileBoxClass {
     overflow-y: hidden;
 }
 
-/* ---------------image rotate -----------------------------*/
+
+/* --------------- image rotate -----------------------------*/
+
 /*.rotate0portrait {*/
 /*    transform-origin: top left; !* IE 10+, Firefox, etc. *!*/
 /*    -webkit-transform-origin: top left; !* Chrome *!*/

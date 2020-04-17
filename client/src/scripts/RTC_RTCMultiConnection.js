@@ -9,11 +9,19 @@
     connection.channel = connection.sessionid = (roomid || location.href.replace(/\/|:|#|\?|\$|\^|%|\.|`|~|!|\+|@|\[|\||]|\|*. /g, '').split('\n').join('').split('\r').join('')) + '';
     connection.socketURL = connection.socketURL || "/";
 
-    webrtcdev.log(" >>>> connection channel ", connection.channel);
+    webrtcdev.log("[RTCMultiConnection] connection channel ", connection.channel);
 
     var mPeer = new MultiPeers(connection);
 
     var preventDuplicateOnStreamEvents = {};
+
+    /**
+     * Event Handler on getting Local Media , attaches stream , sets mute and hark events
+     * @method
+     * @name onGettingLocalMedia
+     * @param {stream} stream
+     * @param {function} callback
+     */
     mPeer.onGettingLocalMedia = function (stream, callback) {
         callback = callback || function () {
         };
@@ -67,6 +75,13 @@
         }, connection);
     };
 
+    /**
+     * Event Handler on getting  Remote Media , attaches stream , sets mute and hark events
+     * @method
+     * @name onGettingRemoteMedia
+     * @param {stream} stream
+     * @param {function} callback
+     */
     mPeer.onGettingRemoteMedia = function (stream, remoteUserId) {
         try {
             stream.type = 'remote';

@@ -4,6 +4,12 @@
 
 var progressHelper = {};
 
+/**
+ * Handler for File sharing staring
+ * @method
+ * @name fileSharingStarted
+ * @param {json} file
+ */
 function fileSharingStarted(file) {
     webrtcdev.log("[flesharing JS] on File start ", file);
     webrtcdev.log("[flesharing JS] on File start description  , name :", file.name, " from -> ", file.userid, " to ->", file.remoteUserId);
@@ -33,6 +39,12 @@ function fileSharingStarted(file) {
     }));
 }
 
+/**
+ * Handler for File sharing in progress
+ * @method
+ * @name fileSharingInprogress
+ * @param {event} e
+ */
 function fileSharingInprogress(e) {
     //webrtcdev.log("[start] on File progress uuid : ", e.uuid , " , name :", e.name ," from -> ", e.userid , " to ->" , e.remoteUserId);
     try {
@@ -53,6 +65,12 @@ function fileSharingInprogress(e) {
     }
 }
 
+/**
+ * Handler for File sharing ending
+ * @method
+ * @name fileSharingEnded
+ * @param {json} file
+ */
 function fileSharingEnded(file) {
     webrtcdev.log("[flesharing JS] On file End description , file :", file, " from -> ", file.userid, " to ->", file.remoteUserId);
 
@@ -108,9 +126,9 @@ function fileSharingEnded(file) {
         }
     }));
 
-    // console.log(" ----------------------- pendingFileTransfer ", pendingFileTransfer , pendingFileTransfer.length , pendingFileTransferlimit);
-    // //start the pending transfer from pendingFileTransfer.push(file);
-    // //if (pendingFileTransfer.length >= pendingFileTransferlimit) {
+    // webrtcdev.log(" pendingFileTransfer ", pendingFileTransfer , pendingFileTransfer.length , pendingFileTransferlimit);
+    //start the pending transfer from pendingFileTransfer.push(file);
+    // if (pendingFileTransfer.length >= pendingFileTransferlimit) {
     //     webrtcdev.log("[flesharing JS] resuming pending/paused file ", pendingFileTransfer[0]);
     //     hideelem(pendingFileTransfer[0].name);
     //     sendFile(pendingFileTransfer[0]);

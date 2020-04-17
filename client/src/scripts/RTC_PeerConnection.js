@@ -29,8 +29,13 @@ var RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSession
 var RTCIceCandidate = window.RTCIceCandidate || window.mozRTCIceCandidate;
 var MediaStreamTrack = window.MediaStreamTrack;
 
-// console.log(" >>> RTC global varaibles ", RTCPeerConnection, RTCSessionDescription, RTCIceCandidate, MediaStreamTrack);
 
+/**
+ * Handles all peer ide activities like setting media setting poliies , SDP constraints , creating offer answer , handling stream
+ * @method
+ * @name PeerInitiator
+ * @param {config} json - configuration json for SDP and RTC
+ */
 function PeerInitiator(config) {
 
     navigator.mediaDevices.getUserMedia({
@@ -42,7 +47,7 @@ function PeerInitiator(config) {
         throw 'WebRTC 1.0 (RTCPeerConnection) API are NOT available in this browser.';
     }
 
-    webrtcdev.log(" ---------- RTCPeerConnection after -------------- ", RTCPeerConnection);
+    webrtcdev.log(" [PeerInitiator] RTCPeerConnection - ", RTCPeerConnection);
 
     var connection = config.rtcMultiConnection;
 
@@ -123,7 +128,7 @@ function PeerInitiator(config) {
                 connection.optionalArgument = null;
             }
 
-            console.log(" ==================== RTCPeerConnection params ", params, " connection.optionalArgument ", connection.optionalArgument);
+            webrtcdev.log("[PeerInitiator] RTCPeerConnection params - ", params, " connection.optionalArgument ", connection.optionalArgument);
             peer = new RTCPeerConnection(params, connection.optionalArgument);
         } catch (e) {
             try {
@@ -473,37 +478,37 @@ function PeerInitiator(config) {
         };
     });
 
-    function oldCreateOfferOrAnswer(_method) {
-        peer[_method](function (localSdp) {
-            if (DetectRTC.browser.name !== 'Safari') {
-                localSdp.sdp = connection.processSdp(localSdp.sdp);
-            }
-            peer.setLocalDescription(localSdp, function () {
-                if (!connection.trickleIce) return;
-
-                config.onLocalSdp({
-                    type: localSdp.type,
-                    sdp: localSdp.sdp,
-                    remotePeerSdpConstraints: config.remotePeerSdpConstraints || false,
-                    renegotiatingPeer: !!config.renegotiatingPeer || false,
-                    connectionDescription: self.connectionDescription,
-                    dontGetRemoteStream: !!config.dontGetRemoteStream,
-                    extra: connection ? connection.extra : {},
-                    streamsToShare: streamsToShare
-                });
-
-                connection.onSettingLocalDescription(self);
-            }, function (error) {
-                if (!!connection.enableLogs) {
-                    webrtcdev.error('setLocalDescription-error', error);
-                }
-            });
-        }, function (error) {
-            if (!!connection.enableLogs) {
-                webrtcdev.error('sdp-' + _method + '-error', error);
-            }
-        }, defaults.sdpConstraints);
-    }
+    // function oldCreateOfferOrAnswer(_method) {
+    //     peer[_method](function (localSdp) {
+    //         if (DetectRTC.browser.name !== 'Safari') {
+    //             localSdp.sdp = connection.processSdp(localSdp.sdp);
+    //         }
+    //         peer.setLocalDescription(localSdp, function () {
+    //             if (!connection.trickleIce) return;
+    //
+    //             config.onLocalSdp({
+    //                 type: localSdp.type,
+    //                 sdp: localSdp.sdp,
+    //                 remotePeerSdpConstraints: config.remotePeerSdpConstraints || false,
+    //                 renegotiatingPeer: !!config.renegotiatingPeer || false,
+    //                 connectionDescription: self.connectionDescription,
+    //                 dontGetRemoteStream: !!config.dontGetRemoteStream,
+    //                 extra: connection ? connection.extra : {},
+    //                 streamsToShare: streamsToShare
+    //             });
+    //
+    //             connection.onSettingLocalDescription(self);
+    //         }, function (error) {
+    //             if (!!connection.enableLogs) {
+    //                 webrtcdev.error('setLocalDescription-error', error);
+    //             }
+    //         });
+    //     }, function (error) {
+    //         if (!!connection.enableLogs) {
+    //             webrtcdev.error('sdp-' + _method + '-error', error);
+    //         }
+    //     }, defaults.sdpConstraints);
+    // }
 
     function createOfferOrAnswer(_method) {
         peer[_method](defaults.sdpConstraints).then(function (localSdp) {

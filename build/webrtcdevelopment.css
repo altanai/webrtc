@@ -163,6 +163,14 @@ video {
   margin-top: 10px;
   color: #C5C5C5;
 }
+.fileviewing-box {
+  display: block;
+  height: 100vh;
+  margin-bottom: 50px;
+}
+.fileviewing-box span {
+  float: right;
+}
 .filesharing-box {
   height: 60%;
   max-height: 200px;
@@ -180,8 +188,33 @@ video {
   padding-right: 10px;
   float: right;
 }
-.fileviewing-box span {
+.filesharing-box span {
+  display: initial!important;
   float: right;
+}
+[class*=filesharingWidget] {
+  height: auto;
+  width: 100%;
+  display: inline-grid !important;
+  overflow-y: scroll;
+  margin-bottom: 50px;
+  position: relative;
+}
+[class*=filesharingWidget] iframe {
+  height: 100vh;
+}
+[class*=filesharingWidget] img {
+  height: auto!important;
+  width: 100%;
+  display: inline-grid !important;
+  margin-bottom: 20px;
+  object-fit: contain;
+  cursor: pointer;
+}
+[class*=filesharingWidget] video {
+  width: auto;
+  height: -webkit-fill-available;
+  object-fit: contain;
 }
 .fileinputClass {
   background: 0 0;

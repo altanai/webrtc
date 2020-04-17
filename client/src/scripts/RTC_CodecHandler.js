@@ -1,6 +1,7 @@
 // CodecsHandler.js
 
 var CodecsHandler = (function () {
+
     function preferCodec(sdp, codecName) {
         var info = splitLines(sdp);
 
