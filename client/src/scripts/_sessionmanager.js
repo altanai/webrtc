@@ -8,7 +8,6 @@
 //       'order for the demo to work.');
 //   }
 //   webrtcdev.error(`getUserMedia error: ${error.name}`, error);
-
 //   outgoingVideo = false;
 // }
 
@@ -683,7 +682,7 @@ var setRtcConn = function (sessionid) {
 
             rtcConn.iceServers = webrtcdevIceServers,
 
-            webrtcdev.log(" [sessionmanager] rtcConn : ", rtcConn);
+            webrtcdev.log("[sessionmanager] rtcConn : ", rtcConn);
 
         // if(this.turn!=null && this.turn !="none"){
         //     if (!webrtcdevIceServers) {
@@ -784,9 +783,8 @@ var connectWebRTC = function (type, channel, selfuserid, remoteUsers) {
             if (fileshareobj.props.fileShare == "single") {
                 createFileSharingDiv(_peerinfo);
                 //max diaply the local / single fileshare 
-                document.getElementById(_peerinfo.fileShare.outerbox).style.width = "100%";
-                // hide the remote fileshare
-                // document.getElementById(_peerinfo.fileShare.outerbox).style.width="100%";
+                document.getElementById(_peerinfo.fileShare.outerbox).style.width = "100%"
+
             } else if (fileshareobj.props.fileShare == "divided") {
 
                 // create local File sharing window 

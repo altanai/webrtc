@@ -68,8 +68,6 @@ function updateWebCallView(peerinfo) {
                     let vid = document.getElementsByName(localVideo)[0];
                     attachMediaStream(vid, peerinfo.stream).then(_ => {
                         webrtcdev.log(' ========================================= [ webcallviewdevmanager ] updateWebCallView - Done attaching .local stream to element');
-                        // if(localobj.userDisplay && peerInfo.name)
-                        //     attachUserDetails( vid, peerInfo );
                         vid.muted = true;
                         vid.className = localobj.videoClass;
                         

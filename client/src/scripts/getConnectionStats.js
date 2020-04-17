@@ -1,20 +1,21 @@
-! function() {
+!function () {
     function e(e, t) {
         if (e || (e = {}), !t) return e;
         for (var o in t) e[o] = t[o];
         return e
     }
-    RTCPeerConnection = window.webkitRTCPeerConnection || window.mozRTCPeerConnection, window.getConnectionStats = RTCPeerConnection.prototype.getConnectionStats = function(t, o) {
+
+    RTCPeerConnection = window.webkitRTCPeerConnection || window.mozRTCPeerConnection, window.getConnectionStats = RTCPeerConnection.prototype.getConnectionStats = function (t, o) {
         function i() {
-            n(function(n) {
+            n(function (n) {
                 for (var g = {
-                        audio: {},
-                        video: {},
-                        results: n,
-                        nomore: function() {
-                            r = !0
-                        }
-                    }, d = 0; d < n.length; ++d) {
+                    audio: {},
+                    video: {},
+                    results: n,
+                    nomore: function () {
+                        r = !0
+                    }
+                }, d = 0; d < n.length; ++d) {
                     var s = n[d];
                     if ("opus" == s.googCodecName) {
                         a.audio.prevBytesSent || (a.audio.prevBytesSent = s.bytesSent);
@@ -84,21 +85,22 @@
         }
 
         function n(e) {
-            navigator.mozGetUserMedia ? g.getStats(function(t) {
+            navigator.mozGetUserMedia ? g.getStats(function (t) {
                 var o = [];
-                t.forEach(function(e) {
+                t.forEach(function (e) {
                     o.push(e)
                 }), e(o)
-            }, e) : g.getStats(function(t) {
+            }, e) : g.getStats(function (t) {
                 var o = [];
-                t.result().forEach(function(e) {
+                t.result().forEach(function (e) {
                     var t = {};
-                    e.names().forEach(function(o) {
+                    e.names().forEach(function (o) {
                         t[o] = e.stat(o)
                     }), t.id = e.id, t.type = e.type, t.timestamp = e.timestamp, o.push(t)
                 }), e(o)
             })
         }
+
         var g = this,
             a = {
                 audio: {},
