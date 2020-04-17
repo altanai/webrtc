@@ -762,7 +762,14 @@ function downloadFile(uuid, element, fileurl, _filename, filetype) {
             window.open(content , "sessionRecording.zip");
         });*/
     } else {
-        window.open(fileurl, "downloadedDocument");
+        // window.open(fileurl, "downloadedDocument");
+        const a = document.createElement("a");
+        document.body.appendChild(a);
+        a.style = "display: none";
+        a.href = fileurl;
+        a.download = _filename;
+        a.click();
+        window.URL.revokeObjectURL(fileurl);
     }
 }
 
