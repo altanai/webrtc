@@ -166,10 +166,9 @@ gulp.task('codecss', function (done) {
 
 var scriptList = [
 
-    // "client/src/scripts/RTCM.js",
     //---------------------------RTC
     "client/src/scripts/RTC_header.js",
-    // "client/src/scripts/RTC_DetectRTC.js",
+    "client/src/scripts/RTC_DetectRTC.js",
     "client/src/scripts/RTC_global.js",
     // "client/src/scripts/RTC_ioshacks.js",
     "client/src/scripts/RTC_Peerconnection.js",
@@ -184,6 +183,7 @@ var scriptList = [
     "client/src/scripts/RTC_RTCMultiConnection.js",
     "client/src/scripts/RTC_footer.js",
 
+    // -------------------- webrtc dev logger
     "client/src/scripts/_logger.js",
 
     // --------------------- helper libs

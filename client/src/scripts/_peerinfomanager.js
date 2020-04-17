@@ -71,7 +71,7 @@ function updatePeerInfo(userid, username, usecolor, useremail, userrole, type) {
     return new Promise(function (resolve, reject) {
         // if userid deosnt exist , exit
         if (!userid) {
-            console.error("[peerinfomanager] userid is null / undefined, cannot create PeerInfo");
+            webrtcdev.error("[peerinfomanager] userid is null / undefined, cannot create PeerInfo");
             reject("userid is null / undefined, cannot create PeerInfo");
             return;
         }

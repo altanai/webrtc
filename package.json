@@ -60,6 +60,10 @@
     "undef": true,
     "unused": true,
     "esversion": 6,
+    "debug": true,
+    "browser": true,
+    "devel": true,
+    "jquery": true,
     "globals": {
       "MY_GLOBAL": true,
       "$": true

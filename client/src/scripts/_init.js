@@ -10,7 +10,7 @@
  * @return {string}sessionid
  */
 this.makesessionid = function (autoload) {
-
+    let sessionid ="";
     if (location.href.replace('#', '').length) {
         // When Session should have a session name
         if (location.href.indexOf('?') > -1) {
@@ -21,7 +21,7 @@ this.makesessionid = function (autoload) {
         return sessionid;
     }
 
-    if (autoload =="reload" && !location.hash.replace('#', '').length) {
+    if (autoload == "reload" && !location.hash.replace('#', '').length) {
         // When Session should autogenerate ssid and locationbar doesnt have a session name
         location.href = location.href.split('#')[0] + '#' + (Math.random() * 100).toString().replace('.', '');
         location.reload();
@@ -138,12 +138,13 @@ function bytesToSize(e) {
  scripts or stylesheets load unloading
  ********************************************/
 function loadjscssfile(filename, filetype) {
+    let fileref;
     if (filetype == "js") { //if filename is a external JavaScript file
-        var fileref = document.createElement('script');
+        fileref = document.createElement('script');
         fileref.setAttribute("type", "text/javascript");
         fileref.setAttribute("src", filename)
     } else if (filetype == "css") { //if filename is an external CSS file
-        var fileref = document.createElement("link");
+        fileref = document.createElement("link");
         fileref.setAttribute("rel", "stylesheet");
         fileref.setAttribute("type", "text/css");
         fileref.setAttribute("href", filename)
@@ -354,13 +355,13 @@ this.setsession = function (_localobj, _remoteobj, incoming, outgoing, session, 
  */
 this.startCall = function (sessionobj) {
 
-    if(!sessionobj){
-        webrtcdev.error("Cannot initiatoe startcall without session object ");
+    if (!sessionobj) {
+        webrtcdev.error("Cannot initiate startcall without session object ");
         return;
     }
-    webrtcdev.log(" [initjs] startwebrtcdev begin processing ", sessionobj);
+    webrtcdev.log(" [ initjs ] startwebrtcdev begin processing ", sessionobj);
 
-    webrtcdev.log(" [ initjs  ] : begin  checkDevices for outgoing and incoming");
+    webrtcdev.log(" [ initjs ] : begin  checkDevices for outgoing and incoming");
     // listDevices();
 
     webrtcdev.log(" [ initjs  ] : incoming ", incoming);
@@ -378,35 +379,18 @@ this.startCall = function (sessionobj) {
     }
 
     webrtcdev.log(" [ initjs  ] : role ", role);
-    // if (role != "inspector") {
-    //     getConnectedDevices('videoinput', cameras => {
-    //         if (!cameras) {
-    //             alert(" you dont have access to webcam ");
-    //             outgoingVideo = false;
-    //         } else {
-    //             console.log('Cameras found', cameras);
-    //         }
-    //     });
-    //
-    //     getConnectedDevices('audioinput', microphones => {
-    //         if (!microphones) {
-    //             alert(" you dont have access to microphones ");
-    //             outgoingAudio = false;
-    //         } else {
-    //             console.log('Cameras found', microphones);
-    //         }
-    //     });
-    // }
 
     return new Promise((resolve, reject) => {
 
+        let sessionid = sessionobj.sessionid;
+
         webrtcdev.log(" [ initjs ] : sessionid : " + sessionid + " and localStorage  ", localStorage);
 
-        if (localStorage.length >= 1 && localStorage.getItem("channel") != sessionid) {
-            webrtcdev.log("[startjs] Current Session ID " + sessionid + " doesnt match cached channel id " + localStorage.getItem("channel") + "-> clearCaches()");
+        if (localStorage.length >= 1 && localStorage.getItem("channel") !== sessionid) {
+            webrtcdev.log("[ intijs ] : Current Session ID " + sessionid + " doesnt match cached channel id " + localStorage.getItem("channel") + "-> clearCaches()");
             clearCaches();
         } else {
-            webrtcdev.log(" no action taken on localStorage");
+            webrtcdev.log(" [ initjs ] : no action taken on localStorage");
         }
 
         webrtcdev.log(" [ initjs ] : localobj ", localobj);
@@ -443,6 +427,7 @@ this.startCall = function (sessionobj) {
         if (role == "inspector") {
             resolve("done");
         }
+
         detectWebcam((hasWebcam) => {
             webrtcdev.log('Has Webcam: ' + (hasWebcam ? 'yes' : 'no'));
             if (!hasWebcam) {
@@ -466,17 +451,17 @@ this.startCall = function (sessionobj) {
                     getVideoPermission();
                 }
 
-                resolve("done");
+                resolve(sessionid);
             });
         });
         // resolve("done");
-    }).then(
-        setRtcConn(sessionid)
-    ).then(
-        setWidgets(rtcConn, sessionobj.widgets)
-    ).then(
-        startSocketSession(rtcConn, socketAddr, sessionid)
-    ).catch((err) => {
+    }).then(sessionid => {
+        setRtcConn(sessionid);
+    }).then(_=> {
+        setWidgets(rtcConn, sessionobj.widgets);
+    }).then(_=> {
+        startSocketSession(rtcConn, socketAddr, sessionid);
+    }).catch((err) => {
         webrtcdev.error(" [ initjs ] : Promise rejected ", err);
     });
 
