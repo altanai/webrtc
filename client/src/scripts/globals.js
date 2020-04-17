@@ -80,6 +80,4 @@ var screen_roomid, screen_userid;
 
 var role = "participant";
 
-let webrtcdev = webrtcdevlogger;
-
 this.sessionid = "";

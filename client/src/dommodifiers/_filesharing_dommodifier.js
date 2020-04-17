@@ -5,7 +5,7 @@
  * @param {json} fileshareobj
  */
 function createFileShareButton(fileshareobj) {
-    widgetholder = "topIconHolder_ul";
+    let widgetholder = "topIconHolder_ul";
 
     const button = document.createElement("span");
     button.setAttribute("data-provides", "fileinput");
@@ -105,7 +105,7 @@ function addstaticProgressHelper(uuid, peerinfo, filename, fileSize, file, progr
             }
             //Once the button is clicked , remove the button
             event.target.remove();
-            for (x in pendingFileTransfer) {
+            for (let x in pendingFileTransfer) {
                 if (pendingFileTransfer[x].name == filename) {
                     webrtcdev.log(" removing pendingFileTransfer element ", pendingFileTransfer[x]);
                     pendingFileTransfer.splice(x, 1);
@@ -328,7 +328,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
         downloadButton.innerHTML = '<i class="fa fa-download"></i>';
     }
     downloadButton.onclick = function () {
-        downloadFile(uuid, elementDisplay, fileurl, _filename, filetype);
+        downloadFile(uuid, elementDisplay, fileurl, filename || _filename, filetype);
     };
 
     //Save Button
@@ -603,8 +603,8 @@ function displayFile(uuid, peerinfo, fileurl, filename, filetype) {
 function syncButton(buttonId) {
     const buttonElement = document.getElementById(buttonId);
 
-    for (x in webcallpeers) {
-        if (buttonElement.getAttribute("lastClickedBy") == webcallpeers[x].userid) {
+    for (let x in webcallpeers) {
+        if (buttonElement.getAttribute("lastClickedBy") === webcallpeers[x].userid) {
             buttonElement.setAttribute("lastClickedBy", '');
             return;
         }
@@ -748,7 +748,7 @@ function downloadFile(uuid, element, fileurl, _filename, filetype) {
  * @param {object} peerinfo - single object peerinfo from webcallpeers
  * @param {dom} parent - name of dom element parent
  */
-function createFileSharingBox(peerinfo, parent) {
+function createFileSharingBox(peerinfo, parent, type) {
     try {
         webrtcdev.log(" [ filehsreing js ]  createFileSharingBox ", peerinfo, parent);
         if (document.getElementById(peerinfo.fileShare.outerbox))
@@ -756,7 +756,7 @@ function createFileSharingBox(peerinfo, parent) {
 
         const fileSharingBox = document.createElement("div");
 
-        if (fileshareobj.props.fileList == "single") {
+        if (type == "single") {
             fileSharingBox.className = "col-md-12 fileviewing-box";
         } else {
             fileSharingBox.className = "col-md-6 fileviewing-box";
@@ -770,7 +770,7 @@ function createFileSharingBox(peerinfo, parent) {
         let fileControlBar = document.createElement("p");
         fileControlBar.id = peerinfo.fileShare.container + "controlBar";
         // show name only in  non sinhle file share object view
-        if (fileshareobj.props.fileList != "single") {
+        if (type != "single") {
             fileControlBar.appendChild(document.createTextNode(peerinfo.name));
             // fileControlBar.appendChild(document.createTextNode("File Viewer " + peerinfo.name));
         }
@@ -902,7 +902,7 @@ function createFileSharingBox(peerinfo, parent) {
 
         /*--------------------------------add for File Share Container--------------------*/
         let fileShareContainer = document.createElement("div");
-        fileShareContainer.className = "filesharingWidget";
+        fileShareContainer.className = "filesharingWidget-" + type;
         fileShareContainer.id = peerinfo.fileShare.container;
 
         if (debug) {
@@ -940,8 +940,6 @@ function rescaleVideo(dom, domparent) {
     }
     dom.setAttribute("orientation", orientation);
     dom.className = "col rotate" + angle + dom.getAttribute("orientation");
-
-
 }
 
 
@@ -954,8 +952,6 @@ function rescaleIFrame(dom, domparent) {
     //     dom.setAttribute("style","height:"+domparent.clientWidth +"px;margin-left: 0px");
     //     dom.setAttribute("orientation",  "landscape");
     dom.className = "col rotate" + angle + dom.getAttribute("orientation");
-
-
 }
 
 
@@ -1005,7 +1001,7 @@ function rescaleImage(dom, domparent) {
  * @param {object} peerinfo - single object peerinfo from webcallpeers
  * @param {dom} parent - name of dom element parent
  */
-function createFileListingBox(peerinfo, parent) {
+function createFileListingBox(peerinfo, parent, type) {
 
     try {
         if (getElementById(peerinfo.fileList.outerbox))
@@ -1013,7 +1009,7 @@ function createFileListingBox(peerinfo, parent) {
 
         const fileListingBox = document.createElement("div");
 
-        if (fileshareobj.props.fileList == "single") {
+        if (type == "single") {
 
             fileListingBox.className = "col-sm-12 filesharing-box";
         } else {
@@ -1030,7 +1026,7 @@ function createFileListingBox(peerinfo, parent) {
         fileListControlBar.setAttribute("style", "background-color:" + peerinfo.color);
 
         //Show name in file list conrol bar when view id not single
-        if (fileshareobj.props.fileList != "single") {
+        if (type != "single") {
             fileListControlBar.appendChild(document.createTextNode(peerinfo.name + "     "));
             //fileListControlBar.appendChild(document.createTextNode("Uploaded Files " + peerinfo.name + "     "));
         }
@@ -1150,17 +1146,16 @@ function createFileSharingDiv(peerinfo) {
                 }
             }
         }
-
     }
 
     if (!getElementById(peerinfo.fileShare.outerbox)) {
         let parentFileShareContainer = getElementById(fileshareobj.fileShareContainer);
-        createFileSharingBox(peerinfo, parentFileShareContainer);
+        createFileSharingBox(peerinfo, parentFileShareContainer, fileshareobj.props.fileShare);
     }
 
     if (!getElementById(peerinfo.fileList.outerbox)) {
         let parentFileListContainer = getElementById(fileshareobj.fileListContainer);
-        createFileListingBox(peerinfo, parentFileListContainer);
+        createFileListingBox(peerinfo, parentFileListContainer, fileshareobj.props.fileList);
     }
 }
 
@@ -1236,16 +1231,17 @@ function createModalPopup(filetype) {
     modalbody.innerHTML = "";
 
     const body = document.createElement("div");
+    let d1;
     switch (filetype) {
         case  "blobcanvas":
             title.innerHTML = "Save Drawing";
-            var d1 = document.createElement("div");
+            d1 = document.createElement("div");
             d1.innerHTML = "Right Click on Save, pop up window gives following info: Right Click on Draw image, Click Save As when window opens up.";
             body.appendChild(d1);
             break;
         case "application/pdf":
             title.innerHTML = "Save PDF";
-            var d1 = document.createElement("div");
+            d1 = document.createElement("div");
             d1.innerHTML = 'Click DOWNLOAD on top of the doc . Click SAVE AS when window opens up';
             const i1 = document.createElement("img");
             i1.src = "images/savefile.PNG";
@@ -1259,14 +1255,14 @@ function createModalPopup(filetype) {
         case "video/webm":
         case "imagesnapshot":
             title.innerHTML = "Save Picture / Video";
-            var d1 = document.createElement("div");
+            d1 = document.createElement("div");
             d1.innerHTML = 'Right Click on the FILE . Click SAVE AS when window opens up';
             body.appendChild(d1);
             break;
         // browser supported audio formats
         case "audio/mp3":
             title.innerHTML = "Save Music File";
-            var d1 = document.createElement("div");
+            d1 = document.createElement("div");
             d1.innerHTML = "Right Click on the FILE (play display line). Click SAVE AS when window opens up";
             body.appendChild(d1);
             break;
@@ -1277,18 +1273,18 @@ function createModalPopup(filetype) {
         case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
         case "video/x-ms-wmv":
             title.innerHTML = "Save Microsoft Office / Libra / Open Office Documents";
-            var d1 = document.createElement("div");
+            d1 = document.createElement("div");
             d1.innerHTML = "Click bottom DOWNLOAD in Uploaded Files box . File shows up below the Uploaded Files box. Click arrow on right, then select OPEN  . File Opens in New Window, then 'Save As'.";
             body.appendChild(d1);
             break;
         case "sessionRecording":
             title.innerHTML = "Save Session Recording";
-            var d1 = document.createElement("div");
+            d1 = document.createElement("div");
             d1.innerHTML = 'Extract the video and audio recording from the dowloaded compresed file and play together ';
             body.appendChild(d1);
             break;
         default :
-            var d1 = document.createElement("div");
+            d1 = document.createElement("div");
             d1.innerHTML = 'Document is Unrecognizable, cannot be saved, but can be shared with Remote. Use/Click Screen Share for Remote to view your screen. Then open the document on your screen.';
             body.appendChild(d1);
             break;

@@ -56,23 +56,8 @@
 }*/
 
 .fileBoxClass{
-    /*padding: 10px 10px 10px 10px;
-    background: rgba(255, 255, 255, 0.39);
-    margin-bottom: 2px;
-    margin-top: 2px;*/
     overflow-y: hidden;
-}   
-
-/*.fileViewing1Box{
-    background-color: #9999FF;
-    color: #968787;
 }
-
-.fileViewing2Box{
-    background-color: #666699;
-    color: #968787;
-}*/
-
 
 /* ---------------image rotate -----------------------------*/
 /*.rotate0portrait {*/

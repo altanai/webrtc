@@ -66,7 +66,8 @@
     "jquery": true,
     "globals": {
       "MY_GLOBAL": true,
-      "$": true
+      "$": true,
+      "webrtcdev": true
     }
   },
   "scripts": {

@@ -1,6 +1,3 @@
-// Muaz Khan     - www.MuazKhan.com
-// MIT License   - www.webrtc-experiment.com/licence
-// Documentation - github.com/streamproc/MediaStreamRecorder
 // ______________________
 // MediaStreamRecorder.js
 
@@ -65,10 +62,6 @@ function loadScript(src, onload) {
     script.onload = onload || function() {};
     document.documentElement.appendChild(script);
 }
-
-// Muaz Khan     - www.MuazKhan.com
-// MIT License   - www.webrtc-experiment.com/licence
-// Documentation - github.com/streamproc/MediaStreamRecorder
 
 // _____________________________
 // Cross-Browser-Declarations.js

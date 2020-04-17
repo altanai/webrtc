@@ -41,7 +41,8 @@ function PeerInitiator(config) {
     if (!RTCPeerConnection) {
         throw 'WebRTC 1.0 (RTCPeerConnection) API are NOT available in this browser.';
     }
-    console.log(" ---------- RTCPeerConnection after -------------- ", RTCPeerConnection);
+
+    webrtcdev.log(" ---------- RTCPeerConnection after -------------- ", RTCPeerConnection);
 
     var connection = config.rtcMultiConnection;
 
@@ -346,7 +347,7 @@ function PeerInitiator(config) {
         }
         peer.setRemoteDescription(new RTCSessionDescription(remoteSdp), cb, function (error) {
             if (!!connection.enableLogs) {
-                console.error('setRemoteDescription failed', '\n', error, '\n', remoteSdp.sdp);
+                webrtcdev.error('setRemoteDescription failed', '\n', error, '\n', remoteSdp.sdp);
             }
 
             cb();
@@ -363,13 +364,13 @@ function PeerInitiator(config) {
 
         peer.setRemoteDescription(new RTCSessionDescription(remoteSdp)).then(cb, function (error) {
             if (!!connection.enableLogs) {
-                console.error('setRemoteDescription failed', '\n', error, '\n', remoteSdp.sdp);
+                webrtcdev.error('setRemoteDescription failed', '\n', error, '\n', remoteSdp.sdp);
             }
 
             cb();
         }).catch(function (error) {
             if (!!connection.enableLogs) {
-                console.error('setRemoteDescription failed', '\n', error, '\n', remoteSdp.sdp);
+                webrtcdev.error('setRemoteDescription failed', '\n', error, '\n', remoteSdp.sdp);
             }
 
             cb();
@@ -494,12 +495,12 @@ function PeerInitiator(config) {
                 connection.onSettingLocalDescription(self);
             }, function (error) {
                 if (!!connection.enableLogs) {
-                    console.error('setLocalDescription-error', error);
+                    webrtcdev.error('setLocalDescription-error', error);
                 }
             });
         }, function (error) {
             if (!!connection.enableLogs) {
-                console.error('sdp-' + _method + '-error', error);
+                webrtcdev.error('sdp-' + _method + '-error', error);
             }
         }, defaults.sdpConstraints);
     }
@@ -526,11 +527,11 @@ function PeerInitiator(config) {
                 connection.onSettingLocalDescription(self);
             }, function (error) {
                 if (!connection.enableLogs) return;
-                console.error('setLocalDescription error', error);
+                webrtcdev.error('setLocalDescription error', error);
             });
         }, function (error) {
             if (!!connection.enableLogs) {
-                console.error('sdp-error', error);
+                webrtcdev.error('sdp-error', error);
             }
         });
     }

@@ -9,7 +9,7 @@
     connection.channel = connection.sessionid = (roomid || location.href.replace(/\/|:|#|\?|\$|\^|%|\.|`|~|!|\+|@|\[|\||]|\|*. /g, '').split('\n').join('').split('\r').join('')) + '';
     connection.socketURL = connection.socketURL || "/";
 
-    console.log(" >>>> connection channel ", connection.channel);
+    webrtcdev.log(" >>>> connection channel ", connection.channel);
 
     var mPeer = new MultiPeers(connection);
 
@@ -418,7 +418,7 @@
         }, function (isRoomJoined, error) {
             if (isRoomJoined === true) {
                 if (connection.enableLogs) {
-                    console.log('isRoomJoined: ', isRoomJoined, ' roomid: ', connection.sessionid);
+                    webrtcdev.log('isRoomJoined: ', isRoomJoined, ' roomid: ', connection.sessionid);
                 }
 
                 if (!!connection.peers[connection.sessionid]) {
@@ -431,7 +431,7 @@
 
             if (isRoomJoined === false) {
                 if (connection.enableLogs) {
-                    console.warn('isRoomJoined: ', error, ' roomid: ', connection.sessionid);
+                    webrtcdev.warn('isRoomJoined: ', error, ' roomid: ', connection.sessionid);
                 }
 
                 // [disabled] retry after 3 seconds
@@ -448,7 +448,7 @@
 
     function openRoom(callback) {
         if (connection.enableLogs) {
-            console.log('Sending open-room signal to socket.io');
+            webrtcdev.log('Sending open-room signal to socket.io');
         }
 
         connection.waitingForLocalMedia = false;
@@ -464,14 +464,14 @@
         }, function (isRoomOpened, error) {
             if (isRoomOpened === true) {
                 if (connection.enableLogs) {
-                    console.log('isRoomOpened: ', isRoomOpened, ' roomid: ', connection.sessionid);
+                    webrtcdev.log('isRoomOpened: ', isRoomOpened, ' roomid: ', connection.sessionid);
                 }
                 callback(isRoomOpened, connection.sessionid);
             }
 
             if (isRoomOpened === false) {
                 if (connection.enableLogs) {
-                    console.warn('isRoomOpened: ', error, ' roomid: ', connection.sessionid);
+                    webrtcdev.warn('isRoomOpened: ', error, ' roomid: ', connection.sessionid);
                 }
 
                 callback(isRoomOpened, connection.sessionid, error);
@@ -537,7 +537,7 @@
                             callback(screen);
                         }
                     }, function (error) {
-                        console.error('Unable to capture screen on Edge. HTTPs and version 17+ is required.');
+                        webrtcdev.error('Unable to capture screen on Edge. HTTPs and version 17+ is required.');
                     });
                 } else {
                     connection.invokeGetUserMedia({
@@ -584,7 +584,7 @@
                         }
                         callback(screen);
                     }, function (error) {
-                        console.error('Unable to capture screen on Edge. HTTPs and version 17+ is required.');
+                        webrtcdev.error('Unable to capture screen on Edge. HTTPs and version 17+ is required.');
                     });
                 } else {
                     connection.invokeGetUserMedia({
@@ -887,25 +887,25 @@
     // EVENTs
     connection.onopen = function (event) {
         if (!!connection.enableLogs) {
-            console.info('Data connection has been opened between you & ', event.userid);
+            webrtcdev.info('Data connection has been opened between you & ', event.userid);
         }
     };
 
     connection.onclose = function (event) {
         if (!!connection.enableLogs) {
-            console.warn('Data connection has been closed between you & ', event.userid);
+            webrtcdev.warn('Data connection has been closed between you & ', event.userid);
         }
     };
 
     connection.onerror = function (error) {
         if (!!connection.enableLogs) {
-            console.error(error.userid, 'data-error', error);
+            webrtcdev.error(error.userid, 'data-error', error);
         }
     };
 
     connection.onmessage = function (event) {
         if (!!connection.enableLogs) {
-            console.debug('data-message', event.userid, event.data);
+            webrtcdev.debug('data-message', event.userid, event.data);
         }
     };
 
@@ -941,7 +941,7 @@
 
     connection.onEntireSessionClosed = function (event) {
         if (!connection.enableLogs) return;
-        console.info('Entire session is closed: ', event.sessionid, event.extra);
+        webrtcdev.info('Entire session is closed: ', event.sessionid, event.extra);
     };
 
     connection.onstream = function (e) {
@@ -988,7 +988,7 @@
         });
 
         if (!stream) {
-            console.warn('No such stream exist.', streamid);
+            webrtcdev.warn('No such stream exist.', streamid);
             return;
         }
 
@@ -1043,7 +1043,7 @@
                             gumCallback(screen);
                         }
                     }, function (error) {
-                        console.error('Unable to capture screen on Edge. HTTPs and version 17+ is required.');
+                        webrtcdev.error('Unable to capture screen on Edge. HTTPs and version 17+ is required.');
                     });
                 } else {
                     connection.invokeGetUserMedia({
@@ -1083,7 +1083,7 @@
             localMediaConstraints = connection.mediaConstraints;
         }
 
-        console.log(" ======================= invokeGetUserMedia ============= ", session.audio, session.video, localMediaConstraints);
+        webrtcdev.log(" ======================= invokeGetUserMedia ============= ", session.audio, session.video, localMediaConstraints);
         if (localMediaConstraints.isScreen) {
             // For ScreenShare
             getUserMediaHandler({
@@ -1155,7 +1155,7 @@
     function applyConstraints(stream, mediaConstraints) {
         if (!stream) {
             if (!!connection.enableLogs) {
-                console.error('No stream to applyConstraints.');
+                webrtcdev.error('No stream to applyConstraints.');
             }
             return;
         }
@@ -1249,7 +1249,7 @@
                             gumCallback(screen);
                         }
                     }, function (error) {
-                        console.error('Unable to capture screen on Edge. HTTPs and version 17+ is required.');
+                        webrtcdev.error('Unable to capture screen on Edge. HTTPs and version 17+ is required.');
                     });
                 } else {
                     connection.invokeGetUserMedia({
@@ -1375,7 +1375,7 @@
 
     connection.onMediaError = function (error, constraints) {
         if (!!connection.enableLogs) {
-            console.error(error, constraints);
+            webrtcdev.error(error, constraints);
         }
     };
 
@@ -1503,7 +1503,7 @@
 
     connection.getSocket = function (callback) {
         if (!callback && connection.enableLogs) {
-            console.warn('getSocket.callback paramter is required.');
+            webrtcdev.warn('getSocket.callback paramter is required.');
         }
 
         callback = callback || function () {
@@ -1635,12 +1635,12 @@
 
     connection.onNumberOfBroadcastViewersUpdated = function (event) {
         if (!connection.enableLogs || !connection.isInitiator) return;
-        console.info('Number of broadcast (', event.broadcastId, ') viewers', event.numberOfBroadcastViewers);
+        webrtcdev.info('Number of broadcast (', event.broadcastId, ') viewers', event.numberOfBroadcastViewers);
     };
 
     connection.onUserStatusChanged = function (event, dontWriteLogs) {
         if (!!connection.enableLogs && !dontWriteLogs) {
-            console.info(event.userid, event.status);
+            webrtcdev.info(event.userid, event.status);
         }
     };
 
@@ -1693,7 +1693,7 @@
 
         connection.socket.emit('check-presence', roomid + '', function (isRoomExist, _roomid, extra) {
             if (connection.enableLogs) {
-                console.log('checkPresence.isRoomExist: ', isRoomExist, ' roomid: ', _roomid);
+                webrtcdev.log('checkPresence.isRoomExist: ', isRoomExist, ' roomid: ', _roomid);
             }
             callback(isRoomExist, _roomid, extra);
         });
@@ -1728,7 +1728,7 @@
 
     connection.onReConnecting = function (event) {
         if (connection.enableLogs) {
-            console.info('ReConnecting with', event.userid, '...');
+            webrtcdev.info('ReConnecting with', event.userid, '...');
         }
     };
 
@@ -1759,7 +1759,7 @@
     connection.onPeerStateChanged = function (state) {
         if (connection.enableLogs) {
             if (state.iceConnectionState.search(/closed|failed/gi) !== -1) {
-                console.error('Peer connection is closed between you & ', state.userid, state.extra, 'state:', state.iceConnectionState);
+                webrtcdev.error('Peer connection is closed between you & ', state.userid, state.extra, 'state:', state.iceConnectionState);
             }
         }
     };
@@ -1841,7 +1841,7 @@
         connection.join(connection.sessionid);
 
         if (connection.enableLogs) {
-            console.warn('Userid already taken.', useridAlreadyTaken, 'Your new userid:', connection.userid);
+            webrtcdev.warn('Userid already taken.', useridAlreadyTaken, 'Your new userid:', connection.userid);
         }
     };
 
@@ -1850,7 +1850,7 @@
 
     connection.onSettingLocalDescription = function (event) {
         if (connection.enableLogs) {
-            console.info('Set local description for remote user', event.userid);
+            webrtcdev.info('Set local description for remote user', event.userid);
         }
     };
 
@@ -1887,13 +1887,13 @@
 
     connection.onSocketDisconnect = function (event) {
         if (connection.enableLogs) {
-            console.warn('socket.io connection is closed');
+            webrtcdev.warn('socket.io connection is closed');
         }
     };
 
     connection.onSocketError = function (event) {
         if (connection.enableLogs) {
-            console.warn('socket.io connection is failed');
+            webrtcdev.warn('socket.io connection is failed');
         }
     };
 

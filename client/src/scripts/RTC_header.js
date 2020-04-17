@@ -23,13 +23,13 @@ var RTCMultiConnection = function (roomid, forceOptions) {
             }
         };
 
-        if (!global.console) {
-            global.console = {};
+        if (!global.webrtcdev) {
+            global.webrtcdev = {};
         }
 
-        if (typeof global.console.debug === 'undefined') {
-            global.console.debug = global.console.info = global.console.error = global.console.log = global.console.log || function () {
-                console.log(arguments);
+        if (typeof global.webrtcdev.debug === 'undefined') {
+            global.webrtcdev.debug = global.webrtcdev.info = global.webrtcdev.error = global.webrtcdev.log = global.webrtcdev.log || function () {
+                webrtcdev.log(arguments);
             };
         }
 
@@ -120,7 +120,7 @@ var RTCMultiConnection = function (roomid, forceOptions) {
 
     function SocketConnection(connection, connectCallback) {
 
-        console.log(" >>>>s  SocketConnection ", connection);
+        webrtcdev.log(" >>>>s  SocketConnection ", connection);
 
         function isData(session) {
             return !session.audio && !session.video && !session.screen && session.data;
@@ -158,7 +158,7 @@ var RTCMultiConnection = function (roomid, forceOptions) {
 
 
         if (!connection.socketURL) {
-            console.log(" >>>>s  socket.io url is missing , using / ");
+            webrtcdev.log(" >>>>s  socket.io url is missing , using / ");
             connection.socketURL = '/';
         }
 
@@ -169,9 +169,9 @@ var RTCMultiConnection = function (roomid, forceOptions) {
 
         if (connection.enableLogs) {
             if (connection.socketURL == '/') {
-                console.info('socket.io url is: ', location.origin + '/');
+                webrtcdev.info('socket.io url is: ', location.origin + '/');
             } else {
-                console.info('socket.io url is: ', connection.socketURL);
+                webrtcdev.info('socket.io url is: ', connection.socketURL);
             }
         }
 
@@ -367,7 +367,7 @@ var RTCMultiConnection = function (roomid, forceOptions) {
             alreadyConnected = true;
 
             if (connection.enableLogs) {
-                console.info('socket.io connection is opened.');
+                webrtcdev.info('socket.io connection is opened.');
             }
 
             setTimeout(function () {
@@ -428,7 +428,7 @@ var RTCMultiConnection = function (roomid, forceOptions) {
 
         connection.socket.on('logs', function (log) {
             if (!connection.enableLogs) return;
-            console.debug('server-logs', log);
+            webrtcdev.debug('server-logs', log);
         });
 
         connection.socket.on('number-of-broadcast-viewers-updated', function (data) {
@@ -683,7 +683,7 @@ var RTCMultiConnection = function (roomid, forceOptions) {
         this.renegotiatePeer = function (remoteUserId, userPreferences, remoteSdp) {
             if (!connection.peers[remoteUserId]) {
                 if (connection.enableLogs) {
-                    console.error('Peer (' + remoteUserId + ') does not exist. Renegotiation skipped.');
+                    webrtcdev.error('Peer (' + remoteUserId + ') does not exist. Renegotiation skipped.');
                 }
                 return;
             }
@@ -723,7 +723,7 @@ var RTCMultiConnection = function (roomid, forceOptions) {
                 return;
             }
 
-            console.warn('RTPSender.replaceTrack is NOT supported.');
+            webrtcdev.warn('RTPSender.replaceTrack is NOT supported.');
             this.renegotiatePeer(remoteUserId);
         };
 
@@ -746,7 +746,7 @@ var RTCMultiConnection = function (roomid, forceOptions) {
                 }
 
                 if (connection.enableLogs) {
-                    console.log('Remote peer\'s sdp:', message.sdp);
+                    webrtcdev.log('Remote peer\'s sdp:', message.sdp);
                 }
                 return;
             }
@@ -757,7 +757,7 @@ var RTCMultiConnection = function (roomid, forceOptions) {
                 }
 
                 if (connection.enableLogs) {
-                    console.log('Remote peer\'s candidate pairs:', message.candidate);
+                    webrtcdev.log('Remote peer\'s candidate pairs:', message.candidate);
                 }
                 return;
             }

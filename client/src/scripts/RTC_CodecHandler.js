@@ -157,9 +157,9 @@ var CodecsHandler = (function () {
 
         if (isScreen) {
             if (!bandwidth.screen) {
-                console.warn('It seems that you are not using bandwidth for screen. Screen sharing is expected to fail.');
+                webrtcdev.warn('It seems that you are not using bandwidth for screen. Screen sharing is expected to fail.');
             } else if (bandwidth.screen < 300) {
-                console.warn('It seems that you are using wrong bandwidth value for screen. Screen sharing is expected to fail.');
+                webrtcdev.warn('It seems that you are using wrong bandwidth value for screen. Screen sharing is expected to fail.');
             }
         }
 

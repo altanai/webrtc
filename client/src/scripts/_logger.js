@@ -71,7 +71,7 @@ var webrtcdevlogger = {
         let arg ="";
         if (isJSON(arguments)) {
             arg = JSON.stringify(arguments, undefined, 2);
-            webrtcdevlogs.push("<pre style='color:grey'>[LOG]" + arg + "</pre>")
+            webrtcdevlogs.push("<pre style='color:grey'>[LOG]" + arg + "</pre>");
         } else {
             arg = getArgsJson(arguments);
             webrtcdevlogs.push("<p style='color:grey'>[LOG]" + arg + "</p>");
@@ -126,7 +126,7 @@ var webrtcdevlogger = {
         }
         console.error(arguments);
     }
-
     // }
-
 };
+
+var webrtcdev = webrtcdevlogger;
