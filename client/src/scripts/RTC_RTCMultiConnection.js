@@ -112,6 +112,13 @@
         }, connection);
     };
 
+    /**
+     * Event Handler on emoving Remote Media
+     * @method
+     * @name onRemovingRemoteMedia
+     * @param {stream} stream
+     * @param {id} remoteUserId
+     */
     mPeer.onRemovingRemoteMedia = function (stream, remoteUserId) {
         var streamEvent = connection.streamEvents[stream.streamid];
         if (!streamEvent) {
@@ -178,6 +185,12 @@
         'transport': 'polling' // fixing transport:unknown issues
     };
 
+    /**
+     * create a new socket connectoion
+     * @method
+     * @name connectSocket
+     * @param {function} connectCallback
+     */
     function connectSocket(connectCallback) {
         connection.socketAutoReConnect = true;
 
@@ -205,8 +218,9 @@
         });
     }
 
-    // 1st paramter is roomid
-    // 2rd paramter is a callback function
+
+    // 1st parameter is roomid
+    // 2rd parameter is a callback function
     connection.openOrJoin = function (roomid, callback) {
         callback = callback || function () {
         };
@@ -859,10 +873,15 @@
     };
 
     connection.sdpSemantics = null; // "unified-plan" or "plan-b", ref: webrtc.org/web-apis/chrome/unified-plan/
+
     connection.iceCandidatePoolSize = null; // 0
+
     connection.bundlePolicy = null; // max-bundle
+
     connection.rtcpMuxPolicy = null; // "require" or "negotiate"
+
     connection.iceTransportPolicy = null; // "relay" or "all"
+
     connection.optionalArgument = {
         optional: [{
             DtlsSrtpKeyAgreement: true
