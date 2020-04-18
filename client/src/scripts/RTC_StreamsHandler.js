@@ -21,8 +21,6 @@ var StreamsHandler = (function () {
         if (type.video) {
             return 'video';
         }
-
-
     }
 
     function setHandlers(stream, syncAction, connection) {

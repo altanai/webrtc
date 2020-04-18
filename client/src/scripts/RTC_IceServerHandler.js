@@ -2,9 +2,7 @@
 
 var IceServersHandler = (function () {
     function getIceServers(connection) {
-        // resiprocate: 3344+4433
-        // pions: 7575
-        var iceServers = [{
+        let iceServers = [{
             'urls': [
                 'stun:stun.l.google.com:19302',
                 'stun:stun1.l.google.com:19302',
@@ -12,7 +10,6 @@ var IceServersHandler = (function () {
                 'stun:stun.l.google.com:19302?transport=udp',
             ]
         }];
-
         return iceServers;
     }
 

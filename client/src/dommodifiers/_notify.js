@@ -1,11 +1,11 @@
 /*-----------------------------------------------------------------------------------*/
 /*                    Notify JS                                                     */
-
 /*-----------------------------------------------------------------------------------*/
 
 /**
  * function to show bootstrap based notification to client
- * @constructor
+ * @function
+ * #name shownotification
  * @param {string} message - message passed inside the notification
  * @param {string} type - type of message passed inside the notification
  */

@@ -478,38 +478,6 @@ function PeerInitiator(config) {
         };
     });
 
-    // function oldCreateOfferOrAnswer(_method) {
-    //     peer[_method](function (localSdp) {
-    //         if (DetectRTC.browser.name !== 'Safari') {
-    //             localSdp.sdp = connection.processSdp(localSdp.sdp);
-    //         }
-    //         peer.setLocalDescription(localSdp, function () {
-    //             if (!connection.trickleIce) return;
-    //
-    //             config.onLocalSdp({
-    //                 type: localSdp.type,
-    //                 sdp: localSdp.sdp,
-    //                 remotePeerSdpConstraints: config.remotePeerSdpConstraints || false,
-    //                 renegotiatingPeer: !!config.renegotiatingPeer || false,
-    //                 connectionDescription: self.connectionDescription,
-    //                 dontGetRemoteStream: !!config.dontGetRemoteStream,
-    //                 extra: connection ? connection.extra : {},
-    //                 streamsToShare: streamsToShare
-    //             });
-    //
-    //             connection.onSettingLocalDescription(self);
-    //         }, function (error) {
-    //             if (!!connection.enableLogs) {
-    //                 webrtcdev.error('setLocalDescription-error', error);
-    //             }
-    //         });
-    //     }, function (error) {
-    //         if (!!connection.enableLogs) {
-    //             webrtcdev.error('sdp-' + _method + '-error', error);
-    //         }
-    //     }, defaults.sdpConstraints);
-    // }
-
     function createOfferOrAnswer(_method) {
         peer[_method](defaults.sdpConstraints).then(function (localSdp) {
             if (DetectRTC.browser.name !== 'Safari') {
