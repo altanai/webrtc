@@ -272,7 +272,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     try {
         if (!fileshareobj.active) return;
 
-        webrtcdev.log("[filesharing dommodifier] displayList - uuid: ", uuid, " peerinfo :", peerinfo,
+        webrtcdev.log("[filesharing dommodifier js] displayList - uuid: ", uuid, " peerinfo :", peerinfo,
             "file url : ", fileurl, " file name : ", filename, " file type :", filetype);
 
         let _filename = null;
@@ -284,7 +284,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
 
         if (fileprogress.length > 0) {
             for (x in fileprogress) {
-                webrtcdev.log("[filesharing js] displayList remove progress bar index - ", x, " file dom - ", fileprogress[x]);
+                webrtcdev.log("[filesharing dommodifier js] displayList remove progress bar index - ", x, " file dom - ", fileprogress[x]);
                 if ((typeof fileprogress[x]) == "object" &&
                     (fileprogress[x].type == "progressbar" || fileprogress[x].indexOf("progressbar") > -1)) {
                     // if the progress bar exist , remove the progress bar div and create the ul
@@ -294,26 +294,26 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
                         webrtcdev.log("[ filesharing js ] displayList, set up parent dom ", parentdom);
                         parentdom.removeChild(fileprogress[x]);
                     } else {
-                        webrtcdev.log("[ filesharing js ] displayList, Not sure what does this do ", fileprogress[x]);
+                        webrtcdev.log("[ filesharing dommodifier js] displayList, Not sure what does this do ", fileprogress[x]);
                         parentdom = fileprogress[x].parentNode.parentNode;
                         //parentdom.removeChild(fileprogress[x].parentNode);
                     }
                 } else {
-                    console.log("[filesharing js] displayList - cannot remove since , elem is not of type progressbar  ", fileprogress[x]);
+                    webrtcdev.warn("[filesharing dommodifier js] displayList - cannot remove since , elem is not of type progressbar  ", fileprogress[x]);
                 }
             }
         } else {
             // if the progress bar area does not exist
             parentdom = document.getElementById(elementList) || document.body;
-            webrtcdev.warn("[ filesharing js ] displayList , progress bar area doesnt exist, set parent dom to ", elementList, document.getElementById(elementList), " or to document body")
+            webrtcdev.warn("[ filesharing dommodifier js] displayList , progress bar area doesnt exist, set parent dom to ", elementList, document.getElementById(elementList), " or to document body")
         }
 
     } catch (err) {
-        webrtcdev.error(" [filesharing js ] Display list exception ", err);
+        webrtcdev.error(" [filesharing dommodifier js] Display list exception ", err);
     }
 
     //append progress bar to parent dom
-    webrtcdev.log(" [filesharing js] displayList set up parent dom  ", parentdom);
+    webrtcdev.log(" c displayList set up parent dom  ", parentdom);
 
     let filedom = document.createElement("ul");
     filedom.id = filename + uuid;
@@ -340,7 +340,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
         downloadButton.innerHTML = '<i class="fa fa-download"></i>';
     }
     downloadButton.onclick = function () {
-        console.log(" --------------- filename " , filename);
+        webrtcdev.log("[filesharing dommodifier js] download  filename ", filename);
         downloadFile(uuid, elementDisplay, fileurl, filename, filetype);
     };
 
@@ -424,7 +424,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
             });
             removeFile(tobeHiddenElement);
             repeatFlagRemoveButton = filename;
-            webrtcdev.log("[startjs] filedom to be hidden : ", filedom);
+            webrtcdev.log("[filesharing dommodifier js] filedom to be hidden : ", filedom);
             // filedom.hidden = true;
             filedom.setAttribute("style", "display:none!important");
         } else if (repeatFlagRemoveButton == filename) {
@@ -560,6 +560,14 @@ function getFileElementDisplayByType(filetype, fileurl, filename) {
         video.title = filename;
         video.id = "display" + filename;
         elementDisplay = video;
+    } else if (filetype.indexOf("video") > -1) {
+
+        let audio = document.createElement('audio');
+        audio.src = fileurl.audiofileurl;
+        audio.setAttribute("type", "audio/wav");
+        audio.controls = "controls";
+        audio.title = filename.videoname + ".wav";
+        elementDisplay = audio;
 
     } else {
         webrtcdev.log("[filehsaring domodifier] getFileElementDisplayByType - iframe ", fileurl);

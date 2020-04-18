@@ -91,7 +91,7 @@ function addMessageSnapshotFormat(messageDivclass, userinfo, message, parent) {
 
         let image = document.createElement("img");
         image.src = datasnapshot;
-        image.setAttribute("style", "border-radius: 50%;height:40px");
+        // image.setAttribute("style", "border-radius: 50%;height:40px");
 
         let span = document.createElement("span");
         span.className = "msg-avatar";

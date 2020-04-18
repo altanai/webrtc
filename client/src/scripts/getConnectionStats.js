@@ -1,3 +1,12 @@
+/*-----------------------------------------------------------------------------------
+                        gets the ConnectionS tats
+If codec is OPUS for audio set availableBandwidth ,  inputLevel , packet loss , rtt , packetsSent , bytesSent
+If its is vp8 for video set availableBandwidth , googFrameHeightInput , googFrameWidthInput , googCaptureQueueDelayMsPerS ,
+rtt , packetsLost , packetsSent , googEncodeUsagePercent , googCpuLimitedResolution , googNacksReceived , googFrameRateInput ,
+googPlisReceived , googViewLimitedResolution , googCaptureJitterMs , googAvgEncodeMs , googFrameHeightSent , googFrameRateSent ,
+googBandwidthLimitedResolution , googFrameWidthSent , googFirsReceived , bytesSent
+-----------------------------------------------------------------------------------*/
+
 !function () {
     function e(e, t) {
         if (e || (e = {}), !t) return e;
@@ -29,7 +38,7 @@
                             rtt: s.googRtt,
                             packetsSent: s.packetsSent,
                             bytesSent: s.bytesSent
-                        })
+                        });
                     }
                     if ("VP8" == s.googCodecName) {
                         a.video.prevBytesSent || (a.video.prevBytesSent = s.bytesSent);
@@ -58,8 +67,9 @@
                             googFrameWidthSent: s.googFrameWidthSent,
                             googFirsReceived: s.googFirsReceived,
                             bytesSent: s.bytesSent
-                        })
+                        });
                     }
+
                     "VideoBwe" == s.type && (g.video.bandwidth = {
                         googActualEncBitrate: s.googActualEncBitrate,
                         googAvailableSendBandwidth: s.googAvailableSendBandwidth,
@@ -68,7 +78,9 @@
                         googTargetEncBitrate: s.googTargetEncBitrate,
                         googBucketDelay: s.googBucketDelay,
                         googTransmitBitrate: s.googTransmitBitrate
-                    }), "googCandidatePair" == s.type && "true" == s.googActiveConnection && (g.connectionType = {
+                    }),
+
+                    "googCandidatePair" == s.type && "true" == s.googActiveConnection && (g.connectionType = {
                         local: {
                             candidateType: s.googLocalCandidateType,
                             ipAddress: s.googLocalAddress
@@ -78,7 +90,7 @@
                             ipAddress: s.googRemoteAddress
                         },
                         transport: s.googTransportType
-                    })
+                    });
                 }
                 t(g), r || void 0 != typeof o && o && setTimeout(i, o || 1e3)
             })
@@ -98,7 +110,7 @@
                         t[o] = e.stat(o)
                     }), t.id = e.id, t.type = e.type, t.timestamp = e.timestamp, o.push(t)
                 }), e(o)
-            })
+            });
         }
 
         var g = this,

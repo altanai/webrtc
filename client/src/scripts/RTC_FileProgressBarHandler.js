@@ -1,4 +1,8 @@
-// FileProgressBarHandler.js
+/*-----------------------------------------------------------------------------------
+                        FileProgressBarHandler
+ Handles events like - onFileStart , onFileProgress and onFileEnd
+ Also updates progress bar innerhtml and updates the label
+-----------------------------------------------------------------------------------*/
 
 var FileProgressBarHandler = (function () {
 

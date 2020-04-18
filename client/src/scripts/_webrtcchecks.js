@@ -8,7 +8,7 @@
  * @name updateStats
  * @param {object} connection
  */
-function updateStats(obj) {
+function updateStats(statisticsobj) {
     webrtcdev.info(" =============================== check Devices ==========================================");
 
     // Update Stats if active
@@ -19,8 +19,6 @@ function updateStats(obj) {
         document.getElementById(statisticsobj.statsConainer).innerHTML += JSON.stringify(obj);
         document.getElementById(statisticsobj.statsConainer).innerHTML += JSON.stringify(obj.bandwidth);
         document.getElementById(statisticsobj.statsConainer).innerHTML += JSON.stringify(obj.codecs);
-
-        alert("detect RTC appended ");
     }
 
 }

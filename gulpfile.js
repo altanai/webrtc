@@ -17,8 +17,7 @@ const _properties = require('./env.js')(fs).readEnv();
 const properties = JSON.parse(_properties);
 console.log("Properties ", properties);
 
-var folderPath = "", file = "";
-
+var folderPath = "";
 if (properties.enviornment == "production") {
     folderPath = 'prod/';
 } else if (properties.enviornment == "test") {
@@ -315,7 +314,7 @@ gulp.task('webrtcdevelopmentcss', function (done) {
         .pipe(concat('webrtcdevelopment.css'))
         .pipe(minify())
         .pipe(less().on('error', function (error) {
-            console.error(error)
+            console.error(error);
         }))
         .pipe(gulp.dest(folderPath));
     done();
@@ -330,7 +329,7 @@ function execute(command, callback) {
 
 gulp.task('git_pull', function (cb) {
     execute('git pull', function (resp) {
-        cb();
+        cb(resp);
     });
 });
 
