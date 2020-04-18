@@ -560,13 +560,15 @@ function getFileElementDisplayByType(filetype, fileurl, filename) {
         video.title = filename;
         video.id = "display" + filename;
         elementDisplay = video;
-    } else if (filetype.indexOf("video") > -1) {
 
+    } else if (filetype.indexOf("audio") > -1) {
+        webrtcdev.log("[filehsaring domodifier] getFileElementDisplayByType - audio ", fileurl);
         let audio = document.createElement('audio');
-        audio.src = fileurl.audiofileurl;
-        audio.setAttribute("type", "audio/wav");
+        audio.src = fileurl;
+        // audio.setAttribute("type", "audio/wav");
         audio.controls = "controls";
-        audio.title = filename.videoname + ".wav";
+        audio.title = filename;
+        audio.id = "display" + filename;
         elementDisplay = audio;
 
     } else {

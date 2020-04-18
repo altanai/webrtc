@@ -315,7 +315,7 @@ function findEmptyRemoteVideoIndex(peerinfo, remoteVideos) {
             vids = remoteVideos[v].video;
         }
 
-        console.log("[webcallviewdevmanager] ] vids.src ", vids.src,
+        webrtcdev.log("[webcallviewdevmanager] vids.src ", vids.src,
             " , vids.srcObject ", vids.srcObject,
             " , vids.readyState ", vids.readyState,
             " , vids.played.length ", vids.played.length);
