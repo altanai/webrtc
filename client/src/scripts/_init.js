@@ -11,6 +11,8 @@
  */
 this.makesessionid = function (autoload) {
     let sessionid ="";
+    webrtcdev.log(" Existing charecters after # " , location.href.replace('#', '').length);
+
     if (location.href.replace('#', '').length) {
         // When Session should have a session name
         if (location.href.indexOf('?') > -1) {
@@ -18,11 +20,14 @@ this.makesessionid = function (autoload) {
         } else {
             sessionid = location.hash.replace(/\/|:|#|\?|\$|\^|%|\.|`|~|!|\+|@|\[|\||]|\|*. /g, '').split('\n').join('').split('\r').join('');
         }
-        return sessionid;
+        if (sessionid )
+            return sessionid;
     }
 
+    webrtcdev.log("Session id not Found in URL ,  Chek for auto - reload if  " , autoload );
+
     if (autoload == "reload" && !location.hash.replace('#', '').length) {
-        // When Session should autogenerate ssid and locationbar doesnt have a session name
+        // When Session should auto-generate ssid and locationbar doesnt have a session name
         location.href = location.href.split('#')[0] + '#' + (Math.random() * 100).toString().replace('.', '');
         location.reload();
     } else {

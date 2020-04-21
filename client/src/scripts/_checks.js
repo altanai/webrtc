@@ -8,20 +8,19 @@
  * @name updateStats
  * @param {object} connection
  */
-function updateStats(statisticsobj) {
-    webrtcdev.info(" =============================== check Devices ==========================================");
+this.updateStats = function () {
+    webrtcdev.info(" ============================ get Stats  ==========================================");
 
     // Update Stats if active
     if (statisticsobj && statisticsobj.active) {
-        // getStats(event.stream.getVideoTracks() , function(result) {
-        //     document.getElementById("network-stats-body").innerHTML = result;        
-        // } , 20000);
-        document.getElementById(statisticsobj.statsConainer).innerHTML += JSON.stringify(obj);
-        document.getElementById(statisticsobj.statsConainer).innerHTML += JSON.stringify(obj.bandwidth);
-        document.getElementById(statisticsobj.statsConainer).innerHTML += JSON.stringify(obj.codecs);
+        getStats(event.stream.getVideoTracks() , function(result) {
+            document.getElementById("network-stats-body").innerHTML = result;
+        } , 20000);
+        document.getElementById(statisticsobj.statsConainer).innerHTML += JSON.stringify(statisticsobj);
+        document.getElementById(statisticsobj.statsConainer).innerHTML += JSON.stringify(statisticsobj.bandwidth);
+        document.getElementById(statisticsobj.statsConainer).innerHTML += JSON.stringify(statisticsobj.codecs);
     }
-
-}
+};
 
 /**
  * function to check browser support for webrtc apis

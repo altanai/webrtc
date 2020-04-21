@@ -23,212 +23,204 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
     webrtcdev.log("[sessionmanager] startSocketSession , set selfuserid ", rtcConn.userid);
     if (!selfuserid)
         selfuserid = rtcConn.userid;
-    else
-        webrtcdev.warn("[sessionmanager] trying to overwrite remoteobj.userdetails.usercolorelfuserid");
 
-    return new Promise((resolve, reject) => {
-        try {
-            let addr = "/";
-            if (socketAddr != "/") {
-                addr = socketAddr;
-            }
-            webrtcdev.log("[sessionmanager] StartSession" + sessionid, " on address ", addr);
-            socket = io.connect(addr, {
-                transports: ['websocket']
-            });
-            // socket.set('log level', 3);
-        } catch (err) {
-            webrtcdev.error(" problem in socket connnection", err);
-            throw (" problem in socket connnection");
+    webrtcdev.warn("[sessionmanager] trying to overwrite remoteobj.userdetails.usercolorelfuserid");
+
+    try {
+        let addr = "/";
+        if (socketAddr != "/") {
+            addr = socketAddr;
         }
+        webrtcdev.log("[sessionmanager] StartSession" + sessionid, " on address ", addr);
+        socket = io.connect(addr, {
+            transports: ['websocket']
+        });
+        // socket.set('log level', 3);
+    } catch (err) {
+        webrtcdev.error(" problem in socket connnection", err);
+        throw (" problem in socket connnection");
+    }
 
-        if (sessionid) {
-            shownotification("Checking status of  : " + sessionid);
-            socket.emit("presence", {
-                channel: sessionid
+    if (sessionid) {
+        shownotification("Checking status of  : " + sessionid);
+        socket.emit("presence", {
+            channel: sessionid
+        });
+    } else {
+        shownotification("Invalid session");
+        webrtcdev.error("[sessionmanager] Session id undefined ");
+        return;
+    }
+
+    // Socket Listeners
+    socket.on("connect", function () {
+        socket.on('disconnected', function () {
+            shownotification("Disconnected from signaller ");
+        });
+    });
+
+    socket.on("presence", function (channelpresence) {
+        //If debug mode is on , show user detaisl at top under mainDiv
+        if (debug) showUserStats();
+        webrtcdev.log("[sessionmanager] presence for sessionid ", channelpresence);
+        if (channelpresence) joinWebRTC(sessionid, selfuserid);
+        else openWebRTC(sessionid, selfuserid, remoteobj.maxAllowed || 10);
+    });
+
+    socket.on("open-channel-resp", function (event) {
+        webrtcdev.log("[sessionmanager] --------------open-channel-resp---------------------  ", event);
+        if (event.status && event.channel == sessionid) {
+
+            let promise = new Promise(function (resolve) {
+                webrtcdev.log(" [open-channel-resp] ",
+                    " Session video:", outgoingVideo,
+                    " audio: ", outgoingAudio,
+                    " data: ", outgoingData,
+                    " OfferToReceiveAudio: ", incomingAudio,
+                    " OfferToReceiveVideo: ", incomingVideo
+                );
+
+                rtcConn.connectionType = "open",
+                    rtcConn.session = {
+                        video: outgoingVideo,
+                        audio: outgoingAudio,
+                        data: outgoingData
+                    },
+                    rtcConn.sdpConstraints.mandatory = {
+                        OfferToReceiveAudio: incomingAudio,
+                        OfferToReceiveVideo: incomingVideo
+                    },
+                    rtcConn.open(event.channel, function (res) {
+                        // alert(" callback from open room ", res);
+                        webrtcdev.log(" [sessionmanager] offer/answer webrtc ", selfuserid, " with role ", role, " responese ", res);
+                    });
+                resolve("ok");
             });
+            promise.then(
+                updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local")
+            ).then(
+                getCamMedia(rtcConn)
+            ).catch((reason) => {
+                webrtcdev.error(' [sessionmanager] Handle rejected promise (' + reason + ')');
+            });
+
         } else {
-            shownotification("Invalid session");
-            webrtcdev.error("[sessionmanager] Session id undefined ");
-            return;
+            // signaller doesnt allow channel open
+            alert("Could not open this channel, Server refused");
+            webrtcdev.error(" [sessionmanager] Could not open this channel, Server refused");
         }
+        if (event.message)
+            shownotification(event.msgtype + " : " + event.message);
+    });
 
-        // Socket Listeners
-        socket.on("connect", function () {
-            socket.on('disconnected', function () {
-                shownotification("Disconnected from signaller ");
+    socket.on("join-channel-resp", function (event) {
+        webrtcdev.log("[sessionmanager] --------------join-channel-resp---------------------  ", event);
+
+        if (event.status && event.channel == sessionid) {
+
+            let promise = new Promise(function (resolve, reject) {
+
+                webrtcdev.log(" [ join-channel-resp ] ",
+                    " Session video:", outgoingVideo,
+                    " audio: ", outgoingAudio,
+                    " data: ", outgoingData,
+                    " OfferToReceiveAudio: ", incomingAudio,
+                    " OfferToReceiveVideo: ", incomingVideo
+                );
+                rtcConn.connectionType = "join",
+                    rtcConn.session = {
+                        video: outgoingVideo,
+                        audio: outgoingAudio,
+                        data: outgoingData
+                    },
+                    rtcConn.sdpConstraints.mandatory = {
+                        OfferToReceiveAudio: incomingAudio,
+                        OfferToReceiveVideo: incomingVideo
+                    },
+                    rtcConn.remoteUsers = event.users;
+                resolve(); // immediately give the result: 123
             });
-        });
 
-        socket.on("presence", function (channelpresence) {
-            //If debug mode is on , show user detaisl at top under mainDiv
-            if (debug) showUserStats();
-            webrtcdev.log("[sessionmanager] presence for sessionid ", channelpresence);
-            if (channelpresence) joinWebRTC(sessionid, selfuserid);
-            else openWebRTC(sessionid, selfuserid, remoteobj.maxAllowed || 10);
-        });
+            promise.then(
+                rtcConn.connectionDescription = rtcConn.join(event.channel),
+                webrtcdev.info(" [sessionmanager] offer/answer webrtc  ", selfuserid, " with role ", role)
+            ).then(
+                // for a new joiner , update his local info
+                updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local")
+            ).then(
+                getCamMedia(rtcConn)
+            ).catch((reason) => {
+                webrtcdev.error('Handle rejected promise (' + reason + ')');
+            });
 
-        socket.on("open-channel-resp", function (event) {
-            webrtcdev.log("[sessionmanager] --------------open-channel-resp---------------------  ", event);
-            if (event.status && event.channel == sessionid) {
-
-                let promise = new Promise(function (resolve, reject) {
-                    webrtcdev.log(" [open-channel-resp] ",
-                        " Session video:", outgoingVideo,
-                        " audio: ", outgoingAudio,
-                        " data: ", outgoingData,
-                        " OfferToReceiveAudio: ", incomingAudio,
-                        " OfferToReceiveVideo: ", incomingVideo
-                    );
-
-                    rtcConn.connectionType = "open",
-                        rtcConn.session = {
-                            video: outgoingVideo,
-                            audio: outgoingAudio,
-                            data: outgoingData
-                        },
-                        rtcConn.sdpConstraints.mandatory = {
-                            OfferToReceiveAudio: incomingAudio,
-                            OfferToReceiveVideo: incomingVideo
-                        },
-                        rtcConn.open(event.channel, function (res) {
-                            // alert(" callback from open room ", res);
-                            webrtcdev.log(" [sessionmanager] offer/answer webrtc ", selfuserid, " with role ", role);
-                        });
-                    resolve("ok");
-                }).then(
-                    updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local")
-                ).then(
-                    getCamMedia(rtcConn)
-                ).catch((reason) => {
-                    webrtcdev.error(' [sessionmanager] Handle rejected promise (' + reason + ')');
-                });
-
-            } else {
-                // signaller doesnt allow channel open
-                alert("Could not open this channel, Server refused");
-                webrtcdev.error(" [sessionmanager] Could not open this channel, Server refused");
-            }
             if (event.message)
                 shownotification(event.msgtype + " : " + event.message);
-        });
+        } else {
+            // signaller doesnt allow channel Join
+            webrtcdev.error(" [sessionmanager] Could not join this channel, Server refused");
+            alert("Could not join this channel, Server refused ");
+        }
+    });
 
-        socket.on("join-channel-resp", function (event) {
-            webrtcdev.log("[sessionmanager] --------------join-channel-resp---------------------  ", event);
+    socket.on("channel-event", function (event) {
+        webrtcdev.log("[sessionmanager] --------------channel-event---------------------  ", event);
+        if (event.type == "new-join" && event.msgtype != "error") {
+            webrtcdev.log("[session manager ] - new-join-channel ");
 
-            if (event.status && event.channel == sessionid) {
-
-                let promise = new Promise(function (resolve, reject) {
-
-                    webrtcdev.log(" [ join-channel-resp ] ",
-                        " Session video:", outgoingVideo,
-                        " audio: ", outgoingAudio,
-                        " data: ", outgoingData,
-                        " OfferToReceiveAudio: ", incomingAudio,
-                        " OfferToReceiveVideo: ", incomingVideo
-                    );
-                    rtcConn.connectionType = "join",
-                        rtcConn.session = {
-                            video: outgoingVideo,
-                            audio: outgoingAudio,
-                            data: outgoingData
-                        },
-                        rtcConn.sdpConstraints.mandatory = {
-                            OfferToReceiveAudio: incomingAudio,
-                            OfferToReceiveVideo: incomingVideo
-                        },
-                        rtcConn.remoteUsers = event.users;
-                    resolve(); // immediately give the result: 123
-                });
-
-                promise.then(
-                    rtcConn.connectionDescription = rtcConn.join(event.channel),
-                    webrtcdev.info(" [sessionmanager] offer/answer webrtc  ", selfuserid, " with role ", role)
-                ).then(
-                    // for a new joiner , update his local info 
-                    updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local")
-                ).then(
-                    getCamMedia(rtcConn)
-                ).catch((reason) => {
-                    webrtcdev.error('Handle rejected promise (' + reason + ')');
-                });
-
-                if (event.message)
-                    shownotification(event.msgtype + " : " + event.message);
-            } else {
-                // signaller doesnt allow channel Join
-                webrtcdev.error(" [sessionmanager] Could not join this channel, Server refused");
-                alert("Could not join this channel, Server refused ");
-            }
-        });
-
-        socket.on("channel-event", function (event) {
-            webrtcdev.log("[sessionmanager] --------------channel-event---------------------  ", event);
-
-            if (event.type == "new-join" && event.msgtype != "error") {
-                webrtcdev.log("[session manager ] - new-join-channel ");
-
-                // check if maxAllowed capacity of the session isnt reached before updating peer info, else return
-                if (remoteobj.maxAllowed != "unlimited" && webcallpeers.length <= remoteobj.maxAllowed) {
-                    webrtcdev.log("[sessionmanager] channel-event : peer length " + webcallpeers.length + " is less than max capacity of session  of the session " + remoteobj.maxAllowed);
-                    let participantId = event.data.sender;
-                    if (!participantId) {
-                        webrtcdev.error("[sessionmanager] channel-event : userid not present in channel-event:" + event.type);
-                        reject("userid not found");
+            // check if maxAllowed capacity of the session isnt reached before updating peer info, else return
+            if (remoteobj.maxAllowed != "unlimited" && webcallpeers.length <= remoteobj.maxAllowed) {
+                webrtcdev.log("[sessionmanager] channel-event : peer length " + webcallpeers.length + " is less than max capacity of session  of the session " + remoteobj.maxAllowed);
+                let participantId = event.data.sender;
+                if (!participantId) {
+                    webrtcdev.error("[sessionmanager] channel-event : userid not present in channel-event:" + event.type);
+                    reject("userid not found");
+                }
+                let peerinfo = findPeerInfo(participantId);
+                let name = event.data.extra.name,
+                    color = event.data.extra.color,
+                    email = event.data.extra.email,
+                    role = event.data.extra.role;
+                if (!peerinfo) {
+                    webrtcdev.log("[sessionmanager] channel-event : PeerInfo not already present, create new peerinfo");
+                    // If peerinfo is not present for new participant , treat him as Remote
+                    if (name == "LOCAL") {
+                        name = "REMOTE";
                     }
-                    let peerinfo = findPeerInfo(participantId);
-                    let name = event.data.extra.name,
-                        color = event.data.extra.color,
-                        email = event.data.extra.email,
-                        role = event.data.extra.role;
-                    if (!peerinfo) {
-                        webrtcdev.log("[sessionmanager] channel-event : PeerInfo not already present, create new peerinfo");
-                        // If peerinfo is not present for new participant , treat him as Remote
-                        if (name == "LOCAL") {
-                            name = "REMOTE";
-                        }
-                        updatePeerInfo(participantId, name, color, email, role, "remote");
-                        shownotification(event.data.extra.role + "  " + event.type);
-                    } else {
-                        // Peer was already present, this is s rejoin 
-                        webrtcdev.log("[sessionmanager] channel-event : PeerInfo was already present, this is s rejoin, update the peerinfo ");
-                        updatePeerInfo(participantId, name, color, email, role, "remote");
-                        shownotification(event.data.extra.role + " " + event.type);
-                    }
-
-                    if (!peerinfo) {
-                        peerinfo = findPeerInfo(participantId)
-                    }
-                    peerinfo.type = "remote";
-                    peerinfo.stream = "";
-                    peerinfo.streamid = "";
-                    updateWebCallView(peerinfo);
-
-                    // event emitter for local connect
-                    window.dispatchEvent(new CustomEvent('webrtcdev', {
-                        detail: {
-                            servicetype: "session",
-                            action: "onLocalConnect"
-                        },
-                    }));
-
+                    updatePeerInfo(participantId, name, color, email, role, "remote");
+                    shownotification(event.data.extra.role + "  " + event.type);
                 } else {
-                    // max capacity of session is reached 
-                    webrtcdev.error("[sessionmanager] channel-event : max capacity of session is reached ", remoteobj.maxAllowed);
-                    shownotification("Another user is trying to join this channel but max count [ " + remoteobj.maxAllowed + " ] is reached", "warning");
-
+                    // Peer was already present, this is s rejoin
+                    webrtcdev.log("[sessionmanager] channel-event : PeerInfo was already present, this is s rejoin, update the peerinfo ");
+                    updatePeerInfo(participantId, name, color, email, role, "remote");
+                    shownotification(event.data.extra.role + " " + event.type);
                 }
 
+                if (!peerinfo) {
+                    peerinfo = findPeerInfo(participantId)
+                }
+                peerinfo.type = "remote";
+                peerinfo.stream = "";
+                peerinfo.streamid = "";
+                updateWebCallView(peerinfo);
+
+                // event emitter for local connect
+                window.dispatchEvent(new CustomEvent('webrtcdev', {
+                    detail: {
+                        servicetype: "session",
+                        action: "onLocalConnect"
+                    },
+                }));
+
             } else {
-                webrtcdev.warn(" unhandled channel event ");
+                // max capacity of session is reached
+                webrtcdev.error("[sessionmanager] channel-event : max capacity of session is reached ", remoteobj.maxAllowed);
+                shownotificationWarning("Another user is trying to join this channel but max count [ " + remoteobj.maxAllowed + " ] is reached");
             }
-        });
-        resolve("done");
-    })
-        .catch((err) => {
-            webrtcdev.error("[sessionmanager] startSocketSession error -", err);
-            reject(err);
-        });
+
+        } else {
+            webrtcdev.warn("unhandled channel event ");
+        }
+    });
 }
 
 
@@ -248,7 +240,7 @@ var setRtcConn = function (sessionid) {
         rtcConn.socketURL = location.hostname + ":8085/",
 
         // turn off media till connection happens
-        webrtcdev.log("info", "[sessionmanager] set dontAttachStream , dontCaptureUserMedia , dontGetRemoteStream as true "),
+        webrtcdev.log("[sessionmanager] set dontAttachStream , dontCaptureUserMedia , dontGetRemoteStream as true "),
         rtcConn.dontAttachStream = true,
         rtcConn.dontCaptureUserMedia = true,
         rtcConn.dontGetRemoteStream = true,
@@ -411,6 +403,13 @@ var setRtcConn = function (sessionid) {
                     action: "onLocalConnect"
                 },
             }));
+
+            console.log("-------------------------event.streams[0].getTracks() " , event.streams[0].getTracks()) ;
+            getWebrtcdevStats(event.streams[0].getTracks()[0]);
+
+            // getRTCStats(event.streams[0].getTracks()[0], function(result){
+            //    console.log("-------------------------result " , result) ;
+            // },5);
         },
 
         rtcConn.onstreamended = function (event) {
@@ -684,7 +683,7 @@ var setRtcConn = function (sessionid) {
 
         webrtcdev.log("[sessionmanager] rtcConn : ", rtcConn);
 
-        return rtcConn;
+    return rtcConn;
 
     // if(this.turn!=null && this.turn !="none"){
     //     if (!webrtcdevIceServers) {
