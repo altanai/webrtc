@@ -70,7 +70,6 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
                 let stream = event.stream;
                 attachMediaStream(video, stream);
                 //video.id = peerInfo.videoContainer;
-                console.log("[screenshareJS] getElementById screenshareobj.screenshareContainer ", screenshareobj.screenshareContainer);
                 getElementById(screenshareobj.screenshareContainer).appendChild(video);
                 showelem(screenshareobj.screenshareContainer);
                 rtcConn.send({

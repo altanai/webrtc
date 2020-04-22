@@ -9,7 +9,7 @@ function fitToContainer(parent, canvas) {
         canvas.width = parent.offsetWidth;
         canvas.height = parent.offsetHeight;
     } catch (err) {
-        webrtcdev.error(err);
+        // webrtcdev.error(err);
     }
 }
 
@@ -22,8 +22,8 @@ function setContext(canv) {
         ctx.fillStyle = fillStyle;
         ctx.font = font;
     } catch (e) {
-        webrtcdev.error(" canvas context not set ", canv);
-        webrtcdev.error(e);
+        // webrtcdev.error(" canvas context not set ", canv);
+        // webrtcdev.error(e);
     }
     return ctx;
 }
@@ -44,15 +44,12 @@ fitToContainer(parentBox, canvas);
 if (document.getElementById("trashBtn")) {
     document.getElementById("trashBtn").onclick = function () {
         tempContext.clearRect(0, 0, canvas.width, canvas.height);
-        webrtcdev.log(" cleared temp canvas", canvas);
-
         context.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
-        webrtcdev.log(" cleared main canvas ", mainCanvas);
 
         window.location.reload();
     };
 } else {
-    webrtcdev.error("trash button not found");
+    // webrtcdev.error("trash button not found");
 }
 
 
@@ -80,7 +77,7 @@ if (document.getElementById("saveBtn")) {
         a.document.write("<img src='" + e + "' alt='from canvas'/>");*/
     };
 } else {
-    webrtcdev.error("save button not found");
+    // webrtcdev.error("save button not found");
 }
 
 /*-----------------------------------------------*/

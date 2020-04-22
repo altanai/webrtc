@@ -7,18 +7,20 @@
  * @method
  * @name getCamMedia
  * @param {json} rtcConn
+ * @param {booolean} outgoingVideo
+ * @param {booolean} outgoingAudio
  */
-function getCamMedia(rtcConn) {
+function getCamMedia(rtcConn , outgoingVideo , outgoingAudio) {
     rtcConn.dontAttachStream = false,
         rtcConn.dontGetRemoteStream = false;
 
-    webrtcdev.log(" [startJS] getCamMedia  role :", role);
+    webrtcdev.log("[startJS] getCamMedia - role :", role);
+    webrtcdev.log("[startJS] getCamMedia   - outgoingVideo " + outgoingVideo + " outgoingAudio " + outgoingAudio);
 
-    webrtcdev.log(" start getusermedia - outgoingVideo " + outgoingVideo + " outgoingAudio " + outgoingAudio);
     return new Promise(function (resolve, reject) {
         if (role == "inspector") {
             rtcConn.dontCaptureUserMedia = true;
-            console.log("[_mediacontrol.js] getCamMedia  - Joining as inspector without camera Video");
+            webrtcdev.log("[_mediacontrol.js] getCamMedia  - Joining as inspector without camera Video");
 
         } else if (outgoingVideo && outgoingAudio) {
             rtcConn.dontCaptureUserMedia = false;
@@ -48,6 +50,12 @@ function getCamMedia(rtcConn) {
         });
 }
 
+/**
+ * get Video and micrpphone stream media
+ * @method
+ * @name getCamMedia
+ * @param {json} rtcConn
+ */
 function waitForRemoteVideo(_remoteStream, _remoteVideo, _localVideo, _miniVideo) {
     var videoTracks = _remoteStream.getVideoTracks();
     if (videoTracks.length === 0 || _remoteVideo.currentTime > 0) {
@@ -59,6 +67,11 @@ function waitForRemoteVideo(_remoteStream, _remoteVideo, _localVideo, _miniVideo
     }
 }
 
+/**
+ * transition To Active
+ * @method
+ * @name transitionToActive
+ */
 function transitionToActive(_remoteVideo, _localVideo, _miniVideo) {
     _remoteVideo.style.opacity = 1;
     if (localVideo != null) {
@@ -73,17 +86,18 @@ function transitionToActive(_remoteVideo, _localVideo, _miniVideo) {
     }
 }
 
-function transitionToWaiting() {
-    card.style.webkitTransform = 'rotateY(0deg)';
+/**
+ * transition To Waiting
+ * @method
+ * @name transitionToWaiting
+ */
+function transitionToWaiting(localVideo , miniVideo) {
     setTimeout(function () {
-        localVideo.src = miniVideo.src;
+        localVideo.srcObject = miniVideo.srcObject;
         localVideo.muted = true;
-        miniVideo.src = '';
-        remoteVideo.src = '';
-        localVideo.style.opacity = 1;
+        miniVideo.srcObject = null;
+        remoteVideo.srcObject = null;
     }, 500);
-    miniVideo.style.opacity = 0;
-    remoteVideo.style.opacity = 0;
 }
 
 /**
@@ -117,48 +131,35 @@ function attachMediaStream(remvid, stream) {
                 element.srcObject = stream;
                 webrtcdev.log("[  Mediacontrol - attachMediaStream  ] added src object for valid stream ", element, stream);
                 var playPromise = element.play();
-
                 if (playPromise !== undefined) {
                     playPromise.then(_ => {
-                        // Automatic playback started!
-                        // Show playing UI.
                         resolve(1);
                     })
                         .catch(error => {
-                            // Auto-play was prevented
-                            // Show paused UI.
-                            webrtcdev.error("[  Mediacontrol - attachMediaStream  ] error " , error);
+                            webrtcdev.error("[  Mediacontrol - attachMediaStream  ] error ", error);
                             reject(1);
                         });
                 }
-                // element.play().then(
-                //     resolve(1)
-                // );
             });
             return pr;
         }
 
         // If no stream , just attach the src as null
-        let pr = new Promise(function (resolve, reject) {
-            if ('srcObject' in element) {
-                element.srcObject = null;
-            } else {
-                // Avoid using this in new browsers, as it is going away.
-                element.src = null;
-            }
-            webrtcdev.warn("[ Mediacontrol - attachMediaStream ] Media Stream empty '' attached to ", element, " as stream is not valid ", stream);
-            resolve(1);
-        });
-        return pr;
+        element.srcObject = null;
+        webrtcdev.warn("[ Mediacontrol - attachMediaStream ] Media Stream empty '' attached to ", element, " as stream is not valid ", stream);
 
     } catch (err) {
         webrtcdev.error(" [ Mediacontrol - attachMediaStream ]  error", err);
-        return new Promise(function (resolve, reject) {
-            reject(1);
-        });
     }
 }
 
+/**
+ * Re attach media stream from one dom to another dom element
+ * @method
+ * @name reattachMediaStream
+ * @param {dom} to
+ * @param {dom} from
+ */
 function reattachMediaStream(to, from) {
     try {
         let pr = new Promise(function (resolve, reject) {
@@ -169,7 +170,6 @@ function reattachMediaStream(to, from) {
             );
         });
         return pr;
-
     } catch (err) {
         webrtcdev.error("[media control] reattachMediaStream err ", err)
     }

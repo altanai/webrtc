@@ -187,8 +187,29 @@ function updateWebCallView(peerinfo) {
  */
 function destroyWebCallView(peerInfo, callback) {
     webrtcdev.log(" [starjs] destroyWebCallView peerInfo", peerInfo);
-    if (peerInfo.videoContainer && document.getElementById(peerInfo.videoContainer))
-        document.getElementById(peerInfo.videoContainer).src = "";
+    if (peerInfo.videoContainer && document.getElementById(peerInfo.videoContainer)){
+
+        let video = document.getElementById(peerInfo.videoContainer);
+        if(!video) return ;
+        video.onplay = video.onplaying = function () {
+            video.addAttribute("hidden");
+            video.parentNode.parentNode.addAttribute("hidden");
+
+            if ('srcObject' in video) {
+                try {
+                    video.srcObject = "";
+                } catch (err) {
+                    if (err.name != "TypeError") {
+                        throw err;
+                    }
+                    // Even if they do, they may only support MediaStream
+                    video.src ="";
+                }
+            } else {
+                video.src ="";
+            }
+        };
+    }
 
     /*if(fileshareobj.active){
         if(fileshareobj.props.fileShare){

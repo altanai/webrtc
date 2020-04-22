@@ -20,6 +20,16 @@ var findPeerInfo = function (userid) {
 };
 
 /**
+ * get All Active Peers
+ * @method
+ * @name getAllActivePeers
+ */
+function getAllActivePeers () {
+    return rtcConn.peers.getAllParticipants();
+}
+
+
+/**
  * update already existing webcallpeers obj by appending a value , mostly used for timer zone
  * @method
  * @name appendToPeerValue

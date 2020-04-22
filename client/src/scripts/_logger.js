@@ -74,7 +74,6 @@ var webrtcdevlogger = {
                 arg = getArgsJson(arguments);
                 webrtcdevlogs.push("<p style='color:grey'>[LOG]" + arg + "</p>");
             }
-
             console.log(arguments);
         },
 

@@ -2,20 +2,20 @@
  video handling
  *********************************************************/
 
-/*Create a video contaioner and attach it to remote obj */
+/**
+ * function to Create a video contaioner and attach it to remote obj
+ * @method
+ * @name createVideoContainer
+ */
 function appendVideo(e, style) {
 
     createVideoContainer(e, style, function (div) {
         let video = document.createElement('video');
         video.className = style;
-        // video.setAttribute('style', 'height:auto;opacity:1;');
         video.controls = false;
         video.id = e.userid;
-        video.src = URL.createObjectURL(e.stream);
-
-        let remote = document.getElementById('remote');
+        video.srcObject = URL.createObjectURL(e.stream);
         div.appendChild(video);
-
         webrtcdev.log("[_media_dommodifier ] appendVideo");
         video.play();
         // Show loading animation.
@@ -35,7 +35,11 @@ function appendVideo(e, style) {
     });
 }
 
-//*create empty container */
+/**
+ * function to create empty container
+ * @method
+ * @name createVideoContainer
+ */
 function createVideoContainer(e, style, callback) {
     let div = document.createElement('div');
     div.setAttribute('style', style || 'float:left;opacity: 1;width: 32%;');
@@ -139,17 +143,12 @@ function attachControlButtons(vid, peerinfo) {
  * @param {json} peerinfo
  * @return {dom} button
  */
-function createFullScreenButton(controlBarName, peerinfo, streamid, stream) {
+function createFullScreenButton(controlBarName, peerinfo) {
     let button = document.createElement("span");
     button.id = controlBarName + "fullscreeButton";
     button.setAttribute("title", "Full Screen");
     button.className = minmaxobj.max.button.class_off;
     button.innerHTML = minmaxobj.max.button.html_off;
-
-    // button.setAttribute("data-placement", "bottom");
-    // button.setAttribute("data-toggle", "tooltip");
-    // button.setAttribute("data-container", "body");
-
     button.onclick = function () {
         if (button.className == minmaxobj.max.button.class_off) {
             let vid = document.getElementById(peerinfo.videoContainer);
@@ -173,7 +172,7 @@ function createFullScreenButton(controlBarName, peerinfo, streamid, stream) {
  * @param {json} peerinfo
  * @return {dom} button
  */
-function createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream) {
+function createMinimizeVideoButton(controlBarName, peerinfo) {
     var button = document.createElement("span");
     button.id = controlBarName + "minmizevideoButton";
     button.setAttribute("title", "Minimize Video");
@@ -209,9 +208,6 @@ function createAudioMuteButton(controlBarName, peerinfo) {
     audioButton.id = controlBarName + "audioButton";
     audioButton.setAttribute("data-val", "mute");
     audioButton.setAttribute("title", "Toggle Audio");
-    // audioButton.setAttribute("data-placement", "bottom");
-    // audioButton.setAttribute("data-toggle", "tooltip");
-    // audioButton.setAttribute("data-container", "body");
     audioButton.className = muteobj.audio.button.class_on;
     audioButton.innerHTML = muteobj.audio.button.html_on;
     audioButton.onclick = function () {
@@ -293,7 +289,7 @@ function attachUserDetails(vid, peerinfo) {
         }
     }
     let nameBox = document.createElement("div");
-    // nameBox.setAttribute("style", "background-color:" + peerinfo.color),
+    nameBox.setAttribute("style", "background-color:" + peerinfo.color),
     nameBox.className = "videoHeaderClass",
         nameBox.innerHTML = peerinfo.name ,
         nameBox.id = "videoheaders" + peerinfo.userid;

@@ -204,33 +204,6 @@ function detectMic(callback) {
     });
 }
 
-
-function getConnectedDevices(type, callback) {
-    navigator.mediaDevices.enumerateDevices()
-        .then(devices => {
-            const filtered = devices.filter(device => device.kind === type);
-            callback(filtered);
-        });
-}
-
-function listDevices() {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-        webrtcdev.warn("enumerateDevices() not supported.");
-        return;
-    }
-    //List cameras and microphones.
-    navigator.mediaDevices.enumerateDevices()
-        .then(function (devices) {
-            devices.forEach(function (device) {
-                webrtcdev.log("[sessionmanager] checkDevices ", device.kind, ": ", device.label, " id = ", device.deviceId);
-            });
-        })
-        .catch(function (err) {
-            webrtcdev.error('[sessionmanager] checkDevices ', err.name, ": ", err.message);
-        });
-}
-
-
 async function getVideoPermission() {
     // navigator.getUserMedia({ audio: false, video: true}, function(){
     //     outgoingVideo = false;
@@ -268,7 +241,6 @@ async function getAudioPermission() {
         webrtcdev.error(err.name + ": " + err.message);
     }
     outgoingAudio = false;
-
 }
 
 

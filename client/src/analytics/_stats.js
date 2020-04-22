@@ -5,37 +5,74 @@
 /**
  * function to updateStats
  * @method
- * @name getStats
+ * @name getWebrtcdevStats
  * @param {object} mediaStreamTrack
  * @param {function} callback
  * @param {int} interval
  */
-this.getWebrtcdevStats = getWebrtcdevStats = function (streamConn) {
+this.getWebrtcdevStats = getWebrtcdevStats = function () {
 
-    webrtcdev.log(" Borwser  : " , rtcConn.DetectRTC.browser);
+    webrtcdev.log(" Browser  : " , rtcConn.DetectRTC.browser);
 
     webrtcdev.log(" Network connection : " , navigator.connection);
 
-    // let conn = rtcConn.connection;
-    streamConn.getStats(null).then(stats => {
-        let statsOutput = "";
+    webrtcdev.log(" All active participants  : " , getAllActivePeers());
 
-        stats.forEach(report => {
-            statsOutput += `<h2>Report: ${report.type}</h3>\n<strong>ID:</strong> ${report.id}<br>\n` +
-                `<strong>Timestamp:</strong> ${report.timestamp}<br>\n`;
+    for (let x in  webcallpeers){
+        webrtcdev.log(" Peer   : " , x, " - ",  webcallpeers[x]);
+    }
 
-            // Now the statistics for this report; we intentially drop the ones we
-            // sorted to the top above
+    for (let y in rtcConn.peers) {
+        if (rtcConn.peers[y].userid) {
+            let conn = rtcConn.peers[y].peer;
+            webrtcdev.log(conn);
+            conn.getStats(null).then(stats => {
+                let statsOutput = "";
 
-            Object.keys(report).forEach(statName => {
-                if (statName !== "id" && statName !== "timestamp" && statName !== "type") {
-                    statsOutput += `<strong>${statName}:</strong> ${report[statName]}<br>\n`;
-                }
+                stats.forEach(report => {
+                    statsOutput += "Report: ${report.type} \n" +
+                        "ID: ${report.id} \n " +
+                        "Timestamp: ${report.timestamp} \n";
+
+                    // Now the statistics for this report; we intentially drop the ones we
+                    // sorted to the top above
+
+                    Object.keys(report).forEach(statName => {
+                        if (statName !== "id" && statName !== "timestamp" && statName !== "type") {
+                            statsOutput += "${statName}: ${report[statName]} \n";
+                        }
+                    });
+                });
+                webrtcdev.log("[stats] getWebrtcdevStats - ", statsOutput);
             });
-        });
+        }
+    }
 
-       console.og("------------------------stats ",statsOutput);
-    });
+    // for (let y in  rtcConn.peers){
+    //     if(rtcConn.peers[y].userid) {
+    //         let conn = rtcConn.peers[y].peer;
+    //         webrtcdev.log(conn);
+    //         conn.getStats(null).then(stats => {
+    //             let statsOutput = "";
+    //
+    //             stats.forEach(report => {
+    //                 statsOutput += `<h2>Report: ${report.type}</h3>\n<strong>ID:</strong> ${report.id}<br>\n` +
+    //                     `<strong>Timestamp:</strong> ${report.timestamp}<br>\n`;
+    //
+    //                 // Now the statistics for this report; we intentially drop the ones we
+    //                 // sorted to the top above
+    //
+    //                 Object.keys(report).forEach(statName => {
+    //                     if (statName !== "id" && statName !== "timestamp" && statName !== "type") {
+    //                         statsOutput += `<strong>${statName}:</strong> ${report[statName]}<br>\n`;
+    //                     }
+    //                 });
+    //             });
+    //            webrtcdev.info("[stats]",statsOutput);
+    //         });
+    //     }
+    // }
+
 };
 
 this.oldgetStats = function (mediaStreamTrack, callback, interval) {
@@ -307,24 +344,23 @@ function showStatus() {
     webrtcdev.info("[stats] WebcallPeers ", webcallpeers);
 }
 
-/**
- * shows stats of ongoing webrtc call
- * @method
- * @name showStatus
- * @param {obj} conn
- */
-function showRtpstats() {
-    try {
-        for (x = 0; x < rtcConn.peers.getLength(); x++) {
-            var pid = rtcConn.peers.getAllParticipants()[x];
-            var arg = JSON.stringify(rtcConn.peers[pid], undefined, 2);
-            document.getElementById(statisticsobj.statsConainer).innerHTML += "<pre >" + arg + "</pre>";
-        }
-    } catch (e) {
-        webrtcdev.error("[stats] rtpstats", e);
-    }
-
-}
+// /**
+//  * shows stats of ongoing webrtc call
+//  * @method
+//  * @name showStatus
+//  * @param {obj} conn
+//  */
+// function showRtpstats() {
+//     try {
+//         for (x = 0; x < rtcConn.peers.getLength(); x++) {
+//             var pid = rtcConn.peers.getAllParticipants()[x];
+//             var arg = JSON.stringify(rtcConn.peers[pid], undefined, 2);
+//             document.getElementById(statisticsobj.statsConainer).innerHTML += "<pre >" + arg + "</pre>";
+//         }
+//     } catch (e) {
+//         webrtcdev.error("[stats] rtpstats", e);
+//     }
+// }
 
 /*
  * shows rtc conn of ongoing webrtc call 
@@ -335,10 +371,9 @@ this.showRtcConn = function () {
     if (rtcConn) {
         webrtcdev.info(" =========================================================================");
         webrtcdev.info("[stats] rtcConn : ", rtcConn);
-        webrtcdev.info("[stats] rtcConn.peers.getAllParticipants() : ", rtcConn.peers.getAllParticipants());
         webrtcdev.info(" =========================================================================");
     } else {
-        webrtcdev.debug(" rtcConn doesnt exist ");
+        webrtcdev.warn(" rtcConn doesnt exist ");
     }
 };
 
@@ -356,17 +391,91 @@ function showRTCPcapabilities() {
     document.getElementById(statisticsobj.statsConainer).innerHTML += "<pre >" + str + "</pre>";
 }
 
+/**
+ * function to updateStats
+ * @method
+ * @name updateStats
+ * @param {object} connection
+ */
+this.updateStats = function () {
+    webrtcdev.info(" ============================ get Stats  ==========================================");
 
-/*
-check MediaStreamTrack
-    MediaTrackSupportedConstraints, 
-    MediaTrackCapabilities, 
-    MediaTrackConstraints 
-    MediaTrackSettings
-*/
-function getstatsMediaDevices() {
-    webrtcdev.log("[stats] getSupportedConstraints - ", navigator.mediaDevices.getSupportedConstraints());
+    // Update Stats if active
+    if (statisticsobj && statisticsobj.active) {
+        getStats(event.stream.getVideoTracks() , function(result) {
+            document.getElementById("network-stats-body").innerHTML = result;
+        } , 20000);
+        document.getElementById(statisticsobj.statsConainer).innerHTML += JSON.stringify(statisticsobj);
+        document.getElementById(statisticsobj.statsConainer).innerHTML += JSON.stringify(statisticsobj.bandwidth);
+        document.getElementById(statisticsobj.statsConainer).innerHTML += JSON.stringify(statisticsobj.codecs);
+    }
+};
+
+/**
+ * function to check browser support for webrtc apis
+ * @name checkWebRTCSupport
+ * @param {object} connection
+ */
+function checkWebRTCSupport(obj) {
+
+    webrtcdev.info(" Browser ", obj.browser.name + obj.browser.fullVersion);
+
+    if (obj.isWebRTCSupported) {
+        // seems WebRTC compatible client
+    } else {
+
+    }
+
+    if (obj.isAudioContextSupported) {
+        // seems Web-Audio compatible client
+    }
+
+    if (obj.isScreenCapturingSupported) {
+        // seems WebRTC screen capturing feature is supported on this client
+    }
+
+    if (obj.isSctpDataChannelsSupported) {
+        // seems WebRTC SCTP data channels feature are supported on this client
+    }
+
+    if (obj.isRtpDataChannelsSupported) {
+        // seems WebRTC (old-fashioned) RTP data channels feature are supported on this client
+    }
+
 }
 
+function getConnectedDevices(type, callback) {
+    navigator.mediaDevices.enumerateDevices()
+        .then(devices => {
+            const filtered = devices.filter(device => device.kind === type);
+            callback(filtered);
+        });
+}
 
+function listDevices() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+        webrtcdev.warn("enumerateDevices() not supported.");
+        return;
+    }
+    //List cameras and microphones.
+    navigator.mediaDevices.enumerateDevices()
+        .then(function (devices) {
+            devices.forEach(function (device) {
+                webrtcdev.log("[sessionmanager] checkDevices ", device.kind, ": ", device.label, " id = ", device.deviceId);
+            });
+        })
+        .catch(function (err) {
+            webrtcdev.error('[sessionmanager] checkDevices ', err.name, ": ", err.message);
+        });
+}
+/*
+check MediaStreamTrack
+    MediaTrackSupportedConstraints,
+    MediaTrackCapabilities,
+    MediaTrackConstraints
+    MediaTrackSettings
+*/
+function getMediaDevicesConstraints() {
+    return navigator.mediaDevices.getSupportedConstraints();
+}
 /*-----------------------------------------------------------------------------------*/

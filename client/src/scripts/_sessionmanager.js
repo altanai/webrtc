@@ -99,7 +99,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
             promise.then(
                 updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local")
             ).then(
-                getCamMedia(rtcConn)
+                getCamMedia(rtcConn , outgoingVideo , outgoingAudio)
             ).catch((reason) => {
                 webrtcdev.error(' [sessionmanager] Handle rejected promise (' + reason + ')');
             });
@@ -148,7 +148,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
                 // for a new joiner , update his local info
                 updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local")
             ).then(
-                getCamMedia(rtcConn)
+                getCamMedia(rtcConn , outgoingVideo , outgoingAudio)
             ).catch((reason) => {
                 webrtcdev.error('Handle rejected promise (' + reason + ')');
             });
@@ -404,16 +404,13 @@ var setRtcConn = function (sessionid) {
                 },
             }));
 
-            console.log("-------------------------event.streams[0].getTracks() " , event.streams[0].getTracks()) ;
-            getWebrtcdevStats(event.streams[0].getTracks()[0]);
-
             // getRTCStats(event.streams[0].getTracks()[0], function(result){
             //    console.log("-------------------------result " , result) ;
             // },5);
         },
 
         rtcConn.onstreamended = function (event) {
-            webrtcdev.log(" On streamEnded event ", event);
+            webrtcdev.warn("[sessionmanager] On streamEnded event ", event);
             let mediaElement = document.getElementById(event.streamid);
             if (mediaElement) {
                 mediaElement.parentNode.removeChild(mediaElement);
@@ -615,24 +612,28 @@ var setRtcConn = function (sessionid) {
             }), */
 
             var peerinfo = findPeerInfo(e.userid);
-            webrtcdev.log(" RTCConn onleave user", e, " his peerinfo ", peerinfo, " from webcallpeers ", webcallpeers);
-            if (e.extra.name != "undefined")
+            webrtcdev.warn(" [ session manager ] - on leave ", e);
+            webrtcdev.warn(" [ session manager ] remove peerinfo ", peerinfo, " from webcallpeers ", webcallpeers);
+            if (e.extra.name)
                 shownotification(e.extra.name + "  left the conversation.");
             //rtcConn.playRoleOfInitiator()
 
-            /*if(peerinfo){
+            if(peerinfo){
                 destroyWebCallView(peerinfo, function (result) {
-                    if (result)
+                    if (result) {
                         removePeerInfo(e.userid);
+
+                    }
                 });
-            }*/
+            }
         },
 
         rtcConn.onclose = function (e) {
-            webrtcdev.warn(" RTCConn on close conversation ", e);
+            webrtcdev.warn("[session manager] RTCConn on close  ", e);
         },
 
         rtcConn.onEntireSessionClosed = function (event) {
+            webrtcdev.warn("[session manager]  on sesion  closed ", e);
             rtcConn.attachStreams.forEach(function (stream) {
                 stream.stop();
             });
@@ -642,15 +643,15 @@ var setRtcConn = function (sessionid) {
 
         rtcConn.onFileStart = function (file) {
             webrtcdev.log("onFileStart", file);
-            fileSharingStarted(file)
+            fileSharingStarted(file);
         },
 
         rtcConn.onFileProgress = function (event) {
-            fileSharingInprogress(event)
+            fileSharingInprogress(event);
         },
 
         rtcConn.onFileEnd = function (file) {
-            fileSharingEnded(file)
+            fileSharingEnded(file);
         },
 
         rtcConn.takeSnapshot = function (userid, callback) {
@@ -678,6 +679,14 @@ var setRtcConn = function (sessionid) {
 
         rtcConn.enableFileSharing = true,
         rtcConn.filesContainer = document.body || document.documentElement,
+
+        rtcConn.onSocketDisconnect = function(){
+            webrtcdev.error("[sesionmanager ] on Socket Disocnnected " );
+        },
+
+        rtcConn.onSocketError = function(){
+            webrtcdev.error("[sesionmanager ] on Socket Error " );
+        },
 
         rtcConn.iceServers = webrtcdevIceServers,
 

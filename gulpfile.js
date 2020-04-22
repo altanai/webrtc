@@ -208,7 +208,6 @@ var scriptList = [
 
     // ---------------------- scripts
     "client/src/scripts/_screenshare.js",
-    "client/src/scripts/_checks.js",
     "client/src/scripts/FileBufferReader.js",
     "client/src/scripts/MediaStreamRecorder.js",
     "client/src/scripts/RecordRTC.js",
