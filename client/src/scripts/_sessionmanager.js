@@ -262,20 +262,6 @@ var setRtcConn = function (sessionid) {
                 remoteUsers = rtcConn.peers.getAllParticipants();
                 webrtcdev.log(" [sessionmanager onopen] Collecting remote peers", remoteUsers);
 
-
-                // remove old non existing peers, excluded selfuserid
-                webrtcdev.log(" [sessionmanager onopen] webcallpeers length ", webcallpeers.length);
-                if (webcallpeers.length - remoteUsers.length > 1) {
-                    for (x in webcallpeers) {
-                        webrtcdev.log(" [sessionmanager onopen] webcallpeers[" + x + "]", webcallpeers[x]);
-                        if (!(remoteUsers.includes(webcallpeers[x].userid)) && (webcallpeers[x].userid != selfuserid)) {
-                            console.warn("[sessionmanager] remove PeerInfo - ", webcallpeers[x].userid, " which neither exists in remote peer and not is selfuserid");
-                            removePeerInfo(x);
-                        }
-                    }
-                }
-                webrtcdev.log(" [sessionmanager] removePeerInfo  After  ", webcallpeers);
-
                 // add new peers
                 for (x in remoteUsers) {
                     webrtcdev.log(" [sessionmanager] join-channel. Adding remote peer ", remoteUsers[x]);
@@ -403,10 +389,6 @@ var setRtcConn = function (sessionid) {
                     action: "onLocalConnect"
                 },
             }));
-
-            // getRTCStats(event.streams[0].getTracks()[0], function(result){
-            //    console.log("-------------------------result " , result) ;
-            // },5);
         },
 
         rtcConn.onstreamended = function (event) {
@@ -577,7 +559,7 @@ var setRtcConn = function (sessionid) {
                         for (x in webcallpeers) {
                             for (y in webcallpeers[x].filearray) {
                                 if (webcallpeers[x].filearray[y].pid == progressid) {
-                                    console.log("[ sessionmanager ] shareFileStopUpload -  filepid ", webcallpeers[x].filearray[y].pid, " | status ", webcallpeers[x].filearray[y].status);
+                                    webrtcdev.log("[ sessionmanager ] shareFileStopUpload -  filepid ", webcallpeers[x].filearray[y].pid, " | status ", webcallpeers[x].filearray[y].status);
                                     webcallpeers[x].filearray[y].status = "stopped";
                                     hideFile(progressid);
                                     removeFile(progressid);
@@ -585,8 +567,14 @@ var setRtcConn = function (sessionid) {
                                 }
                             }
                         }
-                        //  let stopuploadButton = "stopuploadButton"+filename;
+                        // let stopuploadButton = "stopuploadButton"+filename;
                         // document.getElementById(stopuploadButton).hidden = true;
+                        break;
+                    case "sendstats":
+                        sendWebrtcdevStats();
+                        break;
+                    case "receivedstats":
+                        onreceivedWebrtcdevStats(e.userid , e.data.message);
                         break;
                     default:
                         webrtcdev.warn(" unrecognizable message from peer  ", e);
@@ -612,7 +600,7 @@ var setRtcConn = function (sessionid) {
             }), */
 
             var peerinfo = findPeerInfo(e.userid);
-            webrtcdev.warn(" [ session manager ] - on leave ", e);
+            webrtcdev.warn(" [ session manager ] on leave - ", e);
             webrtcdev.warn(" [ session manager ] remove peerinfo ", peerinfo, " from webcallpeers ", webcallpeers);
             if (e.extra.name)
                 shownotification(e.extra.name + "  left the conversation.");
@@ -622,10 +610,22 @@ var setRtcConn = function (sessionid) {
                 destroyWebCallView(peerinfo, function (result) {
                     if (result) {
                         removePeerInfo(e.userid);
-
                     }
                 });
             }
+
+            // remove old non existing peers, excluded selfuserid
+            // webrtcdev.log(" [sessionmanager onopen] webcallpeers length ", webcallpeers.length);
+            // if (webcallpeers.length - remoteUsers.length > 1) {
+            //     for (x in webcallpeers) {
+            //         webrtcdev.log(" [sessionmanager onopen] webcallpeers[" + x + "]", webcallpeers[x]);
+            //         if (!(remoteUsers.includes(webcallpeers[x].userid)) && (webcallpeers[x].userid != selfuserid)) {
+            //             console.warn("[sessionmanager] remove PeerInfo - ", webcallpeers[x].userid, " which neither exists in remote peer and not is selfuserid");
+            //             removePeerInfo(x);
+            //         }
+            //     }
+            // }
+            // webrtcdev.log(" [sessionmanager] removePeerInfo  After  ", webcallpeers);
         },
 
         rtcConn.onclose = function (e) {
@@ -681,7 +681,7 @@ var setRtcConn = function (sessionid) {
         rtcConn.filesContainer = document.body || document.documentElement,
 
         rtcConn.onSocketDisconnect = function(){
-            webrtcdev.error("[sesionmanager ] on Socket Disocnnected " );
+            webrtcdev.error("[sesionmanager ] on Socket Disconnected " );
         },
 
         rtcConn.onSocketError = function(){
@@ -693,15 +693,6 @@ var setRtcConn = function (sessionid) {
         webrtcdev.log("[sessionmanager] rtcConn : ", rtcConn);
 
     return rtcConn;
-
-    // if(this.turn!=null && this.turn !="none"){
-    //     if (!webrtcdevIceServers) {
-    //         return;
-    //     }
-    //     webrtcdev.info(" WebRTC dev ICE servers ", webrtcdevIceServers);
-    //     rtcConn.iceServers = webrtcdevIceServers;
-    //     //window.clearInterval(repeatInitilization);
-    // }
 };
 
 /**

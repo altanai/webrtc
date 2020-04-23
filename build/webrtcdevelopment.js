@@ -1,4 +1,4 @@
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//*********************************************************
+/*********************************************************
  webdev Logger
  *******************************************************/
 var webrtcdevlogs = [];
@@ -127,7 +127,7 @@ var webrtcdevlogger = {
 };
 
 var webrtcdev = webrtcdevlogger;
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  */// '';
+// 'use strict';
 
 var RTCMultiConnection = function (roomid, forceOptions) {
 
@@ -1042,7 +1042,7 @@ var RTCMultiConnection = function (roomid, forceOptions) {
         };
     }
 
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  */'';
+'use strict';
 // ________________
 // DetectRTC v1.3.9
 
@@ -2189,7 +2189,7 @@ var RTCMultiConnection = function (roomid, forceOptions) {
         });
     }
 })();
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  */if (typeof cordova !== 'undefined') {
+if (typeof cordova !== 'undefined') {
     DetectRTC.isMobileDevice = true;
     DetectRTC.browser.name = 'Chrome';
 }
@@ -2545,7 +2545,7 @@ function isUnifiedPlanSuppored() {
 
     return isUnifiedPlanSupported;
 }
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  */// RTCPeerConnection.js
+// RTCPeerConnection.js
 
 var defaults = {};
 
@@ -3080,7 +3080,7 @@ function PeerInitiator(config) {
 
     this.peer = peer;
 }
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  */// OnIceCandidateHandler.js
+// OnIceCandidateHandler.js
 
 var OnIceCandidateHandler = (function () {
     function processCandidates(connection, icePair) {
@@ -3135,7 +3135,7 @@ var OnIceCandidateHandler = (function () {
         processCandidates: processCandidates
     };
 })();
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  */// IceServersHandler.js
+// IceServersHandler.js
 
 var IceServersHandler = (function () {
     function getIceServers(connection) {
@@ -3154,7 +3154,7 @@ var IceServersHandler = (function () {
         getIceServers: getIceServers
     };
 })();
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  */// getUserMediaHandler.js
+// getUserMediaHandler.js
 
 function setStreamType(constraints, stream) {
     if (constraints.mandatory && constraints.mandatory.chromeMediaSource) {
@@ -3340,7 +3340,7 @@ function getUserMediaHandler(options) {
         });
     }
 }
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  */// StreamsHandler.js
+// StreamsHandler.js
 
 var StreamsHandler = (function () {
     function handleType(type) {
@@ -3493,7 +3493,7 @@ var StreamsHandler = (function () {
         }
     };
 })();
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  */// TextReceiver.js & TextSender.js
+// TextReceiver.js & TextSender.js
 
 function TextReceiver(connection) {
     var content = {};
@@ -3598,7 +3598,7 @@ var TextSender = {
         }
     }
 };
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------
+/*-----------------------------------------------------------------------------------
                         FileProgressBarHandler
  Handles events like - onFileStart , onFileProgress and onFileEnd
  Also updates progress bar innerhtml and updates the label
@@ -3699,7 +3699,7 @@ var FileProgressBarHandler = (function () {
         handle: handle
     };
 })();
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  */// _____________________
+// _____________________
 // RTCMultiConnection.js
 
 (function (connection) {
@@ -4288,6 +4288,7 @@ var FileProgressBarHandler = (function () {
         var session = sessionForced || connection.session;
 
         if (connection.dontCaptureUserMedia || isData(session)) {
+            webrtcdev.warn("[RTCConn] dont capture media " );
             callback();
             return;
         }
@@ -4808,7 +4809,8 @@ var FileProgressBarHandler = (function () {
             connection.renegotiate(remoteUserId);
         }
     };
-    var IsChrome = !!navigator.webkitGetUserMedia;
+
+    // var IsChrome = !!navigator.webkitGetUserMedia;
     connection.invokeGetUserMedia = function (localMediaConstraints, callback, session) {
         if (!session) {
             session = connection.session;
@@ -5166,14 +5168,15 @@ var FileProgressBarHandler = (function () {
             var paused = e.mediaElement.pause();
             if (typeof paused !== 'undefined') {
                 paused.then(function () {
-                    e.mediaElement.poster = e.snapshot || 'https://cdn.webrtc-experiment.com/images/muted.png';
+                    e.mediaElement.poster = e.snapshot || 'muted.png';
                 });
             } else {
-                e.mediaElement.poster = e.snapshot || 'https://cdn.webrtc-experiment.com/images/muted.png';
+                e.mediaElement.poster = e.snapshot || 'muted.png';
             }
         } else if (e.muteType === 'audio') {
             e.mediaElement.muted = true;
         }
+        webrtcdev.log("[RtcConn] onmute");
     };
 
     connection.onunmute = function (e) {
@@ -5188,6 +5191,7 @@ var FileProgressBarHandler = (function () {
         } else if (e.unmuteType === 'audio') {
             e.mediaElement.muted = false;
         }
+        webrtcdev.log("[RtcConn] onunmute");
     };
 
     connection.onExtraDataUpdated = function (event) {
@@ -5475,17 +5479,17 @@ var FileProgressBarHandler = (function () {
         return stream;
     };
 
-    if (typeof isChromeExtensionAvailable !== 'undefined') {
-        connection.checkIfChromeExtensionAvailable = isChromeExtensionAvailable;
-    }
-
-    if (typeof isFirefoxExtensionAvailable !== 'undefined') {
-        connection.checkIfChromeExtensionAvailable = isFirefoxExtensionAvailable;
-    }
-
-    if (typeof getChromeExtensionStatus !== 'undefined') {
-        connection.getChromeExtensionStatus = getChromeExtensionStatus;
-    }
+    // if (typeof isChromeExtensionAvailable !== 'undefined') {
+    //     connection.checkIfChromeExtensionAvailable = isChromeExtensionAvailable;
+    // }
+    //
+    // if (typeof isFirefoxExtensionAvailable !== 'undefined') {
+    //     connection.checkIfChromeExtensionAvailable = isFirefoxExtensionAvailable;
+    // }
+    //
+    // if (typeof getChromeExtensionStatus !== 'undefined') {
+    //     connection.getChromeExtensionStatus = getChromeExtensionStatus;
+    // }
 
     connection.modifyScreenConstraints = function (screen_constraints) {
         return screen_constraints;
@@ -5634,18 +5638,18 @@ var FileProgressBarHandler = (function () {
 
     // error messages
     connection.errors = {
-        ROOM_NOT_AVAILABLE: 'Room not available',
+        ROOM_NOT_AVAILABLE: 'Session id not available',
         INVALID_PASSWORD: 'Invalid password',
         USERID_NOT_AVAILABLE: 'User ID does not exist',
-        ROOM_PERMISSION_DENIED: 'Room permission denied',
-        ROOM_FULL: 'Room full',
-        DID_NOT_JOIN_ANY_ROOM: 'Did not join any room yet',
+        ROOM_PERMISSION_DENIED: 'session permission denied',
+        ROOM_FULL: 'session capacity is full',
+        DID_NOT_JOIN_ANY_ROOM: 'Did not join any session yet',
         INVALID_SOCKET: 'Invalid socket',
         PUBLIC_IDENTIFIER_MISSING: 'publicRoomIdentifier is required',
         INVALID_ADMIN_CREDENTIAL: 'Invalid username or password attempted'
     };
 })(this);
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  */
+
 
 };
 
@@ -5659,7 +5663,7 @@ if (typeof define === 'function' && define.amd) {
     });
 }
 
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//*!
+/*!
  * html2canvas 1.0.0-alpha.12 <https://html2canvas.hertzen.com>
  * Copyright (c) 2018 Niklas von Hertzen <https://hertzen.com>
  * Released under MIT License
@@ -5743,7 +5747,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 // http://dev.w3.org/csswg/css-color/
@@ -5996,7 +6000,7 @@ var TRANSPARENT = exports.TRANSPARENT = new Color([0, 0, 0, 0]);
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -6074,7 +6078,7 @@ var calculateLengthFromValueWithUnit = exports.calculateLengthFromValueWithUnit 
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -6283,7 +6287,7 @@ var getCurvePoints = function getCurvePoints(x, y, r1, r2, position) {
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -6315,7 +6319,7 @@ var SMALL_IMAGE = exports.SMALL_IMAGE = 'data:image/gif;base64,R0lGODlhAQABAIAAA
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -6674,7 +6678,7 @@ var parseBackgroundImage = exports.parseBackgroundImage = function parseBackgrou
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -6690,7 +6694,7 @@ var PATH = exports.PATH = {
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -6936,7 +6940,7 @@ var getImage = function getImage(node, resourceLoader) {
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -6969,7 +6973,7 @@ exports.default = Vector;
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -7178,7 +7182,7 @@ var parseListStylePosition = function parseListStylePosition(position) {
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -7243,7 +7247,7 @@ function capitalize(m, p1, p2) {
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -7376,7 +7380,7 @@ var testForeignObject = function testForeignObject(document) {
 var FEATURES = {
     // $FlowFixMe - get/set properties not yet supported
     get SUPPORT_RANGE_BOUNDS() {
-        '';
+        'use strict';
 
         var value = testRangeBounds(document);
         Object.defineProperty(FEATURES, 'SUPPORT_RANGE_BOUNDS', { value: value });
@@ -7384,7 +7388,7 @@ var FEATURES = {
     },
     // $FlowFixMe - get/set properties not yet supported
     get SUPPORT_SVG_DRAWING() {
-        '';
+        'use strict';
 
         var value = testSVG(document);
         Object.defineProperty(FEATURES, 'SUPPORT_SVG_DRAWING', { value: value });
@@ -7392,7 +7396,7 @@ var FEATURES = {
     },
     // $FlowFixMe - get/set properties not yet supported
     get SUPPORT_BASE64_DRAWING() {
-        '';
+        'use strict';
 
         return function (src) {
             var _value = testBase64(document, src);
@@ -7404,7 +7408,7 @@ var FEATURES = {
     },
     // $FlowFixMe - get/set properties not yet supported
     get SUPPORT_FOREIGNOBJECT_DRAWING() {
-        '';
+        'use strict';
 
         var value = typeof Array.from === 'function' && typeof window.fetch === 'function' ? testForeignObject(document) : Promise.resolve(false);
         Object.defineProperty(FEATURES, 'SUPPORT_FOREIGNOBJECT_DRAWING', { value: value });
@@ -7412,7 +7416,7 @@ var FEATURES = {
     },
     // $FlowFixMe - get/set properties not yet supported
     get SUPPORT_CORS_IMAGES() {
-        '';
+        'use strict';
 
         var value = testCORS();
         Object.defineProperty(FEATURES, 'SUPPORT_CORS_IMAGES', { value: value });
@@ -7420,7 +7424,7 @@ var FEATURES = {
     },
     // $FlowFixMe - get/set properties not yet supported
     get SUPPORT_RESPONSE_TYPE() {
-        '';
+        'use strict';
 
         var value = testResponseType();
         Object.defineProperty(FEATURES, 'SUPPORT_RESPONSE_TYPE', { value: value });
@@ -7428,7 +7432,7 @@ var FEATURES = {
     },
     // $FlowFixMe - get/set properties not yet supported
     get SUPPORT_CORS_XHR() {
-        '';
+        'use strict';
 
         var value = 'withCredentials' in new XMLHttpRequest();
         Object.defineProperty(FEATURES, 'SUPPORT_CORS_XHR', { value: value });
@@ -7442,7 +7446,7 @@ exports.default = FEATURES;
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -7529,7 +7533,7 @@ var parseTextDecoration = exports.parseTextDecoration = function parseTextDecora
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -7584,7 +7588,7 @@ var parseBorder = exports.parseBorder = function parseBorder(style) {
 /* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -7705,7 +7709,7 @@ var polyUint32Array = exports.polyUint32Array = function polyUint32Array(buffer)
 /* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -8028,7 +8032,7 @@ var createCounterText = exports.createCounterText = function createCounterText(v
 /* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -8289,7 +8293,7 @@ exports.default = CanvasRenderer;
 /* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -8353,7 +8357,7 @@ exports.default = Logger;
 /* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -8386,7 +8390,7 @@ var parsePadding = exports.parsePadding = function parsePadding(style) {
 /* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -8411,7 +8415,7 @@ var parseOverflowWrap = exports.parseOverflowWrap = function parseOverflowWrap(o
 /* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -8444,7 +8448,7 @@ var parsePosition = exports.parsePosition = function parsePosition(position) {
 /* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -8474,7 +8478,7 @@ var parseTextTransform = exports.parseTextTransform = function parseTextTransfor
 /* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -8602,7 +8606,7 @@ var getInputValue = function getInputValue(node) {
 /* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -8686,7 +8690,7 @@ var getRangeBounds = function getRangeBounds(node, offset, length, scrollX, scro
 /* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -8771,7 +8775,7 @@ var loadSerializedSVG = exports.loadSerializedSVG = function loadSerializedSVG(s
 /* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -8816,7 +8820,7 @@ var breakWords = exports.breakWords = function breakWords(str, parent) {
 /* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -8909,7 +8913,7 @@ var FontMetrics = exports.FontMetrics = function () {
 /* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -8980,7 +8984,7 @@ var Proxy = exports.Proxy = function Proxy(src, options) {
 /* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -9049,7 +9053,7 @@ module.exports = html2canvas;
 /* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -9212,7 +9216,7 @@ var renderElement = exports.renderElement = function renderElement(element, opti
 /* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -9341,7 +9345,7 @@ var isBodyWithTransparentRoot = function isBodyWithTransparentRoot(container, no
 /* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -9392,7 +9396,7 @@ exports.default = StackingContext;
 /* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -9414,7 +9418,7 @@ exports.default = Size;
 /* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -9475,7 +9479,7 @@ exports.default = BezierCurve;
 /* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -9510,7 +9514,7 @@ var parseBorderRadius = exports.parseBorderRadius = function parseBorderRadius(s
 /* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -9626,7 +9630,7 @@ var parseDisplay = exports.parseDisplay = function parseDisplay(display) {
 /* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -9658,7 +9662,7 @@ var parseCSSFloat = exports.parseCSSFloat = function parseCSSFloat(float) {
 /* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -9698,7 +9702,7 @@ var parseFont = exports.parseFont = function parseFont(style) {
 /* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -9716,7 +9720,7 @@ var parseLetterSpacing = exports.parseLetterSpacing = function parseLetterSpacin
 /* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -9741,7 +9745,7 @@ var parseLineBreak = exports.parseLineBreak = function parseLineBreak(wordBreak)
 /* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -9767,7 +9771,7 @@ var parseMargin = exports.parseMargin = function parseMargin(style) {
 /* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -9798,7 +9802,7 @@ var parseOverflow = exports.parseOverflow = function parseOverflow(overflow) {
 /* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -9899,7 +9903,7 @@ var parseTextShadow = exports.parseTextShadow = function parseTextShadow(textSha
 /* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -9972,7 +9976,7 @@ var parseTransformMatrix = function parseTransformMatrix(transform) {
 /* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -10000,7 +10004,7 @@ var parseVisibility = exports.parseVisibility = function parseVisibility(visibil
 /* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -10028,7 +10032,7 @@ var parseWordBreak = exports.parseWordBreak = function parseWordBreak(wordBreak)
 /* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -10046,7 +10050,7 @@ var parseZIndex = exports.parseZIndex = function parseZIndex(zIndex) {
 /* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -10081,7 +10085,7 @@ Object.defineProperty(exports, 'LineBreaker', {
 /* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -10696,7 +10700,7 @@ var LineBreaker = exports.LineBreaker = function LineBreaker(str, options) {
 /* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -10861,7 +10865,7 @@ var Trie = exports.Trie = function () {
 /* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 module.exports = 'KwAAAAAAAAAACA4AIDoAAPAfAAACAAAAAAAIABAAGABAAEgAUABYAF4AZgBeAGYAYABoAHAAeABeAGYAfACEAIAAiACQAJgAoACoAK0AtQC9AMUAXgBmAF4AZgBeAGYAzQDVAF4AZgDRANkA3gDmAOwA9AD8AAQBDAEUARoBIgGAAIgAJwEvATcBPwFFAU0BTAFUAVwBZAFsAXMBewGDATAAiwGTAZsBogGkAawBtAG8AcIBygHSAdoB4AHoAfAB+AH+AQYCDgIWAv4BHgImAi4CNgI+AkUCTQJTAlsCYwJrAnECeQKBAk0CiQKRApkCoQKoArACuALAAsQCzAIwANQC3ALkAjAA7AL0AvwCAQMJAxADGAMwACADJgMuAzYDPgOAAEYDSgNSA1IDUgNaA1oDYANiA2IDgACAAGoDgAByA3YDfgOAAIQDgACKA5IDmgOAAIAAogOqA4AAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAK8DtwOAAIAAvwPHA88D1wPfAyAD5wPsA/QD/AOAAIAABAQMBBIEgAAWBB4EJgQuBDMEIAM7BEEEXgBJBCADUQRZBGEEaQQwADAAcQQ+AXkEgQSJBJEEgACYBIAAoASoBK8EtwQwAL8ExQSAAIAAgACAAIAAgACgAM0EXgBeAF4AXgBeAF4AXgBeANUEXgDZBOEEXgDpBPEE+QQBBQkFEQUZBSEFKQUxBTUFPQVFBUwFVAVcBV4AYwVeAGsFcwV7BYMFiwWSBV4AmgWgBacFXgBeAF4AXgBeAKsFXgCyBbEFugW7BcIFwgXIBcIFwgXQBdQF3AXkBesF8wX7BQMGCwYTBhsGIwYrBjMGOwZeAD8GRwZNBl4AVAZbBl4AXgBeAF4AXgBeAF4AXgBeAF4AXgBeAGMGXgBqBnEGXgBeAF4AXgBeAF4AXgBeAF4AXgB5BoAG4wSGBo4GkwaAAIADHgR5AF4AXgBeAJsGgABGA4AAowarBrMGswagALsGwwbLBjAA0wbaBtoG3QbaBtoG2gbaBtoG2gblBusG8wb7BgMHCwcTBxsHCwcjBysHMAc1BzUHOgdCB9oGSgdSB1oHYAfaBloHaAfaBlIH2gbaBtoG2gbaBtoG2gbaBjUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHbQdeAF4ANQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQd1B30HNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1B4MH2gaKB68EgACAAIAAgACAAIAAgACAAI8HlwdeAJ8HpweAAIAArwe3B14AXgC/B8UHygcwANAH2AfgB4AA6AfwBz4B+AcACFwBCAgPCBcIogEYAR8IJwiAAC8INwg/CCADRwhPCFcIXwhnCEoDGgSAAIAAgABvCHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIfQh3CHgIeQh6CHsIfAh9CHcIeAh5CHoIewh8CH0Idwh4CHkIegh7CHwIhAiLCI4IMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwAJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlggwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAANQc1BzUHNQc1BzUHNQc1BzUHNQc1B54INQc1B6II2gaqCLIIugiAAIAAvgjGCIAAgACAAIAAgACAAIAAgACAAIAAywiHAYAA0wiAANkI3QjlCO0I9Aj8CIAAgACAAAIJCgkSCRoJIgknCTYHLwk3CZYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiWCJYIlgiAAIAAAAFAAXgBeAGAAcABeAHwAQACQAKAArQC9AJ4AXgBeAE0A3gBRAN4A7AD8AMwBGgEAAKcBNwEFAUwBXAF4QkhCmEKnArcCgAHHAsABz4LAAcABwAHAAd+C6ABoAG+C/4LAAcABwAHAAc+DF4MAAcAB54M3gweDV4Nng3eDaABoAGgAaABoAGgAaABoAGgAaABoAGgAaABoAGgAaABoAGgAaABoAEeDqABVg6WDqABoQ6gAaABoAHXDvcONw/3DvcO9w73DvcO9w73DvcO9w73DvcO9w73DvcO9w73DvcO9w73DvcO9w73DvcO9w73DvcO9w73DvcO9w73DncPAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcABwAHAAcAB7cPPwlGCU4JMACAAIAAgABWCV4JYQmAAGkJcAl4CXwJgAkwADAAMAAwAIgJgACLCZMJgACZCZ8JowmrCYAAswkwAF4AXgB8AIAAuwkABMMJyQmAAM4JgADVCTAAMAAwADAAgACAAIAAgACAAIAAgACAAIAAqwYWBNkIMAAwADAAMADdCeAJ6AnuCR4E9gkwAP4JBQoNCjAAMACAABUK0wiAAB0KJAosCjQKgAAwADwKQwqAAEsKvQmdCVMKWwowADAAgACAALcEMACAAGMKgABrCjAAMAAwADAAMAAwADAAMAAwADAAMAAeBDAAMAAwADAAMAAwADAAMAAwADAAMAAwAIkEPQFzCnoKiQSCCooKkAqJBJgKoAqkCokEGAGsCrQKvArBCjAAMADJCtEKFQHZCuEK/gHpCvEKMAAwADAAMACAAIwE+QowAIAAPwEBCzAAMAAwADAAMACAAAkLEQswAIAAPwEZCyELgAAOCCkLMAAxCzkLMAAwADAAMAAwADAAXgBeAEELMAAwADAAMAAwADAAMAAwAEkLTQtVC4AAXAtkC4AAiQkwADAAMAAwADAAMAAwADAAbAtxC3kLgAuFC4sLMAAwAJMLlwufCzAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAApwswADAAMACAAIAAgACvC4AAgACAAIAAgACAALcLMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAvwuAAMcLgACAAIAAgACAAIAAyguAAIAAgACAAIAA0QswADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAANkLgACAAIAA4AswADAAMAAwADAAMAAwADAAMAAwADAAMAAwAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAIAAgACJCR4E6AswADAAhwHwC4AA+AsADAgMEAwwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMACAAIAAGAwdDCUMMAAwAC0MNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQw1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHPQwwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADUHNQc1BzUHNQc1BzUHNQc2BzAAMAA5DDUHNQc1BzUHNQc1BzUHNQc1BzUHNQdFDDAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAgACAAIAATQxSDFoMMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwAF4AXgBeAF4AXgBeAF4AYgxeAGoMXgBxDHkMfwxeAIUMXgBeAI0MMAAwADAAMAAwAF4AXgCVDJ0MMAAwADAAMABeAF4ApQxeAKsMswy7DF4Awgy9DMoMXgBeAF4AXgBeAF4AXgBeAF4AXgDRDNkMeQBqCeAM3Ax8AOYM7Az0DPgMXgBeAF4AXgBeAF4AXgBeAF4AXgBeAF4AXgBeAF4AXgCgAAANoAAHDQ4NFg0wADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAeDSYNMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwAIAAgACAAIAAgACAAC4NMABeAF4ANg0wADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwAD4NRg1ODVYNXg1mDTAAbQ0wADAAMAAwADAAMAAwADAA2gbaBtoG2gbaBtoG2gbaBnUNeg3CBYANwgWFDdoGjA3aBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gaUDZwNpA2oDdoG2gawDbcNvw3HDdoG2gbPDdYN3A3fDeYN2gbsDfMN2gbaBvoN/g3aBgYODg7aBl4AXgBeABYOXgBeACUG2gYeDl4AJA5eACwO2w3aBtoGMQ45DtoG2gbaBtoGQQ7aBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gZJDjUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1B1EO2gY1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQdZDjUHNQc1BzUHNQc1B2EONQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHaA41BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1B3AO2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gY1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1BzUHNQc1B2EO2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gZJDtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBtoG2gbaBkkOeA6gAKAAoAAwADAAMAAwAKAAoACgAKAAoACgAKAAgA4wADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAD//wQABAAEAAQABAAEAAQABAAEAA0AAwABAAEAAgAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAKABMAFwAeABsAGgAeABcAFgASAB4AGwAYAA8AGAAcAEsASwBLAEsASwBLAEsASwBLAEsAGAAYAB4AHgAeABMAHgBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAFgAbABIAHgAeAB4AUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQABYADQARAB4ABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsABAAEAAQABAAEAAUABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAkAFgAaABsAGwAbAB4AHQAdAB4ATwAXAB4ADQAeAB4AGgAbAE8ATwAOAFAAHQAdAB0ATwBPABcATwBPAE8AFgBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAHQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB0AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgBQAB4AHgAeAB4AUABQAFAAUAAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAeAB4AHgAeAFAATwBAAE8ATwBPAEAATwBQAFAATwBQAB4AHgAeAB4AHgAeAB0AHQAdAB0AHgAdAB4ADgBQAFAAUABQAFAAHgAeAB4AHgAeAB4AHgBQAB4AUAAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4ABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAJAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAkACQAJAAkACQAJAAkABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAeAB4AHgAeAFAAHgAeAB4AKwArAFAAUABQAFAAGABQACsAKwArACsAHgAeAFAAHgBQAFAAUAArAFAAKwAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AKwAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4ABAAEAAQABAAEAAQABAAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAUAAeAB4AHgAeAB4AHgArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwAYAA0AKwArAB4AHgAbACsABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQADQAEAB4ABAAEAB4ABAAEABMABAArACsAKwArACsAKwArACsAVgBWAFYAVgBWAFYAVgBWAFYAVgBWAFYAVgBWAFYAVgBWAFYAVgBWAFYAVgBWAFYAVgBWAFYAKwArACsAKwArAFYAVgBWAB4AHgArACsAKwArACsAKwArACsAKwArACsAHgAeAB4AHgAeAB4AHgAeAB4AGgAaABoAGAAYAB4AHgAEAAQABAAEAAQABAAEAAQABAAEAAQAEwAEACsAEwATAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABABLAEsASwBLAEsASwBLAEsASwBLABoAGQAZAB4AUABQAAQAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQABMAUAAEAAQABAAEAAQABAAEAB4AHgAEAAQABAAEAAQABABQAFAABAAEAB4ABAAEAAQABABQAFAASwBLAEsASwBLAEsASwBLAEsASwBQAFAAUAAeAB4AUAAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AKwAeAFAABABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAABAAEAAQABAAEAAQABAAEAAQABAAEAFAAKwArACsAKwArACsAKwArACsAKwArACsAKwArAEsASwBLAEsASwBLAEsASwBLAEsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAABAAEAAQABAAEAAQABAAEAAQAUABQAB4AHgAYABMAUAArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAFAABAAEAAQABAAEAFAABAAEAAQAUAAEAAQABAAEAAQAKwArAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAArACsAHgArAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAeAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABABQAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAFAABAAEAAQABAAEAAQABABQAFAAUABQAFAAUABQAFAAUABQAAQABAANAA0ASwBLAEsASwBLAEsASwBLAEsASwAeAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAABAAEAAQAKwBQAFAAUABQAFAAUABQAFAAKwArAFAAUAArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAUABQAFAAUABQAFAAUAArAFAAKwArACsAUABQAFAAUAArACsABABQAAQABAAEAAQABAAEAAQAKwArAAQABAArACsABAAEAAQAUAArACsAKwArACsAKwArACsABAArACsAKwArAFAAUAArAFAAUABQAAQABAArACsASwBLAEsASwBLAEsASwBLAEsASwBQAFAAGgAaAFAAUABQAFAAUABMAB4AGwBQAB4AKwArACsABAAEAAQAKwBQAFAAUABQAFAAUAArACsAKwArAFAAUAArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAUABQAFAAUABQAFAAUAArAFAAUAArAFAAUAArAFAAUAArACsABAArAAQABAAEAAQABAArACsAKwArAAQABAArACsABAAEAAQAKwArACsABAArACsAKwArACsAKwArAFAAUABQAFAAKwBQACsAKwArACsAKwArACsASwBLAEsASwBLAEsASwBLAEsASwAEAAQAUABQAFAABAArACsAKwArACsAKwArACsAKwArACsABAAEAAQAKwBQAFAAUABQAFAAUABQAFAAUAArAFAAUABQACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAUABQAFAAUABQAFAAUAArAFAAUAArAFAAUABQAFAAUAArACsABABQAAQABAAEAAQABAAEAAQABAArAAQABAAEACsABAAEAAQAKwArAFAAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAUABQAAQABAArACsASwBLAEsASwBLAEsASwBLAEsASwAeABsAKwArACsAKwArACsAKwBQAAQABAAEAAQABAAEACsABAAEAAQAKwBQAFAAUABQAFAAUABQAFAAKwArAFAAUAArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAAQAKwArAAQABAArACsABAAEAAQAKwArACsAKwArACsAKwArAAQABAArACsAKwArAFAAUAArAFAAUABQAAQABAArACsASwBLAEsASwBLAEsASwBLAEsASwAeAFAAUABQAFAAUABQAFAAKwArACsAKwArACsAKwArACsAKwAEAFAAKwBQAFAAUABQAFAAUAArACsAKwBQAFAAUAArAFAAUABQAFAAKwArACsAUABQACsAUAArAFAAUAArACsAKwBQAFAAKwArACsAUABQAFAAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwAEAAQABAAEAAQAKwArACsABAAEAAQAKwAEAAQABAAEACsAKwBQACsAKwArACsAKwArAAQAKwArACsAKwArACsAKwArACsAKwBLAEsASwBLAEsASwBLAEsASwBLAFAAUABQAB4AHgAeAB4AHgAeABsAHgArACsAKwArACsABAAEAAQABAArAFAAUABQAFAAUABQAFAAUAArAFAAUABQACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAKwArAFAABAAEAAQABAAEAAQABAArAAQABAAEACsABAAEAAQABAArACsAKwArACsAKwArAAQABAArAFAAUABQACsAKwArACsAKwBQAFAABAAEACsAKwBLAEsASwBLAEsASwBLAEsASwBLACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAB4AUAAEAAQABAArAFAAUABQAFAAUABQAFAAUAArAFAAUABQACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwBQAFAAUABQAFAAUABQAFAAUABQACsAUABQAFAAUABQACsAKwAEAFAABAAEAAQABAAEAAQABAArAAQABAAEACsABAAEAAQABAArACsAKwArACsAKwArAAQABAArACsAKwArACsAKwArAFAAKwBQAFAABAAEACsAKwBLAEsASwBLAEsASwBLAEsASwBLACsAUABQACsAKwArACsAKwArACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAABAAEAFAABAAEAAQABAAEAAQABAArAAQABAAEACsABAAEAAQABABQAB4AKwArACsAKwBQAFAAUAAEAFAAUABQAFAAUABQAFAAUABQAFAABAAEACsAKwBLAEsASwBLAEsASwBLAEsASwBLAFAAUABQAFAAUABQAFAAUABQABoAUABQAFAAUABQAFAAKwArAAQABAArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArAFAAUABQAFAAUABQAFAAUABQACsAUAArACsAUABQAFAAUABQAFAAUAArACsAKwAEACsAKwArACsABAAEAAQABAAEAAQAKwAEACsABAAEAAQABAAEAAQABAAEACsAKwArACsAKwArAEsASwBLAEsASwBLAEsASwBLAEsAKwArAAQABAAeACsAKwArACsAKwArACsAKwArACsAKwArAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXAAqAFwAXAAqACoAKgAqACoAKgAqACsAKwArACsAGwBcAFwAXABcAFwAXABcACoAKgAqACoAKgAqACoAKgAeAEsASwBLAEsASwBLAEsASwBLAEsADQANACsAKwArACsAKwBcAFwAKwBcACsAKwBcAFwAKwBcACsAKwBcACsAKwArACsAKwArAFwAXABcAFwAKwBcAFwAXABcAFwAXABcACsAXABcAFwAKwBcACsAXAArACsAXABcACsAXABcAFwAXAAqAFwAXAAqACoAKgAqACoAKgArACoAKgBcACsAKwBcAFwAXABcAFwAKwBcACsAKgAqACoAKgAqACoAKwArAEsASwBLAEsASwBLAEsASwBLAEsAKwArAFwAXABcAFwAUAAOAA4ADgAOAB4ADgAOAAkADgAOAA0ACQATABMAEwATABMACQAeABMAHgAeAB4ABAAEAB4AHgAeAB4AHgAeAEsASwBLAEsASwBLAEsASwBLAEsAUABQAFAAUABQAFAAUABQAFAAUAANAAQAHgAEAB4ABAAWABEAFgARAAQABABQAFAAUABQAFAAUABQAFAAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAANAAQABAAEAAQABAANAAQABABQAFAAUABQAFAABAAEAAQABAAEAAQABAAEAAQABAAEACsABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEACsADQANAB4AHgAeAB4AHgAeAAQAHgAeAB4AHgAeAB4AKwAeAB4ADgAOAA0ADgAeAB4AHgAeAB4ACQAJACsAKwArACsAKwBcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAKgAqACoAKgAqACoAKgAqACoAKgAqACoAKgAqACoAKgAqACoAKgAqAFwASwBLAEsASwBLAEsASwBLAEsASwANAA0AHgAeAB4AHgBcAFwAXABcAFwAXAAqACoAKgAqAFwAXABcAFwAKgAqACoAXAAqACoAKgBcAFwAKgAqACoAKgAqACoAKgBcAFwAXAAqACoAKgAqAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAKgAqACoAKgAqACoAKgAqACoAKgAqACoAXAAqAEsASwBLAEsASwBLAEsASwBLAEsAKgAqACoAKgAqACoAUABQAFAAUABQAFAAKwBQACsAKwArACsAKwBQACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAeAFAAUABQAFAAWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYAFkAWQBZAFkAWQBZAFkAWQBZAFkAWQBZAFkAWQBZAFkAWQBZAFkAWQBZAFkAWQBZAFkAWQBZAFkAWQBZAFkAWQBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAUABQAFAAUABQAFAAUABQAFAAKwBQAFAAUABQACsAKwBQAFAAUABQAFAAUABQACsAUAArAFAAUABQAFAAKwArAFAAUABQAFAAUABQAFAAUABQACsAUABQAFAAUAArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAUABQAFAAUAArACsAUABQAFAAUABQAFAAUAArAFAAKwBQAFAAUABQACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArAFAAUABQAFAAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAKwAEAAQABAAeAA0AHgAeAB4AHgAeAB4AHgBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAeAB4AHgAeAB4AHgAeAB4AHgAeACsAKwArACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArAFAAUABQAFAAUABQACsAKwANAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAeAB4AUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAA0AUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQABYAEQArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAADQANAA0AUABQAFAAUABQAFAAUABQAFAAUABQACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArAFAAUABQAFAABAAEAAQAKwArACsAKwArACsAKwArACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAAQABAAEAA0ADQArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQAKwArACsAKwArACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArAFAAUABQACsABAAEACsAKwArACsAKwArACsAKwArACsAKwArAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXAAqACoAKgAqACoAKgAqACoAKgAqACoAKgAqACoAKgAqACoAKgAqACoADQANABUAXAANAB4ADQAbAFwAKgArACsASwBLAEsASwBLAEsASwBLAEsASwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQACsAKwArACsAKwArAB4AHgATABMADQANAA4AHgATABMAHgAEAAQABAAJACsASwBLAEsASwBLAEsASwBLAEsASwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAKwArACsAUABQAFAAUABQAAQABABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAABABQACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAKwArACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArAAQABAAEAAQABAAEAAQABAAEAAQABAAEACsAKwArACsABAAEAAQABAAEAAQABAAEAAQABAAEAAQAKwArACsAKwAeACsAKwArABMAEwBLAEsASwBLAEsASwBLAEsASwBLAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcACsAKwBcAFwAXABcAFwAKwArACsAKwArACsAKwArACsAKwArAFwAXABcAFwAXABcAFwAXABcAFwAXABcACsAKwArACsAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAKwArACsAKwArACsASwBLAEsASwBLAEsASwBLAEsASwBcACsAKwArACoAKgBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAABAAEAAQABAAEACsAKwAeAB4AXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAKgAqACoAKgAqACoAKgAqACoAKgArACoAKgAqACoAKgAqACoAKgAqACoAKgAqACoAKgAqACoAKgAqACoAKgAqACoAKgAqACoAKgAqACoAKgArACsABABLAEsASwBLAEsASwBLAEsASwBLACsAKwArACsAKwArAEsASwBLAEsASwBLAEsASwBLAEsAKwArACsAKwArACsAKgAqACoAKgAqACoAKgBcACoAKgAqACoAKgAqACsAKwAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAArAAQABAAEAAQABABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAAQAUABQAFAAUABQAFAAUAArACsAKwArAEsASwBLAEsASwBLAEsASwBLAEsADQANAB4ADQANAA0ADQAeAB4AHgAeAB4AHgAeAB4AHgAeAAQABAAEAAQABAAEAAQABAAEAB4AHgAeAB4AHgAeAB4AHgAeACsAKwArAAQABAAEAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQAUABQAEsASwBLAEsASwBLAEsASwBLAEsAUABQAFAAUABQAFAAUABQAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAArACsAKwArACsAKwArACsAHgAeAB4AHgBQAFAAUABQAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAArACsAKwANAA0ADQANAA0ASwBLAEsASwBLAEsASwBLAEsASwArACsAKwBQAFAAUABLAEsASwBLAEsASwBLAEsASwBLAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAANAA0AUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAB4AHgAeAB4AHgAeAB4AHgArACsAKwArACsAKwArACsABAAEAAQAHgAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAFAAUABQAFAABABQAFAAUABQAAQABAAEAFAAUAAEAAQABAArACsAKwArACsAKwAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQAKwAEAAQABAAEAAQAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgArACsAUABQAFAAUABQAFAAKwArAFAAUABQAFAAUABQAFAAUAArAFAAKwBQACsAUAArAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AKwArAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeACsAHgAeAB4AHgAeAB4AHgAeAFAAHgAeAB4AUABQAFAAKwAeAB4AHgAeAB4AHgAeAB4AHgAeAFAAUABQAFAAKwArAB4AHgAeAB4AHgAeACsAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgArACsAUABQAFAAKwAeAB4AHgAeAB4AHgAeAA4AHgArAA0ADQANAA0ADQANAA0ACQANAA0ADQAIAAQACwAEAAQADQAJAA0ADQAMAB0AHQAeABcAFwAWABcAFwAXABYAFwAdAB0AHgAeABQAFAAUAA0AAQABAAQABAAEAAQABAAJABoAGgAaABoAGgAaABoAGgAeABcAFwAdABUAFQAeAB4AHgAeAB4AHgAYABYAEQAVABUAFQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgANAB4ADQANAA0ADQAeAA0ADQANAAcAHgAeAB4AHgArAAQABAAEAAQABAAEAAQABAAEAAQAUABQACsAKwBPAFAAUABQAFAAUAAeAB4AHgAWABEATwBQAE8ATwBPAE8AUABQAFAAUABQAB4AHgAeABYAEQArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAGwAbABsAGwAbABsAGwAaABsAGwAbABsAGwAbABsAGwAbABsAGwAbABsAGwAaABsAGwAbABsAGgAbABsAGgAbABsAGwAbABsAGwAbABsAGwAbABsAGwAbABsAGwAbABsABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAB4AHgBQABoAHgAdAB4AUAAeABoAHgAeAB4AHgAeAB4AHgAeAB4ATwAeAFAAGwAeAB4AUABQAFAAUABQAB4AHgAeAB0AHQAeAFAAHgBQAB4AUAAeAFAATwBQAFAAHgAeAB4AHgAeAB4AHgBQAFAAUABQAFAAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgBQAB4AUABQAFAAUABPAE8AUABQAFAAUABQAE8AUABQAE8AUABPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBQAFAAUABQAE8ATwBPAE8ATwBPAE8ATwBPAE8AUABQAFAAUABQAFAAUABQAFAAHgAeAFAAUABQAFAATwAeAB4AKwArACsAKwAdAB0AHQAdAB0AHQAdAB0AHQAdAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAdAB4AHQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHQAeAB0AHQAeAB4AHgAdAB0AHgAeAB0AHgAeAB4AHQAeAB0AGwAbAB4AHQAeAB4AHgAeAB0AHgAeAB0AHQAdAB0AHgAeAB0AHgAdAB4AHQAdAB0AHQAdAB0AHgAdAB4AHgAeAB4AHgAdAB0AHQAdAB4AHgAeAB4AHQAdAB4AHgAeAB4AHgAeAB4AHgAeAB4AHQAeAB4AHgAdAB4AHgAeAB4AHgAdAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHQAdAB4AHgAdAB0AHQAdAB4AHgAdAB0AHgAeAB0AHQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAdAB0AHgAeAB0AHQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB0AHgAeAB4AHQAeAB4AHgAeAB4AHgAeAB0AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAdAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeABQAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAWABEAFgARAB4AHgAeAB4AHgAeAB0AHgAeAB4AHgAeAB4AHgAlACUAHgAeAB4AHgAeAB4AHgAeAB4AFgARAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeACUAJQAlACUAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBQAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB4AHgAeAB4AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHgAeAB0AHQAdAB0AHgAeAB4AHgAeAB4AHgAeAB4AHgAdAB0AHgAdAB0AHQAdAB0AHQAdAB4AHgAeAB4AHgAeAB4AHgAdAB0AHgAeAB0AHQAeAB4AHgAeAB0AHQAeAB4AHgAeAB0AHQAdAB4AHgAdAB4AHgAdAB0AHQAdAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHQAdAB0AHQAeAB4AHgAeAB4AHgAeAB4AHgAdAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AJQAlACUAJQAeAB0AHQAeAB4AHQAeAB4AHgAeAB0AHQAeAB4AHgAeACUAJQAdAB0AJQAeACUAJQAlACAAJQAlAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AJQAlACUAHgAeAB4AHgAdAB4AHQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHQAdAB4AHQAdAB0AHgAdACUAHQAdAB4AHQAdAB4AHQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAlAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB0AHQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AJQAlACUAJQAlACUAJQAlACUAJQAlACUAHQAdAB0AHQAlAB4AJQAlACUAHQAlACUAHQAdAB0AJQAlAB0AHQAlAB0AHQAlACUAJQAeAB0AHgAeAB4AHgAdAB0AJQAdAB0AHQAdAB0AHQAlACUAJQAlACUAHQAlACUAIAAlAB0AHQAlACUAJQAlACUAJQAlACUAHgAeAB4AJQAlACAAIAAgACAAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAdAB4AHgAeABcAFwAXABcAFwAXAB4AEwATACUAHgAeAB4AFgARABYAEQAWABEAFgARABYAEQAWABEAFgARAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAWABEAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AFgARABYAEQAWABEAFgARABYAEQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeABYAEQAWABEAFgARABYAEQAWABEAFgARABYAEQAWABEAFgARABYAEQAWABEAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AFgARABYAEQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeABYAEQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHQAdAB0AHQAdAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AKwArAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AKwArACsAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AKwAeAB4AHgAeAB4AHgAeAB4AHgArACsAKwArACsAKwArACsAKwArACsAKwArAB4AHgAeAB4AKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAEAAQABAAeAB4AKwArACsAKwArABMADQANAA0AUAATAA0AUABQAFAAUABQAFAAUABQACsAKwArACsAKwArACsAUAANACsAKwArACsAKwArACsAKwArACsAKwArACsAKwAEAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQACsAUABQAFAAUABQAFAAUAArAFAAUABQAFAAUABQAFAAKwBQAFAAUABQAFAAUABQACsAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXAA0ADQANAA0ADQANAA0ADQAeAA0AFgANAB4AHgAXABcAHgAeABcAFwAWABEAFgARABYAEQAWABEADQANAA0ADQATAFAADQANAB4ADQANAB4AHgAeAB4AHgAMAAwADQANAA0AHgANAA0AFgANAA0ADQANAA0ADQANACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACsAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAKwArACsAKwArACsAKwArACsAKwArACsAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwAlACUAJQAlACUAJQAlACUAJQAlACUAJQArACsAKwArAA0AEQARACUAJQBHAFcAVwAWABEAFgARABYAEQAWABEAFgARACUAJQAWABEAFgARABYAEQAWABEAFQAWABEAEQAlAFcAVwBXAFcAVwBXAFcAVwBXAAQABAAEAAQABAAEACUAVwBXAFcAVwA2ACUAJQBXAFcAVwBHAEcAJQAlACUAKwBRAFcAUQBXAFEAVwBRAFcAUQBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFEAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBRAFcAUQBXAFEAVwBXAFcAVwBXAFcAUQBXAFcAVwBXAFcAVwBRAFEAKwArAAQABAAVABUARwBHAFcAFQBRAFcAUQBXAFEAVwBRAFcAUQBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFEAVwBRAFcAUQBXAFcAVwBXAFcAVwBRAFcAVwBXAFcAVwBXAFEAUQBXAFcAVwBXABUAUQBHAEcAVwArACsAKwArACsAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAKwArAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwArACUAJQBXAFcAVwBXACUAJQAlACUAJQAlACUAJQAlACUAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAKwArACsAKwArACUAJQAlACUAKwArACsAKwArACsAKwArACsAKwArACsAUQBRAFEAUQBRAFEAUQBRAFEAUQBRAFEAUQBRAFEAUQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACsAVwBXAFcAVwBXAFcAVwBXAFcAVwAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlAE8ATwBPAE8ATwBPAE8ATwAlAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXACUAJQAlACUAJQAlACUAJQAlACUAVwBXAFcAVwBXAFcAVwBXAFcAVwBXACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAEcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAKwArACsAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAADQATAA0AUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABLAEsASwBLAEsASwBLAEsASwBLAFAAUAArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAFAABAAEAAQABAAeAAQABAAEAAQABAAEAAQABAAEAAQAHgBQAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AUABQAAQABABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAAQABAAeAA0ADQANAA0ADQArACsAKwArACsAKwArACsAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAFAAUABQAFAAUABQAFAAUABQAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AUAAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgBQAB4AHgAeAB4AHgAeAFAAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgArAB4AHgAeAB4AHgAeAB4AHgArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAAQAUABQAFAABABQAFAAUABQAAQAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAAQABAAEAAQABAAeAB4AHgAeACsAKwArACsAUABQAFAAUABQAFAAHgAeABoAHgArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAADgAOABMAEwArACsAKwArACsAKwArACsABAAEAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAAQABAAEAAQABAAEACsAKwArACsAKwArACsAKwANAA0ASwBLAEsASwBLAEsASwBLAEsASwArACsAKwArACsAKwAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABABQAFAAUABQAFAAUAAeAB4AHgBQAA4AUAArACsAUABQAFAAUABQAFAABAAEAAQABAAEAAQABAAEAA0ADQBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQAKwArACsAKwArACsAKwArACsAKwArAB4AWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYAFgAWABYACsAKwArAAQAHgAeAB4AHgAeAB4ADQANAA0AHgAeAB4AHgArAFAASwBLAEsASwBLAEsASwBLAEsASwArACsAKwArAB4AHgBcAFwAXABcAFwAKgBcAFwAXABcAFwAXABcAFwAXABcAEsASwBLAEsASwBLAEsASwBLAEsAXABcAFwAXABcACsAUABQAFAAUABQAFAAUABQAFAABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEACsAKwArACsAKwArACsAKwArAFAAUABQAAQAUABQAFAAUABQAFAAUABQAAQABAArACsASwBLAEsASwBLAEsASwBLAEsASwArACsAHgANAA0ADQBcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAKgAqACoAXAAqACoAKgBcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXAAqAFwAKgAqACoAXABcACoAKgBcAFwAXABcAFwAKgAqAFwAKgBcACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAFwAXABcACoAKgBQAFAAUABQAFAAUABQAFAAUABQAFAABAAEAAQABAAEAA0ADQBQAFAAUAAEAAQAKwArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUAArACsAUABQAFAAUABQAFAAKwArAFAAUABQAFAAUABQACsAKwArACsAKwArACsAKwArAFAAUABQAFAAUABQAFAAKwBQAFAAUABQAFAAUABQACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAAQABAAEAAQADQAEAAQAKwArAEsASwBLAEsASwBLAEsASwBLAEsAKwArACsAKwArACsAVABVAFUAVQBVAFUAVQBVAFUAVQBVAFUAVQBVAFUAVQBVAFUAVQBVAFUAVQBVAFUAVQBVAFUAVQBUAFUAVQBVAFUAVQBVAFUAVQBVAFUAVQBVAFUAVQBVAFUAVQBVAFUAVQBVAFUAVQBVAFUAVQBVACsAKwArACsAKwArACsAKwArACsAKwArAFkAWQBZAFkAWQBZAFkAWQBZAFkAWQBZAFkAWQBZAFkAWQBZAFkAKwArACsAKwBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAWgBaAFoAKwArACsAKwAGAAYABgAGAAYABgAGAAYABgAGAAYABgAGAAYABgAGAAYABgAGAAYABgAGAAYABgAGAAYABgAGAAYABgAGAAYAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXACUAJQBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAJQAlACUAJQAlACUAUABQAFAAUABQAFAAUAArACsAKwArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAKwArACsAKwArAFYABABWAFYAVgBWAFYAVgBWAFYAVgBWAB4AVgBWAFYAVgBWAFYAVgBWAFYAVgBWAFYAVgArAFYAVgBWAFYAVgArAFYAKwBWAFYAKwBWAFYAKwBWAFYAVgBWAFYAVgBWAFYAVgBWAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAEQAWAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUAAaAB4AKwArAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQAGAARABEAGAAYABMAEwAWABEAFAArACsAKwArACsAKwAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEACUAJQAlACUAJQAWABEAFgARABYAEQAWABEAFgARABYAEQAlACUAFgARACUAJQAlACUAJQAlACUAEQAlABEAKwAVABUAEwATACUAFgARABYAEQAWABEAJQAlACUAJQAlACUAJQAlACsAJQAbABoAJQArACsAKwArAFAAUABQAFAAUAArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArAAcAKwATACUAJQAbABoAJQAlABYAEQAlACUAEQAlABEAJQBXAFcAVwBXAFcAVwBXAFcAVwBXABUAFQAlACUAJQATACUAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXABYAJQARACUAJQAlAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwAWACUAEQAlABYAEQARABYAEQARABUAVwBRAFEAUQBRAFEAUQBRAFEAUQBRAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAEcARwArACsAVwBXAFcAVwBXAFcAKwArAFcAVwBXAFcAVwBXACsAKwBXAFcAVwBXAFcAVwArACsAVwBXAFcAKwArACsAGgAbACUAJQAlABsAGwArAB4AHgAeAB4AHgAeAB4AKwArACsAKwArACsAKwArACsAKwAEAAQABAAQAB0AKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwBQAFAAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArACsADQANAA0AKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAKwArAB4AHgAeAB4AHgAeAB4AHgAeAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgBQAFAAHgAeAB4AKwAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgArACsAKwArAB4AKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4ABAArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAAQAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAAQAKwArACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsADQBQAFAAUABQACsAKwArACsAUABQAFAAUABQAFAAUABQAA0AUABQAFAAUABQACsAKwArACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArACsAKwArACsAKwArAB4AKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUAArACsAUAArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAUABQACsAKwArAFAAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArAA0AUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAB4AHgBQAFAAUABQAFAAUABQACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAUABQACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsADQBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArAB4AUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwBQAFAAUABQAFAABAAEAAQAKwAEAAQAKwArACsAKwArAAQABAAEAAQAUABQAFAAUAArAFAAUABQACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAKwArACsABAAEAAQAKwArACsAKwAEAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAKwArACsADQANAA0ADQANAA0ADQANAB4AKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAB4AUABQAFAAUABQAFAAUABQAB4AUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAABAAEACsAKwArACsAUABQAFAAUABQAA0ADQANAA0ADQANABQAKwArACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwANAA0ADQANAA0ADQANAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAKwArACsAKwArACsAHgAeAB4AHgArACsAKwArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAKwArACsAKwArACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArACsAKwBQAFAAUABQAFAAUAAEAAQABAAEAAQABAAEAA0ADQAeAB4AHgAeAB4AKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAEsASwBLAEsASwBLAEsASwBLAEsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsABABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAAQABAAEAAQABAAEAAQABAAEAAQABAAeAB4AHgANAA0ADQANACsAKwArACsAKwArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArACsAKwBLAEsASwBLAEsASwBLAEsASwBLACsAKwArACsAKwArAFAAUABQAFAAUABQAFAABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEACsASwBLAEsASwBLAEsASwBLAEsASwANAA0ADQANACsAKwArACsAKwArACsAKwArACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAABAAeAA4AUAArACsAKwArACsAKwArACsAKwAEAFAAUABQAFAADQANAB4ADQAeAAQABAAEAB4AKwArAEsASwBLAEsASwBLAEsASwBLAEsAUAAOAFAADQANAA0AKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArACsAKwArACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAAQABAAEAAQABAAEAAQABAANAA0AHgANAA0AHgAEACsAUABQAFAAUABQAFAAUAArAFAAKwBQAFAAUABQACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwBQAFAAUABQAFAAUABQAFAAUABQAA0AKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAAQABAAEAAQABAAEAAQAKwArACsAKwArAEsASwBLAEsASwBLAEsASwBLAEsAKwArACsAKwArACsABAAEAAQABAArAFAAUABQAFAAUABQAFAAUAArACsAUABQACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAAQABAAEAAQABAArACsABAAEACsAKwAEAAQABAArACsAUAArACsAKwArACsAKwAEACsAKwArACsAKwBQAFAAUABQAFAABAAEACsAKwAEAAQABAAEAAQABAAEACsAKwArAAQABAAEAAQABAArACsAKwArACsAKwArACsAKwArACsABAAEAAQABAAEAAQABABQAFAAUABQAA0ADQANAA0AHgBLAEsASwBLAEsASwBLAEsASwBLACsADQArAB4AKwArAAQABAAEAAQAUABQAB4AUAArACsAKwArACsAKwArACsASwBLAEsASwBLAEsASwBLAEsASwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAAQABAAEACsAKwAEAAQABAAEAAQABAAEAAQABAAOAA0ADQATABMAHgAeAB4ADQANAA0ADQANAA0ADQANAA0ADQANAA0ADQANAA0AUABQAFAAUAAEAAQAKwArAAQADQANAB4AUAArACsAKwArACsAKwArACsAKwArACsASwBLAEsASwBLAEsASwBLAEsASwArACsAKwArACsAKwAOAA4ADgAOAA4ADgAOAA4ADgAOAA4ADgAOACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsASwBLAEsASwBLAEsASwBLAEsASwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXABcAFwAXAArACsAKwAqACoAKgAqACoAKgAqACoAKgAqACoAKgAqACoAKgArACsAKwArAEsASwBLAEsASwBLAEsASwBLAEsAXABcAA0ADQANACoASwBLAEsASwBLAEsASwBLAEsASwBQAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAKwArACsAKwArACsAKwBQAFAABAAEAAQABAAEAAQABAAEAAQABABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAAQABAAEAFAABAAEAAQABAAOAB4ADQANAA0ADQAOAB4ABAArACsAKwArACsAKwArACsAUAAEAAQABAAEAAQABAAEAAQABAAEAAQAUABQAFAAUAArACsAUABQAFAAUAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAA0ADQANACsADgAOAA4ADQANACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUAArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAABAAEAAQABAAEAAQABAAEACsABAAEAAQABAAEAAQABAAEAFAADQANAA0ADQANACsAKwArACsAKwArACsAKwArACsASwBLAEsASwBLAEsASwBLAEsASwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwAOABMAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAArAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQACsAUABQACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAAQABAArACsAKwAEACsABAAEACsABAAEAAQABAAEAAQABABQAAQAKwArACsAKwArACsAKwArAEsASwBLAEsASwBLAEsASwBLAEsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAKwArACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsADQANAA0ADQANACsAKwArACsAKwArACsAKwArACsAKwBQAFAAUABQACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAASABIAEgAQwBDAEMAUABQAFAAUABDAFAAUABQAEgAQwBIAEMAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAASABDAEMAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABIAEMAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAEsASwBLAEsASwBLAEsASwBLAEsAKwArACsAKwANAA0AKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArAAQABAAEAAQABAANACsAKwArACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAEAAQABAAEAAQABAAEAA0ADQANAB4AHgAeAB4AHgAeAFAAUABQAFAADQAeACsAKwArACsAKwArACsAKwArACsASwBLAEsASwBLAEsASwBLAEsASwArAFAAUABQAFAAUABQAFAAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAFAAUABQAFAAUAArACsAKwArACsAKwArACsAKwArACsAUAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsABAAEAAQABABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAEcARwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwArACsAKwArACsAKwArACsAKwArACsAKwArAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArACsAKwBQAFAAUABQAFAAUABQAFAAUABQACsAKwAeAAQABAANAAQABAAEAAQAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeACsAKwArACsAKwArACsAKwArACsAHgAeAB4AHgAeAB4AHgArACsAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4ABAAEAAQABAAEAB4AHgAeAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQAHgAeAAQABAAEAAQABAAEAAQAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAEAAQABAAEAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAB4AHgAEAAQABAAeACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AKwArACsAKwArACsAKwArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAKwArACsAKwArACsAKwArACsAKwArACsAKwArAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeACsAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgArAFAAUAArACsAUAArACsAUABQACsAKwBQAFAAUABQACsAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AKwBQACsAUABQAFAAUABQAFAAUAArAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgArAFAAUABQAFAAKwArAFAAUABQAFAAUABQAFAAUAArAFAAUABQAFAAUABQAFAAKwAeAB4AUABQAFAAUABQACsAUAArACsAKwBQAFAAUABQAFAAUABQACsAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgArACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAAeAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAFAAUABQAFAAUABQAFAAUABQAFAAUAAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAHgAeAB4AHgAeAB4AHgAeAB4AKwArAEsASwBLAEsASwBLAEsASwBLAEsASwBLAEsASwBLAEsASwBLAEsASwBLAEsASwBLAEsASwBLAEsASwBLAEsASwBLAEsABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAB4AHgAeAB4ABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAB4AHgAeAB4AHgAeAB4AHgAEAB4AHgAeAB4AHgAeAB4AHgAeAB4ABAAeAB4ADQANAA0ADQAeACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAAQABAAEAAQABAArAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsABAAEAAQABAAEAAQABAArAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAArACsABAAEAAQABAAEAAQABAArAAQABAArAAQABAAEAAQABAArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwBQAFAAUABQAFAAKwArAFAAUABQAFAAUABQAFAAUABQAAQABAAEAAQABAAEAAQAKwArACsAKwArACsAKwArACsAHgAeAB4AHgAEAAQABAAEAAQABAAEACsAKwArACsAKwBLAEsASwBLAEsASwBLAEsASwBLACsAKwArACsAFgAWAFAAUABQAFAAKwBQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArAFAAUAArAFAAKwArAFAAKwBQAFAAUABQAFAAUABQAFAAUABQACsAUABQAFAAUAArAFAAKwBQACsAKwArACsAKwArAFAAKwArACsAKwBQACsAUAArAFAAKwBQAFAAUAArAFAAUAArAFAAKwArAFAAKwBQACsAUAArAFAAKwBQACsAUABQACsAUAArACsAUABQAFAAUAArAFAAUABQAFAAUABQAFAAKwBQAFAAUABQACsAUABQAFAAUAArAFAAKwBQAFAAUABQAFAAUABQAFAAUABQACsAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQACsAKwArACsAKwBQAFAAUAArAFAAUABQAFAAUAArAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUABQAFAAUAArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArAB4AHgArACsAKwArACsAKwArACsAKwArACsAKwArACsATwBPAE8ATwBPAE8ATwBPAE8ATwBPAE8ATwAlACUAJQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAeACUAHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHgAeACUAJQAlACUAHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdAB0AHQAdACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACkAKQApACkAKQApACkAKQApACkAKQApACkAKQApACkAKQApACkAKQApACkAKQApACkAKQAlACUAJQAlACUAIAAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlAB4AHgAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAHgAeACUAJQAlACUAJQAeACUAJQAlACUAJQAgACAAIAAlACUAIAAlACUAIAAgACAAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAIQAhACEAIQAhACUAJQAgACAAJQAlACAAIAAgACAAIAAgACAAIAAgACAAIAAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAIAAgACAAIAAlACUAJQAlACAAJQAgACAAIAAgACAAIAAgACAAIAAlACUAJQAgACUAJQAlACUAIAAgACAAJQAgACAAIAAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAeACUAHgAlAB4AJQAlACUAJQAlACAAJQAlACUAJQAeACUAHgAeACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAHgAeAB4AHgAeAB4AHgAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlAB4AHgAeAB4AHgAeAB4AHgAeAB4AJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAIAAgACUAJQAlACUAIAAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAIAAlACUAJQAlACAAIAAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAeAB4AHgAeAB4AHgAeAB4AJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlAB4AHgAeAB4AHgAeACUAJQAlACUAJQAlACUAIAAgACAAJQAlACUAIAAgACAAIAAgAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AFwAXABcAFQAVABUAHgAeAB4AHgAlACUAJQAgACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAIAAgACAAJQAlACUAJQAlACUAJQAlACUAIAAlACUAJQAlACUAJQAlACUAJQAlACUAIAAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAlACUAJQAlACUAJQAlACUAJQAlACUAJQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAlACUAJQAlAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AJQAlACUAJQAlACUAJQAlAB4AHgAeAB4AHgAeAB4AHgAeAB4AJQAlACUAJQAlACUAHgAeAB4AHgAeAB4AHgAeACUAJQAlACUAJQAlACUAJQAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeAB4AHgAeACUAJQAlACUAJQAlACUAJQAlACUAJQAlACAAIAAgACAAIAAlACAAIAAlACUAJQAlACUAJQAgACUAJQAlACUAJQAlACUAJQAlACAAIAAgACAAIAAgACAAIAAgACAAJQAlACUAIAAgACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACAAIAAgACAAIAAgACAAIAAgACAAIAAgACAAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACsAKwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAJQAlACUAJQAlACUAJQAlACUAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAJQAlACUAJQAlACUAJQAlACUAJQAlAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAVwBXAFcAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQAlACUAJQArAAQAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsAKwArACsA';
@@ -10870,7 +10874,7 @@ module.exports = 'KwAAAAAAAAAACA4AIDoAAPAfAAACAAAAAAAIABAAGABAAEgAUABYAF4AZgBeAG
 /* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -10907,7 +10911,7 @@ exports.default = Circle;
 /* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -11241,7 +11245,7 @@ var sortByZIndex = function sortByZIndex(a, b) {
 /* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -11694,7 +11698,7 @@ var transformObsoleteColorStops = function transformObsoleteColorStops(args) {
 /* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -11726,7 +11730,7 @@ var parseAngle = exports.parseAngle = function parseAngle(angle) {
 /* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -12314,7 +12318,7 @@ var serializeDoctype = function serializeDoctype(doctype) {
 /* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -12591,7 +12595,7 @@ var _loadImage = function _loadImage(src, timeout) {
 /* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"";
+;
 
 
 Object.defineProperty(exports, "__esModule", {
@@ -12920,10 +12924,10 @@ var formatCounterValue = function formatCounterValue(counter, glue, format) {
 /***/ })
 /******/ ]);
 });
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  */var webrtcdevcon = function () {
+var webrtcdevcon = function () {
 
 
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  */
+
 /*********** global Params ****************/
 var t = "";
 var e = null;
@@ -13007,7 +13011,7 @@ var role = "participant";
 
 this.sessionid = "";
 
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------*/
 /*                    Global Init JS                                                 */
 /*-----------------------------------------------------------------------------------*/
 
@@ -13019,8 +13023,8 @@ this.sessionid = "";
  * @return {string}sessionid
  */
 this.makesessionid = function (autoload) {
-    let sessionid ="";
-    webrtcdev.log(" Existing charecters after # " , location.href.replace('#', '').length);
+    let sessionid = "";
+    webrtcdev.log(" Existing charecters after # ", location.href.replace('#', '').length);
 
     if (location.href.replace('#', '').length) {
         // When Session should have a session name
@@ -13029,11 +13033,11 @@ this.makesessionid = function (autoload) {
         } else {
             sessionid = location.hash.replace(/\/|:|#|\?|\$|\^|%|\.|`|~|!|\+|@|\[|\||]|\|*. /g, '').split('\n').join('').split('\r').join('');
         }
-        if (sessionid )
+        if (sessionid)
             return sessionid;
     }
 
-    webrtcdev.log("Session id not Found in URL ,  Chek for auto - reload if  " , autoload );
+    webrtcdev.log("Session id not Found in URL ,  Chek for auto - reload if  ", autoload);
 
     if (autoload == "reload" && !location.hash.replace('#', '').length) {
         // When Session should auto-generate ssid and locationbar doesnt have a session name
@@ -13326,6 +13330,8 @@ this.setsession = function (_localobj, _remoteobj, incoming, outgoing, session, 
 
     return {
         sessionid: sessionid,
+        outgoing: outgoing,
+        incoming: incoming,
         socketAddr: socketAddr,
         localobj: localobj,
         remoteobj: remoteobj,
@@ -13342,26 +13348,28 @@ this.setsession = function (_localobj, _remoteobj, incoming, outgoing, session, 
 this.startCall = function (sessionobj) {
 
     if (!sessionobj) {
-        webrtcdev.error("Cannot initiate startcall without session object ");
+        webrtcdev.error(" [ initjs ] : Cannot initiate startcall without session object ");
         return;
     }
-    webrtcdev.log(" [ initjs ] startwebrtcdev begin processing ", sessionobj);
+
+    // sessionobj is ready
+    webrtcdev.log(" [ initjs ] startwebrtcdev begin processing ");
 
     webrtcdev.log(" [ initjs ] : begin  checkDevices for outgoing and incoming");
     // listDevices();
 
-    webrtcdev.log(" [ initjs  ] : incoming ", incoming);
-    webrtcdev.log(" [ initjs  ] : outgoing ", outgoing);
+    webrtcdev.log(" [ initjs  ] : incoming ", sessionobj.incoming);
+    webrtcdev.log(" [ initjs  ] : outgoing ", sessionobj.outgoing);
 
-    if (incoming) {
-        incomingAudio = incoming.audio;
-        incomingVideo = incoming.video;
-        incomingData = incoming.data;
+    if (sessionobj.incoming) {
+        incomingAudio = sessionobj.incoming.audio;
+        incomingVideo = sessionobj.incoming.video;
+        incomingData = sessionobj.incoming.data;
     }
-    if (outgoing) {
-        outgoingAudio = outgoing.audio;
-        outgoingVideo = outgoing.video;
-        outgoingData = outgoing.data;
+    if (sessionobj.outgoing) {
+        outgoingAudio = sessionobj.outgoing.audio;
+        outgoingVideo = sessionobj.outgoing.video;
+        outgoingData = sessionobj.outgoing.data;
     }
 
     webrtcdev.log(" [ initjs  ] : role ", role);
@@ -13443,10 +13451,10 @@ this.startCall = function (sessionobj) {
         // resolve("done");
     }).then(sessionid => {
         setRtcConn(sessionid);
-    }).then(_=> {
+    }).then(_ => {
         setWidgets(rtcConn, sessionobj.widgets);
-    }).then(_=> {
-        startSocketSession(rtcConn, socketAddr, sessionid);
+    }).then(_ => {
+        startSocketSession(rtcConn, sessionobj.socketAddr, sessionobj.sessionid);
     }).catch((err) => {
         webrtcdev.error(" [ initjs ] : Promise rejected ", err);
     });
@@ -13479,7 +13487,7 @@ this.stopCall = function () {
 };
 
 
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  */function getElement(e) {
+function getElement(e) {
     return document.querySelector(e)
 }
 
@@ -13596,7 +13604,7 @@ function hideelem(elem) {
 function existselem(elem) {
     return getElementById(elem) ? true : false;
 }
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//**
+/**
  * Update local cache of user sesssion based object called peerinfo
  * @method
  * @name updateWebCallView
@@ -13666,7 +13674,7 @@ function updateWebCallView(peerinfo) {
                 if (localVideo && document.getElementsByName(localVideo)[0]) {
                     let vid = document.getElementsByName(localVideo)[0];
                     attachMediaStream(vid, peerinfo.stream).then(_ => {
-                        webrtcdev.log(' ========================================= [ webcallviewdevmanager ] updateWebCallView - Done attaching .local stream to element');
+                        webrtcdev.log('[ webcallviewdevmanager ] updateWebCallView - Done attaching local stream to element');
                         vid.muted = true;
                         vid.className = localobj.videoClass;
                         
@@ -13739,7 +13747,7 @@ function updateWebCallView(peerinfo) {
 
                     attachMediaStream(remoteVideos[emptyvideoindex], peerinfo.stream)
                         .then(_ => {
-                            webrtcdev.log(' ========================================= [ webcallviewdevmanager ] updateWebCallView - Done attaching remote stream to element');
+                            webrtcdev.log('[ webcallviewdevmanager ] updateWebCallView - Done attaching remote stream to element');
 
                             if (remoteVideos[emptyvideoindex]) {
                                 showelem(remoteVideos[emptyvideoindex].video);
@@ -13784,14 +13792,14 @@ function updateWebCallView(peerinfo) {
  * @param {function} callback
  */
 function destroyWebCallView(peerInfo, callback) {
-    webrtcdev.log(" [starjs] destroyWebCallView peerInfo", peerInfo);
+    webrtcdev.log(" [webcallviewmanager] destroyWebCallView peerInfo", peerInfo);
     if (peerInfo.videoContainer && document.getElementById(peerInfo.videoContainer)){
 
         let video = document.getElementById(peerInfo.videoContainer);
         if(!video) return ;
         video.onplay = video.onplaying = function () {
-            video.addAttribute("hidden");
-            video.parentNode.parentNode.addAttribute("hidden");
+            video.setAttribute("hidden", true);
+            video.parentNode.parentNode.setAttribute("hidden", true);
 
             if ('srcObject' in video) {
                 try {
@@ -13962,7 +13970,7 @@ function findEmptyRemoteVideoIndex(peerinfo, remoteVideos) {
     webrtcdev.log("[webcallviewmanager - findEmptyRemoteVideoIndex] emptyvideoindex ", emptyvideoindex, remoteVideos[emptyvideoindex]);
     return emptyvideoindex;
 }
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//**
+/**
  * Create File share button
  * @method
  * @name createFileShareButton
@@ -15305,7 +15313,7 @@ function createModalPopup(filetype) {
 
     mainDiv.appendChild(modalBox);
 }
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//***************************************************
+/***************************************************
  video handling
  *********************************************************/
 
@@ -15323,7 +15331,7 @@ function appendVideo(e, style) {
         video.id = e.userid;
         video.srcObject = URL.createObjectURL(e.stream);
         div.appendChild(video);
-        webrtcdev.log("[_media_dommodifier ] appendVideo");
+        webrtcdev.log("[_media_dommodifier ] appendVideo", video);
         video.play();
         // Show loading animation.
         // let playPromise = video.play();
@@ -15388,7 +15396,7 @@ function attachControlButtons(vid, peerinfo) {
         }
     }
 
-    // Control bar holds media control elements like , mute unmute , fillscreen ,. recird , snapshot
+    // Control bar holds media control elements like , mute unmute , fullscreen , record , snapshot
     let controlBar = document.createElement("div");
     controlBar.id = controlBarName;
 
@@ -15405,10 +15413,10 @@ function attachControlButtons(vid, peerinfo) {
 
     if (muteobj.active) {
         if (muteobj.audio.active) {
-            controlBar.appendChild(createAudioMuteButton(controlBarName, peerinfo));
+            controlBar.appendChild(createAudioMuteButton(muteobj, controlBarName, peerinfo));
         }
         if (muteobj.video.active) {
-            controlBar.appendChild(createVideoMuteButton(controlBarName, peerinfo));
+            controlBar.appendChild(createVideoMuteButton(muteobj, controlBarName, peerinfo));
         }
     }
 
@@ -15426,8 +15434,8 @@ function attachControlButtons(vid, peerinfo) {
     }
 
     if (minmaxobj.active) {
-        controlBar.appendChild(createFullScreenButton(controlBarName, peerinfo, streamid, stream));
-        // controlBar.appendChild(createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream));
+        controlBar.appendChild(createFullScreenButton(minmaxobj, controlBarName, peerinfo, streamid, stream));
+        // controlBar.appendChild(createMinimizeVideoButton(minmaxobj , controlBarName, peerinfo, streamid, stream));
 
         // attach minimize button to header instead of widgets in footer
         nameBoxid = "#videoheaders" + peerinfo.userid;
@@ -15435,7 +15443,7 @@ function attachControlButtons(vid, peerinfo) {
         for (n in nameBox) {
             // webrtcdev.log("[_media_dommodifier ] attachControlButtons - nameBox " , nameBox[n]);
             if (nameBox[n].appendChild)
-                nameBox[n].appendChild(createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream));
+                nameBox[n].appendChild(createMinimizeVideoButton(minmaxobj, controlBarName, peerinfo, streamid, stream));
         }
     }
 
@@ -15446,11 +15454,11 @@ function attachControlButtons(vid, peerinfo) {
  * function to createFullScreenButton
  * @method
  * @name createFullScreenButton
+ * @return {json} minmaxobj
  * @param {string} controlBarName
  * @param {json} peerinfo
- * @return {dom} button
  */
-function createFullScreenButton(controlBarName, peerinfo) {
+function createFullScreenButton(minmaxobj, controlBarName, peerinfo) {
     let button = document.createElement("span");
     button.id = controlBarName + "fullscreeButton";
     button.setAttribute("title", "Full Screen");
@@ -15479,7 +15487,7 @@ function createFullScreenButton(controlBarName, peerinfo) {
  * @param {json} peerinfo
  * @return {dom} button
  */
-function createMinimizeVideoButton(controlBarName, peerinfo) {
+function createMinimizeVideoButton(minmaxobj, controlBarName, peerinfo) {
     var button = document.createElement("span");
     button.id = controlBarName + "minmizevideoButton";
     button.setAttribute("title", "Minimize Video");
@@ -15510,7 +15518,7 @@ function createMinimizeVideoButton(controlBarName, peerinfo) {
  * @param {json} peerinfo
  * @return {dom} button
  */
-function createAudioMuteButton(controlBarName, peerinfo) {
+function createAudioMuteButton(muteobj, controlBarName, peerinfo) {
     let audioButton = document.createElement("span");
     audioButton.id = controlBarName + "audioButton";
     audioButton.setAttribute("data-val", "mute");
@@ -15544,7 +15552,7 @@ function createAudioMuteButton(controlBarName, peerinfo) {
  * @param {json} peerinfo
  * @return {dom} button
  */
-function createVideoMuteButton(controlBarName, peerinfo) {
+function createVideoMuteButton(muteobj, controlBarName, peerinfo) {
     let videoButton = document.createElement("span");
     videoButton.id = controlBarName + "videoButton";
     videoButton.setAttribute("title", "Toggle Video");
@@ -15583,7 +15591,7 @@ function createVideoMuteButton(controlBarName, peerinfo) {
  * @param {json} peerinfo
  */
 function attachUserDetails(vid, peerinfo) {
-    webrtcdev.log("[media_dommanager] attachUserDetails - ", peerinfo.userid, ":", peerinfo.type , " to video DOM " , vid);
+    webrtcdev.log("[media_dommanager] attachUserDetails - ", peerinfo.userid, ":", peerinfo.type, " to video DOM ", vid);
     if (vid.parentNode.querySelectorAll('.videoHeaderClass').length > 0) {
         webrtcdev.warn("[media_dommanager] attachUserDetails - video header already present ", vid.parentNode.querySelectorAll('.videoHeaderClass'));
         if ((vid.parentNode.querySelectorAll("videoheaders" + peerinfo.userid)).length > 0) {
@@ -15597,7 +15605,7 @@ function attachUserDetails(vid, peerinfo) {
     }
     let nameBox = document.createElement("div");
     nameBox.setAttribute("style", "background-color:" + peerinfo.color),
-    nameBox.className = "videoHeaderClass",
+        nameBox.className = "videoHeaderClass",
         nameBox.innerHTML = peerinfo.name ,
         nameBox.id = "videoheaders" + peerinfo.userid;
 
@@ -15621,7 +15629,7 @@ function attachMetaUserDetails(vid, peerinfo) {
 }
 
 
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------*/
 /*                    Notify JS                                                     */
 /*-----------------------------------------------------------------------------------*/
 
@@ -15763,7 +15771,7 @@ function spawnNotification(theBody, theIcon, theTitle) {
 /*-----------------------------------------------------------------------------------*/
 
 
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  */var screenShareButton;
+var screenShareButton;
 
 /**
  * find if view button is provided or need to be created
@@ -15980,7 +15988,7 @@ function screenshareNotification(message, type) {
         alert(message);
     }
 }
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//*
+/*
  * Assign Screen Record Button based on screenrecordobj widget
  * @method
  * @name assignScreenRecordButton
@@ -16220,7 +16228,7 @@ function assignScreenRecordButton(screenrecordobj) {
 }*/
 
 
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//*
+/*
  * creates chat button DOM
  * @method
  * @name createChatButton
@@ -16367,7 +16375,7 @@ function assignChatBox(chatobj) {
 function updateWhotyping(data) {
     document.getElementById("whoTyping").innerHTML = data;
 }
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//**
+/**
  * Sync draw boads opening between all peers
  * @method
  * @name syncDrawBoard
@@ -16469,7 +16477,7 @@ saveButtonCanvas.onclick = function () {
 };
 document.body.appendChild(saveButtonCanvas);
 
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//**
+/**
  * function to activate Timer Buttons
  * @name activateButtons
  */
@@ -16686,7 +16694,7 @@ function showRemoteTimer(peerinfo) {
         remotetimecontainer.appendChild(timerspanpeer);
     }
 }
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------*/
 /*                        stats JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 
@@ -16694,47 +16702,45 @@ function showRemoteTimer(peerinfo) {
  * function to updateStats
  * @method
  * @name getWebrtcdevStats
- * @param {object} mediaStreamTrack
- * @param {function} callback
- * @param {int} interval
  */
 this.getWebrtcdevStats = getWebrtcdevStats = function () {
 
-    webrtcdev.log(" Browser  : " , rtcConn.DetectRTC.browser);
+    webrtcdev.info(" Browser  : ", rtcConn.DetectRTC.browser);
 
-    webrtcdev.log(" Network connection : " , navigator.connection);
+    webrtcdev.info(" Network connection downlink : ", navigator.connection.downlink);
+    webrtcdev.info(" Network connection effectiveType : ", navigator.connection.effectiveType);
+    webrtcdev.info(" Network connection rtt : ", navigator.connection.rtt);
 
-    webrtcdev.log(" All active participants  : " , getAllActivePeers());
+    webrtcdev.info(" Bandwidth  : ", rtcConn.bandwidth);
 
-    for (let x in  webcallpeers){
-        webrtcdev.log(" Peer   : " , x, " - ",  webcallpeers[x]);
+    webrtcdev.info(" All active participants  : ", getAllActivePeers());
+
+    for (let x in webcallpeers) {
+        webrtcdev.info(" Peer   : ", x, " - ", webcallpeers[x]);
     }
 
-    for (let y in rtcConn.peers) {
-        if (rtcConn.peers[y].userid) {
-            let conn = rtcConn.peers[y].peer;
-            webrtcdev.log(conn);
-            conn.getStats(null).then(stats => {
-                let statsOutput = "";
+    return new Promise(function (resolve, reject) {
+        for (let y in rtcConn.peers) {
+            if (rtcConn.peers[y].userid) {
+                let conn = rtcConn.peers[y].peer;
+                webrtcdev.log(conn);
+                conn.getStats(null).then(stats => {
+                    let statsOutput = "";
 
-                stats.forEach(report => {
-                    statsOutput += "Report: ${report.type} \n" +
-                        "ID: ${report.id} \n " +
-                        "Timestamp: ${report.timestamp} \n";
-
-                    // Now the statistics for this report; we intentially drop the ones we
-                    // sorted to the top above
-
-                    Object.keys(report).forEach(statName => {
-                        if (statName !== "id" && statName !== "timestamp" && statName !== "type") {
-                            statsOutput += "${statName}: ${report[statName]} \n";
-                        }
+                    stats.forEach(report => {
+                        statsOutput += "Report:" + report.type + " <br/> " + "ID:" + report.id + " <br/>" + "Timestamp:" + report.timestamp + " <br/> ";
+                        Object.keys(report).forEach(statName => {
+                            if (statName !== "id" && statName !== "timestamp" && statName !== "type") {
+                                statsOutput += statName + " : " + report[statName] + " <br/> ";
+                            }
+                        });
                     });
+                    webrtcdev.info("[stats] getWebrtcdevStats - self  ",selfuserid  , statsOutput);
+                    resolve(statsOutput);
                 });
-                webrtcdev.log("[stats] getWebrtcdevStats - ", statsOutput);
-            });
+            }
         }
-    }
+    });
 
     // for (let y in  rtcConn.peers){
     //     if(rtcConn.peers[y].userid) {
@@ -16762,6 +16768,29 @@ this.getWebrtcdevStats = getWebrtcdevStats = function () {
     // }
 
 };
+
+/**
+ * function to send webrtc stats
+ * @method
+ * @name getWebrtcdevStats
+ * @param {object} mediaStreamTrack
+ * @param {function} callback
+ */
+function sendWebrtcdevStats(){
+    getWebrtcdevStats.then(stats=>{
+        rtcConn.send({
+            type: "stats",
+            message: stats
+        });
+    });
+}
+
+/*
+onreceivedWebrtcdevStats
+ */
+function onreceivedWebrtcdevStats(userid ,stats){
+    webrtcdev.info("[stats] getWebrtcdevStats - remote userid ", userid , stats);
+}
 
 this.oldgetStats = function (mediaStreamTrack, callback, interval) {
     var peer = this;
@@ -17058,7 +17087,7 @@ function showStatus() {
 this.showRtcConn = function () {
     if (rtcConn) {
         webrtcdev.info(" =========================================================================");
-        webrtcdev.info("[stats] rtcConn : ", rtcConn);
+        webrtcdev.info("[stats] rtcConn : ", JSON.stringify(rtcConn));
         webrtcdev.info(" =========================================================================");
     } else {
         webrtcdev.warn(" rtcConn doesnt exist ");
@@ -17075,8 +17104,8 @@ function showRTCPcapabilities() {
     let str = "";
     str += RTCRtpSender.getCapabilities('audio');
     str += RTCRtpSender.getCapabilities('video');
-
-    document.getElementById(statisticsobj.statsConainer).innerHTML += "<pre >" + str + "</pre>";
+    webrtcdev.info("[stats] rtcConn : ", JSON.stringify(str));
+    // document.getElementById(statisticsobj.statsConainer).innerHTML += "<pre >" + str + "</pre>";
 }
 
 /**
@@ -17090,9 +17119,9 @@ this.updateStats = function () {
 
     // Update Stats if active
     if (statisticsobj && statisticsobj.active) {
-        getStats(event.stream.getVideoTracks() , function(result) {
+        getStats(event.stream.getVideoTracks(), function (result) {
             document.getElementById("network-stats-body").innerHTML = result;
-        } , 20000);
+        }, 20000);
         document.getElementById(statisticsobj.statsConainer).innerHTML += JSON.stringify(statisticsobj);
         document.getElementById(statisticsobj.statsConainer).innerHTML += JSON.stringify(statisticsobj.bandwidth);
         document.getElementById(statisticsobj.statsConainer).innerHTML += JSON.stringify(statisticsobj.codecs);
@@ -17156,6 +17185,7 @@ function listDevices() {
             webrtcdev.error('[sessionmanager] checkDevices ', err.name, ": ", err.message);
         });
 }
+
 /*
 check MediaStreamTrack
     MediaTrackSupportedConstraints,
@@ -17166,8 +17196,9 @@ check MediaStreamTrack
 function getMediaDevicesConstraints() {
     return navigator.mediaDevices.getSupportedConstraints();
 }
+
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//**************************************************************
+/**************************************************************
  Screenshare
  ****************************************************************/
 
@@ -17469,12 +17500,12 @@ function resetAlertBox() {
     getElementById("alertBox").hidden = false;
     getElementById("alertBox").innerHTML = "";
 }
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  */// Last time updated: 2016-11-04 7:11:11 AM UTC
+// Last time updated: 2016-11-04 7:11:11 AM UTC
 
 // ________________
 // FileBufferReader
 
-'';
+'use strict';
 
 (function() {
 
@@ -18640,7 +18671,7 @@ function resetAlertBox() {
     window.FileBufferReader = FileBufferReader;
 })();
 
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  */// ______________________
+// ______________________
 // MediaStreamRecorder.js
 
 function MediaStreamRecorder(mediaStream) {
@@ -20038,7 +20069,7 @@ function SaveToDisk(blobOrFile, fileName) {
 
     (window.URL || window.webkitURL).revokeObjectURL(hyperlink.href);
 }
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  */'';
+'use strict';
 
 //__________
 // RecordRTC.js
@@ -23982,7 +24013,7 @@ if (typeof RecordRTC !== 'undefined') {
     RecordRTC.GifRecorder = GifRecorder;
 }
 
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  */function createSnapshotButton(controlBarName , peerinfo){
+function createSnapshotButton(controlBarName , peerinfo){
     var snapshotButton=document.createElement("div");
     snapshotButton.id=controlBarName+"snapshotButton";
     snapshotButton.setAttribute("title", "Snapshot");
@@ -24085,7 +24116,7 @@ function syncSnapshot(datasnapshot , datatype , dataname ){
     webrtcdev.log("snaspshot ",datasnapshot);
 }*/
 
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------*/
 /*                    Geo JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 
@@ -24143,7 +24174,7 @@ function showError(error) {
 }
 
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------*/
 /*.                        Chat JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 
@@ -24302,17 +24333,19 @@ function addMessageBlockFormat(messageheaderDivclass, messageheader, messageDivc
 
 
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//************************************
- webrtc get media
- ***********************************/
+/**----------------------------------
+    webrtc get media
+------------------------------------*/
 
 /**
  * get Video and micrpphone stream media
  * @method
  * @name getCamMedia
  * @param {json} rtcConn
+ * @param {booolean} outgoingVideo
+ * @param {booolean} outgoingAudio
  */
-function getCamMedia(rtcConn) {
+function getCamMedia(rtcConn , outgoingVideo , outgoingAudio) {
     rtcConn.dontAttachStream = false,
         rtcConn.dontGetRemoteStream = false;
 
@@ -24324,7 +24357,7 @@ function getCamMedia(rtcConn) {
             rtcConn.dontCaptureUserMedia = true;
             webrtcdev.log("[_mediacontrol.js] getCamMedia  - Joining as inspector without camera Video");
 
-        } else if (outgoingVid && outgoingAudio) {
+        } else if (outgoingVideo && outgoingAudio) {
             rtcConn.dontCaptureUserMedia = false;
             webrtcdev.log("[_mediacontrol.js] getCamMedia  - Capture Media ");
             rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error
@@ -24352,55 +24385,55 @@ function getCamMedia(rtcConn) {
         });
 }
 
-/**
- * get Video and micrpphone stream media
- * @method
- * @name getCamMedia
- * @param {json} rtcConn
- */
-function waitForRemoteVideo(_remoteStream, _remoteVideo, _localVideo, _miniVideo) {
-    var videoTracks = _remoteStream.getVideoTracks();
-    if (videoTracks.length === 0 || _remoteVideo.currentTime > 0) {
-        transitionToActive(_remoteVideo, _localVideo, _miniVideo);
-    } else {
-        setTimeout(function () {
-            waitForRemoteVideo(_remoteStream, _remoteVideo, _localVideo, _miniVideo)
-        }, 100);
-    }
-}
-
-/**
- * transition To Active
- * @method
- * @name transitionToActive
- */
-function transitionToActive(_remoteVideo, _localVideo, _miniVideo) {
-    _remoteVideo.style.opacity = 1;
-    if (localVideo != null) {
-        setTimeout(function () {
-            _localVideo.src = '';
-        }, 500);
-    }
-    if (miniVideo != null) {
-        setTimeout(function () {
-            _miniVideo.style.opacity = 1;
-        }, 1000);
-    }
-}
-
-/**
- * transition To Waiting
- * @method
- * @name transitionToWaiting
- */
-function transitionToWaiting(localVideo , miniVideo) {
-    setTimeout(function () {
-        localVideo.srcObject = miniVideo.srcObject;
-        localVideo.muted = true;
-        miniVideo.srcObject = null;
-        remoteVideo.srcObject = null;
-    }, 500);
-}
+// /**
+//  * get Video and micrpphone stream media
+//  * @method
+//  * @name getCamMedia
+//  * @param {json} rtcConn
+//  */
+// function waitForRemoteVideo(_remoteStream, _remoteVideo, _localVideo, _miniVideo) {
+//     var videoTracks = _remoteStream.getVideoTracks();
+//     if (videoTracks.length === 0 || _remoteVideo.currentTime > 0) {
+//         transitionToActive(_remoteVideo, _localVideo, _miniVideo);
+//     } else {
+//         setTimeout(function () {
+//             waitForRemoteVideo(_remoteStream, _remoteVideo, _localVideo, _miniVideo)
+//         }, 100);
+//     }
+// }
+//
+// /**
+//  * transition To Active
+//  * @method
+//  * @name transitionToActive
+//  */
+// function transitionToActive(_remoteVideo, _localVideo, _miniVideo) {
+//     _remoteVideo.style.opacity = 1;
+//     if (localVideo != null) {
+//         setTimeout(function () {
+//             _localVideo.src = '';
+//         }, 500);
+//     }
+//     if (miniVideo != null) {
+//         setTimeout(function () {
+//             _miniVideo.style.opacity = 1;
+//         }, 1000);
+//     }
+// }
+//
+// /**
+//  * transition To Waiting
+//  * @method
+//  * @name transitionToWaiting
+//  */
+// function transitionToWaiting(localVideo , miniVideo) {
+//     setTimeout(function () {
+//         localVideo.srcObject = miniVideo.srcObject;
+//         localVideo.muted = true;
+//         miniVideo.srcObject = null;
+//         remoteVideo.srcObject = null;
+//     }, 500);
+// }
 
 /**
  * attach media stream to dom element
@@ -24427,7 +24460,7 @@ function attachMediaStream(remvid, stream) {
 
         webrtcdev.log("[ Mediacontrol - attachMediaStream ] stream ", stream);
 
-        // If stream is present , attach teh streama dn give play
+        // If stream is present , attach the stream  and play
         if (stream) {
             let pr = new Promise(function (resolve, reject) {
                 element.srcObject = stream;
@@ -24444,14 +24477,22 @@ function attachMediaStream(remvid, stream) {
                 }
             });
             return pr;
+        }else{
+            // If no stream , just attach the src as null , do not play
+            let pr = new Promise(function (resolve, reject) {
+                element.srcObject = null;
+                webrtcdev.warn("[ Mediacontrol - attachMediaStream ] Media Stream empty '' attached to ", element, " as stream is not valid ", stream);
+                resolve();
+            });
+            return pr;
         }
 
-        // If no stream , just attach the src as null
-        element.srcObject = null;
-        webrtcdev.warn("[ Mediacontrol - attachMediaStream ] Media Stream empty '' attached to ", element, " as stream is not valid ", stream);
-
     } catch (err) {
-        webrtcdev.error(" [ Mediacontrol - attachMediaStream ]  error", err);
+        let pr = new Promise(function (resolve, reject) {
+            webrtcdev.error(" [ Mediacontrol - attachMediaStream ]  error", err);
+            reject();
+        });
+        return pr;
     }
 }
 
@@ -24464,6 +24505,7 @@ function attachMediaStream(remvid, stream) {
  */
 function reattachMediaStream(to, from) {
     try {
+        // If stream is present , attach the stream and play
         let pr = new Promise(function (resolve, reject) {
             to.srcObject = from.srcObject;
             webrtcdev.log(' [  Mediacontrol] reattachMediaStream - added src object for valid stream ', to);
@@ -24476,7 +24518,7 @@ function reattachMediaStream(to, from) {
         webrtcdev.error("[media control] reattachMediaStream err ", err)
     }
 }
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------*/
 /*                       Record JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 
@@ -24642,7 +24684,7 @@ function stopRecord(){
 }*/
 
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//************************************************************************
+/************************************************************************
  Canvas Record
  *************************************************************************/
 var scrrecordStream = null, scrrecordStreamid = null;
@@ -25014,7 +25056,7 @@ function PostBlob(resource) {
     displayList(peerinfo.uuid, peerinfo, fileurl, recordVideoname, "videoScreenRecording");
     displayFile(peerinfo.uuid, peerinfo, fileurl, recordVideoname, "videoScreenRecording");
 }
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------*/
 /*                    File JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 
@@ -25273,7 +25315,7 @@ function addNewFileRemote(e) {
 }
 
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------*/
 /*                         Draw JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 var CanvasDesigner;
@@ -25362,7 +25404,7 @@ function webrtcdevCanvasDesigner(drawCanvasobj) {
 }
 
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------*/
 /*                    Reconnect JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 
@@ -25413,7 +25455,7 @@ function assignButtonRedial(id,reconnectobj){
     };
 }
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------*/
 /*                    listen-in JS                                                   */
 
 /*-----------------------------------------------------------------------------------*/
@@ -25478,7 +25520,7 @@ this.sendlisteninlink = function (url, key, senderuseremail, receiveruseremail) 
 };
 /*-----------------------------------------------------------------------------------*/
 
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------*/
 /*                       cursor JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 
@@ -25572,7 +25614,7 @@ function createCursorButton(controlBarName, peerinfo, streamid, stream) {
 /*
     <div id="cursor1" class="fa fa-hand-o-up" style="width:0"></div>
     <div id="cursor2" class="fa fa-hand-o-up" style="width:0"></div>*/
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------*/
 /*                    Code Editor  JS                                                */
 /*-----------------------------------------------------------------------------------*/
 
@@ -25677,7 +25719,7 @@ function stopWebrtcdevcodeeditorSync(){
 
 /*-----------------------------------------------------------------------------------*/
 
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  */function createTextEditorButton(texteditorobj) {
+function createTextEditorButton(texteditorobj) {
     var texteditorButton = document.createElement("span");
     texteditorButton.className = texteditorobj.button.class_off;
     texteditorButton.innerHTML = texteditorobj.button.html_off;
@@ -25736,7 +25778,7 @@ function stopWebrtcdevTexteditorSync() {
     document.getElementById(texteditorobj.texteditorContainer).removeEventListener("keyup", sendWebrtcdevTexteditorSync, false);
 }
 
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//*********************************************
+/*********************************************
  ICE
  **************************************************/
 /**
@@ -25788,7 +25830,7 @@ function getICEServer() {
     xhr.setRequestHeader("Authorization", "Basic " + btoa("farookafsari:e35af4d2-dbd5-11e7-b927-0c3f27cba33f"));
     xhr.send();
 }
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------*/
 /*                        timer JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 /**
@@ -25938,14 +25980,21 @@ var startPeersTime = function (date, zone, userid) {
 function peerTimeZone(zone, userid) {
 
     try {
-        webrtcdev.log("[timerjs] peerTimeZone -- " , zone , userid);
+        if(!userid)
+            throw "uerid missing";
+
+        webrtcdev.log("[timerjs] peerTimeZone - " , zone , userid);
         // set peers zone in webcallpeers
         appendToPeerValue(userid , "zone" ,  zone);
 
         // Starting peer timer for all peers
-        var peerinfo = findPeerInfo(userid);
-        webrtcdev.log("[timerjs] peerTimeZone , updated peerinfo with zone-- " , peerinfo);
+        let peerinfo = findPeerInfo(userid);
+        if(!peerinfo)
+            throw "peerinfo missing";
+
+        webrtcdev.log("[timerjs] peerTimeZone , updated peerinfo with zone -  " , peerinfo);
         showRemoteTimeZone(peerinfo);
+
     } catch (err) {
         webrtcdev.error("[timerjs] ", err);
     }
@@ -25961,7 +26010,7 @@ function checkTime(i) {
 }
 
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------*/
 /*                        Tracing JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 
@@ -26074,7 +26123,7 @@ function getScreenshotOfElement(element, posX, posY, width, height, callback) {
 }
 
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//**
+/**
  * find information about a peer form array of peers based on userid
  * @method
  * @name findPeerInfo
@@ -26124,10 +26173,7 @@ function appendToPeerValue(userid, value) {
  * remove info about a peer in list of peers (webcallpeers)
  * @method
  * @name removePeerInfo
- * @param {string} userid
- * @param {string} usernamess
- * @param {string} usercolor
- * @param {string} type
+ * @param {int} index
  */
 function removePeerInfo(index) {
     return new Promise(function (resolve, reject) {
@@ -26147,7 +26193,9 @@ function removePeerInfo(index) {
  * @name updatePeerInfo
  * @param {string} userid
  * @param {string} username
- * @param {string} usercolor
+ * @param {string} usercolor unique color associated with this peer for easy identification
+ * @param {string} useremail
+ * @param {string} userrole particant , host , guests , inspector
  * @param {string} type
  */
 function updatePeerInfo(userid, username, usecolor, useremail, userrole, type) {
@@ -26243,7 +26291,7 @@ this.getwebcallpeers = function () {
     return webcallpeers;
 };
 
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------*/
 /*                    Widgets JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 var setWidgets = function (rtcConn, widgetsobj) {
@@ -26513,7 +26561,7 @@ var setWidgets = function (rtcConn, widgetsobj) {
     });
 };
 
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  */// function handleError(error) {
+// function handleError(error) {
 //   if (error.name === 'ConstraintNotSatisfiedError') {
 //     let v = constraints.video;
 //     webrtcdev.error(`The resolution ${v.width.exact}x${v.height.exact} px is not supported by your device.`);
@@ -26777,20 +26825,6 @@ var setRtcConn = function (sessionid) {
                 remoteUsers = rtcConn.peers.getAllParticipants();
                 webrtcdev.log(" [sessionmanager onopen] Collecting remote peers", remoteUsers);
 
-
-                // remove old non existing peers, excluded selfuserid
-                webrtcdev.log(" [sessionmanager onopen] webcallpeers length ", webcallpeers.length);
-                if (webcallpeers.length - remoteUsers.length > 1) {
-                    for (x in webcallpeers) {
-                        webrtcdev.log(" [sessionmanager onopen] webcallpeers[" + x + "]", webcallpeers[x]);
-                        if (!(remoteUsers.includes(webcallpeers[x].userid)) && (webcallpeers[x].userid != selfuserid)) {
-                            console.warn("[sessionmanager] remove PeerInfo - ", webcallpeers[x].userid, " which neither exists in remote peer and not is selfuserid");
-                            removePeerInfo(x);
-                        }
-                    }
-                }
-                webrtcdev.log(" [sessionmanager] removePeerInfo  After  ", webcallpeers);
-
                 // add new peers
                 for (x in remoteUsers) {
                     webrtcdev.log(" [sessionmanager] join-channel. Adding remote peer ", remoteUsers[x]);
@@ -26918,10 +26952,6 @@ var setRtcConn = function (sessionid) {
                     action: "onLocalConnect"
                 },
             }));
-
-            // getRTCStats(event.streams[0].getTracks()[0], function(result){
-            //    console.log("-------------------------result " , result) ;
-            // },5);
         },
 
         rtcConn.onstreamended = function (event) {
@@ -27092,7 +27122,7 @@ var setRtcConn = function (sessionid) {
                         for (x in webcallpeers) {
                             for (y in webcallpeers[x].filearray) {
                                 if (webcallpeers[x].filearray[y].pid == progressid) {
-                                    console.log("[ sessionmanager ] shareFileStopUpload -  filepid ", webcallpeers[x].filearray[y].pid, " | status ", webcallpeers[x].filearray[y].status);
+                                    webrtcdev.log("[ sessionmanager ] shareFileStopUpload -  filepid ", webcallpeers[x].filearray[y].pid, " | status ", webcallpeers[x].filearray[y].status);
                                     webcallpeers[x].filearray[y].status = "stopped";
                                     hideFile(progressid);
                                     removeFile(progressid);
@@ -27100,8 +27130,14 @@ var setRtcConn = function (sessionid) {
                                 }
                             }
                         }
-                        //  let stopuploadButton = "stopuploadButton"+filename;
+                        // let stopuploadButton = "stopuploadButton"+filename;
                         // document.getElementById(stopuploadButton).hidden = true;
+                        break;
+                    case "sendstats":
+                        sendWebrtcdevStats();
+                        break;
+                    case "receivedstats":
+                        onreceivedWebrtcdevStats(e.userid , e.data.message);
                         break;
                     default:
                         webrtcdev.warn(" unrecognizable message from peer  ", e);
@@ -27127,7 +27163,7 @@ var setRtcConn = function (sessionid) {
             }), */
 
             var peerinfo = findPeerInfo(e.userid);
-            webrtcdev.warn(" [ session manager ] - on leave ", e);
+            webrtcdev.warn(" [ session manager ] on leave - ", e);
             webrtcdev.warn(" [ session manager ] remove peerinfo ", peerinfo, " from webcallpeers ", webcallpeers);
             if (e.extra.name)
                 shownotification(e.extra.name + "  left the conversation.");
@@ -27137,10 +27173,22 @@ var setRtcConn = function (sessionid) {
                 destroyWebCallView(peerinfo, function (result) {
                     if (result) {
                         removePeerInfo(e.userid);
-
                     }
                 });
             }
+
+            // remove old non existing peers, excluded selfuserid
+            // webrtcdev.log(" [sessionmanager onopen] webcallpeers length ", webcallpeers.length);
+            // if (webcallpeers.length - remoteUsers.length > 1) {
+            //     for (x in webcallpeers) {
+            //         webrtcdev.log(" [sessionmanager onopen] webcallpeers[" + x + "]", webcallpeers[x]);
+            //         if (!(remoteUsers.includes(webcallpeers[x].userid)) && (webcallpeers[x].userid != selfuserid)) {
+            //             console.warn("[sessionmanager] remove PeerInfo - ", webcallpeers[x].userid, " which neither exists in remote peer and not is selfuserid");
+            //             removePeerInfo(x);
+            //         }
+            //     }
+            // }
+            // webrtcdev.log(" [sessionmanager] removePeerInfo  After  ", webcallpeers);
         },
 
         rtcConn.onclose = function (e) {
@@ -27196,7 +27244,7 @@ var setRtcConn = function (sessionid) {
         rtcConn.filesContainer = document.body || document.documentElement,
 
         rtcConn.onSocketDisconnect = function(){
-            webrtcdev.error("[sesionmanager ] on Socket Disocnnected " );
+            webrtcdev.error("[sesionmanager ] on Socket Disconnected " );
         },
 
         rtcConn.onSocketError = function(){
@@ -27208,15 +27256,6 @@ var setRtcConn = function (sessionid) {
         webrtcdev.log("[sessionmanager] rtcConn : ", rtcConn);
 
     return rtcConn;
-
-    // if(this.turn!=null && this.turn !="none"){
-    //     if (!webrtcdevIceServers) {
-    //         return;
-    //     }
-    //     webrtcdev.info(" WebRTC dev ICE servers ", webrtcdevIceServers);
-    //     rtcConn.iceServers = webrtcdevIceServers;
-    //     //window.clearInterval(repeatInitilization);
-    // }
 };
 
 /**
@@ -27387,7 +27426,7 @@ this.clearCaches = clearCaches = function () {
     localStorage.clear();
 };
 
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  *//**
+/**
  * function to leave a webrtc socket channel
  * @method
  * @name leaveWebRTC
@@ -27404,7 +27443,165 @@ window.onunload = function () {
     webrtcdev.log("[startjs] onunload ", localStorage.getItem("channel"));
     alert(" Refreshing the Page will loose the session data");
 };
-/* Generated on:Wed Apr 22 2020 10:43:52 GMT+0530 (India Standard Time) || version: 5.2.2 - Altanai (@altanai)  , License : MIT  */};
+};
 if (typeof module !== 'undefined' /* && !!module.exports*/ ) {
     module.exports = exports = webrtcdevcon;
+}
+
+/* ***************************************************************
+Admin
+******************************************************************/
+
+let socket;
+let webrtcdevDataObj;
+let usersDataObj;
+const channelsFeed = document.getElementById("channelsFeed");
+
+var WebRTCdevadmin = function (signaller) {
+    console.log("[adminjs] connect to ", signaller);
+    try {
+        socket = io.connect(signaller);
+
+        socket.on('response_to_admin_enquire', function (message) {
+            console.log("[adminjs] response_to_admin_enquire -", message);
+            switch (message.response) {
+                case "channels":
+                    console.log("[adminjs] chnanels ");
+                    let channelinfo = message.channelinfo;
+                    if (message.format == "list") {
+                        clearList("channellistArea");
+                        for (i in Object.keys(channelinfo)) {
+                            /*drawList("channellistArea" , Object.keys(webrtcdevDataObj)[i]);*/
+                            drawList("channellistArea", channelinfo[i]);
+                        }
+                    } else if (message.format == "table") {
+                        drawTable("webrtcdevTableBody", channelinfo);
+                    } else {
+                        webrtcdev.error("format not specified ");
+                    }
+                    break;
+
+                case "users":
+                    console.log("[adminjs] users ");
+                    users = message.users;
+                    if (message.format == "list") {
+                        clearList("userslistArea");
+                        for (i in usersDataObj) {
+                            drawList("userslistArea", usersDataObj[i]);
+                        }
+                    }
+                    break;
+
+                case "all":
+                    channelsFeed.innerHTML = JSON.stringify(message.channels, null, 4);
+                    break;
+
+                default :
+                    webrtcdev.log("unrecognizable response from signaller ", message);
+            }
+        });
+    } catch (e) {
+        console.error(e);
+    }
+};
+
+function onLoadAdmin() {
+    socket.emit('admin_enquire', {
+        ask: 'channels',
+        format: 'list'
+    });
+}
+
+$('#channels_list').click(function () {
+    socket.emit('admin_enquire', {
+        ask: 'channels',
+        format: 'list'
+    });
+});
+
+$("#channelFindBtn").click(function () {
+    socket.emit('admin_enquire', {
+        ask: 'channels',
+        find: $("#channelFindInput").val(),
+        format: 'list'
+    });
+});
+
+$('#users_list').click(function () {
+    socket.emit('admin_enquire', {
+        ask: 'users',
+        format: 'list'
+    });
+});
+
+$('#channels_table').click(function () {
+    socket.emit('admin_enquire', {
+        ask: 'channels',
+        format: 'table'
+    });
+});
+
+$('#channels_json').click(function () {
+    socket.emit('admin_enquire', {
+        ask: 'all',
+        format: 'json'
+    });
+});
+
+$('#channel_clients').click(function () {
+    socket.emit('admin_enquire',
+        {
+            ask: 'channel_clients',
+            channel: 'https172162010780841524489749781952'
+        });
+});
+
+function clearList(element) {
+    $("#" + element).empty();
+}
+
+function drawList(element, listitem) {
+    $("#" + element).append("<li className='list-group-item'>" + listitem + "</li>");
+}
+
+function drawTable(tablebody, data) {
+    for (i in Object.keys(data)) {
+        let key = Object.keys(data)[i];
+
+        drawTableRow(tablebody, i, data[key].channel, data[key].timestamp, data[key].users,
+            data[key].status, data[key].endtimestamp, 0);
+        /*                    
+        for (j in data[key].users) {
+            users.push(data[key].users[j]);
+        }*/
+    }
+}
+
+function drawTableRow(tablebody, i, channel, timestamp, users,
+                      status, endtimestamp, duration) {
+
+    let row = $("<tr className='success' />");
+    row.append($("<td>" + i + "</td>"));
+    row.append($("<td>" + channel + "</td>"));
+    row.append($("<td>" + timestamp + "</td>"));
+    row.append($("<td>" + JSON.stringify(users, null, 4) + "</td>"));
+    row.append($("<td>" + status + "</td>"));
+    row.append($("<td>" + endtimestamp + "</td>"));
+    row.append($("<td>" + duration + "</td>"));
+    $("#" + tablebody).append(row);
+    /*row.append($("<td id='usersRow'>" + drawUsersTable("usersRow" , rowData.users) + "</td>"));*/
+}
+
+function drawUsersTable(users) {
+    let usersTable = document.createElement("table");
+    $("#usersRow").append(usersTable);
+    for (var i = 0; i < users.length; i++) {
+        drawUsersRow(usersTable, data[i]);
+    }
+}
+
+function drawUsersRow(userData) {
+    let row = $("<tr />");
+    $("#table").append(row);
+    row.append($("<td>" + userData + "</td>"));
 }

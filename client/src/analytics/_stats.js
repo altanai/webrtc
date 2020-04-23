@@ -6,47 +6,45 @@
  * function to updateStats
  * @method
  * @name getWebrtcdevStats
- * @param {object} mediaStreamTrack
- * @param {function} callback
- * @param {int} interval
  */
 this.getWebrtcdevStats = getWebrtcdevStats = function () {
 
-    webrtcdev.log(" Browser  : " , rtcConn.DetectRTC.browser);
+    webrtcdev.info(" Browser  : ", rtcConn.DetectRTC.browser);
 
-    webrtcdev.log(" Network connection : " , navigator.connection);
+    webrtcdev.info(" Network connection downlink : ", navigator.connection.downlink);
+    webrtcdev.info(" Network connection effectiveType : ", navigator.connection.effectiveType);
+    webrtcdev.info(" Network connection rtt : ", navigator.connection.rtt);
 
-    webrtcdev.log(" All active participants  : " , getAllActivePeers());
+    webrtcdev.info(" Bandwidth  : ", rtcConn.bandwidth);
 
-    for (let x in  webcallpeers){
-        webrtcdev.log(" Peer   : " , x, " - ",  webcallpeers[x]);
+    webrtcdev.info(" All active participants  : ", getAllActivePeers());
+
+    for (let x in webcallpeers) {
+        webrtcdev.info(" Peer   : ", x, " - ", webcallpeers[x]);
     }
 
-    for (let y in rtcConn.peers) {
-        if (rtcConn.peers[y].userid) {
-            let conn = rtcConn.peers[y].peer;
-            webrtcdev.log(conn);
-            conn.getStats(null).then(stats => {
-                let statsOutput = "";
+    return new Promise(function (resolve, reject) {
+        for (let y in rtcConn.peers) {
+            if (rtcConn.peers[y].userid) {
+                let conn = rtcConn.peers[y].peer;
+                webrtcdev.log(conn);
+                conn.getStats(null).then(stats => {
+                    let statsOutput = "";
 
-                stats.forEach(report => {
-                    statsOutput += "Report: ${report.type} \n" +
-                        "ID: ${report.id} \n " +
-                        "Timestamp: ${report.timestamp} \n";
-
-                    // Now the statistics for this report; we intentially drop the ones we
-                    // sorted to the top above
-
-                    Object.keys(report).forEach(statName => {
-                        if (statName !== "id" && statName !== "timestamp" && statName !== "type") {
-                            statsOutput += "${statName}: ${report[statName]} \n";
-                        }
+                    stats.forEach(report => {
+                        statsOutput += "Report:" + report.type + " <br/> " + "ID:" + report.id + " <br/>" + "Timestamp:" + report.timestamp + " <br/> ";
+                        Object.keys(report).forEach(statName => {
+                            if (statName !== "id" && statName !== "timestamp" && statName !== "type") {
+                                statsOutput += statName + " : " + report[statName] + " <br/> ";
+                            }
+                        });
                     });
+                    webrtcdev.info("[stats] getWebrtcdevStats - self  ",selfuserid  , statsOutput);
+                    resolve(statsOutput);
                 });
-                webrtcdev.log("[stats] getWebrtcdevStats - ", statsOutput);
-            });
+            }
         }
-    }
+    });
 
     // for (let y in  rtcConn.peers){
     //     if(rtcConn.peers[y].userid) {
@@ -74,6 +72,29 @@ this.getWebrtcdevStats = getWebrtcdevStats = function () {
     // }
 
 };
+
+/**
+ * function to send webrtc stats
+ * @method
+ * @name getWebrtcdevStats
+ * @param {object} mediaStreamTrack
+ * @param {function} callback
+ */
+function sendWebrtcdevStats(){
+    getWebrtcdevStats.then(stats=>{
+        rtcConn.send({
+            type: "stats",
+            message: stats
+        });
+    });
+}
+
+/*
+onreceivedWebrtcdevStats
+ */
+function onreceivedWebrtcdevStats(userid ,stats){
+    webrtcdev.info("[stats] getWebrtcdevStats - remote userid ", userid , stats);
+}
 
 this.oldgetStats = function (mediaStreamTrack, callback, interval) {
     var peer = this;
@@ -370,7 +391,7 @@ function showStatus() {
 this.showRtcConn = function () {
     if (rtcConn) {
         webrtcdev.info(" =========================================================================");
-        webrtcdev.info("[stats] rtcConn : ", rtcConn);
+        webrtcdev.info("[stats] rtcConn : ", JSON.stringify(rtcConn));
         webrtcdev.info(" =========================================================================");
     } else {
         webrtcdev.warn(" rtcConn doesnt exist ");
@@ -387,8 +408,8 @@ function showRTCPcapabilities() {
     let str = "";
     str += RTCRtpSender.getCapabilities('audio');
     str += RTCRtpSender.getCapabilities('video');
-
-    document.getElementById(statisticsobj.statsConainer).innerHTML += "<pre >" + str + "</pre>";
+    webrtcdev.info("[stats] rtcConn : ", JSON.stringify(str));
+    // document.getElementById(statisticsobj.statsConainer).innerHTML += "<pre >" + str + "</pre>";
 }
 
 /**
@@ -402,9 +423,9 @@ this.updateStats = function () {
 
     // Update Stats if active
     if (statisticsobj && statisticsobj.active) {
-        getStats(event.stream.getVideoTracks() , function(result) {
+        getStats(event.stream.getVideoTracks(), function (result) {
             document.getElementById("network-stats-body").innerHTML = result;
-        } , 20000);
+        }, 20000);
         document.getElementById(statisticsobj.statsConainer).innerHTML += JSON.stringify(statisticsobj);
         document.getElementById(statisticsobj.statsConainer).innerHTML += JSON.stringify(statisticsobj.bandwidth);
         document.getElementById(statisticsobj.statsConainer).innerHTML += JSON.stringify(statisticsobj.codecs);
@@ -468,6 +489,7 @@ function listDevices() {
             webrtcdev.error('[sessionmanager] checkDevices ', err.name, ": ", err.message);
         });
 }
+
 /*
 check MediaStreamTrack
     MediaTrackSupportedConstraints,
@@ -478,4 +500,5 @@ check MediaStreamTrack
 function getMediaDevicesConstraints() {
     return navigator.mediaDevices.getSupportedConstraints();
 }
+
 /*-----------------------------------------------------------------------------------*/

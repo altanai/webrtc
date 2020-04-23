@@ -48,10 +48,7 @@ function appendToPeerValue(userid, value) {
  * remove info about a peer in list of peers (webcallpeers)
  * @method
  * @name removePeerInfo
- * @param {string} userid
- * @param {string} usernamess
- * @param {string} usercolor
- * @param {string} type
+ * @param {int} index
  */
 function removePeerInfo(index) {
     return new Promise(function (resolve, reject) {
@@ -71,7 +68,9 @@ function removePeerInfo(index) {
  * @name updatePeerInfo
  * @param {string} userid
  * @param {string} username
- * @param {string} usercolor
+ * @param {string} usercolor unique color associated with this peer for easy identification
+ * @param {string} useremail
+ * @param {string} userrole particant , host , guests , inspector
  * @param {string} type
  */
 function updatePeerInfo(userid, username, usecolor, useremail, userrole, type) {

@@ -148,14 +148,21 @@ var startPeersTime = function (date, zone, userid) {
 function peerTimeZone(zone, userid) {
 
     try {
-        webrtcdev.log("[timerjs] peerTimeZone -- " , zone , userid);
+        if(!userid)
+            throw "uerid missing";
+
+        webrtcdev.log("[timerjs] peerTimeZone - " , zone , userid);
         // set peers zone in webcallpeers
         appendToPeerValue(userid , "zone" ,  zone);
 
         // Starting peer timer for all peers
-        var peerinfo = findPeerInfo(userid);
-        webrtcdev.log("[timerjs] peerTimeZone , updated peerinfo with zone-- " , peerinfo);
+        let peerinfo = findPeerInfo(userid);
+        if(!peerinfo)
+            throw "peerinfo missing";
+
+        webrtcdev.log("[timerjs] peerTimeZone , updated peerinfo with zone -  " , peerinfo);
         showRemoteTimeZone(peerinfo);
+
     } catch (err) {
         webrtcdev.error("[timerjs] ", err);
     }

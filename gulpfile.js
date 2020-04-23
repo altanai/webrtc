@@ -273,10 +273,10 @@ gulp.task('webrtcdevelopmentjs', function (done) {
 gulp.task('mainstyle', function (done) {
     console.log(" gulping main stylesheets css  ");
     let cssList = [
-        "node_modules/bootstrap/dist/css/bootstrap.min.css",
         "node_modules/font-awesome/css/font-awesome.min.css",
         "node_modules/remodal/dist/remodal.css",
-        "node_modules/remodal/dist/remodal-default-theme.css"
+        "node_modules/remodal/dist/remodal-default-theme.css",
+        "node_modules/bootstrap/dist/css/bootstrap.min.css"
         // "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css",
         // "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css",
         // "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css",

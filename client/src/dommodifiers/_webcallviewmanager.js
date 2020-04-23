@@ -68,7 +68,7 @@ function updateWebCallView(peerinfo) {
                 if (localVideo && document.getElementsByName(localVideo)[0]) {
                     let vid = document.getElementsByName(localVideo)[0];
                     attachMediaStream(vid, peerinfo.stream).then(_ => {
-                        webrtcdev.log(' ========================================= [ webcallviewdevmanager ] updateWebCallView - Done attaching .local stream to element');
+                        webrtcdev.log('[ webcallviewdevmanager ] updateWebCallView - Done attaching local stream to element');
                         vid.muted = true;
                         vid.className = localobj.videoClass;
                         
@@ -141,7 +141,7 @@ function updateWebCallView(peerinfo) {
 
                     attachMediaStream(remoteVideos[emptyvideoindex], peerinfo.stream)
                         .then(_ => {
-                            webrtcdev.log(' ========================================= [ webcallviewdevmanager ] updateWebCallView - Done attaching remote stream to element');
+                            webrtcdev.log('[ webcallviewdevmanager ] updateWebCallView - Done attaching remote stream to element');
 
                             if (remoteVideos[emptyvideoindex]) {
                                 showelem(remoteVideos[emptyvideoindex].video);
@@ -186,14 +186,14 @@ function updateWebCallView(peerinfo) {
  * @param {function} callback
  */
 function destroyWebCallView(peerInfo, callback) {
-    webrtcdev.log(" [starjs] destroyWebCallView peerInfo", peerInfo);
+    webrtcdev.log(" [webcallviewmanager] destroyWebCallView peerInfo", peerInfo);
     if (peerInfo.videoContainer && document.getElementById(peerInfo.videoContainer)){
 
         let video = document.getElementById(peerInfo.videoContainer);
         if(!video) return ;
         video.onplay = video.onplaying = function () {
-            video.addAttribute("hidden");
-            video.parentNode.parentNode.addAttribute("hidden");
+            video.setAttribute("hidden", true);
+            video.parentNode.parentNode.setAttribute("hidden", true);
 
             if ('srcObject' in video) {
                 try {

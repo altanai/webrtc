@@ -10,8 +10,8 @@
  * @return {string}sessionid
  */
 this.makesessionid = function (autoload) {
-    let sessionid ="";
-    webrtcdev.log(" Existing charecters after # " , location.href.replace('#', '').length);
+    let sessionid = "";
+    webrtcdev.log(" Existing charecters after # ", location.href.replace('#', '').length);
 
     if (location.href.replace('#', '').length) {
         // When Session should have a session name
@@ -20,11 +20,11 @@ this.makesessionid = function (autoload) {
         } else {
             sessionid = location.hash.replace(/\/|:|#|\?|\$|\^|%|\.|`|~|!|\+|@|\[|\||]|\|*. /g, '').split('\n').join('').split('\r').join('');
         }
-        if (sessionid )
+        if (sessionid)
             return sessionid;
     }
 
-    webrtcdev.log("Session id not Found in URL ,  Chek for auto - reload if  " , autoload );
+    webrtcdev.log("Session id not Found in URL ,  Chek for auto - reload if  ", autoload);
 
     if (autoload == "reload" && !location.hash.replace('#', '').length) {
         // When Session should auto-generate ssid and locationbar doesnt have a session name
@@ -317,6 +317,8 @@ this.setsession = function (_localobj, _remoteobj, incoming, outgoing, session, 
 
     return {
         sessionid: sessionid,
+        outgoing: outgoing,
+        incoming: incoming,
         socketAddr: socketAddr,
         localobj: localobj,
         remoteobj: remoteobj,
@@ -333,26 +335,28 @@ this.setsession = function (_localobj, _remoteobj, incoming, outgoing, session, 
 this.startCall = function (sessionobj) {
 
     if (!sessionobj) {
-        webrtcdev.error("Cannot initiate startcall without session object ");
+        webrtcdev.error(" [ initjs ] : Cannot initiate startcall without session object ");
         return;
     }
-    webrtcdev.log(" [ initjs ] startwebrtcdev begin processing ", sessionobj);
+
+    // sessionobj is ready
+    webrtcdev.log(" [ initjs ] startwebrtcdev begin processing ");
 
     webrtcdev.log(" [ initjs ] : begin  checkDevices for outgoing and incoming");
     // listDevices();
 
-    webrtcdev.log(" [ initjs  ] : incoming ", incoming);
-    webrtcdev.log(" [ initjs  ] : outgoing ", outgoing);
+    webrtcdev.log(" [ initjs  ] : incoming ", sessionobj.incoming);
+    webrtcdev.log(" [ initjs  ] : outgoing ", sessionobj.outgoing);
 
-    if (incoming) {
-        incomingAudio = incoming.audio;
-        incomingVideo = incoming.video;
-        incomingData = incoming.data;
+    if (sessionobj.incoming) {
+        incomingAudio = sessionobj.incoming.audio;
+        incomingVideo = sessionobj.incoming.video;
+        incomingData = sessionobj.incoming.data;
     }
-    if (outgoing) {
-        outgoingAudio = outgoing.audio;
-        outgoingVideo = outgoing.video;
-        outgoingData = outgoing.data;
+    if (sessionobj.outgoing) {
+        outgoingAudio = sessionobj.outgoing.audio;
+        outgoingVideo = sessionobj.outgoing.video;
+        outgoingData = sessionobj.outgoing.data;
     }
 
     webrtcdev.log(" [ initjs  ] : role ", role);
@@ -434,10 +438,10 @@ this.startCall = function (sessionobj) {
         // resolve("done");
     }).then(sessionid => {
         setRtcConn(sessionid);
-    }).then(_=> {
+    }).then(_ => {
         setWidgets(rtcConn, sessionobj.widgets);
-    }).then(_=> {
-        startSocketSession(rtcConn, socketAddr, sessionid);
+    }).then(_ => {
+        startSocketSession(rtcConn, sessionobj.socketAddr, sessionobj.sessionid);
     }).catch((err) => {
         webrtcdev.error(" [ initjs ] : Promise rejected ", err);
     });
