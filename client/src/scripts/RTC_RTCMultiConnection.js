@@ -183,6 +183,7 @@
         // 'force new connection': true, // For SocketIO version < 1.0
         // 'forceNew': true, // For SocketIO version >= 1.0
         // 'transport': 'polling' // fixing transport:unknown issues
+        'transport': 'websocket'
     };
 
     /**
@@ -587,7 +588,7 @@
         var session = sessionForced || connection.session;
 
         if (connection.dontCaptureUserMedia || isData(session)) {
-            webrtcdev.warn("[RTCConn] dont capture media " );
+            webrtcdev.warn("[RTCConn] dont capture media ");
             callback();
             return;
         }
@@ -921,27 +922,19 @@
 
     // EVENTs
     connection.onopen = function (event) {
-        if (!!connection.enableLogs) {
-            webrtcdev.info('Data connection has been opened between you & ', event.userid);
-        }
+        webrtcdev.info('Data connection has been opened between you & ', event.userid);
     };
 
     connection.onclose = function (event) {
-        if (!!connection.enableLogs) {
-            webrtcdev.warn('Data connection has been closed between you & ', event.userid);
-        }
+        webrtcdev.warn('Data connection has been closed between you & ', event.userid);
     };
 
     connection.onerror = function (error) {
-        if (!!connection.enableLogs) {
-            webrtcdev.error(error.userid, 'data-error', error);
-        }
+        webrtcdev.error(error.userid, 'data-error', error);
     };
 
     connection.onmessage = function (event) {
-        if (!!connection.enableLogs) {
-            webrtcdev.debug('data-message', event.userid, event.data);
-        }
+        webrtcdev.debug('data-message', event.userid, event.data);
     };
 
     connection.send = function (data, remoteUserId) {

@@ -33,30 +33,14 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
         // socket = io.connect(addr, {
         //     transports: ['websocket']
         // });
-        socket = io.connect(addr,
-            {
-                transportOptions: {
-                    polling: {
-                        extraHeaders: {
-                            'x-clientid': 'WebrtcDevelopment Client'
-                        }
-                    }
-                }
-            }
-        );
-
+        socket = io.connect(addr);
         // socket.set('log level', 3);
     } catch (err) {
         webrtcdev.error(" problem in socket connnection", err);
         throw (" problem in socket connection");
     }
 
-    if (sessionid) {
-        shownotification("Checking status of  : " + sessionid);
-        socket.emit("presence", {
-            channel: sessionid
-        });
-    } else {
+    if (!sessionid) {
         shownotification("Invalid session");
         webrtcdev.error("[sessionmanager] Session id undefined ");
         return;
@@ -65,6 +49,10 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
     // Socket Listeners
     socket.on("connect", function () {
         webrtcdev.log("[sessionmanager] connected to signaller ");
+
+        socket.emit("presence", {
+            channel: sessionid
+        });
 
         socket.on('disconnected', function () {
             webrtcdev.error("[sessionmanager] Disconnected from signaller  ");
@@ -111,9 +99,9 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
     });
 
     socket.on("presence", function (channelpresence) {
-        //If debug mode is on , show user detaisl at top under mainDiv
+        //If debug mode is on , show user details at top under mainDiv
         if (debug) showUserStats();
-        webrtcdev.log("[sessionmanager] =======================presence for sessionid ==================", channelpresence);
+        webrtcdev.log("[sessionmanager] ======================= presence for sessionid ==================", channelpresence);
         if (channelpresence) joinWebRTC(sessionid, selfuserid);
         else openWebRTC(sessionid, selfuserid, remoteobj.maxAllowed || 10);
     });
@@ -142,7 +130,6 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
                         OfferToReceiveVideo: incomingVideo
                     },
                     rtcConn.open(event.channel, function (res) {
-                        // alert(" callback from open room ", res);
                         webrtcdev.log(" [sessionmanager] offer/answer webrtc ", selfuserid, " with role ", role, " responese ", res);
                     });
                 resolve("ok");
@@ -169,15 +156,15 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
 
         if (event.status && event.channel == sessionid) {
 
-            let promise = new Promise(function (resolve, reject) {
+            webrtcdev.log(" [ join-channel-resp ] ",
+                " Session video:", outgoingVideo,
+                " audio: ", outgoingAudio,
+                " data: ", outgoingData,
+                " OfferToReceiveAudio: ", incomingAudio,
+                " OfferToReceiveVideo: ", incomingVideo
+            );
 
-                webrtcdev.log(" [ join-channel-resp ] ",
-                    " Session video:", outgoingVideo,
-                    " audio: ", outgoingAudio,
-                    " data: ", outgoingData,
-                    " OfferToReceiveAudio: ", incomingAudio,
-                    " OfferToReceiveVideo: ", incomingVideo
-                );
+            let promise = new Promise(function (resolve, reject) {
                 rtcConn.connectionType = "join",
                     rtcConn.session = {
                         video: outgoingVideo,
@@ -194,6 +181,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
 
             promise.then(_ => {
                 rtcConn.connectionDescription = rtcConn.join(event.channel);
+                // rtcConn.connectionDescription = rtcConn.openOrJoin(event.channel);
                 webrtcdev.info(" [sessionmanager] rtcConn.connectionDescription  ", rtcConn.connectionDescription);
                 webrtcdev.info(" [sessionmanager] offer/answer webrtc  ", selfuserid, " with role ", role);
             }).then(_ => {
@@ -219,7 +207,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
         if (event.type == "new-join" && event.msgtype != "error") {
             webrtcdev.log("[session manager ] - new-join-channel ");
 
-            // check if maxAllowed capacity of the session isnt reached before updating peer info, else return
+            // check if maxAllowed capacity of the session isnot reached before updating peer info, else return
             if (remoteobj.maxAllowed != "unlimited" && webcallpeers.length <= remoteobj.maxAllowed) {
                 webrtcdev.log("[sessionmanager] channel-event : peer length " + webcallpeers.length + " is less than max capacity of session  of the session " + remoteobj.maxAllowed);
                 let participantId = event.data.sender;
@@ -304,7 +292,7 @@ var setRtcConn = function (sessionid) {
         },
 
         rtcConn.onopen = function (event) {
-
+            alert("onopen");
             webrtcdev.log("[sessionmanager] rtconn onopen - ", event);
             try {
 
@@ -385,7 +373,7 @@ var setRtcConn = function (sessionid) {
 
             } catch (err) {
                 shownotification("problem in session open ", "warning");
-                webrtcdev.error("problem in session open", err);
+                webrtcdev.error("[sessionmanager] onopen - problem in session open", err);
             }
         },
 
@@ -805,7 +793,7 @@ var connectWebRTC = function (type, channel, selfuserid, remoteUsers) {
             var _peerinfo = findPeerInfo(selfuserid);
             if (!_peerinfo) throw "self peerinfo missing in webcallpeers for " + selfuserid;
 
-            // Create File Sharing Div 
+            // Create File Sharing Div
             if (fileshareobj.props.fileShare == "single") {
                 createFileSharingDiv(_peerinfo);
                 //max display the local / single fileshare
@@ -813,7 +801,7 @@ var connectWebRTC = function (type, channel, selfuserid, remoteUsers) {
 
             } else if (fileshareobj.props.fileShare == "divided") {
 
-                // create local File sharing window 
+                // create local File sharing window
                 // Do not create file share and file viewer for inspector's own session
                 if (role != "inspector") {
                     webrtcdev.log(" [sessionmanager] creating local file sharing");
@@ -822,7 +810,7 @@ var connectWebRTC = function (type, channel, selfuserid, remoteUsers) {
                     webrtcdev.log("[sessionmanager] Since it is an inspector's own session , not creating local File viewer and list");
                 }
 
-                // create remotes File sharing window 
+                // create remotes File sharing window
                 for (x in webcallpeers) {
                     if (webcallpeers[x].userid != selfuserid && webcallpeers[x].role != "inspector") {
                         webrtcdev.log(" [start connectWebRTC] creating remote file sharing ");
@@ -839,7 +827,7 @@ var connectWebRTC = function (type, channel, selfuserid, remoteUsers) {
                 webrtcdev.error("[sessionmanager] fileshareobj.props.fileShare undefined ");
             }
 
-            // Creating File listing div 
+            // Creating File listing div
             if (fileshareobj.props.fileList == "single") {
                 document.getElementById(_peerinfo.fileList.outerbox).style.width = "100%";
             } else if (fileshareobj.props.fileShare != "single") {

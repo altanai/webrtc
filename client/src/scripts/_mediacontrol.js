@@ -179,7 +179,7 @@ function attachMediaStream(remvid, stream) {
                         webrtcdev.error("[  Mediacontrol - attachMediaStream  ] error ", error);
                         if(error.name=="NotAllowedError" && error.message.includes("play() failed")){
                             alert(" play failed due to auto play policy, please wait ");
-                        }else if(error.name=="NotAllowedError" && error.message.includes("pause()")){
+                        }else if(error.name=="NotAllowedError" && error.message.includes("The play() request was interrupted by a call to pause()")){
                             alert(" play failed, video was pause  ");
                         }
                         resolve(1);
@@ -218,14 +218,14 @@ function reattachMediaStream(to, from) {
         // If stream is present , attach the stream and play
         let pr = new Promise(function (resolve, reject) {
             to.srcObject = from.srcObject;
-            webrtcdev.log(' [  Mediacontrol] reattachMediaStream - added src object for valid stream ', to);
+            webrtcdev.log('[ Mediacontrol] reattachMediaStream - added src object for valid stream ', to);
             var playPromise = to.play();
             if (playPromise !== undefined) {
                 playPromise.then(_ => {
                     resolve(1);
                 })
                     .catch(error => {
-                        webrtcdev.error("[  Mediacontrol - attachMediaStream  ] error ", error);
+                        webrtcdev.error("[ Mediacontrol ] attachMediaStream - error ", error);
                         reject(1);
                     });
             }
