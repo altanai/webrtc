@@ -182,7 +182,7 @@
     connection.socketOptions = {
         // 'force new connection': true, // For SocketIO version < 1.0
         // 'forceNew': true, // For SocketIO version >= 1.0
-        'transport': 'polling' // fixing transport:unknown issues
+        // 'transport': 'polling' // fixing transport:unknown issues
     };
 
     /**
@@ -463,8 +463,8 @@
                     webrtcdev.warn('isRoomJoined: ', error, ' roomid: ', connection.sessionid);
                 }
 
-                // [disabled] retry after 3 seconds
-                false && setTimeout(function () {
+                // retry after 3 seconds
+                setTimeout(function () {
                     joinRoom(connectionDescription, cb);
                 }, 3000);
             }

@@ -53,6 +53,10 @@
 }
 
 [class*="filesharingWidget"] {
+    /*height: auto;*/
+    /*width: 100%;*/
+    /*margin-bottom: 50px;*/
+    /*position: relative;*/
     height: auto;
     width: 100%;
     display: inline-grid !important;
@@ -87,6 +91,18 @@
     bottom: 10px;
     position: fixed;
 }
+
+/*.filesharingWidget{
+    overflow: auto;
+    height: 100%;
+}
+
+.iframeClassfileviewer{
+    width: 69%;
+    border: 0;
+    border-left: 1px solid black;
+    height: inherit;
+}*/
 
 .fileBoxClass {
     overflow-y: hidden;

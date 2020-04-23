@@ -51,8 +51,7 @@ this.sendwebrtcdevLogs = function (url, key, msg) {
 
 /**
  * add user id and email and status to page header area in debug mode
- * @method    .then(apires => console.log("HelpLogs API response ", apires))
-    .catch(error => console.error("HelpLogs API response ", error));
+ * @method
  * @name showUserStats
  */
 this.showUserStats = showUserStats = function () {

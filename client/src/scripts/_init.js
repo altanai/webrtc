@@ -1,6 +1,14 @@
 /*-----------------------------------------------------------------------------------*/
 /*                    Global Init JS                                                 */
 /*-----------------------------------------------------------------------------------*/
+var channelpresence = false;
+var localVideoStreaming = null;
+var turn = "none";
+var localobj = {}, remoteobj = {};
+var pendingFileTransfer = [];
+var connectionStatus = null;
+
+this.connectionStatus = connectionStatus;
 
 /**
  * creates sessionid
@@ -24,7 +32,7 @@ this.makesessionid = function (autoload) {
             return sessionid;
     }
 
-    webrtcdev.log("Session id not Found in URL ,  Chek for auto - reload if  ", autoload);
+    webrtcdev.log("Session id not Found in URL ,  Check for auto - reload if  ", autoload);
 
     if (autoload == "reload" && !location.hash.replace('#', '').length) {
         // When Session should auto-generate ssid and locationbar doesnt have a session name
@@ -36,19 +44,6 @@ this.makesessionid = function (autoload) {
         return sessionid;
     }
 };
-
-/**************************************************************************************
- peerconnection
- ****************************************************************************/
-
-var channelpresence = false;
-var localVideoStreaming = null;
-var turn = "none";
-var localobj = {}, remoteobj = {};
-var pendingFileTransfer = [];
-var connectionStatus = null;
-
-this.connectionStatus = connectionStatus;
 
 function isData(session) {
     return !session.audio && !session.video && !session.screen && session.data;
@@ -138,10 +133,12 @@ function bytesToSize(e) {
     return Math.round(e / Math.pow(1024, n), 2) + " " + t[n]
 }
 
+this.issafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
 /************************************************
  scripts or stylesheets load unloading
  ********************************************/
+
 function loadjscssfile(filename, filetype) {
     let fileref;
     if (filetype == "js") { //if filename is a external JavaScript file
@@ -165,51 +162,7 @@ function loadScript(src, onload) {
     document.documentElement.appendChild(script);
 }
 
-
-/**********************************
- Detect Webcam
- **********************************/
-
-/**
- * Detect if webcam is accesible by browser
- * @method
- * @name detectWebcam
- * @param {function} callback
- */
-function detectWebcam(callback) {
-    let md = navigator.mediaDevices;
-    webrtcdev.log(" detectwebcam ", md);
-
-    if (!md || !md.enumerateDevices)
-        callback(false);
-
-    md.enumerateDevices().then(devices => {
-        callback(devices.some(device => 'videoinput' === device.kind));
-    });
-}
-
-/**
- * Detect if Mic is accesible by browser
- * @method
- * @name detectMic
- * @param {function} callback
- */
-function detectMic(callback) {
-    let md = navigator.mediaDevices;
-    if (!md || !md.enumerateDevices)
-        callback(false);
-
-    md.enumerateDevices().then(devices => {
-        callback(devices.some(device => 'audioinput' === device.kind));
-    });
-}
-
 async function getVideoPermission() {
-    // navigator.getUserMedia({ audio: false, video: true}, function(){
-    //     outgoingVideo = false;
-    // }, function(){
-    //  outgoingVideo = false;
-    // });
     let stream = null;
     try {
         stream = await navigator.mediaDevices.getUserMedia({audio: false, video: true});
@@ -223,7 +176,6 @@ async function getVideoPermission() {
         webrtcdev.error(err.name + ": " + err.message);
     }
     outgoingVideo = false;
-
 }
 
 
@@ -243,8 +195,6 @@ async function getAudioPermission() {
     outgoingAudio = false;
 }
 
-
-this.issafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
 /*-----------------------------------------------------------------------------------*/
 
@@ -344,7 +294,6 @@ this.startCall = function (sessionobj) {
 
     webrtcdev.log(" [ initjs ] : begin  checkDevices for outgoing and incoming");
     // listDevices();
-
     webrtcdev.log(" [ initjs  ] : incoming ", sessionobj.incoming);
     webrtcdev.log(" [ initjs  ] : outgoing ", sessionobj.outgoing);
 
@@ -409,33 +358,43 @@ this.startCall = function (sessionobj) {
             resolve("done");
         }
 
-        detectWebcam((hasWebcam) => {
+        detectWebcam().then(hasWebcam => {
             webrtcdev.log('Has Webcam: ' + (hasWebcam ? 'yes' : 'no'));
             if (!hasWebcam) {
+                webrtcdev.error(" dont have access to webcam  ");
                 alert(" you dont have access to webcam ");
                 outgoingVideo = false;
             }
-            detectMic((hasMic) => {
-                webrtcdev.log('Has Mic: ' + (hasMic ? 'yes' : 'no'));
-                if (!hasMic) {
-                    alert(" youcamera  dont have access to Mic ");
-                    outgoingAudio = false;
-                }
 
-                // Try getting permission again and ask your to restart
-                if (outgoingAudio) {
-                    webrtcdev.log(" get permission for audio access ");
-                    getAudioPermission();
-                }
-                if (outgoingVideo) {
-                    webrtcdev.log(" get permission for video Access ");
-                    getVideoPermission();
-                }
-
-                resolve(sessionid);
-            });
+            if (outgoingVideo) {
+                webrtcdev.log(" get permission for video Access ");
+                getVideoPermission();
+            }
+        }).catch(err => {
+            webrtcdev.error(" dont have access to webcam  ", err);
         });
-        // resolve("done");
+
+        detectMic().then(hasMic => {
+            webrtcdev.log('Has Mic: ' + (hasMic ? 'yes' : 'no'));
+            if (!hasMic) {
+                webrtcdev.error(" dont have access to mic  ");
+                alert(" you dont have access to Mic ");
+                outgoingAudio = false;
+            }
+
+            // Try getting permission again and ask your to restart
+            if (outgoingAudio) {
+                webrtcdev.log(" get permission for audio access ");
+                getAudioPermission();
+            }
+        }).catch(err => {
+            webrtcdev.error(" dont have access to mic  ", err);
+        });
+
+        // Permission to show desktop notifications
+        getNotficationPermission();
+        resolve(sessionid);
+
     }).then(sessionid => {
         setRtcConn(sessionid);
     }).then(_ => {
@@ -457,7 +416,7 @@ this.startCall = function (sessionobj) {
  * @method
  * @name stopCall
  */
-this.stopCall = function () {
+this.stopCall = stopCall = function () {
     webrtcdev.log(" stopCall ");
     rtcConn.closeEntireSession();
 
@@ -472,4 +431,3 @@ this.stopCall = function () {
 
     this.connectionStatus = "closed";
 };
-

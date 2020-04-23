@@ -106,29 +106,26 @@ this.showdesktopnotification = showdesktopnotification = function (title, descri
     // want to be respectful there is no need to bother them any more.
 };
 
-
-// not a very good pracise i know
-// need this to inform user of session updates when he/she is on another tab/widnow 
-if (typeof Notification != undefined) {
-    try {
-        Notification.requestPermission().then(function (result) {
-            webrtcdev.log("[notify.js] notification requestPermission ", result);
-        });
-    } catch (error) {
-        // Safari doesn't return a promise for requestPermissions and it                                                                                                                                       
-        // throws a TypeError. It takes a callback as the first argument                                                                                                                                       
-        // instead.
-        if (error instanceof TypeError) {
-            Notification.requestPermission((result) => {
-                webrtcdev.log("[notify.js] notification requestPermission safari", result);
+function getNotficationPermission(){
+// not a very good practise i know
+// need this to inform user of session updates when he/she is on another tab / window
+    if (typeof Notification != undefined) {
+        try {
+            Notification.requestPermission().then(function (result) {
+                webrtcdev.log("[notify.js] notification requestPermission ", result);
             });
-        } else {
-            throw error;
+        } catch (error) {
+            webrtcdev.error("[notify.js] notification requestPermission ", error);
         }
     }
-
 }
 
+
+/**
+ * function to spawn desktop notification
+ * @function
+ * @name spawnNotification
+ */
 function spawnNotification(theBody, theIcon, theTitle) {
     var options = {
         body: theBody,

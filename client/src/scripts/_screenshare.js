@@ -40,7 +40,7 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
         // scrConn.dontCaptureUserMedia = false,
 
         scrConn.onMediaError = function (error, constraints) {
-            webrtcdev.error("[screenshareJS] on stream in _screenshare :" , error, constraints);
+            webrtcdev.error("[screenshareJS] on stream in _screenshare :", error, constraints);
             shownotificationWarning(error.name);
         },
 
@@ -228,7 +228,6 @@ function webrtcdevViewscreen(roomid) {
  */
 function webrtcdevStopShareScreen() {
     try {
-
         rtcConn.send({
             type: "screenshare",
             message: "stoppedscreenshare"
@@ -245,8 +244,10 @@ function webrtcdevStopShareScreen() {
         }
 
         let stream1 = scrConn.streamEvents.selectFirst();
-        stream1.stream.getTracks().forEach(track => track.stop());
-
+        if (stream1) {
+            webrtcdev.error("[screensharejs] webrtcdevStopShareScreen - stoppping the stream");
+            stream1.stream.getTracks().forEach(track => track.stop());
+        }
         webrtcdevCleanShareScreen();
     } catch (err) {
         webrtcdev.error("[screensharejs] webrtcdevStopShareScreen - ", err);

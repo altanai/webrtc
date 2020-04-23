@@ -2,6 +2,78 @@
     cursor: pointer
 }
 
+#contentWrap {
+    margin: 0;
+    width: 100%;
+    position: relative
+}
+
+#topIconHolder {
+    padding: 0px 0px 0px 0px;
+}
+
+#topIconHolder ul {
+    padding: 0;
+    margin: 0;
+    list-style: none
+}
+
+#topIconHolder ul li {
+    float: left;
+    display: block;
+    cursor: pointer;
+    padding: 0 5px
+}
+
+#topIconHolder ul li a {
+    color: #fff;
+    position: relative
+}
+
+
+.topPanelButton {
+    line-height: 20px !important;
+}
+
+.slash:after {
+    content: "\\";
+    color: #fff;
+    font-size: 32px;
+    font-weight: 700;
+    left: 2px;
+    position: absolute;
+    top: -11px;
+    transform: rotate(-30deg)
+}
+
+.modal-body {
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0 auto;
+    text-align: center
+}
+
+.modal-footer {
+    text-align: left
+}
+
+
+.popup-box {
+    position: absolute;
+    bottom: 0;
+    right: 0px;
+    height: 40%;
+    width: 300px;
+    margin-bottom: 68px;
+}
+
+.user-activity {
+    line-height: 1.28;
+    width: 75%;
+    position: relative
+}
+
+
 .max_vid {
     position: absolute;
     bottom: 10px;
@@ -26,6 +98,20 @@
     position: relative;
     background-color: orange
 }
+
+#inlineVidWrap {
+    position: absolute;
+    bottom: 30px;
+    left: 30px
+}
+
+.inlineVid {
+    width: 200px;
+    border: 1px solid #00f;
+    margin: 0 20px;
+    display: inline-block
+}
+
 :fullscreen {
     position: fixed !important;
     top: 0 !important;
@@ -43,20 +129,6 @@
     background: orange;
     width: 100%;
     height: 100%
-}
-
-
-#inlineVidWrap {
-    position: absolute;
-    bottom: 30px;
-    left: 30px
-}
-
-.inlineVid {
-    width: 200px;
-    border: 1px solid #00f;
-    margin: 0 20px;
-    display: inline-block
 }
 
 .custom_wrapper {
@@ -80,6 +152,10 @@
 
 .bgc {
     background-color: #4FC3F7
+}
+
+#invitationemail {
+    font-size: 12px
 }
 
 :-moz-placeholder {
@@ -120,10 +196,20 @@
     border: 5px solid #777;
 }
 
+
 .centre {
     margin: 0 auto;
     width: 90%;
 }
+
+#container {
+    background-color: #000000;
+    height: 100%;
+    margin: 0px auto;
+    position: absolute;
+    width: 100%;
+}
+
 
 .alertDiv {
     position: absolute;
@@ -155,6 +241,13 @@
     font-size: 14px;
     color: #333333;
     line-height: 20px !important
+}
+
+.secondPanelClass, .thirdPanelClass, .fourthPanelClass, .fifthPanelClass {
+    margin-bottom: -20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: -20px;
 }
 
 .filler {

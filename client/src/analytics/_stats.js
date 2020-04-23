@@ -391,11 +391,14 @@ function showStatus() {
 this.showRtcConn = function () {
     if (rtcConn) {
         webrtcdev.info(" =========================================================================");
-        webrtcdev.info("[stats] rtcConn : ", JSON.stringify(rtcConn));
+        // webrtcdev.info("[stats] rtcConn : ", JSON.stringify(rtcConn));
+        webrtcdev.info("[stats] rtcConn : ", rtcConn);
         webrtcdev.info(" =========================================================================");
     } else {
         webrtcdev.warn(" rtcConn doesnt exist ");
     }
+
+    return rtcConn;
 };
 
 /*

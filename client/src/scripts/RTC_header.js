@@ -367,7 +367,7 @@ var RTCMultiConnection = function (roomid, forceOptions) {
             alreadyConnected = true;
 
             if (connection.enableLogs) {
-                webrtcdev.info('socket.io connection is opened.');
+                webrtcdev.info('[RTC header] socket.io connection is opened.');
             }
 
             setTimeout(function () {
@@ -380,14 +380,17 @@ var RTCMultiConnection = function (roomid, forceOptions) {
         });
 
         connection.socket.on('disconnect', function (event) {
+            webrtcdev.error('[RTC header] socket.io connection is disconneted .');
             connection.onSocketDisconnect(event);
         });
 
         connection.socket.on('error', function (event) {
+            webrtcdev.error('[RTC header] socket.io connection errorred.');
             connection.onSocketError(event);
         });
 
         connection.socket.on('user-disconnected', function (remoteUserId) {
+            webrtcdev.log('[RTC header] user-disconnected');
             if (remoteUserId === connection.userid) {
                 return;
             }
@@ -402,6 +405,7 @@ var RTCMultiConnection = function (roomid, forceOptions) {
         });
 
         connection.socket.on('user-connected', function (userid) {
+            webrtcdev.log('[RTC header] user-connected');
             if (userid === connection.userid) {
                 return;
             }

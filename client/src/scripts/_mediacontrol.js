@@ -1,6 +1,46 @@
 /**----------------------------------
-    webrtc get media
-------------------------------------*/
+ webrtc get media
+ ------------------------------------*/
+
+/**
+ * Detect if webcam is accessible by browser
+ * @method
+ * @name detectWebcam
+ * @param {function} callback
+ */
+function detectWebcam() {
+    return new Promise(function (resolve, reject) {
+        let md = navigator.mediaDevices;
+        if (!md || !md.enumerateDevices) {
+            webrtcdev.warn(" detectwebcam cant detect devices ");
+            resolve(false);
+        }
+        webrtcdev.log(" detectwebcam mediaDevices object - ", md);
+        md.enumerateDevices().then(devices => {
+            webrtcdev.log(" detectwebcam individual devices - ", devices);
+            resolve(devices.some(device => 'videoinput' === device.kind));
+        });
+    });
+}
+
+/**
+ * Detect if Mic is accessible by browser
+ * @method
+ * @name detectMic
+ * @param {function} callback
+ */
+function detectMic(callback) {
+    return new Promise(function (resolve, reject) {
+        let md = navigator.mediaDevices;
+        if (!md || !md.enumerateDevices) {
+            resolve(false);
+        }
+
+        md.enumerateDevices().then(devices => {
+            resolve(devices.some(device => 'audioinput' === device.kind));
+        });
+    });
+}
 
 /**
  * get Video and micrpphone stream media
@@ -10,7 +50,7 @@
  * @param {booolean} outgoingVideo
  * @param {booolean} outgoingAudio
  */
-function getCamMedia(rtcConn , outgoingVideo , outgoingAudio) {
+function getCamMedia(rtcConn, outgoingVideo, outgoingAudio) {
     rtcConn.dontAttachStream = false,
         rtcConn.dontGetRemoteStream = false;
 
@@ -135,14 +175,19 @@ function attachMediaStream(remvid, stream) {
                     playPromise.then(_ => {
                         resolve(1);
                     })
-                        .catch(error => {
-                            webrtcdev.error("[  Mediacontrol - attachMediaStream  ] error ", error);
-                            reject(1);
-                        });
+                    .catch(error => {
+                        webrtcdev.error("[  Mediacontrol - attachMediaStream  ] error ", error);
+                        if(error.name=="NotAllowedError" && error.message.includes("play() failed")){
+                            alert(" play failed due to auto play policy, please wait ");
+                        }else if(error.name=="NotAllowedError" && error.message.includes("pause()")){
+                            alert(" play failed, video was pause  ");
+                        }
+                        resolve(1);
+                    });
                 }
             });
             return pr;
-        }else{
+        } else {
             // If no stream , just attach the src as null , do not play
             let pr = new Promise(function (resolve, reject) {
                 element.srcObject = null;
@@ -174,12 +219,19 @@ function reattachMediaStream(to, from) {
         let pr = new Promise(function (resolve, reject) {
             to.srcObject = from.srcObject;
             webrtcdev.log(' [  Mediacontrol] reattachMediaStream - added src object for valid stream ', to);
-            to.play().then(
-                resolve(1)
-            );
+            var playPromise = to.play();
+            if (playPromise !== undefined) {
+                playPromise.then(_ => {
+                    resolve(1);
+                })
+                    .catch(error => {
+                        webrtcdev.error("[  Mediacontrol - attachMediaStream  ] error ", error);
+                        reject(1);
+                    });
+            }
         });
         return pr;
     } catch (err) {
-        webrtcdev.error("[media control] reattachMediaStream err ", err)
+        webrtcdev.error("[media control] reattachMediaStream err ", err);
     }
 }
