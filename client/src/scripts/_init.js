@@ -176,6 +176,7 @@ async function getVideoPermission() {
         webrtcdev.error(err.name + ": " + err.message);
     }
     outgoingVideo = false;
+    return;
 }
 
 
@@ -193,6 +194,7 @@ async function getAudioPermission() {
         webrtcdev.error(err.name + ": " + err.message);
     }
     outgoingAudio = false;
+    return;
 }
 
 
@@ -215,16 +217,16 @@ this.setsession = function (_localobj, _remoteobj, incoming, outgoing, session, 
     localobj = _localobj;
     remoteobj = _remoteobj;
 
-    turn = (session.hasOwnProperty('turn') ? session.turn : null);
-    if (turn && turn != "none") {
-        if (turn.active && turn.iceServers) {
-            webrtcdevIceServers = turn.iceServers;
-        } else {
-            getICEServer();
-            // getICEServer( turn.username ,turn.secretkey , turn.domain,
-            //                 turn.application , turn.room , turn.secure);                
-        }
-    }
+    turn = session.turn;
+    // if (turn && turn != "none") {
+    //     if (turn.active && turn.iceServers) {
+    //         webrtcdevIceServers = turn.iceServers;
+    //     } else {
+    //         getICEServer();
+    //         // getICEServer( turn.username ,turn.secretkey , turn.domain,
+    //         //                 turn.application , turn.room , turn.secure);
+    //     }
+    // }
 
     if (widgets) {
 
@@ -290,12 +292,10 @@ this.startCall = function (sessionobj) {
     }
 
     // sessionobj is ready
-    webrtcdev.log(" [ initjs ] startwebrtcdev begin processing ");
+    webrtcdev.log("[ initjs ] startwebrtcdev begin processing with " , sessionobj);
 
-    webrtcdev.log(" [ initjs ] : begin  checkDevices for outgoing and incoming");
-    // listDevices();
-    webrtcdev.log(" [ initjs  ] : incoming ", sessionobj.incoming);
-    webrtcdev.log(" [ initjs  ] : outgoing ", sessionobj.outgoing);
+    webrtcdev.log("[ initjs ] : incoming ", sessionobj.incoming);
+    webrtcdev.log("[ initjs ] : outgoing ", sessionobj.outgoing);
 
     if (sessionobj.incoming) {
         incomingAudio = sessionobj.incoming.audio;
@@ -396,7 +396,7 @@ this.startCall = function (sessionobj) {
         resolve(sessionid);
 
     }).then(sessionid => {
-        setRtcConn(sessionid);
+        setRtcConn(sessionid,sessionobj);
     }).then(_ => {
         setWidgets(rtcConn, sessionobj.widgets);
     }).then(_ => {

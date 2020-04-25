@@ -1,4 +1,5 @@
 exports.realtimecomm = function (app, properties, log, socketCallback) {
+
     var listOfUsers = {};
     var shiftedModerationControls = {};
     var ScalableBroadcast;
@@ -14,7 +15,6 @@ exports.realtimecomm = function (app, properties, log, socketCallback) {
         io = io(app);
         // io.set({
         //     transports: [
-        //         'polling',
         //         'websocket'
         //     ]
         // });
@@ -23,11 +23,6 @@ exports.realtimecomm = function (app, properties, log, socketCallback) {
 
     } catch (e) {
         console.error(" Realtime connection threw Exception ", e);
-        console.log(" Retrying Socket.io connection with log true");
-        io = io.listen(app, {
-            log: true,
-            origins: '*:*'
-        });
         /* transport options 
             'websocket', 
             'flashsocket', 

@@ -9,10 +9,8 @@ var isChrome = !!window.chrome && !isOpera;
 // var isMobileDevice = !!navigator.userAgent.match(/Android|iPhone|iPad|iPod|BlackBerry|IEMobile/i);
 
 var screenCallback;
-var iceServers = [];
 var signaler, screen, screenRoomid;
 var screenShareStreamLocal = null;
-
 
 /**
  * function set up Srcreens share session RTC peer connection
@@ -24,7 +22,7 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
 
     localStorage.setItem("screenRoomid ", screenRoomid);
     webrtcdev.log("[screenshare JS] webrtcdevPrepareScreenShare - screenRoomid : ", screenRoomid);
-    webrtcdev.log("[screenshare JS] webrtcdevPrepareScreenShare - filling up iceServers : ", turn, webrtcdevIceServers);
+    webrtcdev.log("[screenshare JS] webrtcdevPrepareScreenShare - filling up iceServers : ", webrtcdevIceServers);
 
     scrConn = new RTCMultiConnection(),
         scrConn.channel = screenRoomid,
@@ -136,13 +134,13 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
         scrConn.socketMessageEvent = 'scrRTCMultiConnection-Message',
         scrConn.socketCustomEvent = 'scrRTCMultiConnection-Custom-Message';
 
-    if (turn && turn != 'none') {
-        if (!webrtcdevIceServers) {
-            webrtcdev.error("[screensharejs] ICE server not found yet in screenshare session");
-            alert("ICE server not found yet in screenshare session ");
-        }
-        scrConn.iceServers = webrtcdevIceServers;
-    }
+    // if (turn && turn != 'none') {
+    //     if (!webrtcdevIceServers) {
+    //         webrtcdev.error("[screensharejs] ICE server not found yet in screenshare session");
+    //         alert("ICE server not found yet in screenshare session ");
+    //     }
+    //     scrConn.iceServers = webrtcdevIceServers;
+    // }
 
     return scrConn;
 }

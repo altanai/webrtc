@@ -128,11 +128,16 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
                     rtcConn.sdpConstraints.mandatory = {
                         OfferToReceiveAudio: incomingAudio,
                         OfferToReceiveVideo: incomingVideo
-                    },
-                    rtcConn.open(event.channel, function (res) {
-                        webrtcdev.log(" [sessionmanager] offer/answer webrtc ", selfuserid, " with role ", role, " responese ", res);
-                    });
-                resolve("ok");
+                    };
+
+                let sessionid = event.channel;
+                rtcConn.openOrJoin(sessionid, function (res) {
+                    resolve("ok");
+                    webrtcdev.log(" [sessionmanager] open-channel-resp - openOrJoin offer/answer webrtc ", selfuserid, " with role ", role, " responese ", res);
+                });
+                // rtcConn.open(event.channel, function (res) {
+                //     webrtcdev.log(" [sessionmanager] offer/answer webrtc ", selfuserid, " with role ", role, " responese ", res);
+                // });
             });
             promise.then(_ => {
                 updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local")
@@ -166,25 +171,28 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
 
             let promise = new Promise(function (resolve, reject) {
                 rtcConn.connectionType = "join",
-                    rtcConn.session = {
-                        video: outgoingVideo,
-                        audio: outgoingAudio,
-                        data: outgoingData
-                    },
-                    rtcConn.sdpConstraints.mandatory = {
-                        OfferToReceiveAudio: incomingAudio,
-                        OfferToReceiveVideo: incomingVideo
-                    },
-                    rtcConn.remoteUsers = event.users;
-                resolve(); // immediately give the result: 123
+                rtcConn.session = {
+                    video: outgoingVideo,
+                    audio: outgoingAudio,
+                    data: outgoingData
+                },
+                rtcConn.sdpConstraints.mandatory = {
+                    OfferToReceiveAudio: incomingAudio,
+                    OfferToReceiveVideo: incomingVideo
+                },
+                rtcConn.remoteUsers = event.users;
+                // rtcConn.connectionDescription = rtcConn.join(event.channel);
+                let sessionid = event.channel;
+                rtcConn.openOrJoin(sessionid, function (res) {
+                    resolve("ok");
+                    webrtcdev.log(" [sessionmanager] open-channel-resp - openOrJoin offer/answer webrtc ", selfuserid, " with role ", role, " responese ", res);
+                });
             });
 
             promise.then(_ => {
-                rtcConn.connectionDescription = rtcConn.join(event.channel);
                 // rtcConn.connectionDescription = rtcConn.openOrJoin(event.channel);
                 webrtcdev.info(" [sessionmanager] rtcConn.connectionDescription  ", rtcConn.connectionDescription);
                 webrtcdev.info(" [sessionmanager] offer/answer webrtc  ", selfuserid, " with role ", role);
-            }).then(_ => {
                 // for a new joiner , update his local info
                 updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local");
             }).then(_ => {
@@ -270,7 +278,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
  * @name setRtcConn
  * @param {int} sessionid
 */
-var setRtcConn = function (sessionid) {
+var setRtcConn = function (sessionid,sessionobj) {
 
     webrtcdev.log("[sessionmanager] setRtcConn - initiating RtcConn");
 
@@ -278,6 +286,7 @@ var setRtcConn = function (sessionid) {
 
         rtcConn.channel = this.sessionid,
         rtcConn.socketURL = location.hostname + ":8085/",
+        // rtcConn.iceServers = sessionobj.turn.iceservers || rtcConn.getIceServers() ,
 
         // turn off media till connection happens
         webrtcdev.log("[sessionmanager] set dontAttachStream , dontCaptureUserMedia , dontGetRemoteStream as true "),
@@ -292,7 +301,6 @@ var setRtcConn = function (sessionid) {
         },
 
         rtcConn.onopen = function (event) {
-            alert("onopen");
             webrtcdev.log("[sessionmanager] rtconn onopen - ", event);
             try {
 
@@ -715,8 +723,6 @@ var setRtcConn = function (sessionid) {
         rtcConn.onSocketError = function (e) {
             webrtcdev.error("[sesionmanager ] on Socket Error ", e);
         },
-
-        rtcConn.iceServers = webrtcdevIceServers,
 
         webrtcdev.log("[sessionmanager] rtcConn : ", rtcConn);
 

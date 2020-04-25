@@ -176,7 +176,7 @@ function attachMediaStream(remvid, stream) {
                         resolve(1);
                     })
                     .catch(error => {
-                        webrtcdev.error("[  Mediacontrol - attachMediaStream  ] error ", error);
+                        webrtcdev.error("[ Mediacontrol - attachMediaStream ] error ", error);
                         if(error.name=="NotAllowedError" && error.message.includes("play() failed")){
                             alert(" play failed due to auto play policy, please wait ");
                         }else if(error.name=="NotAllowedError" && error.message.includes("The play() request was interrupted by a call to pause()")){

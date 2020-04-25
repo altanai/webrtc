@@ -18,6 +18,8 @@
     "mocha": "^7.1.1",
     "node": "^13.12.0",
     "node-static": "^0.7.11",
+    "redis": "^3.0.2",
+    "redis-server": "^1.2.2",
     "remodal": "^1.1.1",
     "restify": "^8.5.1",
     "socket.io": "^2.3.0"

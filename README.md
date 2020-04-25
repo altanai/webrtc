@@ -887,7 +887,10 @@ USe gulp-babel@8.0.0
 **arrow functions realted**
 use tarnscompiler with preset env plugin for changes arraow function to normals ones before minifying
 
+## Reporting a Vulnerability
 
+Create an issues 
+https://github.com/altanai/webrtc/issues <https://github.com/altanai/webrtc/issues>
      
 ### License
 ----

@@ -79,11 +79,12 @@ gulp.task('vendorjs', function (done) {
         .pipe(gulp.dest(folderPath+'minScripts/')); 
 });*/
 
-gulp.task('webrtcdevelopmentServer', function (done) {
+gulp.task('server', function (done) {
     console.log(" gulping admin script  ");
     let list = [
-        "realtimecomm.js",
-        "restapi.js"
+        "server/redis.js",
+        "server/realtimecomm.js",
+        "server/restapi.js"
     ];
     console.log(list);
     gulp.src(list)
@@ -344,7 +345,7 @@ gulp.task('fonts', function (cb) {
 gulp.task('default', gulp.series(
     'webrtcdevelopmentjs',
     'webrtcdevelopmentcss',
-    'webrtcdevelopmentServer'
+    'server'
 ));
 
 // only gulp webrtcdev js changes
@@ -370,6 +371,6 @@ gulp.task('production', gulp.series(
     'webrtcdevelopmentjs',
     'mainstyle',
     'webrtcdevelopmentcss',
-    'webrtcdevelopmentServer',
+    'server',
     'fonts'
 )); 

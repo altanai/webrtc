@@ -27,7 +27,7 @@ file = new _static.Server(folderPath, {
     indexFile: "home.html"
 });
 
-
+// -------------------- Http Sever start -----------------
 var app;
 if (properties.secure) {
     var options = {
@@ -51,8 +51,13 @@ if (properties.secure) {
 }
 app.listen(properties.httpPort);
 
-/*var _realtimecomm=require('./client/build/minScripts/webrtcdevelopmentServer.js').realtimecomm;*/
-var _realtimecomm = require('./realtimecomm.js').realtimecomm;
+// -------------------- Redis Sever start -----------------
+var _redisserver = require('./build/webrtcdevelopmentServer.js').redisserver;
+_redisserver();
+
+// -------------------- Session manager server   -----------------
+
+var _realtimecomm = require('./build/webrtcdevelopmentServer.js').realtimecomm;
 var realtimecomm = _realtimecomm(app, properties, log, function (socket) {
     try {
         var params = socket.handshake.query;
@@ -72,6 +77,7 @@ var realtimecomm = _realtimecomm(app, properties, log, function (socket) {
     }
 });
 
+// -------------------- REST Api Sever  -----------------
 
 var _restapi = require('./build/webrtcdevelopmentServer.js').restapi;
 var restapi = _restapi(realtimecomm, options, app, properties);
