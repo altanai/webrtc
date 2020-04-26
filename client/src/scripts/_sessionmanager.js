@@ -303,14 +303,6 @@ var setRtcConn = function (sessionid, sessionobj) {
 
                 if (event.userid == selfuserid) {
                     webrtcdev.log("[sessionmanager] onopen selfuserid ", selfuserid, " joined the session ");
-                    // Connect to webrtc
-                    if (rtcConn.connectionType == "open") {
-                        connectWebRTC("open", sessionid, selfuserid, []);
-                    } else if (rtcConn.connectionType == "join") {
-                        connectWebRTC("join", sessionid, selfuserid, remoteUsers);
-                    } else {
-                        shownotification("Connection type is neither open nor join", "warning");
-                    }
 
                     // event emitter for app client
                     window.dispatchEvent(new CustomEvent('webrtcdev', {
@@ -348,11 +340,6 @@ var setRtcConn = function (sessionid, sessionobj) {
                     //     return index == self.indexOf(elem);
                     // });
 
-                    if (timerobj && timerobj.active) {
-                        startsessionTimer(timerobj);
-                        shareTimePeer();
-                    }
-
                     window.dispatchEvent(new CustomEvent('webrtcdev', {
                         detail: {
                             servicetype: "session",
@@ -381,6 +368,20 @@ var setRtcConn = function (sessionid, sessionobj) {
                 if (statisticsobj && statisticsobj.active) {
                     //populate RTP stats
                     showRtpstats();
+                }
+
+                // Connect to webrtc
+                if (rtcConn.connectionType == "open") {
+                    connectWebRTC("open", sessionid, selfuserid, []);
+                } else if (rtcConn.connectionType == "join") {
+                    connectWebRTC("join", sessionid, selfuserid, remoteUsers);
+                } else {
+                    shownotification("Connection type is neither open nor join", "warning");
+                }
+
+                if (timerobj && timerobj.active) {
+                    startsessionTimer(timerobj);
+                    shareTimePeer();
                 }
 
             } catch (err) {

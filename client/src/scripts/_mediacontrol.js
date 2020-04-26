@@ -160,24 +160,41 @@ function attachMediaStream(remvid, stream) {
         webrtcdev.log("[ Mediacontrol - attachMediaStream ] stream ", stream);
 
         // If stream is present , attach the stream  and play
-        if (stream) {
+        if (stream && ( stream.isVideo || stream.isScreen)) {
             let pr = new Promise(function (resolve, reject) {
-                element.srcObject = stream;
-                webrtcdev.log("[  Mediacontrol - attachMediaStream  ] added src object for valid stream ", element, stream);
+                //element.srcObject = stream; // src(undfeiend) error after refresh sometimes
+
+                // Older browsers may not have srcObject
+                if ('srcObject' in element) {
+                    try {
+                        element.srcObject = stream;
+                    } catch (err) {
+                        if (err.name != "TypeError") {
+                            throw err;
+                        }
+                        // Even if they do, they may only support MediaStream
+                        element.src = URL.createObjectURL(stream);
+                    }
+                } else {
+                    element.src = URL.createObjectURL(stream);
+                }
+
+                webrtcdev.log("[Mediacontrol ] attachMediaStream - added src object for valid stream ");
                 var playPromise = element.play();
                 if (playPromise !== undefined) {
                     playPromise.then(_ => {
+                        webrtcdev.log("[Mediacontrol] attachMediaStream  - element started playing ", element);
                         resolve(1);
                     })
-                        .catch(error => {
-                            webrtcdev.error("[ Mediacontrol - attachMediaStream ] error ", error);
-                            if (error.name == "NotAllowedError" && error.message.includes("play() failed")) {
-                                alert(" play failed due to auto play policy, please wait ");
-                            } else if (error.name == "NotAllowedError" && error.message.includes("The play() request was interrupted by a call to pause()")) {
-                                alert(" play failed, video was pause  ");
-                            }
-                            resolve(1);
-                        });
+                    .catch(error => {
+                        webrtcdev.error("[Mediacontrol] attachMediaStream - error ", error);
+                        if (error.name == "NotAllowedError" && error.message.includes("play() failed")) {
+                            alert(" play failed due to auto play policy, please wait ");
+                        } else if (error.name == "NotAllowedError" && error.message.includes("The play() request was interrupted by a call to pause()")) {
+                            alert(" play failed, video was pause  ");
+                        }
+                        resolve(1);
+                    });
                 }
             });
             return pr;
@@ -218,10 +235,10 @@ function reattachMediaStream(to, from) {
                 playPromise.then(_ => {
                     resolve(1);
                 })
-                    .catch(error => {
-                        webrtcdev.error("[ Mediacontrol ] attachMediaStream - error ", error);
-                        reject(1);
-                    });
+                .catch(error => {
+                    webrtcdev.error("[ Mediacontrol ] attachMediaStream - error ", error);
+                    reject(1);
+                });
             }
         });
         return pr;
