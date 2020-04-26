@@ -74,7 +74,7 @@ var webrtcdevlogger = {
                 arg = getArgsJson(arguments);
                 webrtcdevlogs.push("<p style='color:grey'>[LOG]" + arg + "</p>");
             }
-            // console.log(arguments);
+            console.log(arguments);
         },
 
         info:   function () {
@@ -86,7 +86,7 @@ var webrtcdevlogger = {
                 arg = getArgsJson(arguments);
                 webrtcdevlogs.push("<p style='color:blue'>[INFO]" + arg + "</p>");
             }
-            // console.info(arguments);
+            console.info(arguments);
         },
 
         debug: function () {
@@ -98,7 +98,7 @@ var webrtcdevlogger = {
                 arg = getArgsJson(arguments);
                 webrtcdevlogs.push("<p style='color:green'>[DEBUG]" + arg + "</p>");
             }
-            // console.debug(arguments);
+            console.debug(arguments);
         },
 
         warn: function () {
@@ -110,7 +110,7 @@ var webrtcdevlogger = {
                 arg = getArgsJson(arguments);
                 webrtcdevlogs.push("<p style='color:orange'>[WARN]" + arg + "</p>");
             }
-            // console.warn(arguments);
+            console.warn(arguments);
         },
 
         error: function () {
@@ -122,7 +122,7 @@ var webrtcdevlogger = {
                 arg = getArgsJson(arguments);
                 webrtcdevlogs.push("<p style='color:red'>[ERROR]" + arg + "</p>");
             }
-            // console.error(arguments);
+            console.error(arguments);
         }
 };
 

@@ -20,6 +20,21 @@ var findPeerInfo = function (userid) {
 };
 
 /**
+ * find index of peerinfo in webcall peers based on userid
+ * @method
+ * @name findPeerInfoIndex
+ * @param {string} userid
+ */
+var findPeerInfoIndex = function (userid) {
+    for (x in webcallpeers) {
+        if (webcallpeers[x].userid == userid) {
+            return x;
+        }
+    }
+    return null;
+};
+
+/**
  * get All Active Peers
  * @method
  * @name getAllActivePeers
@@ -34,12 +49,15 @@ function getAllActivePeers() {
  * @method
  * @name appendToPeerValue
  * @param {string} userid
+ * @param {json} key
  * @param {json} value
  */
-function appendToPeerValue(userid, value) {
+function appendToPeerValue(userid, key, value) {
     for (x in webcallpeers) {
         if (webcallpeers[x].userid == userid) {
-            webcallpeers[x].key = value;
+            webcallpeers[x][key]= value;
+            webrtcdev.log(" updated peerValue key ", key, " with value ", value);
+            return ;
         }
     }
 }
@@ -72,87 +90,74 @@ function removePeerInfo(userid) {
  * @param {string} type
  */
 function updatePeerInfo(userid, username, usecolor, useremail, userrole, type) {
-    webrtcdev.log("[peerinfomanager] updating peerInfo: ", userid, username, usecolor, useremail, userrole, type);
-    var updateflag = -1;
+    webrtcdev.log("[peerinfomanager] updatePeerInfo-  ", userid, username, usecolor, useremail, userrole, type);
 
-    return new Promise(function (resolve, reject) {
-        // if userid deosnt exist , exit
-        if (!userid) {
-            webrtcdev.error("[peerinfomanager] userid is null / undefined, cannot create PeerInfo");
-            reject("userid is null / undefined, cannot create PeerInfo");
-            return;
-        }
+    // if userid deosnt exist , exit
+    if (!userid) {
+        webrtcdev.error("[peerinfomanager] updatePeerInfo - userid is null / undefined, cannot create PeerInfo");
+        return;
+    }
 
-        // if userid is already present in webcallpeers , exit
-        for (var x in webcallpeers) {
-            if (webcallpeers[x].userid == userid) {
-                webrtcdev.log("[peerinfomanager] UserID is already existing in webcallpeers, update the fields only at index ", x);
-                updateflag = x;
-                break;
-            }
-        }
+    let peerInfo = {
+        videoContainer: "video" + userid,
+        videoHeight: null,
+        videoClassName: null,
+        userid: userid,
+        name: username,
+        color: usecolor,
+        email: useremail,
+        role: userrole || "participant",
+        type: type,
+        controlBarName: "control-video" + userid,
+        filearray: [],
+        vid: "video" + type + "_" + userid
+    };
 
-        // check if total capacity of webcallpeers has been reached 
-        peerInfo = {
-            videoContainer: "video" + userid,
-            videoHeight: null,
-            videoClassName: null,
-            userid: userid,
-            name: username,
-            color: usecolor,
-            email: useremail,
-            role: userrole,
-            controlBarName: "control-video" + userid,
-            filearray: [],
-            vid: "video" + type + "_" + userid
-        };
-
-        if (fileshareobj.active) {
-            if (fileshareobj.props.fileShare == "single") {
-                peerInfo.fileShare = {
-                    outerbox: "widget-filesharing-box",
-                    container: "widget-filesharing-container",
-                    minButton: "widget-filesharing-minbutton",
-                    maxButton: "widget-filesharing-maxbutton",
-                    rotateButton: "widget-filesharing-rotatebutton",
-                    closeButton: "widget-filesharing-closebutton"
-                };
-            } else {
-                peerInfo.fileShare = {
-                    outerbox: "widget-filesharing-box" + userid,
-                    container: "widget-filesharing-container" + userid,
-                    minButton: "widget-filesharing-minbutton" + userid,
-                    maxButton: "widget-filesharing-maxbutton" + userid,
-                    rotateButton: "widget-filesharing-rotatebutton" + userid,
-                    closeButton: "widget-filesharing-closebutton" + userid
-                };
-            }
-
-            if (fileshareobj.props.fileList == "single") {
-                peerInfo.fileList = {
-                    outerbox: "widget-filelisting-box",
-                    container: "widget-filelisting-container"
-                };
-            } else {
-                peerInfo.fileList = {
-                    outerbox: "widget-filelisting-box" + userid,
-                    container: "widget-filelisting-container" + userid
-                };
-            }
-        }
-
-        if (updateflag > -1) {
-            webcallpeers[updateflag] = peerInfo;
-            webrtcdev.log("[peerinfomanager] updated peerInfo: ", peerInfo);
+    if (fileshareobj.active) {
+        if (fileshareobj.props.fileShare == "single") {
+            peerInfo.fileShare = {
+                outerbox: "widget-filesharing-box",
+                container: "widget-filesharing-container",
+                minButton: "widget-filesharing-minbutton",
+                maxButton: "widget-filesharing-maxbutton",
+                rotateButton: "widget-filesharing-rotatebutton",
+                closeButton: "widget-filesharing-closebutton"
+            };
         } else {
-            webcallpeers.push(peerInfo);
-            webrtcdev.log("[peerinfomanager] created peerInfo: ", peerInfo);
+            peerInfo.fileShare = {
+                outerbox: "widget-filesharing-box" + userid,
+                container: "widget-filesharing-container" + userid,
+                minButton: "widget-filesharing-minbutton" + userid,
+                maxButton: "widget-filesharing-maxbutton" + userid,
+                rotateButton: "widget-filesharing-rotatebutton" + userid,
+                closeButton: "widget-filesharing-closebutton" + userid
+            };
         }
-        resolve("done");
-    })
-        .catch((err) => {
-            webrtcdev.error("[peerinfomanager] Promise rejected ", err);
-        });
+
+        if (fileshareobj.props.fileList == "single") {
+            peerInfo.fileList = {
+                outerbox: "widget-filelisting-box",
+                container: "widget-filelisting-container"
+            };
+        } else {
+            peerInfo.fileList = {
+                outerbox: "widget-filelisting-box" + userid,
+                container: "widget-filelisting-container" + userid
+            };
+        }
+    }
+
+    // if userid is already present in webcallpeers , update only
+    let isexistingpeerinfo = findPeerInfo(userid);
+    if (isexistingpeerinfo) {
+        webrtcdev.log("[peerinfomanager] updatePeerInfo - UserID is already existing in webcallpeers, update the fields only ");
+        let x = findPeerInfoIndex(userid);
+        webcallpeers[x] = peerInfo;
+        webrtcdev.log("[peerinfomanager] updated peerInfo: ", peerInfo);
+    } else {
+        webcallpeers.push(peerInfo);
+        webrtcdev.log("[peerinfomanager] newly created peerInfo: ", peerInfo);
+    }
 }
 
 /**

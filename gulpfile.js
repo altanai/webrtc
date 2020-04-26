@@ -82,7 +82,7 @@ gulp.task('vendorjs', function (done) {
 gulp.task('server', function (done) {
     console.log(" gulping admin script  ");
     let list = [
-        "server/redis.js",
+        "server/redisscipts.js",
         "server/realtimecomm.js",
         "server/restapi.js"
     ];

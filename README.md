@@ -81,7 +81,6 @@ gulp production
 ```
 
 
-
 ## Get Started
 ----
 
@@ -93,25 +92,25 @@ git clone https://github.com/altanai/webrtc.git webrtc
 ```
 
 **2. install nvm ( node version manager )**
-```
+```shell script
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.2/install.sh | bash
 . ~/.nvm/nvm.sh
-nvm install v5.0.0
-nvm use v5.0.0
+nvm install v12.0.0
+nvm use v12.0.0
 ```
 
 **3. install npm and update the dependencies**
 It will read the package.json and update the dependencies in node_modules folder on project location
 
 ```
-	sudo apt-get install npm
-	npm install 
+sudo apt-get install npm
+npm install 
 ```
 
 **4. Change ENV variables and Test**
 
 To change the ports for running the https server and rest server, goto env.json
-```
+```json
 {       
     "hostname"      : "host",        
 	"enviornment"   : "local",        
@@ -125,21 +124,21 @@ To change the ports for running the https server and rest server, goto env.json
 
 To run the tests
 ```
-	npm test
+npm test
 ```
 
 **5. Start up the Server**
 
 To start the Server in dev mode  and stop the server as soon as Ctrl+ C is hit or the terminal widnow is closed . 
 ```
-	node webrtcserver.js
+node webrtcserver.js
 ```
 read more about [node](https://nodejs.org/en/about/ )
 
 To start the Server using npm start ( using package.json) , behaves same as earlier run using node. We use supervisor to restart the server incase of exceptions or new code .
 
 ```
-	npm start
+npm start
 ```
 
 **6. JS and CSS Libs**
@@ -147,7 +146,6 @@ To start the Server using npm start ( using package.json) , behaves same as earl
 Make a webpage and give holders for video and button elements that SDK will use .
 
 Inside the head tag of html
-
     build/webrtcdevelopment_header.css
     build/webrtcdevelopment_header.js
 
@@ -161,7 +159,7 @@ After the body tag of html
 Create the webrtc dom object with local and remote objects
 
 local object  :
-```
+```json
     var local={
 
         video           :   "myAloneVideo",            // name of the local video element
@@ -179,7 +177,7 @@ local object  :
 ```
 
 remote object  :
-```
+```json
     var remote={
         videoarr        : ["myConferenceVideo", "otherConferenceVideo"], // conatiners for the video after session is made 
                                                                 // first one is usually the local video holder followed by remote video holders
@@ -194,7 +192,7 @@ remote object  :
 ```
 
 Incoming and outgoing media configiration  ( self exlanatory ) :
-```
+```json
     var incoming={
         audio :  true,
         video :  true,
@@ -238,7 +236,7 @@ sessionid = init(false);
 Create a session json object with turn credentials and the session created from above step
 
 set preference for the incoming and outgoing media connectection. Bydefault all are set to true . 
-```
+```json
     var incoming={
         audio:  true,
         video:  true,
@@ -292,7 +290,7 @@ User RTCDataConnection api from webRTC to send peer to peer nessages within a se
 
 When the chat widget is active  , if the dom specified by the container id is present then webSDK uses as it is,  else it creates one default box 
 
-```             
+```json
 {
     active: true,
     container: {
@@ -325,7 +323,7 @@ File share widgets creates uses 2 conatiners - File Share and File List . If the
 The list of files with buttons to view , hide or remove them from file viewers are in file Viewer container .
 Displaying or playing the text or media files happens in file share conainer , which also has button to maximize , minimize the viewer window or in case of images to rotate them. 
 
-```
+```json
 {
     active : true,
     fileShareContainer : "fileSharingRow",                  // File sharing container
@@ -360,7 +358,7 @@ Displaying or playing the text or media files happens in file share conainer , w
 Creates or assigns a timer for teh ongoing sesssion . Also displays the geolocation and timezone of the peers if perssion if provided . Timer can start upwards or downwards. 
 Can be used for billing and policy control .
 
-```
+```json
 {
     active: true,
     type: "forward",                                        // Forwards timer starts from 0:0:00 goes thereafter, backward timer ticks backword from prespecified time limit
@@ -395,7 +393,7 @@ Can be used for billing and policy control .
 
 Records everything pesent on the tab selected along with audio and displays recording as mp4 file. Use an extension and pre-declared safe-site  to facilitate captuing the tab.
 
-```
+```json
 {
     active : true,
     videoRecordContainer: true,                                 // container for storing or displaying recorded video
@@ -416,7 +414,7 @@ Button for screen share has 3 states -
 - share screen button and 
 - view button for incoming screen by peer .
 
-```                 
+```json              
 {
     active : true,
     screenshareContainer: "screenShareRow",                 // container to display screen being shared
@@ -453,7 +451,7 @@ Button for screen share has 3 states -
 
 Records video stream . Created for each peer video .
 
-```
+```json
 {
     active : true,
     videoRecordContainer : true,
@@ -470,41 +468,40 @@ Records video stream . Created for each peer video .
 
 Takes a snapshot from video stream . Will be created for each inidvidual peer video .
 
-```
+```json
 {
-    active : true,
-    snapshotContainer: true,
-    button:{
-        class_on:"pull-right btn btn-modify-video2 videoButtonClass",
-        html_on:"<i class='fa fa-th-large' title='Take a snapshot'></i>"
+    true,
+    snapshotContainer;: true,
+    button;:{
+        "pull-right btn btn-modify-video2 videoButtonClass",
+        html_on;:"<i class='fa fa-th-large' title='Take a snapshot'></i>"
     }
 } 
-
 ```
 
 ### 8. Minimising/ maximising Video
 
 To enable the user to watch video in full screen mode or to inimize the video to hide it from screen. Will be seprately created for each individual peer video .
     
-```
+```json
 {
-    active : true,
-    max:{
-        button:{                                                                // button to maximise the video to full screen mode 
-            id: 'maxVideoButton',
-            class_on:"pull-right btn btn-modify-video2 videoButtonClass On",
-            html_on:"<i class='fa fa-laptop' title='full Screen'></i>",
-            class_off:"pull-right btn btn-modify-video2 videoButtonClass Off",
-            html_off:"<i class=' fa fa-laptop' title='full Screen'></i>"
+    true,
+    max;:{
+        {                                                                // button to maximise the video to full screen mode 
+            'maxVideoButton',
+            class_on;:"pull-right btn btn-modify-video2 videoButtonClass On",
+            html_on;:"<i class='fa fa-laptop' title='full Screen'></i>",
+            class_off;:"pull-right btn btn-modify-video2 videoButtonClass Off",
+            html_off;:"<i class=' fa fa-laptop' title='full Screen'></i>"
         }  
     } ,
-    min :{
-        button:{                                                                // button to minimize or hide the video 
-            id: 'minVideoButton',
-            class_on:"pull-right btn btn-modify-video2 videoButtonClass On",
-            html_on:"<i class='fa fa-minus' title='minimize Video'></i>",
-            class_off:"pull-right btn btn-modify-video2 videoButtonClass Off",
-            html_off:"<i class='fa fa-minus' title='minimize Video'></i>"
+    {
+        {                                                                // button to minimize or hide the video 
+            'minVideoButton',
+            class_on;:"pull-right btn btn-modify-video2 videoButtonClass On",
+            html_on;:"<i class='fa fa-minus' title='minimize Video'></i>",
+            class_off;:"pull-right btn btn-modify-video2 videoButtonClass Off",
+            html_off;:"<i class='fa fa-minus' title='minimize Video'></i>"
         }  
     }                    
 }
@@ -514,20 +511,20 @@ To enable the user to watch video in full screen mode or to inimize the video to
 
 Mutes the audio or video of the peer video . Created for each peer video.
 
-```
+```json
  {
-    active: true,
-    drawCanvasContainer: "drawBoardRow",
-    container:{
-            id:'drawContainer',
-            minbutton_id:'minimizeDrawButton'
+    true,
+    drawCanvasContainer;: "drawBoardRow",
+    container;:{
+            'drawContainer',
+            minbutton_id;:'minimizeDrawButton'
         },
-    button:{
-        id: "draw-webrtc" , 
-        class_on:"btn btn-lg draw-webrtc On",
-        html_on:'<img title="Draw" src=assets/images/icon_3.png />',
-        class_off:"btn btn-lg draw-webrtc Off",
-        html_off:'<img title="Draw" src=assets/images/icon_3.png />'
+    {
+        "draw-webrtc" , 
+        class_on;:"btn btn-lg draw-webrtc On",
+        html_on;:'<img title="Draw" src=assets/images/icon_3.png />',
+        class_off;:"btn btn-lg draw-webrtc Off",
+        html_off;:'<img title="Draw" src=assets/images/icon_3.png />'
     }
 }
 ```
@@ -536,160 +533,159 @@ Mutes the audio or video of the peer video . Created for each peer video.
 
 Allows a user to recoonect a session without refreshing a page . Will enable him to drop the session and create a new one.
 
-```
+```ecmascript 6
 {
-    active: false,
-    button:{
-        id: "reconnectBtn",
-        class:"btn btn-success glyphicon glyphicon-refresh topPanelButton",
-        html:"Reconnect",
-        resyncfiles:false
+    false,
+    button;:{
+        "reconnectBtn",
+        class;:"btn btn-success glyphicon glyphicon-refresh topPanelButton",
+        html;:"Reconnect",
+        resyncfiles;:false
     }
 }
 ```
 
 ### 11. Cursor
 
-```
+```json
 {
-    active : true,
-    pointer:{
-        class_on: "fa fa-hand-o-up fa-3x"
+    true,
+    pointer;:{
+        "fa fa-hand-o-up fa-3x"
     },
-    button:{
-        id: 'shareCursorButton',
-        class_on:"pull-right btn btn-modify-video2 videoButtonClass On",
-        html_on:"<i class='fa fa-hand-o-up' title='Cursor'></i>",
-        class_off:"pull-right btn btn-modify-video2 videoButtonClass Off",
-        html_off:"<i class='fa fa-hand-o-up' title='Cursor'></i>"
+    {
+        'shareCursorButton',
+        class_on;:"pull-right btn btn-modify-video2 videoButtonClass On",
+        html_on;:"<i class='fa fa-hand-o-up' title='Cursor'></i>",
+        class_off;:"pull-right btn btn-modify-video2 videoButtonClass Off",
+        html_off;:"<i class='fa fa-hand-o-up' title='Cursor'></i>"
     }                   
 },
 ```
 
 ### 12. Inspector 
-```
+```json
 {
-    active: true,
-    button:{
-        id:"ListenInButton",
-        textbox : "listenInLink"
+    true,
+    button;:{
+        "ListenInButton",
+        textbox; : "listenInLink"
     }
 }
 ```
 ### 13. Debug 
-```
- debug   : false,
+```json
+ false,
 ```
 
 ### 14. Help
 
-```
+Actiavtes the help log 
+```json
 {
-  active : true , 
-  helpContainer : "help-view-body",
-  screenshotContainer: "help-screenshot-body",
-  descriptionContainer: "help-description-body"
+  true , 
+  helpContainer; : "help-view-body",
+  screenshotContainer;: "help-screenshot-body",
+  descriptionContainer;: "help-description-body"
 }
 ```
 
 ### 15. Stats 
 
-```
+```json
 {
   active : true , 
   statsConainer : "network-stats-body"
 }
 ```
 
-
 ### Assign individual widgets to a json object called widgets 
 
-```
+```javascript
 	var widgets={
         
-        chat : < add chat widget json >,
+        chat : < add;;; chat; widget; json >,
 
-        fileshare : < fieshare widget>,
+        fileshare; : < fieshare;;; widget>,
 
-        debug   : false,
+        debug;   : false,
             
-        reconnect   :{
-                            active: false,
-                            button:{
-                                id: "reconnectBtn",
-                                class:"btn btn-success glyphicon glyphicon-refresh topPanelButton",
-                                html:"Reconnect",
-                                resyncfiles:false
+        reconnect;   :{
+                            false,
+                            button;:{
+                                "reconnectBtn",
+                                class;:"btn btn-success glyphicon glyphicon-refresh topPanelButton",
+                                html;:"Reconnect",
+                                resyncfiles;:false
                             }
                         },
-            timer   :{
-                        active: true,
-                        type: "forward",
-                        counter:{
-                            hours: "countdownHours",
-                            minutes:"countdownMinutes",
-                            seconds :"countdownSeconds"
+            {
+                        true,
+                        type;: "forward",
+                        counter;:{
+                            "countdownHours",
+                            minutes;:"countdownMinutes",
+                            seconds; :"countdownSeconds"
                         },
-                        upperlimit: {
-                            hour:0 , 
-                            min: 3 , 
-                            sec: 60 
+                        {
+                            0 , 
+                            min;: 3 , 
+                            sec;: 60 
                         },
-                        span:{
-                            currentTime_id:"currentTimeArea",
-                            currentTimeZone_id:"currentTimeZoneArea",
-                            remoteTime_id :"remoteTimeArea",
-                            remoteTimeZone_id:"remoteTimeZoneArea",
-                            class_on:""
+                        {
+                            "currentTimeArea",
+                            currentTimeZone_id;:"currentTimeZoneArea",
+                            remoteTime_id; :"remoteTimeArea",
+                            remoteTimeZone_id;:"remoteTimeZoneArea",
+                            class_on;:""
                         },
-                        container:{
-                            id:'collapseThree',
-                            minbutton_id:'timerBtn'
+                        {
+                            'collapseThree',
+                            minbutton_id;:'timerBtn'
                         },
-                        button :{
-                            id: 'timerBtn'
+                        {
+                            'timerBtn'
                         }
                     },
             
-            chat    : < chat widget >
+            chat    : < chat;;; widget >
 
-            fileShare :< file share widget >
+            fileShare; :< file;;; share; widget >
 
-            mute    : < mute unmute widget >
+            mute;    : < mute;;; unmute; widget >
 
-            videoRecord : < video record widget >
+            videoRecord; : < video;;; record; widget >
 
-            snapshot : < snapshot widget >
+            snapshot; : < snapshot;;; widget >
 
-            cursor : < widget for cursor sharing >
+            cursor; : < widget;;; for cursor sharing >
 
-            minmax  : < widget to maximize or minimize the video >
+            minmax;  : < widget;;; to; maximize; or; minimize; the; video >
             
-            drawCanvas  : < draw widget >
+            drawCanvas;  : < draw;;; widget >
 
-            screenrecord : < screen record widget >       
+            screenrecord; : < screen;;; record; widget >       
             
-            screenshare : < screen share >
+            screenshare; : < screen;;; share >
 
-            listenin : < listen in widget >
+            listenin; : < listen in widget >
             
-            help : {
-              active : true , 
-              helpContainer : "help-view-body",
-              screenshotContainer: "help-screenshot-body",
-              descriptionContainer: "help-description-body"
+            help; : {
+              true , 
+              helpContainer; : "help-view-body",
+              screenshotContainer;: "help-screenshot-body",
+              descriptionContainer;: "help-description-body"
             },
             
-            statistics:{
-              active : true , 
-              statsConainer : "network-stats-body"
+            {
+              true , 
+              statsConainer; : "network-stats-body"
             }
 	}
 ```
 
 
 ## Event listners 
-----
 
 Implemented event listners 
 
@@ -704,15 +700,15 @@ Implemented event listners
 5. onNoCameraCard
 
 
-##Keys and certs 
-----
+## Keys and certs 
+
 
 Add the Key and certs
+```shell script
 openssl req -x509 -newkey rsa:4096 -sha256 -nodes -keyout ssl_certs/server.key -out ssl_certs/server.crt -subj "/CN=webrtc.altanai.com" -days 3650
-
+```
 
 ## Demo
-----
 
 open tab on chrome or mozilla browser and add a link to the https server using nodejs script
 https://127.0.0.1:8086/multiparty_fullfeatures.html
@@ -723,8 +719,8 @@ webrtc_quickstart - https://github.com/altanai/webrtc_quickstart
 
 webrtc_usecases - https://github.com/altanai/webrtc_usercases
 
+
 ## Extra 
-----
 
 Following are the additioanl libraries packed with the project 
 
@@ -732,7 +728,7 @@ Following are the additioanl libraries packed with the project
 Minify and concat the js and css files  into minscripts
 
 **Task Runner**
-you can run gulp alone to minify and concat the js and css files  into minscripts
+you can run gulp alone to minify and concat the js and css files  into min-scripts
 ```
 gulp
 ```
@@ -757,32 +753,58 @@ forever start webrtcserver.js
   open ./docs/index.html
 ```
 **PM2**
-To start the Server using PM2 ( a process manager for nodejs)
+
+To start the Server using PM2 ( a process manager for nodejs) , install pm2 globally 
+```shell script
+npm install pm2 -g
+```
+
+create a conf json 
+```shell script
+pm2 ecosystem
+```
+
+Add config to json 
+```json
+  apps : [{
+    script: 'webrtcserver.js',
+    watch: '.'
+  }]
+```
+start pm2 
+```shell script
+pm2 start ecosystem.config.js 
+```
 
 ----------------------------------------------------------
-# Working steps 
+## Working steps 
 
-## 1. create a new session 
+1.create a new session
+
 Naviagte on browser https://localhost:8084/#2435937115056035
 which creates websocket over socket.io wss://localhost:8084/socket.io/?EIO=3&transport=websocket
 
-## 2. check for channel presence
+2.check for channel presence
 
-#### first client message 
+first client message 
+```json
 [ "presence", 
   {
     channel: "2435937115056035"
     }
  ]
+```
 
-#### server side 
+on the server side 
+```
  Presence Check index of  2435937115056035  is  false
-      
-#### websocket reponse from server ["presence", false]
+```
+websocket response from server ["presence", false]
 
-## 3. if channel doesnt exist already create 
+3.if channel doesnt exist already create 
 
-#### client message to open channel 
+client message to open channel 
+```shell script
   [  "open-channel", 
     {
       channel: "2435937115056035", 
@@ -790,8 +812,10 @@ which creates websocket over socket.io wss://localhost:8084/socket.io/?EIO=3&tra
       maxAllowed: 6
      }
    ]
-   
-#### server reposne 
+```
+
+server response 
+```shell script
  ------------open channel-------------  2435937115056035  by  gxh0oi2jrs
 registered new in channels  [ '2435937115056035' ]
 information added to channel { '2435937115056035':
@@ -804,15 +828,19 @@ information added to channel { '2435937115056035':
      log:
       [ '12/18/2018, 10:18:01 PM:-channel created . User gxh0oi2jrs waiting ' ] } }
      
-#### websocket response from server
+```
+
+websocket response from server
+```json
   [  "open-channel-resp", 
    { 
     status: true, 
     channel: "2435937115056035"
     }
-    ]
+  ]
+```
     
-  ## 4. Join a session and check for channel presence 
+4.Join a session and check for channel presence 
   
   navigate another browser client to same session url such as 
   
@@ -822,8 +850,9 @@ information added to channel { '2435937115056035':
    
    Presence Check index of  2435937115056035  is  true
    
-   ## 5. If channel is present join the channel 
-  
+5.If channel is present join the channel 
+
+```shell script
   ["join-channel", {channel: "2435937115056035", sender: "2ilwvn9qq39",…}]
    
 ------------join channel-------------  2435937115056035  by  2ilwvn9qq39  isallowed  true
@@ -834,7 +863,7 @@ information added to channel { '2435937115056035':
  channel: "2435937115056035", 
  users: ["gxh0oi2jrs", "2ilwvn9qq39"]
 }]
-
+```
  
 
 
@@ -851,7 +880,6 @@ Rejections of the returned promise are made by passing a DOMException error obje
 The DOMException interface represents an abnormal event 
 
 Possible errors are:
-
 ```
 openrmc.webrtc.Errors = {
     NOT_SUPPORTED : 'NOT_SUPPORTED',
@@ -880,19 +908,19 @@ Because this error can occur even when the user has not yet granted permission t
 
 ref : https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
 
-Errors on gulp 
+### Errors on gulp 
 **sourcemap related **
 USe gulp-babel@8.0.0
 
 **arrow functions realted**
 use tarnscompiler with preset env plugin for changes arraow function to normals ones before minifying
 
+
 ## Reporting a Vulnerability
 
 Create an issues 
 https://github.com/altanai/webrtc/issues <https://github.com/altanai/webrtc/issues>
-     
+
 ### License
-----
 
 MIT

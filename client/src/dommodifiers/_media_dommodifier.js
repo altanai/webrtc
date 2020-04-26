@@ -17,21 +17,16 @@ function appendVideo(e, style) {
         video.srcObject = URL.createObjectURL(e.stream);
         div.appendChild(video);
         webrtcdev.log("[_media_dommodifier ] appendVideo", video);
-        video.play();
-        // Show loading animation.
-        // let playPromise = video.play();
-        // if (playPromise !== undefined) {
-        //     playPromise.then(_ => {
-        //         // Automatic playback started!
-        //         // Show playing UI.
-        //         webrtcdev.log('[media dom modifier] appendVideo - Successfully attached stream to element.', video);
-        //     })
-        //         .catch(error => {
-        //             // Auto-play was prevented
-        //             // Show paused UI.
-        //             webrtcdev.error('[media dom modifier] appendVideo - Error attaching stream to element.', video, error);
-        //         });
-        // }
+        var promise = video.play();
+        if (promise !== undefined) {
+            promise.then(_ => {
+                // Autoplay started!
+            }).catch(error => {
+                // Autoplay was prevented.
+                // Show a "Play" button so that user can start playback.
+                alert("video autoplay failed");
+            });
+        }
     });
 }
 

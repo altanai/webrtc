@@ -15,7 +15,7 @@ var t;
 var worker = null;
 
 
-////////////////////////////////////////// self ////////////////////////////////
+//-----------------------------self -----------------
 /**
  * function to start session timer with timerobj
  * @method
@@ -81,7 +81,7 @@ function shareTimePeer() {
     }
 }
 
-/////////////////////////////////////////// peer ///////////////////////////////////////////
+// -----------------------------remote -----------------
 
 try {
     // event listener for web workers
@@ -135,7 +135,7 @@ var startPeersTime = function (date, zone, userid) {
     } catch (e) {
         webrtcdev.error(e);
     }
-}
+};
 
 
 /**
@@ -148,20 +148,16 @@ var startPeersTime = function (date, zone, userid) {
 function peerTimeZone(zone, userid) {
 
     try {
-        if(!userid)
-            throw "uerid missing";
-
-        webrtcdev.log("[timerjs] peerTimeZone - " , zone , userid);
-        // set peers zone in webcallpeers
-        appendToPeerValue(userid , "zone" ,  zone);
+        webrtcdev.log("[timerjs] peerTimeZone - ", zone, userid);
 
         // Starting peer timer for all peers
         let peerinfo = findPeerInfo(userid);
-        if(!peerinfo)
-            throw "peerinfo missing";
+        if (!peerinfo) return;
 
-        webrtcdev.log("[timerjs] peerTimeZone , updated peerinfo with zone -  " , peerinfo);
+        // set peers zone in webcallpeers
+        appendToPeerValue(userid, "zone", zone);
         showRemoteTimeZone(peerinfo);
+        webrtcdev.log("[timerjs] peerTimeZone , updated peerinfo with zone -  ", peerinfo);
 
     } catch (err) {
         webrtcdev.error("[timerjs] ", err);
@@ -171,9 +167,9 @@ function peerTimeZone(zone, userid) {
 
 function checkTime(i) {
     if (i < 10) {
-        i = "0" + i
+        i = "0" + i;
     }
-    ;  // add zero in front of numbers < 10
+      // add zero in front of numbers < 10
     return i;
 }
 

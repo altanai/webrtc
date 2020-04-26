@@ -51,43 +51,37 @@ function detectMic(callback) {
  * @param {booolean} outgoingAudio
  */
 function getCamMedia(rtcConn, outgoingVideo, outgoingAudio) {
-    rtcConn.dontAttachStream = false,
-        rtcConn.dontGetRemoteStream = false;
 
     webrtcdev.log("[startJS] getCamMedia - role :", role);
     webrtcdev.log("[startJS] getCamMedia   - outgoingVideo " + outgoingVideo + " outgoingAudio " + outgoingAudio);
 
-    return new Promise(function (resolve, reject) {
-        if (role == "inspector") {
-            rtcConn.dontCaptureUserMedia = true;
-            webrtcdev.log("[_mediacontrol.js] getCamMedia  - Joining as inspector without camera Video");
+    if (role == "inspector") {
 
-        } else if (outgoingVideo && outgoingAudio) {
-            rtcConn.dontCaptureUserMedia = false;
-            webrtcdev.log("[_mediacontrol.js] getCamMedia  - Capture Media ");
-            rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error
+        rtcConn.dontCaptureUserMedia = true;
+        webrtcdev.log("[_mediacontrol.js] getCamMedia  - Joining as inspector without camera Video");
 
-        } else if (!outgoingVideo && outgoingAudio) {
-            rtcConn.dontCaptureUserMedia = false;
-            // alert(" start  getCamMedia  - Dont Capture Webcam, only Mic");
-            webrtcdev.warn("[_mediacontrol.js] getCamMedia  - Dont Capture Webcam only Mic ");
-            rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error
+    } else if (outgoingVideo && outgoingAudio) {
 
-        } else {
-            rtcConn.dontCaptureUserMedia = true;
-            webrtcdev.error(" [_mediacontrol.js] getCamMedia - dont Capture outgoing video ", outgoingVideo);
-            window.dispatchEvent(new CustomEvent('webrtcdev', {
-                detail: {
-                    servicetype: "session",
-                    action: "onNoCameraCard"
-                }
-            }));
-        }
-        resolve("success");
-    }).catch(
-        (reason) => {
-            webrtcdev.error('[_mediacontrol.js] getCamMedia  - rejected promise (' + reason + ')');
-        });
+        webrtcdev.log("[_mediacontrol.js] getCamMedia  - Capture Media ");
+        rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error
+
+    } else if (!outgoingVideo && outgoingAudio) {
+
+        // alert(" start  getCamMedia  - Dont Capture Webcam, only Mic");
+        webrtcdev.warn("[_mediacontrol.js] getCamMedia  - Dont Capture Webcam only Mic ");
+        rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error
+
+    } else {
+
+        rtcConn.dontCaptureUserMedia = true;
+        webrtcdev.error(" [_mediacontrol.js] getCamMedia - dont Capture outgoing video ", outgoingVideo);
+        window.dispatchEvent(new CustomEvent('webrtcdev', {
+            detail: {
+                servicetype: "session",
+                action: "onNoCameraCard"
+            }
+        }));
+    }
 }
 
 // /**
@@ -175,15 +169,15 @@ function attachMediaStream(remvid, stream) {
                     playPromise.then(_ => {
                         resolve(1);
                     })
-                    .catch(error => {
-                        webrtcdev.error("[ Mediacontrol - attachMediaStream ] error ", error);
-                        if(error.name=="NotAllowedError" && error.message.includes("play() failed")){
-                            alert(" play failed due to auto play policy, please wait ");
-                        }else if(error.name=="NotAllowedError" && error.message.includes("The play() request was interrupted by a call to pause()")){
-                            alert(" play failed, video was pause  ");
-                        }
-                        resolve(1);
-                    });
+                        .catch(error => {
+                            webrtcdev.error("[ Mediacontrol - attachMediaStream ] error ", error);
+                            if (error.name == "NotAllowedError" && error.message.includes("play() failed")) {
+                                alert(" play failed due to auto play policy, please wait ");
+                            } else if (error.name == "NotAllowedError" && error.message.includes("The play() request was interrupted by a call to pause()")) {
+                                alert(" play failed, video was pause  ");
+                            }
+                            resolve(1);
+                        });
                 }
             });
             return pr;

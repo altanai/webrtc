@@ -7,9 +7,8 @@
 function updateWebCallView(peerinfo) {
     let myrole = role;
     webrtcdev.log("[webcallviewmanager] - updateWebCallView start with ",
-        " peerinfo", peerinfo,
-        " | myrole :", myrole,
-        " | video indexOf : ", peerinfo.vid.indexOf("videoundefined"));
+        " peerinfo", peerinfo, " peerinfo role " , peerinfo.role,
+        " | myrole :", myrole);
 
     switch (myrole) {
 
@@ -68,18 +67,16 @@ function updateWebCallView(peerinfo) {
                 if (localVideo && document.getElementsByName(localVideo)[0]) {
                     let vid = document.getElementsByName(localVideo)[0];
                     attachMediaStream(vid, peerinfo.stream).then(_ => {
-                        webrtcdev.log('[ webcallviewdevmanager ] updateWebCallView - Done attaching local stream to element');
+                        webrtcdev.log('[ webcallviewdevmanager ] updateWebCallView - Done attaching local stream to element', vid);
                         vid.muted = true;
                         vid.className = localobj.videoClass;
-                        
+
                         if (localobj.userDisplay && peerinfo.name)
                             attachUserDetails(vid, peerinfo);
 
                         if (localobj.userMetaDisplay && peerinfo.userid)
                             attachMetaUserDetails(vid, peerinfo);
                     });
-                    webrtcdev.info("[webcallviewdevmanager] User is alone in the session  , hiding remote video container",
-                        "showing users single video container and attaching attachMediaStream and attachUserDetails ");
 
                 } else {
                     //alert(" Please Add a video container in config for single");
@@ -93,33 +90,40 @@ function updateWebCallView(peerinfo) {
 
                 // handling local video transition to active
                 if (outgoingVideo && localVideo && selfVideo) {
-                    /*chk if local video is added to conf , else adding local video to index 0 */
-                    //localvid : video container before p2p session
+                    // chk if local video is added to conf , else adding local video to index 0
+                    //localvid : Local video container before session
                     const localvid = document.getElementsByName(localVideo)[0];
-                    // selfvid : local video in a p2p session
+                    // selfvid : local video in a  session
                     const selfvid = document.getElementsByName(selfVideo)[0];
 
-                    if (selfvid.played.length == 0) {
+                    if (selfvid.played.length <= 0) {
+                        let pr ;
                         if (localvid.played.length > 0) {
-                            reattachMediaStream(selfvid, localvid);
+                            webrtcdev.log("[webcallviewdevmanager] updateWebCallView - local video is playing , just reattach stream to add in session");
+                            pr= reattachMediaStream(selfvid, localvid);
                         } else {
-                            attachMediaStream(selfvid, webcallpeers[0].stream);
+                            webrtcdev.log("[webcallviewdevmanager] updateWebCallView - local video is not playing ,use webcallpeers for stream to add in  session");
+                            pr= attachMediaStream(selfvid, webcallpeers[0].stream);
                         }
 
-                        if (localobj.userDisplay && webcallpeers[0].name) {
-                            attachUserDetails(selfvid, webcallpeers[0]);
-                        }
+                        pr.then(_=>{
+                            webrtcdev.log('[ webcallviewdevmanager ] updateWebCallView - Done attaching remote stream to local element');
+                            if (localobj.userDisplay && webcallpeers[0].name) {
+                                attachUserDetails(selfvid, webcallpeers[0]);
+                            }
 
-                        if (localobj.userMetaDisplay && webcallpeers[0].userid) {
-                            attachMetaUserDetails(selfvid, webcallpeers[0]);
-                        }
+                            if (localobj.userMetaDisplay && webcallpeers[0].userid) {
+                                attachMetaUserDetails(selfvid, webcallpeers[0]);
+                            }
 
-                        selfvid.id = webcallpeers[0].videoContainer;
-                        selfvid.className = remoteobj.videoClass;
-                        attachControlButtons(selfvid, webcallpeers[0]);
+                            selfvid.id = webcallpeers[0].videoContainer;
+                            selfvid.className = remoteobj.videoClass;
+                            selfvid.muted = true;
+                            attachControlButtons(selfvid, webcallpeers[0]);
+                        });
 
                     } else {
-                        webrtcdev.log("[webcallviewdevmanager] updateWebCallView- not updating self video as it is already playing ");
+                        webrtcdev.log("[webcallviewdevmanager] updateWebCallView - not updating self video as it is already playing ", selfvid.played.length);
                     }
 
                     webrtcdev.info("[webcallviewdevmanager] updateWebCallView - User is joined by a remote peer , hiding local video container",
@@ -133,15 +137,15 @@ function updateWebCallView(peerinfo) {
                 }
 
                 // handling remote video addition
-                if (remoteVideos) {
+                if (incomingVideo && remoteVideos) {
 
                     let emptyvideoindex = findEmptyRemoteVideoIndex(peerinfo, remoteVideos);
-
                     updateRemoteVideos(peerinfo, remoteVideos, emptyvideoindex);
 
+                    webrtcdev.log("[webcallviewdevmanager] updateWebCallView - remote video attachMediaStream");
                     attachMediaStream(remoteVideos[emptyvideoindex], peerinfo.stream)
                         .then(_ => {
-                            webrtcdev.log('[ webcallviewdevmanager ] updateWebCallView - Done attaching remote stream to element');
+                            webrtcdev.log('[ webcallviewdevmanager ] updateWebCallView - Done attaching remote stream to remote element');
 
                             if (remoteVideos[emptyvideoindex]) {
                                 showelem(remoteVideos[emptyvideoindex].video);
@@ -161,17 +165,17 @@ function updateWebCallView(peerinfo) {
                         });
 
                 } else {
-                    webrtcdev.error("[webcallviewdevmanager] updateWebCallView - remote Video containers not defined ");
+                    webrtcdev.error("[webcallviewdevmanager] updateWebCallView - remote Video containers not defined ",remoteVideos);
                     alert("remote Video containers not defined");
                 }
 
             } else {
-                webrtcdev.error("[webcallviewdevmanager] updateWebCallView-  PeerInfo vid didnt match either case ");
+                webrtcdev.error("[webcallviewdevmanager] updateWebCallView-  PeerInfo vid didnt match either case ",peerinfo.vid) ;
             }
             break;
 
         default:
-            webrtcdev.warn("[webcallviewdevmanager] updateWebCallView -  Switch default case");
+            webrtcdev.error("[webcallviewdevmanager] updateWebCallView -  No role found to update webcall view ",myrole);
     }
 
     webrtcdev.log("[webcallviewdevmanager] updateWebCallView - finish");
@@ -187,10 +191,10 @@ function updateWebCallView(peerinfo) {
  */
 function destroyWebCallView(peerInfo) {
     webrtcdev.log(" [webcallviewmanager] destroyWebCallView peerInfo", peerInfo);
-    if (peerInfo.videoContainer && document.getElementById(peerInfo.videoContainer)){
+    if (peerInfo.videoContainer && document.getElementById(peerInfo.videoContainer)) {
 
         let video = document.getElementById(peerInfo.videoContainer);
-        if(!video) return ;
+        if (!video) return;
         video.onplay = video.onplaying = function () {
             video.setAttribute("hidden", true);
             video.parentNode.parentNode.setAttribute("hidden", true);
@@ -203,10 +207,10 @@ function destroyWebCallView(peerInfo) {
                         throw err;
                     }
                     // Even if they do, they may only support MediaStream
-                    video.src ="";
+                    video.src = "";
                 }
             } else {
-                video.src ="";
+                video.src = "";
             }
         };
     }
@@ -290,7 +294,7 @@ function updateRemoteVideos(peerinfo, remoteVideos, emptyvideoindex) {
         }
         webrtcdev.log("[webcallviewmanager ] updateRemoteVideos - remoteVideos after updating ", remoteVideos[emptyvideoindex]);
     } catch (err) {
-        webrtcdev.error("[webcallviewmanager ] updateRemoteVideos - ",err);
+        webrtcdev.error("[webcallviewmanager ] updateRemoteVideos - ", err);
     }
 }
 

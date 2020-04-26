@@ -52,15 +52,21 @@ if (properties.secure) {
 app.listen(properties.httpPort);
 
 // -------------------- Redis Sever start -----------------
-var _redisserver = require('./build/webrtcdevelopmentServer.js').redisserver;
-_redisserver();
+var _redisobj = require('./build/webrtcdevelopmentServer.js').redisscipts;
+redisobj = new _redisobj();
+redisobj.startServer();
+
+var rclient = redisobj.startclient();
+rclient.set("session", "webrtcdevelopment");
 
 // -------------------- Session manager server   -----------------
 
 var _realtimecomm = require('./build/webrtcdevelopmentServer.js').realtimecomm;
-var realtimecomm = _realtimecomm(app, properties, log, function (socket) {
+var realtimecomm = _realtimecomm(app, properties, log , rclient , function (socket) {
     try {
         var params = socket.handshake.query;
+        console.log("params");
+        rclient.set("session", "webrtcdevelopment");
 
         if (!params.socketCustomEvent) {
             params.socketCustomEvent = 'custom-message';
@@ -70,6 +76,7 @@ var realtimecomm = _realtimecomm(app, properties, log, function (socket) {
             try {
                 socket.broadcast.emit(params.socketCustomEvent, message);
             } catch (e) {
+                console.error(e);
             }
         });
     } catch (e) {

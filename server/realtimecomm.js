@@ -1,4 +1,4 @@
-exports.realtimecomm = function (app, properties, log, socketCallback) {
+exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
 
     var listOfUsers = {};
     var shiftedModerationControls = {};
@@ -41,12 +41,17 @@ exports.realtimecomm = function (app, properties, log, socketCallback) {
             extra = alreadyExists.extra;
         }
 
-        listOfUsers[socket.userid] = {
+        let userdata = {
             socket: socket,
             connectedWith: {},
             isPublic: false, // means: isPublicModerator
             extra: extra || {}
         };
+        if (cache) {
+            cache.hmset(socket.userid, userdata);
+        } else {
+            listOfUsers[socket.userid] = userdata;
+        }
     }
 
     function onConnection(socket) {

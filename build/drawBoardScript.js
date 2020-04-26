@@ -1918,8 +1918,8 @@ addEvent(canvas, isTouch ? 'touchstart' : 'mousedown', function (e) {
 
     var cache = is;
 
-    webrtcdev.log(" canvas coordinates x ->" , e.pageX , "||", canvas.offsetLeft);
-    webrtcdev.log(" canvas coordinates y ->" , e.pageY ," ||", canvas.offsetTop);
+    // console.log(" canvas coordinates x ->" , e.pageX , "||", canvas.offsetLeft);
+    // console.log(" canvas coordinates y ->" , e.pageY ," ||", canvas.offsetTop);
 
     if (cache.isLine){
  lineHandler.mousedown(e);
@@ -2025,9 +2025,7 @@ function onkeyup(e) {
 
     if (isControlKeyPressed && keyCode === 65) {
         dragHelper.global.startingIndex = 0;
-
         endLastPath();
-        
         setSelection(find('drag-all-paths'), 'DragAllPaths');
     }
 
