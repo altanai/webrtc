@@ -926,6 +926,11 @@ use tarnscompiler with preset env plugin for changes arraow function to normals 
              
              Proxy: Any proxy between you and your server could be modifying the request and not update the content-length header.
 
+### errors on git
+
+update regiustry to  "registry": "https://registry.npmjs.org " 
+shelfed .
+
 ## Reporting a Vulnerability
 
 Create an issues 
