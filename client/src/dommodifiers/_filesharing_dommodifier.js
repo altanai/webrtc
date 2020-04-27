@@ -5,7 +5,7 @@
  * @param {json} fileshareobj
  */
 function createFileShareButton(fileshareobj) {
-    widgetholder = "topIconHolder_ul";
+    let widgetholder = "topIconHolder_ul";
 
     const button = document.createElement("span");
     button.setAttribute("data-provides", "fileinput");
@@ -105,7 +105,7 @@ function addstaticProgressHelper(uuid, peerinfo, filename, fileSize, file, progr
             }
             //Once the button is clicked , remove the button
             event.target.remove();
-            for (x in pendingFileTransfer) {
+            for (let x in pendingFileTransfer) {
                 if (pendingFileTransfer[x].name == filename) {
                     webrtcdev.log(" removing pendingFileTransfer element ", pendingFileTransfer[x]);
                     pendingFileTransfer.splice(x, 1);
@@ -219,21 +219,34 @@ function addProgressHelper(uuid, peerinfo, filename, fileSize, file, progressHel
         //     webrtcdev.log(" Not creating progress bar div as it already exists ");
         // }
 
-    } catch (e) {
-        webrtcdev.error(" [filehsraingJs] problem in addProgressHelper  ", e);
+    } catch (err) {
+        webrtcdev.error(" [filehsraingJs] problem in addProgressHelper  ", err);
     }
 }
 
+/*
+ * Update Label for progress bar
+ * @method
+ * @name updateLabel
+ * @param {e} progress
+ * @param {r} progress bar
+ */
 function updateLabel(e, r) {
     if (-1 != e.position) {
         const n = +e.position.toFixed(2).split(".")[1] || 100;
-        r.innerHTML = n + "%"
+        r.innerHTML = n + "%";
     }
 }
 
+/*
+ * Simulate button click
+ * @method
+ * @name simulateClick
+ * @param {string} buttonName
+ */
 function simulateClick(buttonName) {
     document.getElementById(buttonName).click();
-    webrtcdev.log("simulateClick on " + buttonName);
+    webrtcdev.log("[fileharing dommodifier ] simulateClick on " + buttonName);
     return true;
 }
 
@@ -259,7 +272,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     try {
         if (!fileshareobj.active) return;
 
-        webrtcdev.log("[filesharing js] displayList - uuid: ", uuid, " peerinfo :", peerinfo,
+        webrtcdev.log("[filesharing dommodifier js] displayList - uuid: ", uuid, " peerinfo :", peerinfo,
             "file url : ", fileurl, " file name : ", filename, " file type :", filetype);
 
         let _filename = null;
@@ -271,7 +284,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
 
         if (fileprogress.length > 0) {
             for (x in fileprogress) {
-                webrtcdev.log("[filesharing js] displayList remove progress bar index - ", x, " file dom - ", fileprogress[x]);
+                webrtcdev.log("[filesharing dommodifier js] displayList remove progress bar index - ", x, " file dom - ", fileprogress[x]);
                 if ((typeof fileprogress[x]) == "object" &&
                     (fileprogress[x].type == "progressbar" || fileprogress[x].indexOf("progressbar") > -1)) {
                     // if the progress bar exist , remove the progress bar div and create the ul
@@ -281,33 +294,32 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
                         webrtcdev.log("[ filesharing js ] displayList, set up parent dom ", parentdom);
                         parentdom.removeChild(fileprogress[x]);
                     } else {
-                        webrtcdev.log("[ filesharing js ] displayList, Not sure what does this do ", fileprogress[x]);
+                        webrtcdev.log("[ filesharing dommodifier js] displayList, Not sure what does this do ", fileprogress[x]);
                         parentdom = fileprogress[x].parentNode.parentNode;
                         //parentdom.removeChild(fileprogress[x].parentNode);
                     }
                 } else {
-                    console.log("[filesharing js] displayList - cannot remove since , elem is not of type progressbar  ", fileprogress[x]);
+                    webrtcdev.warn("[filesharing dommodifier js] displayList - cannot remove since , elem is not of type progressbar  ", fileprogress[x]);
                 }
             }
         } else {
             // if the progress bar area does not exist
             parentdom = document.getElementById(elementList) || document.body;
-            webrtcdev.warn("[ filesharing js ] displayList , progress bar area doesnt exist, set parent dom to ", elementList, document.getElementById(elementList), " or to document body")
+            webrtcdev.warn("[ filesharing dommodifier js] displayList , progress bar area doesnt exist, set parent dom to ", elementList, document.getElementById(elementList), " or to document body")
         }
 
-    } catch (e) {
-        webrtcdev.error(" [filesharing js ] Display list exception ", e);
+    } catch (err) {
+        webrtcdev.error(" [filesharing dommodifier js] Display list exception ", err);
     }
 
     //append progress bar to parent dom
-    webrtcdev.log(" [filesharing js] displayList set up parent dom  ", parentdom);
+    webrtcdev.log(" c displayList set up parent dom  ", parentdom);
 
     let filedom = document.createElement("ul");
     filedom.id = filename + uuid;
-    filedom.type = peerinfo.type;  // local or remote ,
+    filedom.type = peerinfo.type;  // local or remote
     filedom.innerHTML = "";
     filedom.className = "row";
-    // filedom.setAttribute("style","float: left; width: 98%; margin-left: 2%;");
 
     let name = document.createElement("li");
     /*name.innerHTML = listlength +"   " + filename ;*/
@@ -328,7 +340,8 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
         downloadButton.innerHTML = '<i class="fa fa-download"></i>';
     }
     downloadButton.onclick = function () {
-        downloadFile(uuid, elementDisplay, fileurl, _filename, filetype);
+        webrtcdev.log("[filesharing dommodifier js] download  filename ", filename);
+        downloadFile(uuid, elementDisplay, fileurl, filename, filetype);
     };
 
     //Save Button
@@ -411,7 +424,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
             });
             removeFile(tobeHiddenElement);
             repeatFlagRemoveButton = filename;
-            webrtcdev.log("[startjs] filedom to be hidden : ", filedom);
+            webrtcdev.log("[filesharing dommodifier js] filedom to be hidden : ", filedom);
             // filedom.hidden = true;
             filedom.setAttribute("style", "display:none!important");
         } else if (repeatFlagRemoveButton == filename) {
@@ -468,7 +481,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
  */
 function getFileElementDisplayByType(filetype, fileurl, filename) {
 
-    webrtcdev.log(" [filehsaring js]  - getFileElementDisplayByType ",
+    webrtcdev.log(" [filehsaring domodifier]  - getFileElementDisplayByType ",
         "file type :", filetype, "file url : ", fileurl, ", file name : ", filename);
     let elementDisplay;
 
@@ -482,8 +495,6 @@ function getFileElementDisplayByType(filetype, fileurl, filename) {
     } else if (filetype.indexOf("image") > -1) {
         let image = document.createElement("img");
         image.src = fileurl;
-        // image.style.width = "100%";
-        // image.style.height = "100%";
         image.title = filename;
         image.id = "display" + filename;
         elementDisplay = image;
@@ -509,7 +520,6 @@ function getFileElementDisplayByType(filetype, fileurl, filename) {
         audio.setAttribute("type", "audio/wav");
         audio.controls = "controls";
         audio.title = filename.videoname + ".wav";
-
         //audio.hidden=true;
 
         div.appendChild(video);
@@ -521,7 +531,7 @@ function getFileElementDisplayByType(filetype, fileurl, filename) {
         audio.play();
 
     } else if (filetype.indexOf("videoScreenRecording") > -1) {
-        webrtcdev.log("videoScreenRecording ", fileurl);
+        webrtcdev.log("[filehsaring domodifier] getFileElementDisplayByType - videoScreenRecording  fileurl ", fileurl);
         let video = document.createElement("video");
         video.src = fileurl;
         video.setAttribute("controls", "controls");
@@ -531,7 +541,7 @@ function getFileElementDisplayByType(filetype, fileurl, filename) {
         elementDisplay = video;
 
     } else if (filetype.indexOf("video") > -1) {
-        webrtcdev.log("videoRecording ", fileurl);
+        webrtcdev.log("[filehsaring domodifier] getFileElementDisplayByType - videoRecording ", fileurl);
         let video = document.createElement("video");
         video.src = fileurl;
         /*
@@ -551,7 +561,18 @@ function getFileElementDisplayByType(filetype, fileurl, filename) {
         video.id = "display" + filename;
         elementDisplay = video;
 
+    } else if (filetype.indexOf("audio") > -1) {
+        webrtcdev.log("[filehsaring domodifier] getFileElementDisplayByType - audio ", fileurl);
+        let audio = document.createElement('audio');
+        audio.src = fileurl;
+        // audio.setAttribute("type", "audio/wav");
+        audio.controls = "controls";
+        audio.title = filename;
+        audio.id = "display" + filename;
+        elementDisplay = audio;
+
     } else {
+        webrtcdev.log("[filehsaring domodifier] getFileElementDisplayByType - iframe ", fileurl);
         let iframe = document.createElement("iframe");
         iframe.style.width = "100%";
         iframe.src = fileurl;
@@ -563,10 +584,21 @@ function getFileElementDisplayByType(filetype, fileurl, filename) {
     return elementDisplay;
 }
 
+
+/*
+ * Display file by type
+ * @method
+ * @name displayFile
+ * @param {uuid} uuid
+ * @param {json} peerinfo
+ * @param {blob} fileurl
+ * @param {string} filename
+ * @param {string} filetype
+ */
 function displayFile(uuid, peerinfo, fileurl, filename, filetype) {
 
-    webrtcdev.log(" [filehsaring js]  - displayFile  - uuid: ", uuid, " peerinfo :", peerinfo,
-        "file url : ", fileurl, " file name : ", filename, " file type :", filetype);
+    webrtcdev.log(" [filehsaring dommodifier] displayFile  - uuid: ", uuid, " peerinfo :", peerinfo,
+        " , file url : ", fileurl, " ,  file name : ", filename, " ,  file type :", filetype);
     try {
 
         if (!peerinfo || !peerinfo.fileShare) return;
@@ -578,8 +610,8 @@ function displayFile(uuid, peerinfo, fileurl, filename, filetype) {
             showFile(peerinfo.fileShare.container, fileurl, filename, filetype);
 
         } else if (role == "inspector") {
-            for (peer in webcallpeers) {
-                const i = ++peer;
+            for (j in webcallpeers) {
+                const i = ++j;
                 const parentdominspector = document.getElementById(webcallpeers[i].fileShare.container);
                 if (parentdominspector) {
                     showFile(webcallpeers[i].fileShare.container, fileurl, filename, filetype);
@@ -590,21 +622,21 @@ function displayFile(uuid, peerinfo, fileurl, filename, filetype) {
             document.body.appendChild(filedom);
         }
     } catch (err) {
-        webrtcdev.error("[filehsaring js] displayFile  has a problem ", err);
+        webrtcdev.error("[filehsaring dommodifier ] displayFile  has a problem ", err);
     }
-
-    /*
-    if($('#'+ parentdom).length > 0)
-        $("#"+element).html(getFileElementDisplayByType(_filetype , _fileurl , _filename));
-    else
-        $("body").append(getFileElementDisplayByType(_filetype , _fileurl , _filename));*/
 }
 
+/*
+ * Sync Button Clicks
+ * @method
+ * @name syncButton
+ * @param {id} buttonID
+ */
 function syncButton(buttonId) {
     const buttonElement = document.getElementById(buttonId);
 
-    for (x in webcallpeers) {
-        if (buttonElement.getAttribute("lastClickedBy") == webcallpeers[x].userid) {
+    for (let x in webcallpeers) {
+        if (buttonElement.getAttribute("lastClickedBy") === webcallpeers[x].userid) {
             buttonElement.setAttribute("lastClickedBy", '');
             return;
         }
@@ -619,7 +651,7 @@ function syncButton(buttonId) {
     }
 }
 
-/* ************* file Listing container button functions --------------- */
+/* ---------------- file Listing container button functions --------------- */
 
 /**
  * Shows or hides file and sync activity with peers
@@ -676,7 +708,7 @@ function showFile(element, fileurl, filename, filetype) {
 
 function hideFile(element) {
     webrtcdev.log("[filehsaring js]  hidefile ", element);
-    //if(document.getElementById(element) && $("#"+element).has("#display"+filename)){
+
     if (existselem(element)) {
         document.getElementById(element).innerHTML = "";
         hideelem(element);
@@ -704,6 +736,7 @@ function removeFile(element) {
  */
 function downloadFile(uuid, element, fileurl, _filename, filetype) {
     webrtcdev.log(" downloadButton _filename ", _filename, "  filetype ", filetype);
+
     if (filetype == "sessionRecording") {
         const a = document.createElement("a");
         document.body.appendChild(a);
@@ -724,7 +757,9 @@ function downloadFile(uuid, element, fileurl, _filename, filetype) {
         window.URL.revokeObjectURL(fileurl.videofileurl);
 
         /*window.open(fileurl.audiofileurl , filename.audioname+".wav");
-        window.open(fileurl.videofileurl , filename.videoname+".webm");*/
+        window.open(fileurl.videofileurl , filename.videoname+".webm");
+        */
+
         /*
         var zip = new JSZip();
         zip.file(filename.videoname , filename.videofileurl);
@@ -737,7 +772,14 @@ function downloadFile(uuid, element, fileurl, _filename, filetype) {
             window.open(content , "sessionRecording.zip");
         });*/
     } else {
-        window.open(fileurl, "downloadedDocument");
+        // window.open(fileurl, "downloadedDocument");
+        const a = document.createElement("a");
+        document.body.appendChild(a);
+        a.style = "display: none";
+        a.href = fileurl;
+        a.download = _filename;
+        a.click();
+        window.URL.revokeObjectURL(fileurl);
     }
 }
 
@@ -748,7 +790,7 @@ function downloadFile(uuid, element, fileurl, _filename, filetype) {
  * @param {object} peerinfo - single object peerinfo from webcallpeers
  * @param {dom} parent - name of dom element parent
  */
-function createFileSharingBox(peerinfo, parent) {
+function createFileSharingBox(peerinfo, parent, type) {
     try {
         webrtcdev.log(" [ filehsreing js ]  createFileSharingBox ", peerinfo, parent);
         if (document.getElementById(peerinfo.fileShare.outerbox))
@@ -756,7 +798,7 @@ function createFileSharingBox(peerinfo, parent) {
 
         const fileSharingBox = document.createElement("div");
 
-        if (fileshareobj.props.fileList == "single") {
+        if (type == "single") {
             fileSharingBox.className = "col-md-12 fileviewing-box";
         } else {
             fileSharingBox.className = "col-md-6 fileviewing-box";
@@ -769,8 +811,8 @@ function createFileSharingBox(peerinfo, parent) {
 
         let fileControlBar = document.createElement("p");
         fileControlBar.id = peerinfo.fileShare.container + "controlBar";
-        // show name only in  non sinhle file share object view
-        if (fileshareobj.props.fileList != "single") {
+        // show name only in  non single file share object view
+        if (type != "single") {
             fileControlBar.appendChild(document.createTextNode(peerinfo.name));
             // fileControlBar.appendChild(document.createTextNode("File Viewer " + peerinfo.name));
         }
@@ -902,7 +944,7 @@ function createFileSharingBox(peerinfo, parent) {
 
         /*--------------------------------add for File Share Container--------------------*/
         let fileShareContainer = document.createElement("div");
-        fileShareContainer.className = "filesharingWidget";
+        fileShareContainer.className = "filesharingWidget-" + type;
         fileShareContainer.id = peerinfo.fileShare.container;
 
         if (debug) {
@@ -940,8 +982,6 @@ function rescaleVideo(dom, domparent) {
     }
     dom.setAttribute("orientation", orientation);
     dom.className = "col rotate" + angle + dom.getAttribute("orientation");
-
-
 }
 
 
@@ -954,8 +994,6 @@ function rescaleIFrame(dom, domparent) {
     //     dom.setAttribute("style","height:"+domparent.clientWidth +"px;margin-left: 0px");
     //     dom.setAttribute("orientation",  "landscape");
     dom.className = "col rotate" + angle + dom.getAttribute("orientation");
-
-
 }
 
 
@@ -1005,7 +1043,7 @@ function rescaleImage(dom, domparent) {
  * @param {object} peerinfo - single object peerinfo from webcallpeers
  * @param {dom} parent - name of dom element parent
  */
-function createFileListingBox(peerinfo, parent) {
+function createFileListingBox(peerinfo, parent, type) {
 
     try {
         if (getElementById(peerinfo.fileList.outerbox))
@@ -1013,7 +1051,7 @@ function createFileListingBox(peerinfo, parent) {
 
         const fileListingBox = document.createElement("div");
 
-        if (fileshareobj.props.fileList == "single") {
+        if (type == "single") {
 
             fileListingBox.className = "col-sm-12 filesharing-box";
         } else {
@@ -1030,7 +1068,7 @@ function createFileListingBox(peerinfo, parent) {
         fileListControlBar.setAttribute("style", "background-color:" + peerinfo.color);
 
         //Show name in file list conrol bar when view id not single
-        if (fileshareobj.props.fileList != "single") {
+        if (type != "single") {
             fileListControlBar.appendChild(document.createTextNode(peerinfo.name + "     "));
             //fileListControlBar.appendChild(document.createTextNode("Uploaded Files " + peerinfo.name + "     "));
         }
@@ -1150,17 +1188,16 @@ function createFileSharingDiv(peerinfo) {
                 }
             }
         }
-
     }
 
     if (!getElementById(peerinfo.fileShare.outerbox)) {
         let parentFileShareContainer = getElementById(fileshareobj.fileShareContainer);
-        createFileSharingBox(peerinfo, parentFileShareContainer);
+        createFileSharingBox(peerinfo, parentFileShareContainer, fileshareobj.props.fileShare);
     }
 
     if (!getElementById(peerinfo.fileList.outerbox)) {
         let parentFileListContainer = getElementById(fileshareobj.fileListContainer);
-        createFileListingBox(peerinfo, parentFileListContainer);
+        createFileListingBox(peerinfo, parentFileListContainer, fileshareobj.props.fileList);
     }
 }
 
@@ -1236,16 +1273,17 @@ function createModalPopup(filetype) {
     modalbody.innerHTML = "";
 
     const body = document.createElement("div");
+    let d1;
     switch (filetype) {
         case  "blobcanvas":
             title.innerHTML = "Save Drawing";
-            var d1 = document.createElement("div");
+            d1 = document.createElement("div");
             d1.innerHTML = "Right Click on Save, pop up window gives following info: Right Click on Draw image, Click Save As when window opens up.";
             body.appendChild(d1);
             break;
         case "application/pdf":
             title.innerHTML = "Save PDF";
-            var d1 = document.createElement("div");
+            d1 = document.createElement("div");
             d1.innerHTML = 'Click DOWNLOAD on top of the doc . Click SAVE AS when window opens up';
             const i1 = document.createElement("img");
             i1.src = "images/savefile.PNG";
@@ -1259,14 +1297,14 @@ function createModalPopup(filetype) {
         case "video/webm":
         case "imagesnapshot":
             title.innerHTML = "Save Picture / Video";
-            var d1 = document.createElement("div");
+            d1 = document.createElement("div");
             d1.innerHTML = 'Right Click on the FILE . Click SAVE AS when window opens up';
             body.appendChild(d1);
             break;
         // browser supported audio formats
         case "audio/mp3":
             title.innerHTML = "Save Music File";
-            var d1 = document.createElement("div");
+            d1 = document.createElement("div");
             d1.innerHTML = "Right Click on the FILE (play display line). Click SAVE AS when window opens up";
             body.appendChild(d1);
             break;
@@ -1277,18 +1315,18 @@ function createModalPopup(filetype) {
         case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
         case "video/x-ms-wmv":
             title.innerHTML = "Save Microsoft Office / Libra / Open Office Documents";
-            var d1 = document.createElement("div");
+            d1 = document.createElement("div");
             d1.innerHTML = "Click bottom DOWNLOAD in Uploaded Files box . File shows up below the Uploaded Files box. Click arrow on right, then select OPEN  . File Opens in New Window, then 'Save As'.";
             body.appendChild(d1);
             break;
         case "sessionRecording":
             title.innerHTML = "Save Session Recording";
-            var d1 = document.createElement("div");
+            d1 = document.createElement("div");
             d1.innerHTML = 'Extract the video and audio recording from the dowloaded compresed file and play together ';
             body.appendChild(d1);
             break;
         default :
-            var d1 = document.createElement("div");
+            d1 = document.createElement("div");
             d1.innerHTML = 'Document is Unrecognizable, cannot be saved, but can be shared with Remote. Use/Click Screen Share for Remote to view your screen. Then open the document on your screen.';
             body.appendChild(d1);
             break;

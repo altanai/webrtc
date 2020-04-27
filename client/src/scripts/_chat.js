@@ -80,14 +80,18 @@ function addNewMessage(e) {
  */
 function addMessageSnapshotFormat(messageDivclass, userinfo, message, parent) {
     var n = document.createElement("div");
-    n.className = messageDivclass + " chat-msg-" + chatcounter;
+    n.id = " chat-msg-" + chatcounter++;
+
+    webrtcdev.log(" userinfo  on chat ------------------- ", userinfo, selfuserid);
+
+    n.className = messageDivclass + " chat-msg ";
     webrtcdev.log("addNewMessagelocal", userinfo);
 
     takeSnapshot(userinfo, function (datasnapshot) {
 
         let image = document.createElement("img");
         image.src = datasnapshot;
-        image.setAttribute("style", "border-radius: 50%;height:40px");
+        // image.setAttribute("style", "border-radius: 50%;height:40px");
 
         let span = document.createElement("span");
         span.className = "msg-avatar";

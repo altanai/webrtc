@@ -123,13 +123,13 @@ function stopSessionRecord(peerinfo, scrrecordStreamid, scrrecordStream, scrreco
 
     var recorder = listOfRecorders[scrrecordStreamid];
     recorder.stopRecording(function () {
-        var blob = recorder.getBlob();
+        let blob = recorder.getBlob();
         webrtcdev.log("scrrecordStreamid stopped recording blob is ", blob);
     });
 
     var recorder2 = listOfRecorders[scrrecordAudioStreamid];
     recorder2.stopRecording(function () {
-        var blob = recorder2.getBlob();
+        let blob = recorder2.getBlob();
         webrtcdev.log("scrrecordStreamid stopped recording blob is ", blob);
     });
 

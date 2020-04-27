@@ -110,28 +110,46 @@ function attachMediaStream(remvid, stream) {
         }
 
         webrtcdev.log("[ Mediacontrol - attachMediaStream ] stream ", stream);
+
+        // If stream is present , attach teh streama dn give play
         if (stream) {
             let pr = new Promise(function (resolve, reject) {
                 element.srcObject = stream;
-                webrtcdev.log(' ========================================= [  Mediacontrol - attachMediaStream  ] added src object for valid stream ', element, stream);
-                element.play().then(
-                    resolve(1)
-                );
-            });
-            return pr;
-        } else {
-            let pr = new Promise(function (resolve, reject) {
-                if ('srcObject' in element) {
-                    element.srcObject = null;
-                } else {
-                    // Avoid using this in new browsers, as it is going away.
-                    element.src = null;
+                webrtcdev.log("[  Mediacontrol - attachMediaStream  ] added src object for valid stream ", element, stream);
+                var playPromise = element.play();
+
+                if (playPromise !== undefined) {
+                    playPromise.then(_ => {
+                        // Automatic playback started!
+                        // Show playing UI.
+                        resolve(1);
+                    })
+                        .catch(error => {
+                            // Auto-play was prevented
+                            // Show paused UI.
+                            webrtcdev.error("[  Mediacontrol - attachMediaStream  ] error " , error);
+                            reject(1);
+                        });
                 }
-                webrtcdev.warn("[ Mediacontrol - attachMediaStream ] Media Stream empty '' attached to ", element, " as stream is not valid ", stream);
-                resolve(1);
+                // element.play().then(
+                //     resolve(1)
+                // );
             });
             return pr;
         }
+
+        // If no stream , just attach the src as null
+        let pr = new Promise(function (resolve, reject) {
+            if ('srcObject' in element) {
+                element.srcObject = null;
+            } else {
+                // Avoid using this in new browsers, as it is going away.
+                element.src = null;
+            }
+            webrtcdev.warn("[ Mediacontrol - attachMediaStream ] Media Stream empty '' attached to ", element, " as stream is not valid ", stream);
+            resolve(1);
+        });
+        return pr;
 
     } catch (err) {
         webrtcdev.error(" [ Mediacontrol - attachMediaStream ]  error", err);

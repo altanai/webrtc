@@ -1,6 +1,6 @@
 {
   "name": "webrtcdevelopment",
-  "version": "5.0.1",
+  "version": "5.1.2",
   "description": "webrtc based communication and collaboration client. Contains lot of experiments modules ",
   "main": "webrtcserver.js",
   "engines": {
@@ -59,9 +59,15 @@
     "undef": true,
     "unused": true,
     "esversion": 6,
+    "node": true,
+    "debug": true,
+    "browser": true,
+    "devel": true,
+    "jquery": true,
     "globals": {
       "MY_GLOBAL": true,
-      "$": true
+      "$": true,
+      "webrtcdev": true
     }
   },
   "scripts": {

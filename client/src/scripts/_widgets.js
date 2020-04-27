@@ -1,9 +1,9 @@
-/**
- * set Widgets.
- */
+/*-----------------------------------------------------------------------------------*/
+/*                    Widgets JS                                                   */
+/*-----------------------------------------------------------------------------------*/
 var setWidgets = function (rtcConn, widgetsobj) {
 
-    webrtcdev.log(" ------------------ widgetsobj ", widgetsobj );
+    webrtcdev.log(" [widgets] widgetsobj ", widgetsobj);
 
     return new Promise(function (resolve, reject) {
 

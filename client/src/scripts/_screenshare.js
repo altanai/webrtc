@@ -40,7 +40,7 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
         // scrConn.dontCaptureUserMedia = false,
 
         scrConn.onMediaError = function (error, constraints) {
-            webrtcdev.error(error, constraints);
+            webrtcdev.error("[screenshareJS] on stream in _screenshare :" , error, constraints);
             shownotificationWarning(error.name);
         },
 

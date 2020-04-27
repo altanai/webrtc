@@ -5,11 +5,10 @@ const pipeline = require('readable-stream').pipeline;
 const minify = require('gulp-minify-css');
 const replace = require('gulp-replace');
 const less = require('gulp-less');
-
 // const iife = require("gulp-iife");
 // const babel = require('gulp-babel');
 const exec = require('child_process').exec;
-var remoteSrc = require('gulp-remote-src');
+// var remoteSrc = require('gulp-remote-src');
 var rev = require('gulp-rev-timestamp');
 const del = require('del');
 const fs = require('fs');
@@ -18,8 +17,7 @@ const _properties = require('./env.js')(fs).readEnv();
 const properties = JSON.parse(_properties);
 console.log("Properties ", properties);
 
-var folderPath = "", file = "";
-
+var folderPath = "";
 if (properties.enviornment == "production") {
     folderPath = 'prod/';
 } else if (properties.enviornment == "test") {
@@ -33,7 +31,7 @@ var header = require('gulp-header'),
     pckg = require("./package.json"),
     version = pckg.version,
     headerComment = '/* Generated on:' + date +
-        ' || version: ' + version + ' - Altanai , License : MIT  */';
+        ' || version: ' + version + ' - Altanai (@altanai)  , License : MIT  */';
 
 // gulp.task('clean', function(done) {
 //   return Promise.all([
@@ -83,7 +81,7 @@ gulp.task('vendorjs', function (done) {
 
 gulp.task('webrtcdevelopmentServer', function (done) {
     console.log(" gulping admin script  ");
-    list = [
+    let list = [
         "realtimecomm.js",
         "restapi.js"
     ];
@@ -99,7 +97,7 @@ gulp.task('webrtcdevelopmentServer', function (done) {
 
 gulp.task('drawjs', function (done) {
     console.log(" gulping drawjs  ");
-    list = [
+    let list = [
         "client/src/drawboard/common.js",
         "client/src/drawboard/decorator.js",
         "client/src/drawboard/draw-helper.js",
@@ -120,7 +118,7 @@ gulp.task('drawjs', function (done) {
 
 gulp.task('drawcss', function (done) {
     console.log(" gulping main drawcss  ");
-    list = [
+    let list = [
         "client/src/drawboard/drawing.css"
     ];
     console.log(list);
@@ -134,7 +132,7 @@ gulp.task('drawcss', function (done) {
 
 gulp.task('codejs', function (done) {
     console.log(" gulping codejs  ");
-    list = [
+    let list = [
         "client/src/codemirror/lib/codemirror.js",
         "client/src/codemirror/addon/selection/active-line.js",
         "client/src/codemirror/addon/mode/loadmode.js",
@@ -152,7 +150,7 @@ gulp.task('codejs', function (done) {
 
 gulp.task('codecss', function (done) {
     console.log(" gulping main codecss  ");
-    list = [
+    let list = [
         "client/src/codemirror/theme/mdn-like.css",
         "client/src/codemirror/lib/codemirror.css",
         "client/src/codemirror/style.css"
@@ -166,8 +164,25 @@ gulp.task('codecss', function (done) {
 
 var scriptList = [
 
-    "client/src/scripts/RTCM.js",
+    // -------------------- webrtc dev logger
     "client/src/scripts/_logger.js",
+
+    //---------------------------RTC
+    "client/src/scripts/RTC_header.js",
+    "client/src/scripts/RTC_DetectRTC.js",
+    "client/src/scripts/RTC_global.js",
+    // "client/src/scripts/RTC_ioshacks.js",
+    "client/src/scripts/RTC_Peerconnection.js",
+    "client/src/scripts/RTC_CodecsHandler.js",
+    "client/src/scripts/RTC_OnIceCandidateHandler.js",
+    "client/src/scripts/RTC_IceServerHandler.js",
+    "client/src/scripts/RTC_getUserMediaHandler.js",
+    "client/src/scripts/RTC_StreamsHandler.js",
+    "client/src/scripts/RTC_TextReceiverSender.js",
+    "client/src/scripts/RTC_FileProgressBarHandler.js",
+    // "client/src/scripts/RTC_Translator.js",
+    "client/src/scripts/RTC_RTCMultiConnection.js",
+    "client/src/scripts/RTC_footer.js",
 
     // --------------------- helper libs
     "client/src/helperlibs/html2canvas.js",
@@ -238,7 +253,7 @@ gulp.task('webrtcdevelopmentjs', function (done) {
     console.log(" gulping main webrtc development scripts ");
     // scriptList.push("client/src/scripts/admin.js");
     console.log(scriptList);
-    return pipeline(gulp.src(scriptList, {allowEmpty: true}),
+    pipeline(gulp.src(scriptList, {allowEmpty: true}),
         replace(/use strict/g, ''),
         header(headerComment),
         concat('webrtcdevelopment.js'),
@@ -249,6 +264,7 @@ gulp.task('webrtcdevelopmentjs', function (done) {
             }
         }),
         rev(),
+        header(headerComment),
         concat('webrtcdevelopment_min.js'),
         gulp.dest(folderPath)
     );
@@ -257,7 +273,7 @@ gulp.task('webrtcdevelopmentjs', function (done) {
 
 gulp.task('mainstyle', function (done) {
     console.log(" gulping main stylesheets css  ");
-    cssList = [
+    let cssList = [
         "node_modules/bootstrap/dist/css/bootstrap.min.css",
         "node_modules/font-awesome/css/font-awesome.min.css",
         "node_modules/remodal/dist/remodal.css",
@@ -280,7 +296,7 @@ gulp.task('mainstyle', function (done) {
 
 gulp.task('webrtcdevelopmentcss', function (done) {
     console.log(" gulping custom stylesheets css  ");
-    cssList = [
+    let cssList = [
         // "client/src/css/styles.css",
         "client/src/css/media.css",
         "client/src/css/chat.css",
@@ -298,7 +314,7 @@ gulp.task('webrtcdevelopmentcss', function (done) {
         .pipe(concat('webrtcdevelopment.css'))
         .pipe(minify())
         .pipe(less().on('error', function (error) {
-            console.error(error)
+            console.error(error);
         }))
         .pipe(gulp.dest(folderPath));
     done();
@@ -313,7 +329,7 @@ function execute(command, callback) {
 
 gulp.task('git_pull', function (cb) {
     execute('git pull', function (resp) {
-        cb();
+        cb(resp);
     });
 });
 
@@ -332,7 +348,7 @@ gulp.task('default', gulp.series(
     'webrtcdevelopmentServer'
 ));
 
-// onlu gulp webrtcdev js changes 
+// only gulp webrtcdev js changes
 gulp.task('develop', gulp.series(
     'betawebrtcdevelopmentjs'
 ));

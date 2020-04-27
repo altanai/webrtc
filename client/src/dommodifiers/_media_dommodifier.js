@@ -4,6 +4,7 @@
 
 /*Create a video contaioner and attach it to remote obj */
 function appendVideo(e, style) {
+
     createVideoContainer(e, style, function (div) {
         let video = document.createElement('video');
         video.className = style;
@@ -62,18 +63,19 @@ function attachControlButtons(vid, peerinfo) {
 
     // Preventing multiple control bars
     var p = vid.parentNode;
-    webrtcdev.log(" ====== attachControlButtons parent Node of video  ", p);
-    // if (p) {
-    //     let c = p.childNodes;
-    //     for (i = 0; i < c.length; i++) {
-    //         if (c[i].nodeName == "DIV" && c[i].id != undefined) {
-    //             if (c[i].id.indexOf("control") > -1) {
-    //                 webrtcdev.warn("[media dom modifier] control bar exists already, delete the previous one , before adding new one", c[i]);
-    //                 p.removeChild(c[i]);
-    //             }
-    //         }
-    //     }
-    // }
+    webrtcdev.log(" [media dom modifier] attachControlButtons to the parent Node of video  ", p);
+    if (p) {
+        let c = p.childNodes;
+        for (i in c) {
+            let cc = c[i];
+            if (cc.nodeName == "DIV" && cc.id) {
+                if (cc.id.indexOf("control") > -1) {
+                    webrtcdev.warn("[media dom modifier] control bar exists already, delete the previous one , before adding new one", cc);
+                    p.removeChild(cc);
+                }
+            }
+        }
+    }
 
     // Control bar holds media control elements like , mute unmute , fillscreen ,. recird , snapshot
     let controlBar = document.createElement("div");
@@ -197,7 +199,7 @@ function createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream) {
 /**
  * function to createAudioMuteButton
  * @method
- * @name attachUserDetails
+ * @name createAudioMuteButton
  * @param {string} controlBarName
  * @param {json} peerinfo
  * @return {dom} button
@@ -278,14 +280,14 @@ function createVideoMuteButton(controlBarName, peerinfo) {
  * @param {json} peerinfo
  */
 function attachUserDetails(vid, peerinfo) {
-    webrtcdev.log("[media_dommanager] attachUserDetails - ", peerinfo.userid, ":", peerinfo.type);
-    if ((vid.parentNode.querySelectorAll('.videoHeaderClass')).length > 0) {
-        webrtcdev.warn("[media_dommanager] video header already present ", vid.parentNode.querySelectorAll('.videoHeaderClass'));
+    webrtcdev.log("[media_dommanager] attachUserDetails - ", peerinfo.userid, ":", peerinfo.type , " to video DOM " , vid);
+    if (vid.parentNode.querySelectorAll('.videoHeaderClass').length > 0) {
+        webrtcdev.warn("[media_dommanager] attachUserDetails - video header already present ", vid.parentNode.querySelectorAll('.videoHeaderClass'));
         if ((vid.parentNode.querySelectorAll("videoheaders" + peerinfo.userid)).length > 0) {
             webrtcdev.warn("[media_dommanager] user's video header already present ", "videoheaders" + peerinfo.userid);
             return;
         } else {
-            webrtcdev.warn("[media_dommanager] video header already present for diff user , overwrite with ", "videoheaders" + peerinfo.userid);
+            webrtcdev.warn("[media_dommanager] attachUserDetails - video header already present for diff user , overwrite with ", "videoheaders" + peerinfo.userid);
             let vidheader = vid.parentNode.querySelectorAll('.videoHeaderClass')[0];
             vidheader.remove();
         }

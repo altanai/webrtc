@@ -5,8 +5,8 @@
  * @param {string} userid
  */
 var findPeerInfo = function (userid) {
-    /*    
-    if(rtcConn.userid==userid){
+    /* find selfuser id faster which is index 0 of webcallpeers
+    if(rtcConn.userid == userid){
         webrtcdev.log("PeerInfo is found for initiator", webcallpeers[0]);
         return webcallpeers[0];
     }
@@ -20,7 +20,7 @@ var findPeerInfo = function (userid) {
 };
 
 /**
- * update already ecisting webcallpeers obj by appending a value , mostly used for timer zone
+ * update already existing webcallpeers obj by appending a value , mostly used for timer zone
  * @method
  * @name appendToPeerValue
  * @param {string} userid
@@ -35,7 +35,7 @@ function appendToPeerValue(userid, value) {
 }
 
 /**
- * update info about a peer in list of peers (webcallpeers)
+ * remove info about a peer in list of peers (webcallpeers)
  * @method
  * @name removePeerInfo
  * @param {string} userid
@@ -71,7 +71,7 @@ function updatePeerInfo(userid, username, usecolor, useremail, userrole, type) {
     return new Promise(function (resolve, reject) {
         // if userid deosnt exist , exit
         if (!userid) {
-            console.error("[peerinfomanager] userid is null / undefined, cannot create PeerInfo");
+            webrtcdev.error("[peerinfomanager] userid is null / undefined, cannot create PeerInfo");
             reject("userid is null / undefined, cannot create PeerInfo");
             return;
         }

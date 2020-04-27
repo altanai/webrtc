@@ -1,4 +1,4 @@
-function createTextEditorButton() {
+function createTextEditorButton(texteditorobj) {
     var texteditorButton = document.createElement("span");
     texteditorButton.className = texteditorobj.button.class_off;
     texteditorButton.innerHTML = texteditorobj.button.html_off;

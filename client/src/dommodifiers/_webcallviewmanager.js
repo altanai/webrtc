@@ -30,26 +30,27 @@ function updateWebCallView(peerinfo) {
 
             let remvid = remoteVideos[emptyvideoindex];
             webrtcdev.log(" [webcallviewmanager] updateWebCallView role-inspector , attaching stream", remvid, peerinfo.stream);
-            attachMediaStream(remvid, peerinfo.stream);
-            if (remvid.hidden) removid.hidden = false;
-            remvid.id = peerinfo.videoContainer;
-            remvid.className = remoteobj.videoClass;
-            //attachControlButtons(remvid, peerInfo);
+            attachMediaStream(remvid, peerinfo.stream).then(_ => {
+                if (remvid.hidden) removid.hidden = false;
+                remvid.id = peerinfo.videoContainer;
+                remvid.className = remoteobj.videoClass;
+                //attachControlButtons(remvid, peerInfo);
 
-            if (remoteobj.userDisplay && peerinfo.name) {
-                attachUserDetails(remvid, peerinfo);
-            }
-            if (remoteobj.userMetaDisplay && peerinfo.userid) {
-                attachMetaUserDetails(remvid, peerinfo);
-            }
-            // Hide the unsed video for Local
-            var _templ = document.getElementsByName(localVideo)[0];
-            if (_templ) _templ.hidden = true;
+                if (remoteobj.userDisplay && peerinfo.name) {
+                    attachUserDetails(remvid, peerinfo);
+                }
+                if (remoteobj.userMetaDisplay && peerinfo.userid) {
+                    attachMetaUserDetails(remvid, peerinfo);
+                }
+                // Hide the unsed video for Local
+                var _templ = document.getElementsByName(localVideo)[0];
+                if (_templ) _templ.hidden = true;
 
-            for (v in remoteobj.videoarr) {
-                var _templ2 = document.getElementsByName(remoteobj.videoarr[v])[0];
-                if (_templ2) _templ2.setAttribute("style", "display:none");
-            }
+                for (v in remoteobj.videoarr) {
+                    var _templ2 = document.getElementsByName(remoteobj.videoarr[v])[0];
+                    if (_templ2) _templ2.setAttribute("style", "display:none");
+                }
+            });
 
             for (let t in document.getElementsByClassName("timeBox")) {
                 document.getElementsByClassName("timeBox")[t].hidden = true;
@@ -68,8 +69,6 @@ function updateWebCallView(peerinfo) {
                     let vid = document.getElementsByName(localVideo)[0];
                     attachMediaStream(vid, peerinfo.stream).then(_ => {
                         webrtcdev.log(' ========================================= [ webcallviewdevmanager ] updateWebCallView - Done attaching .local stream to element');
-                        // if(localobj.userDisplay && peerInfo.name)
-                        //     attachUserDetails( vid, peerInfo );
                         vid.muted = true;
                         vid.className = localobj.videoClass;
                         
@@ -316,7 +315,7 @@ function findEmptyRemoteVideoIndex(peerinfo, remoteVideos) {
             vids = remoteVideos[v].video;
         }
 
-        console.log("[webcallviewdevmanager] ] vids.src ", vids.src,
+        webrtcdev.log("[webcallviewdevmanager] vids.src ", vids.src,
             " , vids.srcObject ", vids.srcObject,
             " , vids.readyState ", vids.readyState,
             " , vids.played.length ", vids.played.length);
