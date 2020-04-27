@@ -33,24 +33,29 @@ exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
         */
     }
 
-    function appendUser(socket) {
-        var alreadyExists = listOfUsers[socket.userid];
-        var extra = {};
+    async function appendUser(socket) {
+        try {
+            var alreadyExists = listOfUsers[socket.userid];
+            var extra = {};
 
-        if (alreadyExists && alreadyExists.extra) {
-            extra = alreadyExists.extra;
-        }
+            if (alreadyExists && alreadyExists.extra) {
+                extra = alreadyExists.extra;
+            }
 
-        let userdata = {
-            socket: socket,
-            connectedWith: {},
-            isPublic: false, // means: isPublicModerator
-            extra: extra || {}
-        };
-        if (cache) {
-            cache.hmset(socket.userid, userdata);
-        } else {
-            listOfUsers[socket.userid] = userdata;
+            let userdata = {
+                socket: socket,
+                connectedWith: {},
+                isPublic: false, // means: isPublicModerator
+                extra: extra || {}
+            };
+            // if (cache) {
+            //     const result = await cache.hset(socket.userid, "data", userdata);
+            //     console.log(result);
+            // } else {
+                listOfUsers[socket.userid] = userdata;
+            // }
+        } catch (err) {
+            console.error(err);
         }
     }
 

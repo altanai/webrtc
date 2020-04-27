@@ -246,3 +246,30 @@ function reattachMediaStream(to, from) {
         webrtcdev.error("[media control] reattachMediaStream err ", err);
     }
 }
+
+/**
+ * Dettach media stream from dom
+ * @method
+ * @name detachMediaStream
+ * @param {dom} vid
+ */
+function detachMediaStream(vid){
+
+    if ('srcObject' in vid) {
+        const stream = vid.srcObject;
+        const tracks = stream.getTracks();
+
+        tracks.forEach(function(track) {
+            track.stop();
+        });
+        vid.stream = "";
+        vid.srcObject = null;
+        // try {
+        //     video.srcObject = "";
+        // } catch (err) {
+        //     webrtcdev.error("[webcallviewmanager] destroyWebCallView - erorr  ", err);
+        // }
+    } else {
+        vid.src = "";
+    }
+}

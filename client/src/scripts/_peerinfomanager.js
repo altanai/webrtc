@@ -52,13 +52,18 @@ function getAllActivePeers() {
  * @param {json} key
  * @param {json} value
  */
-function appendToPeerValue(userid, key, value) {
-    for (x in webcallpeers) {
-        if (webcallpeers[x].userid == userid) {
-            webcallpeers[x][key]= value;
-            webrtcdev.log(" updated peerValue key ", key, " with value ", value);
-            return ;
+function appendToPeerValue(pid, key, value) {
+    try {
+        webrtcdev.log("[peerinfomanager] appendToPeerValue - update peer - ", pid, " by key ", key, " with value ", value);
+        for (x in webcallpeers) {
+            if (webcallpeers[x].userid == pid) {
+                webcallpeers[x][key] = value;
+                webrtcdev.log("[peerinfomanager]  appendToPeerValue - updated peerValue ", webcallpeers[x]);
+                break;
+            }
         }
+    } catch (e) {
+        webrtcdev.error("[peerinfomanager] appendToPeerValue errorr - ", e);
     }
 }
 
@@ -69,13 +74,18 @@ function appendToPeerValue(userid, key, value) {
  * @param {id} userid
  */
 function removePeerInfo(userid) {
-    webrtcdev.log(" [peerinfomanager] removePeerInfo - remove userid: ", userid);
-    for (x in webcallpeers) {
-        if (webcallpeers[x].userid == userid) {
-            webcallpeers.splice(x, 1);
-            return;
+    try {
+        webrtcdev.log("[peerinfomanager] removePeerInfo - remove userid: ", userid);
+        for (x in webcallpeers) {
+            if (webcallpeers[x].userid == userid) {
+                webcallpeers.splice(x, 1);
+                return;
+            }
         }
+    } catch (e) {
+        webrtcdev.error("[peerinfomanager] appendToPeerValue errorr - ", e);
     }
+
 }
 
 /**
@@ -98,20 +108,42 @@ function updatePeerInfo(userid, username, usecolor, useremail, userrole, type) {
         return;
     }
 
-    let peerInfo = {
-        videoContainer: "video" + userid,
-        videoHeight: null,
-        videoClassName: null,
-        userid: userid,
-        name: username,
-        color: usecolor,
-        email: useremail,
-        role: userrole || "participant",
-        type: type,
-        controlBarName: "control-video" + userid,
-        filearray: [],
-        vid: "video" + type + "_" + userid
-    };
+    // if userid is already present in webcallpeers , update only
+    let peerInfo = findPeerInfo(userid);
+    if (peerInfo) {
+        webrtcdev.log("[peerinfomanager] updatePeerInfo - UserID is already existing in webcallpeers, update the fields only ");
+
+        peerInfo.videoContainer = peerInfo.videoContainer || "video" + userid;
+        peerInfo.videoHeight = peerInfo.videoHeight || null;
+        peerInfo.videoClassName = peerInfo.videoClassName || null;
+        peerInfo.userid = peerInfo.userid || userid;
+        peerInfo.name = peerInfo.name || username;
+        peerInfo.color = peerInfo.color || usecolor;
+        peerInfo.email = peerInfo.email || useremail;
+        peerInfo.role = peerInfo.role || userrole || "participant";
+        peerInfo.type = peerInfo.type || type;
+        peerInfo.controlBarName = peerInfo.controlBarName || "control-video" + userid;
+        peerInfo.filearray = peerInfo.filearray || [];
+        peerInfo.vid = peerInfo.vid || "video" + type + "_" + userid;
+
+    } else {
+        peerInfo = {
+            videoContainer: "video" + userid,
+            videoHeight: null,
+            videoClassName: null,
+            userid: userid,
+            name: username,
+            color: usecolor,
+            email: useremail,
+            role: userrole || "participant",
+            type: type,
+            controlBarName: "control-video" + userid,
+            filearray: [],
+            vid: "video" + type + "_" + userid
+        };
+        webcallpeers.push(peerInfo);
+        webrtcdev.log("[peerinfomanager] updatedPeerInfo -  newly created peerinfo", peerInfo);
+    }
 
     if (fileshareobj.active) {
         if (fileshareobj.props.fileShare == "single") {
@@ -147,17 +179,8 @@ function updatePeerInfo(userid, username, usecolor, useremail, userrole, type) {
         }
     }
 
-    // if userid is already present in webcallpeers , update only
-    let isexistingpeerinfo = findPeerInfo(userid);
-    if (isexistingpeerinfo) {
-        webrtcdev.log("[peerinfomanager] updatePeerInfo - UserID is already existing in webcallpeers, update the fields only ");
-        let x = findPeerInfoIndex(userid);
-        webcallpeers[x] = peerInfo;
-        webrtcdev.log("[peerinfomanager] updated peerInfo: ", peerInfo);
-    } else {
-        webcallpeers.push(peerInfo);
-        webrtcdev.log("[peerinfomanager] newly created peerInfo: ", peerInfo);
-    }
+    let pindex = findPeerInfoIndex(userid);
+    webcallpeers[pindex] = peerInfo;
 }
 
 /**

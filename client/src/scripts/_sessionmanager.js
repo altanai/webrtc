@@ -131,6 +131,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
                     resolve("ok");
                 });
             });
+
             promise.then(_ => {
                 updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local");
             }).then(_ => {
@@ -407,27 +408,28 @@ var setRtcConn = function (sessionid, sessionobj) {
         },
 
         rtcConn.onstream = function (event) {
-            webrtcdev.log("[sessionmanager onstream ] on stream Started event ", event);
+            webrtcdev.log("[sessionmanager] onstream - event ", event);
             if (event.type == "local") localVideoStreaming = true;
 
             var peerinfo = findPeerInfo(event.userid);
             if (!peerinfo) {
-                webrtcdev.error("[sartjs] onstream - PeerInfo not present in webcallpeers ", event.userid, " creating it now ");
-
+                webrtcdev.error("[sessionmanager] onstream - PeerInfo not present in webcallpeers ", event.userid, " creating it now ");
                 //userid, username, usecolor, useremail, userrole, type
-                updatePeerInfo(event.userid, event.extra.name, event.extra.color, event.extra.email, event.extra.role, event.type),
-                    webrtcdev.log(" [sessionmanager] onstream - updated local peerinfo for open-channel "),
-                    peerinfo = findPeerInfo(event.userid);
-
+                updatePeerInfo(event.userid, event.extra.name, event.extra.color, event.extra.email, event.extra.role, event.type);
+                webrtcdev.log(" [sessionmanager] onstream - updated local peerinfo for open-channel ");
+                appendToPeerValue(event.userid, "stream", event.stream);
+                appendToPeerValue(event.userid, "streamid", event.streamid);
+                updateWebCallView(findPeerInfo(event.userid));
             } else if (role == "inspector" && event.type == "local") {
                 // ignore any incoming stream from inspector
                 webrtcdev.info("[sessionmanager] onstream - ignore any incoming stream from inspector");
+                updateWebCallView(peerinfo);
+            } else {
+                peerinfo.type = event.type;
+                peerinfo.stream = event.stream;
+                peerinfo.streamid = event.stream.streamid;
+                updateWebCallView(peerinfo);
             }
-
-            peerinfo.type = event.type;
-            peerinfo.stream = event.stream;
-            peerinfo.streamid = event.stream.streamid;
-            updateWebCallView(peerinfo);
         },
 
         rtcConn.onstreamended = function (event) {

@@ -1,17 +1,20 @@
 /*-----------------------------------------------------------------------------------*/
 /*                       Record JS                                                   */
+
 /*-----------------------------------------------------------------------------------*/
+
+var listOfRecorders = {};
 
 /**
  * Create Record Button to call start and stop recoriding functions
  * @method
  * @name createRecordButton
+ * @param {json} videoRecordobj
  * @param {string} controlBarName
  * @param {json} peerinfo
- * @param {string} streamid
- * @param {blob} stream
  */
-function createRecordButton(controlBarName, peerinfo, streamid, stream) {
+function createRecordButton(videoRecordobj, controlBarName, peerinfo) {
+
     let recordButton = document.createElement("div");
     recordButton.id = controlBarName + "recordButton";
     recordButton.setAttribute("title", "Record");
@@ -24,29 +27,31 @@ function createRecordButton(controlBarName, peerinfo, streamid, stream) {
         if (recordButton.className == videoRecordobj.button.class_on) {
             recordButton.className = videoRecordobj.button.class_off;
             recordButton.innerHTML = videoRecordobj.button.html_off;
-            stopRecord(peerinfo, streamid, stream);
+            stopRecord(peerinfo);
         } else if (recordButton.className == videoRecordobj.button.class_off) {
             recordButton.className = videoRecordobj.button.class_on;
             recordButton.innerHTML = videoRecordobj.button.html_on;
-            startRecord(peerinfo, streamid, stream);
+            startRecord(peerinfo);
         }
     };
     return recordButton;
 }
-
-
-var listOfRecorders = {};
-
 
 /**
  * start Recording the stream using recordRTC
  * @method
  * @name startRecord
  * @param {json} peerinfo
- * @param {string} streamid
- * @param {blob} stream
  */
-function startRecord(peerinfo, streamid, stream) {
+function startRecord(peerinfo) {
+    let streamid = peerinfo.streamid;
+    let stream = peerinfo.stream;
+
+    if (!stream) {
+        webrtcdev.error("[recordjs] startRecord - stream is missing for peer ", peerinfo);
+    }
+
+    webrtcdev.log("[recordjs] stop - stream", stream);
     let recorder = RecordRTC(stream, {
         type: 'video',
         recorderType: MediaStreamRecorder,
@@ -60,25 +65,29 @@ function startRecord(peerinfo, streamid, stream) {
  * @method
  * @name stopRecord
  * @param {json} peerinfo
- * @param {string} streamid
- * @param {blob} stream
  */
-function stopRecord(peerinfo, streamid, stream) {
-    /*var streamid = prompt('Enter stream-id');*/
+function stopRecord(peerinfo) {
+    let streamid = peerinfo.streamid;
+    let stream = peerinfo.stream;
+    if (!stream) {
+        webrtcdev.error("[recordjs] stopRecord - stream is missing for peer ", peerinfo);
+    }
 
+    webrtcdev.log("[recordjs] stop - stream", stream);
     if (!listOfRecorders[streamid]) {
-        /*throw 'Wrong stream-id';*/
         webrtcdev.log("wrong stream id ");
     }
     let recorder = listOfRecorders[streamid];
-    recorder.stopRecording(function () {
+    recorder.stopRecording(function (url) {
+
+        webrtcdev.log(" url ", url);
         let blob = recorder.getBlob();
-        // if (!peerinfo) {
+        if (!peerinfo) {
             if (selfuserid)
                 peerinfo = findPeerInfo(selfuserid);
             else
                 peerinfo = findPeerInfo(rtcConn.userid);
-        // }
+        }
 
         /*        
         window.open( URL.createObjectURL(blob) );

@@ -55,10 +55,10 @@ function createVideoContainer(e, style, callback) {
  */
 function attachControlButtons(vid, peerinfo) {
 
-    const stream = peerinfo.stream;
-    const streamid = peerinfo.streamid;
-    const controlBarName = peerinfo.controlBarName;
-    const snapshotViewer = peerinfo.fileSharingContainer;
+    let stream = peerinfo.stream;
+    let streamid = peerinfo.streamid;
+    let controlBarName = peerinfo.controlBarName;
+    let snapshotViewer = peerinfo.fileSharingContainer;
 
     // Preventing multiple control bars
     var p = vid.parentNode;
@@ -105,7 +105,7 @@ function attachControlButtons(vid, peerinfo) {
     }
 
     if (videoRecordobj.active) {
-        controlBar.appendChild(createRecordButton(controlBarName, peerinfo, streamid, stream));
+        controlBar.appendChild(createRecordButton(videoRecordobj , controlBarName, peerinfo));
     }
 
     if (cursorobj.active) {

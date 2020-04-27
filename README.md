@@ -915,6 +915,16 @@ USe gulp-babel@8.0.0
 **arrow functions realted**
 use tarnscompiler with preset env plugin for changes arraow function to normals ones before minifying
 
+### errors on webrtc client 
+
+**Issue1** net::ERR_CONTENT_LENGTH_MISMATCH 200 (OK) \
+**solution** This error is definite mismatch between the data that is advertised in the HTTP Headers and the data transferred over the wire.
+             
+             It could come from the following:
+             
+             Server: If a server has a bug with certain modules that changes the content but don't update the content-length in the header or just doesn't work properly. It was the case for the Node HTTP Proxy at some point (see here)
+             
+             Proxy: Any proxy between you and your server could be modifying the request and not update the content-length header.
 
 ## Reporting a Vulnerability
 
