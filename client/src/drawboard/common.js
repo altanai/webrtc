@@ -8,8 +8,8 @@ function fitToContainer(parent, canvas) {
         canvas.style.height='100%';*/
         canvas.width = parent.offsetWidth;
         canvas.height = parent.offsetHeight;
-    } catch (e) {
-        console.log(e);
+    } catch (err) {
+        // webrtcdev.error(err);
     }
 }
 
@@ -22,8 +22,8 @@ function setContext(canv) {
         ctx.fillStyle = fillStyle;
         ctx.font = font;
     } catch (e) {
-        console.error(" canvas context not set ", canv);
-        console.error(e);
+        // webrtcdev.error(" canvas context not set ", canv);
+        // webrtcdev.error(e);
     }
     return ctx;
 }
@@ -34,8 +34,8 @@ let context = setContext(mainCanvas);
 let tempContext = setContext(canvas);
 let parentBox = document.getElementById("drawBox");
 
-console.log("Main Canvas : ", mainCanvas, context);
-console.log("Temp Canvas : ", canvas, tempContext);
+// console.log("Main Canvas : ", mainCanvas, context);
+// console.log("Temp Canvas : ", canvas, tempContext);
 
 
 fitToContainer(parentBox, mainCanvas);
@@ -44,15 +44,12 @@ fitToContainer(parentBox, canvas);
 if (document.getElementById("trashBtn")) {
     document.getElementById("trashBtn").onclick = function () {
         tempContext.clearRect(0, 0, canvas.width, canvas.height);
-        console.log(" cleared temp canvas", canvas);
-
         context.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
-        console.log(" cleared main canvas ", mainCanvas);
 
         window.location.reload();
     };
 } else {
-    console.error("trash button not found");
+    // webrtcdev.error("trash button not found");
 }
 
 
@@ -80,7 +77,7 @@ if (document.getElementById("saveBtn")) {
         a.document.write("<img src='" + e + "' alt='from canvas'/>");*/
     };
 } else {
-    console.error("save button not found");
+    // webrtcdev.error("save button not found");
 }
 
 /*-----------------------------------------------*/

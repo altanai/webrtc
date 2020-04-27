@@ -1,10 +1,11 @@
-exports.realtimecomm  = function(app, properties, log, socketCallback) {
+exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
+
     var listOfUsers = {};
     var shiftedModerationControls = {};
     var ScalableBroadcast;
 
     var webrtcdevchannels = {};
-    var channels=[];
+    var channels = [];
     var users = {};
     var sessions = {};
 
@@ -12,22 +13,16 @@ exports.realtimecomm  = function(app, properties, log, socketCallback) {
 
     try {
         io = io(app);
-        io.set({
-          transports: [
-            'websocket'
-          ]
-        });
-        io.origins('*:*') ;
+        // io.set({
+        //     transports: [
+        //         'websocket'
+        //     ]
+        // });
+        io.origins('*:*');
         io.on('connection', onConnection);
 
     } catch (e) {
         console.error(" Realtime connection threw Exception ", e);
-        console.log(" Retrying Socket.io coonection with log true");
-        io = io.listen(app, {
-            log: true,
-            origins: '*:*'
-        });
-
         /* transport options 
             'websocket', 
             'flashsocket', 
@@ -36,23 +31,32 @@ exports.realtimecomm  = function(app, properties, log, socketCallback) {
             'jsonp-polling', 
             'polling'
         */
-
     }
 
-    function appendUser(socket) {
-        var alreadyExists = listOfUsers[socket.userid];
-        var extra = {};
+    async function appendUser(socket) {
+        try {
+            var alreadyExists = listOfUsers[socket.userid];
+            var extra = {};
 
-        if (alreadyExists && alreadyExists.extra) {
-            extra = alreadyExists.extra;
+            if (alreadyExists && alreadyExists.extra) {
+                extra = alreadyExists.extra;
+            }
+
+            let userdata = {
+                socket: socket,
+                connectedWith: {},
+                isPublic: false, // means: isPublicModerator
+                extra: extra || {}
+            };
+            // if (cache) {
+            //     const result = await cache.hset(socket.userid, "data", userdata);
+            //     console.log(result);
+            // } else {
+                listOfUsers[socket.userid] = userdata;
+            // }
+        } catch (err) {
+            console.error(err);
         }
-
-        listOfUsers[socket.userid] = {
-            socket: socket,
-            connectedWith: {},
-            isPublic: false, // means: isPublicModerator
-            extra: extra || {}
-        };
     }
 
     function onConnection(socket) {
@@ -78,7 +82,7 @@ exports.realtimecomm  = function(app, properties, log, socketCallback) {
         socket.userid = params.userid;
         appendUser(socket);
 
-        socket.on('extra-data-updated', function(extra) {
+        socket.on('extra-data-updated', function (extra) {
             try {
                 if (!listOfUsers[socket.userid]) return;
                 listOfUsers[socket.userid].extra = extra;
@@ -131,8 +135,9 @@ exports.realtimecomm  = function(app, properties, log, socketCallback) {
         });
         */
 
-        socket.on('changed-uuid', function(newUserId, callback) {
-            callback = callback || function() {};
+        socket.on('changed-uuid', function (newUserId, callback) {
+            callback = callback || function () {
+            };
 
             if (params.dontUpdateUserId) {
                 delete params.dontUpdateUserId;
@@ -161,7 +166,7 @@ exports.realtimecomm  = function(app, properties, log, socketCallback) {
             }
         });
 
-        socket.on('set-password', function(password) {
+        socket.on('set-password', function (password) {
             try {
                 if (listOfUsers[socket.userid]) {
                     listOfUsers[socket.userid].password = password;
@@ -171,7 +176,7 @@ exports.realtimecomm  = function(app, properties, log, socketCallback) {
             }
         });
 
-        socket.on('disconnect-with', function(remoteUserId, callback) {
+        socket.on('disconnect-with', function (remoteUserId, callback) {
             try {
                 if (listOfUsers[socket.userid] && listOfUsers[socket.userid].connectedWith[remoteUserId]) {
                     delete listOfUsers[socket.userid].connectedWith[remoteUserId];
@@ -190,14 +195,15 @@ exports.realtimecomm  = function(app, properties, log, socketCallback) {
             }
         });
 
-        socket.on('close-entire-session', function(callback) {
+        socket.on('close-entire-session', function (callback) {
             try {
                 var connectedWith = listOfUsers[socket.userid].connectedWith;
-                Object.keys(connectedWith).forEach(function(key) {
+                Object.keys(connectedWith).forEach(function (key) {
                     if (connectedWith[key] && connectedWith[key].emit) {
                         try {
                             connectedWith[key].emit('closed-entire-session', socket.userid, listOfUsers[socket.userid].extra);
-                        } catch (e) {}
+                        } catch (e) {
+                        }
                     }
                 });
 
@@ -208,7 +214,7 @@ exports.realtimecomm  = function(app, properties, log, socketCallback) {
             }
         });
 
-        socket.on('check-presence', function(userid, callback) {
+        socket.on('check-presence', function (userid, callback) {
             if (userid === socket.userid && !!listOfUsers[userid]) {
                 callback(false, socket.userid, listOfUsers[userid].extra);
                 return;
@@ -222,146 +228,146 @@ exports.realtimecomm  = function(app, properties, log, socketCallback) {
             callback(!!listOfUsers[userid], userid, extra);
         });
 
-        socket.on('open-channel', function (data) {  
-            console.log("------------open channel------------- ", data.channel," by " , data.sender);
-            
-            var newchannel=null;
+        socket.on('open-channel', function (data) {
+            console.log("------------open channel------------- ", data.channel, " by ", data.sender);
 
-            if(data.channel){
-                newchannel=data.channel;
-            } else{
+            var newchannel = null;
+
+            if (data.channel) {
+                newchannel = data.channel;
+            } else {
                 console.log(" Err :  channel is empty");
-            } 
-
-            if (channels.indexOf(newchannel)<0){
-                channels.push(newchannel);
-                console.log("registered new in channels " , channels);
-            }else{
-                console.log("channel already exists channels " , channels);
             }
 
-            try{
+            if (channels.indexOf(newchannel) < 0) {
+                channels.push(newchannel);
+                console.log("registered new in channels ", channels);
+            } else {
+                console.log("channel already exists channels ", channels);
+            }
+
+            try {
                 webrtcdevchannels[newchannel] = {
                     channel: newchannel,
                     timestamp: new Date().toLocaleString(),
                     maxAllowed: data.maxAllowed,
-                    users:[data.sender],
-                    status:"waiting",
-                    endtimestamp:0,
-                    log:[new Date().toLocaleString()+":-channel created . User "+data.sender+" waiting "]
-                };   
-                console.log("information added to channel" , webrtcdevchannels);
-            }catch(e){
-                console.log(" Err : info couldnt be aded to channel " , e);
+                    users: [data.sender],
+                    status: "waiting",
+                    endtimestamp: 0,
+                    log: [new Date().toLocaleString() + ":-channel created . User " + data.sender + " waiting "]
+                };
+                console.log("information added to channel", webrtcdevchannels);
+            } catch (e) {
+                console.log(" Err : info couldnt be aded to channel ", e);
             }
 
             //send back the resposne to web client 
-            var oevent={
-                status : true,
-                channel : newchannel
+            var oevent = {
+                status: true,
+                channel: newchannel
             };
-            socket.emit("open-channel-resp", oevent);  
+            socket.emit("open-channel-resp", oevent);
         });
 
-        socket.on('open-channel-screenshare', function (data) {  
-            console.log("------------open channel screenshare------------- ", data.channel," by " , data.sender);
-            var oevent={
-                status : true,
+        socket.on('open-channel-screenshare', function (data) {
+            console.log("------------open channel screenshare------------- ", data.channel, " by ", data.sender);
+            var oevent = {
+                status: true,
                 channel: data.channel
             };
-            socket.emit("open-channel-screenshare-resp",oevent);  
+            socket.emit("open-channel-screenshare-resp", oevent);
         });
 
-        socket.on('join-channel', function (data) {  
+        socket.on('join-channel', function (data) {
             var isallowed = false;
             var channel = data.channel;
-            if(webrtcdevchannels[data.channel].users.length < webrtcdevchannels[data.channel].maxAllowed ||
-                 webrtcdevchannels[data.channel].maxAllowed == "unlimited")
+            if (webrtcdevchannels[data.channel].users.length < webrtcdevchannels[data.channel].maxAllowed ||
+                webrtcdevchannels[data.channel].maxAllowed == "unlimited")
                 isallowed = true;
 
-            console.log("------------join channel------------- ", data.channel," by " , data.sender , " isallowed " , isallowed);
-            
-            if(isallowed){
-                webrtcdevchannels[data.channel].users.push(data.sender); 
+            console.log("------------join channel------------- ", data.channel, " by ", data.sender, " isallowed ", isallowed);
+
+            if (isallowed) {
+                webrtcdevchannels[data.channel].users.push(data.sender);
                 webrtcdevchannels[data.channel].status = webrtcdevchannels[data.channel].users.length + " active members";
-                webrtcdevchannels[data.channel].log.push(new Date().toLocaleString()+":-User "+data.sender+" joined the channel ");  
-                
+                webrtcdevchannels[data.channel].log.push(new Date().toLocaleString() + ":-User " + data.sender + " joined the channel ");
+
                 // send back the join response to webclient
-                var jevent={
+                var jevent = {
                     status: true,
-                    channel : data.channel,
+                    channel: data.channel,
                     users: webrtcdevchannels[data.channel].users
                 };
-                socket.emit("join-channel-resp",jevent);
+                socket.emit("join-channel-resp", jevent);
 
-                var cevent={
-                    status:true,
-                    type:"new-join", 
+                var cevent = {
+                    status: true,
+                    type: "new-join",
                     msgtype: "success",
-                    data:data
+                    data: data
                 };
                 socket.broadcast.emit('channel-event', cevent);
-            }else{
+            } else {
 
-                console.warn(" Not aloowed to join channel , maxAllowed : " ,  webrtcdevchannels[data.channel].maxAllowed , 
-                            " current-users : " , webrtcdevchannels[data.channel].users.length);
+                console.warn(" Not aloowed to join channel , maxAllowed : ", webrtcdevchannels[data.channel].maxAllowed,
+                    " current-users : ", webrtcdevchannels[data.channel].users.length);
 
-                var jevent={
-                    status:false,
+                var jevent = {
+                    status: false,
                     msgtype: "error",
                     msg: "Sorry cant join this channel"
-                }
-                socket.emit("join-channel-resp",jevent);
+                };
+                socket.emit("join-channel-resp", jevent);
 
-                var cevent={
-                    status:true,
-                    type:"new-join", 
+                var cevent = {
+                    status: true,
+                    type: "new-join",
                     msgtype: "error",
-                    msg: "Another user is trying to join this channel but max count [ "+webrtcdevchannels[data.channel].maxAllowed +" ] is reached"
-                }
+                    msg: "Another user is trying to join this channel but max count [ " + webrtcdevchannels[data.channel].maxAllowed + " ] is reached"
+                };
                 socket.broadcast.emit('channel-event', cevent);
-            }  
+            }
         });
 
-        socket.on('update-channel',function(data){
-            console.log("------------update channel------------- ", data.channel," by " , data.sender," -> ", data );
-            switch (data.type){
+        socket.on('update-channel', function (data) {
+            console.log("------------update channel------------- ", data.channel, " by ", data.sender, " -> ", data);
+            switch (data.type) {
                 case "change-userid":
                     var index = webrtcdevchannels[data.channel].users.indexOf(data.extra.old);
-                    console.log("old userid" , webrtcdevchannels[data.channel].users[index]);
-                    webrtcdevchannels[data.channel].users[index]=data.extra.new;
-                    console.log("changed userid" , webrtcdevchannels[data.channel].users);
-                break;
+                    console.log("old userid", webrtcdevchannels[data.channel].users[index]);
+                    webrtcdevchannels[data.channel].users[index] = data.extra.new;
+                    console.log("changed userid", webrtcdevchannels[data.channel].users);
+                    break;
                 default:
                     console.log("do nothing ");
             }
         });
 
-        socket.on('presence', function(data, callback) {
-            var presence = (webrtcdevchannels[data.channel]?true:false);
-            console.log(" Presence Check index of " , data.channel , " is " , presence);
-            socket.emit("presence",presence);
+        socket.on('presence', function (data, callback) {
+            var presence = (webrtcdevchannels[data.channel] ? true : false);
+            console.log(" Presence Check index of ", data.channel, " is ", presence);
+            socket.emit("presence", presence);
         });
 
         // Supports Admin functioality on channel
-        socket.on("admin_enquire",function(data){
-            switch (data.ask){
+        socket.on("admin_enquire", function (data) {
+            switch (data.ask) {
                 case "channels":
-                    if(data.find){
-                        socket.emit('response_to_admin_enquire', module.getChannel(data.find,data.format));
-                    }else{
+                    if (data.find) {
+                        socket.emit('response_to_admin_enquire', module.getChannel(data.find, data.format));
+                    } else {
                         socket.emit('response_to_admin_enquire', module.getAllChannels(data.format));
                     }
-                break;
+                    break;
                 case "users":
                     socket.emit('response_to_admin_enquire', module.getAllActiveUsers(data.format));
-                break;
+                    break;
                 case "channel_clients":
                     socket.emit('response_to_admin_enquire', module.getChannelClients(data.channel));
-                break;
+                    break;
                 default :
                     socket.emit('response_to_admin_enquire', "no case matched ");
-            }           
+            }
         });
 
         function onMessageCallback(message) {
@@ -401,7 +407,7 @@ exports.realtimecomm  = function(app, properties, log, socketCallback) {
         }
 
         var numberOfPasswordTries = 0;
-        socket.on(socketMessageEvent, function(message, callback) {
+        socket.on(socketMessageEvent, function (message, callback) {
             if (message.remoteUserId && message.remoteUserId === socket.userid) {
                 // remoteUserId MUST be unique
                 return;
@@ -488,7 +494,7 @@ exports.realtimecomm  = function(app, properties, log, socketCallback) {
             }
         });
 
-        socket.on('disconnect', function() {
+        socket.on('disconnect', function () {
             try {
                 delete socket.namespace.sockets[this.id];
             } catch (e) {
@@ -530,90 +536,84 @@ exports.realtimecomm  = function(app, properties, log, socketCallback) {
         }
     }
 
-    module.getAll=function(format){
-        var channels=[];
-        for (i in webrtcdevchannels) { 
+    module.getAll = function (format) {
+        var channels = [];
+        for (i in webrtcdevchannels) {
             channels.push(webrtcdevchannels[i]);
         }
-        var output={
-            response:'channels',
+        var output = {
+            response: 'channels',
             channels: channels,
-            format:format
+            format: format
         };
         return output;
     };
 
-    module.getAllChannels=function(format){
+    module.getAllChannels = function (format) {
         var sessions = [];
-        for (i in Object.keys(webrtcdevchannels)) { 
+        for (i in Object.keys(webrtcdevchannels)) {
             sessions.push(Object.keys(webrtcdevchannels)[i]);
         }
-        var output={
-            response : 'all',
-            channelinfo : sessions,
-            format : format
+        var output = {
+            response: 'all',
+            channelinfo: sessions,
+            format: format
         };
         return output;
     };
 
-    module.getChannel=function(channelid , format){
+    module.getChannel = function (channelid, format) {
 
-        var output={
-                response : 'channel',
-                channelinfo : webrtcdevchannels[channelid]?webrtcdevchannels[channelid]:null,
-                format : format
-            };
+        var output = {
+            response: 'channel',
+            channelinfo: webrtcdevchannels[channelid] ? webrtcdevchannels[channelid] : null,
+            format: format
+        };
         return output;
     };
 
-    module.getAllActiveUsers=function(format){
-        var users=[];
-        for (i in Object.keys(webrtcdevchannels)) { 
-            var key=Object.keys(webrtcdevchannels)[i];
+    module.getAllActiveUsers = function (format) {
+        var users = [];
+        for (i in Object.keys(webrtcdevchannels)) {
+            var key = Object.keys(webrtcdevchannels)[i];
             for (j in webrtcdevchannels[key].users) {
                 users.push(webrtcdevchannels[key].users[j]);
             }
         }
 
-        var output={
-                response:'users',
-                users:users,
-                format:format
-            };
+        var output = {
+            response: 'users',
+            users: users,
+            format: format
+        };
         return output;
     };
 
-    module.getUser=function(userid , format){
+    module.getUser = function (userid, format) {
 
-        var output={
-                response:'users',
-                users:(users[userid]?users[userid]:"notfound"),
-                format:format
-            };
+        var output = {
+            response: 'users',
+            users: (users[userid] ? users[userid] : "notfound"),
+            format: format
+        };
         return output;
     };
 
-    module.getChannelClients=function(channel){
-        
-        var output={
-                response:'users',
-                clients:io.of('/' + channel).clients(),
-                format:data.format
-            };
+    module.getChannelClients = function (channel) {
+
+        var output = {
+            response: 'users',
+            clients: io.of('/' + channel).clients(),
+            format: data.format
+        };
         return output;
     };
 
     console.log("----------------realtimecomm----------------------");
-    console.log(" Socket.io env => "+ properties.enviornment+ " running at\n "+properties.httpsPort);
+    console.log(" Socket.io env => " + properties.enviornment + " running at\n " + properties.httpsPort);
 
     return module;
 };
-
-
-
-
-
-
 
 
 var enableLogs = false;
@@ -644,7 +644,8 @@ function pushLogs() {
 
     try {
         logs = require(logsFile);
-    } catch (e) {}
+    } catch (e) {
+    }
 
     if (arguments[1] && arguments[1].stack) {
         arguments[1] = arguments[1].stack;
@@ -660,11 +661,11 @@ function pushLogs() {
 
 // removing JSON from cache
 function uncache(jsonFile) {
-    searchCache(jsonFile, function(mod) {
+    searchCache(jsonFile, function (mod) {
         delete require.cache[mod.id];
     });
 
-    Object.keys(module.constructor._pathCache).forEach(function(cacheKey) {
+    Object.keys(module.constructor._pathCache).forEach(function (cacheKey) {
         if (cacheKey.indexOf(jsonFile) > 0) {
             delete module.constructor._pathCache[cacheKey];
         }
@@ -676,7 +677,7 @@ function searchCache(jsonFile, callback) {
 
     if (mod && ((mod = require.cache[mod]) !== undefined)) {
         (function run(mod) {
-            mod.children.forEach(function(child) {
+            mod.children.forEach(function (child) {
                 run(child);
             });
 

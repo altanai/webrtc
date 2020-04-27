@@ -9,10 +9,8 @@ var isChrome = !!window.chrome && !isOpera;
 // var isMobileDevice = !!navigator.userAgent.match(/Android|iPhone|iPad|iPod|BlackBerry|IEMobile/i);
 
 var screenCallback;
-var iceServers = [];
 var signaler, screen, screenRoomid;
 var screenShareStreamLocal = null;
-
 
 /**
  * function set up Srcreens share session RTC peer connection
@@ -24,7 +22,7 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
 
     localStorage.setItem("screenRoomid ", screenRoomid);
     webrtcdev.log("[screenshare JS] webrtcdevPrepareScreenShare - screenRoomid : ", screenRoomid);
-    webrtcdev.log("[screenshare JS] webrtcdevPrepareScreenShare - filling up iceServers : ", turn, webrtcdevIceServers);
+    webrtcdev.log("[screenshare JS] webrtcdevPrepareScreenShare - filling up iceServers : ", webrtcdevIceServers);
 
     scrConn = new RTCMultiConnection(),
         scrConn.channel = screenRoomid,
@@ -40,7 +38,7 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
         // scrConn.dontCaptureUserMedia = false,
 
         scrConn.onMediaError = function (error, constraints) {
-            webrtcdev.error("[screenshareJS] on stream in _screenshare :" , error, constraints);
+            webrtcdev.error("[screenshareJS] on stream in _screenshare :", error, constraints);
             shownotificationWarning(error.name);
         },
 
@@ -70,7 +68,6 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
                 let stream = event.stream;
                 attachMediaStream(video, stream);
                 //video.id = peerInfo.videoContainer;
-                console.log("[screenshareJS] getElementById screenshareobj.screenshareContainer ", screenshareobj.screenshareContainer);
                 getElementById(screenshareobj.screenshareContainer).appendChild(video);
                 showelem(screenshareobj.screenshareContainer);
                 rtcConn.send({
@@ -137,13 +134,13 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
         scrConn.socketMessageEvent = 'scrRTCMultiConnection-Message',
         scrConn.socketCustomEvent = 'scrRTCMultiConnection-Custom-Message';
 
-    if (turn && turn != 'none') {
-        if (!webrtcdevIceServers) {
-            webrtcdev.error("[screensharejs] ICE server not found yet in screenshare session");
-            alert("ICE server not found yet in screenshare session ");
-        }
-        scrConn.iceServers = webrtcdevIceServers;
-    }
+    // if (turn && turn != 'none') {
+    //     if (!webrtcdevIceServers) {
+    //         webrtcdev.error("[screensharejs] ICE server not found yet in screenshare session");
+    //         alert("ICE server not found yet in screenshare session ");
+    //     }
+    //     scrConn.iceServers = webrtcdevIceServers;
+    // }
 
     return scrConn;
 }
@@ -229,7 +226,6 @@ function webrtcdevViewscreen(roomid) {
  */
 function webrtcdevStopShareScreen() {
     try {
-
         rtcConn.send({
             type: "screenshare",
             message: "stoppedscreenshare"
@@ -246,8 +242,10 @@ function webrtcdevStopShareScreen() {
         }
 
         let stream1 = scrConn.streamEvents.selectFirst();
-        stream1.stream.getTracks().forEach(track => track.stop());
-
+        if (stream1) {
+            webrtcdev.error("[screensharejs] webrtcdevStopShareScreen - stoppping the stream");
+            stream1.stream.getTracks().forEach(track => track.stop());
+        }
         webrtcdevCleanShareScreen();
     } catch (err) {
         webrtcdev.error("[screensharejs] webrtcdevStopShareScreen - ", err);

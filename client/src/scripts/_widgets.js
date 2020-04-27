@@ -105,9 +105,9 @@ var setWidgets = function (rtcConn, widgetsobj) {
             activateButtons(timerobj);
             hideelem(timerobj.container.id)
         } else if (timerobj && !timerobj.active) {
-            if (timerobj.button.id && document.getElementById(timerobj.button.id)) {
-                document.getElementById(timerobj.button.id).className = "inactiveButton";
-            }
+            // if (timerobj.button.id && document.getElementById(timerobj.button.id)) {
+            //     document.getElementById(timerobj.button.id).className = "inactiveButton";
+            // }
             webrtcdev.warn("[widget js] timer widget deactivated ");
         }
 

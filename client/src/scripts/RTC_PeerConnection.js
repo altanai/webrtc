@@ -524,6 +524,7 @@ function PeerInitiator(config) {
                 peer.nativeClose();
             }
         } catch (e) {
+            webrtcdev.error("[RTCPeerocnnection ] peer onclose error ", e);
         }
 
         peer = null;

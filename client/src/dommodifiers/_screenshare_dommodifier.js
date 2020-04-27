@@ -8,9 +8,9 @@ var screenShareButton;
 function createOrAssignScreenviewButton() {
     if (screenshareobj.button.viewButton.id && getElementById(screenshareobj.button.viewButton.id)) {
         let button = getElementById(screenshareobj.button.viewButton.id);
-        assignScreenViewButton(button);
+        assignScreenViewButton(screenshareobj, button);
     } else {
-        createScreenViewButton();
+        createScreenViewButton(screenshareobj);
     }
 }
 
@@ -51,7 +51,7 @@ function createScreenViewButton() {
  * @method
  * @name assignScreenViewButton
  */
-function assignScreenViewButton(button) {
+function assignScreenViewButton(screenshareobj, button) {
     /*
     if(getElementById(screenshareobj.button.viewButton.id))
         return;*/
@@ -79,7 +79,7 @@ function removeScreenViewButton() {
         let elem = getElementById("viewScreenShareButton");
         elem.parentElement.removeChild(elem);
     }
-    return;
+
 }
 
 

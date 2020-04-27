@@ -2,13 +2,22 @@
 /*                    Geo JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 
-if (navigator.geolocation) {
-    operatingsystem = navigator.platform;
-    navigator.geolocation.getCurrentPosition(showPosition, showError);
-} else {
-    x.innerHTML = "Geolocation is not supported by this browser.";
+/**
+ * function to start session timer with timerobj
+ * @method
+ * @name startsessionTimer
+ * @param {json} timerobj
+ */
+function startPositionService(positionobj) {
+    if(positionobj.active){
+        if (navigator.geolocation) {
+            // operatingsystem = navigator.platform;
+            navigator.geolocation.getCurrentPosition(showPosition, showError);
+        } else {
+            x.innerHTML = "Geolocation is not supported by this browser.";
+        }
+    }
 }
-
 /**
  * shows position from lat and long
  * @method

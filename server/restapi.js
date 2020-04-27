@@ -1,4 +1,5 @@
 exports.restapi = function(realtimecomm, options , app, properties) {
+
     var restify = require('restify');
     var server = restify.createServer(options);
 

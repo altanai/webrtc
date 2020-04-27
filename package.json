@@ -1,6 +1,6 @@
 {
   "name": "webrtcdevelopment",
-  "version": "5.1.2",
+  "version": "5.3.1",
   "description": "webrtc based communication and collaboration client. Contains lot of experiments modules ",
   "main": "webrtcserver.js",
   "engines": {
@@ -15,7 +15,11 @@
     "jquery": "*",
     "jquery-ui": "*",
     "log": "^1.4.0",
-    "node": "^13.12.0",
+    "mocha": "^7.1.1",
+    "node": "^13.13.0",
+    "node-static": "^0.7.11",
+    "redis": "^3.0.2",
+    "redis-server": "^1.2.2",
     "remodal": "^1.1.1",
     "restify": "^8.5.1",
     "socket.io": "^2.3.0"

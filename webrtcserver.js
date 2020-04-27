@@ -27,7 +27,7 @@ file = new _static.Server(folderPath, {
     indexFile: "home.html"
 });
 
-
+// -------------------- Http Sever start -----------------
 var app;
 if (properties.secure) {
     var options = {
@@ -51,11 +51,22 @@ if (properties.secure) {
 }
 app.listen(properties.httpPort);
 
-/*var _realtimecomm=require('./client/build/minScripts/webrtcdevelopmentServer.js').realtimecomm;*/
-var _realtimecomm = require('./realtimecomm.js').realtimecomm;
-var realtimecomm = _realtimecomm(app, properties, log, function (socket) {
+// -------------------- Redis Sever start -----------------
+var _redisobj = require('./build/webrtcdevelopmentServer.js').redisscipts;
+redisobj = new _redisobj();
+redisobj.startServer();
+
+var rclient = redisobj.startclient();
+rclient.set("session", "webrtcdevelopment");
+
+// -------------------- Session manager server   -----------------
+
+var _realtimecomm = require('./build/webrtcdevelopmentServer.js').realtimecomm;
+var realtimecomm = _realtimecomm(app, properties, log , rclient , function (socket) {
     try {
         var params = socket.handshake.query;
+        console.log("params");
+        rclient.set("session", "webrtcdevelopment");
 
         if (!params.socketCustomEvent) {
             params.socketCustomEvent = 'custom-message';
@@ -65,6 +76,7 @@ var realtimecomm = _realtimecomm(app, properties, log, function (socket) {
             try {
                 socket.broadcast.emit(params.socketCustomEvent, message);
             } catch (e) {
+                console.error(e);
             }
         });
     } catch (e) {
@@ -72,6 +84,7 @@ var realtimecomm = _realtimecomm(app, properties, log, function (socket) {
     }
 });
 
+// -------------------- REST Api Sever  -----------------
 
 var _restapi = require('./build/webrtcdevelopmentServer.js').restapi;
 var restapi = _restapi(realtimecomm, options, app, properties);

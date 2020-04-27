@@ -182,7 +182,8 @@
     connection.socketOptions = {
         // 'force new connection': true, // For SocketIO version < 1.0
         // 'forceNew': true, // For SocketIO version >= 1.0
-        'transport': 'polling' // fixing transport:unknown issues
+        // 'transport': 'polling' // fixing transport:unknown issues
+        'transport': 'websocket'
     };
 
     /**
@@ -463,8 +464,8 @@
                     webrtcdev.warn('isRoomJoined: ', error, ' roomid: ', connection.sessionid);
                 }
 
-                // [disabled] retry after 3 seconds
-                false && setTimeout(function () {
+                // retry after 3 seconds
+                setTimeout(function () {
                     joinRoom(connectionDescription, cb);
                 }, 3000);
             }
@@ -587,6 +588,7 @@
         var session = sessionForced || connection.session;
 
         if (connection.dontCaptureUserMedia || isData(session)) {
+            webrtcdev.warn("[RTCConn] dont capture media ");
             callback();
             return;
         }
@@ -920,27 +922,19 @@
 
     // EVENTs
     connection.onopen = function (event) {
-        if (!!connection.enableLogs) {
-            webrtcdev.info('Data connection has been opened between you & ', event.userid);
-        }
+        webrtcdev.info('Data connection has been opened between you & ', event.userid);
     };
 
     connection.onclose = function (event) {
-        if (!!connection.enableLogs) {
-            webrtcdev.warn('Data connection has been closed between you & ', event.userid);
-        }
+        webrtcdev.warn('Data connection has been closed between you & ', event.userid);
     };
 
     connection.onerror = function (error) {
-        if (!!connection.enableLogs) {
-            webrtcdev.error(error.userid, 'data-error', error);
-        }
+        webrtcdev.error(error.userid, 'data-error', error);
     };
 
     connection.onmessage = function (event) {
-        if (!!connection.enableLogs) {
-            webrtcdev.debug('data-message', event.userid, event.data);
-        }
+        webrtcdev.debug('data-message', event.userid, event.data);
     };
 
     connection.send = function (data, remoteUserId) {
@@ -985,7 +979,6 @@
 
         if (typeof played !== 'undefined') {
             played.catch(function () {
-                /*** iOS 11 doesn't allow automatic play and rejects ***/
             }).then(function () {
                 setTimeout(function () {
                     e.mediaElement.play();
@@ -1107,7 +1100,8 @@
             connection.renegotiate(remoteUserId);
         }
     };
-    var IsChrome = !!navigator.webkitGetUserMedia;
+
+    // var IsChrome = !!navigator.webkitGetUserMedia;
     connection.invokeGetUserMedia = function (localMediaConstraints, callback, session) {
         if (!session) {
             session = connection.session;
@@ -1465,14 +1459,15 @@
             var paused = e.mediaElement.pause();
             if (typeof paused !== 'undefined') {
                 paused.then(function () {
-                    e.mediaElement.poster = e.snapshot || 'https://cdn.webrtc-experiment.com/images/muted.png';
+                    e.mediaElement.poster = e.snapshot || 'muted.png';
                 });
             } else {
-                e.mediaElement.poster = e.snapshot || 'https://cdn.webrtc-experiment.com/images/muted.png';
+                e.mediaElement.poster = e.snapshot || 'muted.png';
             }
         } else if (e.muteType === 'audio') {
             e.mediaElement.muted = true;
         }
+        webrtcdev.log("[RtcConn] onmute");
     };
 
     connection.onunmute = function (e) {
@@ -1487,6 +1482,7 @@
         } else if (e.unmuteType === 'audio') {
             e.mediaElement.muted = false;
         }
+        webrtcdev.log("[RtcConn] onunmute");
     };
 
     connection.onExtraDataUpdated = function (event) {
@@ -1774,17 +1770,17 @@
         return stream;
     };
 
-    if (typeof isChromeExtensionAvailable !== 'undefined') {
-        connection.checkIfChromeExtensionAvailable = isChromeExtensionAvailable;
-    }
-
-    if (typeof isFirefoxExtensionAvailable !== 'undefined') {
-        connection.checkIfChromeExtensionAvailable = isFirefoxExtensionAvailable;
-    }
-
-    if (typeof getChromeExtensionStatus !== 'undefined') {
-        connection.getChromeExtensionStatus = getChromeExtensionStatus;
-    }
+    // if (typeof isChromeExtensionAvailable !== 'undefined') {
+    //     connection.checkIfChromeExtensionAvailable = isChromeExtensionAvailable;
+    // }
+    //
+    // if (typeof isFirefoxExtensionAvailable !== 'undefined') {
+    //     connection.checkIfChromeExtensionAvailable = isFirefoxExtensionAvailable;
+    // }
+    //
+    // if (typeof getChromeExtensionStatus !== 'undefined') {
+    //     connection.getChromeExtensionStatus = getChromeExtensionStatus;
+    // }
 
     connection.modifyScreenConstraints = function (screen_constraints) {
         return screen_constraints;
@@ -1933,12 +1929,12 @@
 
     // error messages
     connection.errors = {
-        ROOM_NOT_AVAILABLE: 'Room not available',
+        ROOM_NOT_AVAILABLE: 'Session id not available',
         INVALID_PASSWORD: 'Invalid password',
         USERID_NOT_AVAILABLE: 'User ID does not exist',
-        ROOM_PERMISSION_DENIED: 'Room permission denied',
-        ROOM_FULL: 'Room full',
-        DID_NOT_JOIN_ANY_ROOM: 'Did not join any room yet',
+        ROOM_PERMISSION_DENIED: 'session permission denied',
+        ROOM_FULL: 'session capacity is full',
+        DID_NOT_JOIN_ANY_ROOM: 'Did not join any session yet',
         INVALID_SOCKET: 'Invalid socket',
         PUBLIC_IDENTIFIER_MISSING: 'publicRoomIdentifier is required',
         INVALID_ADMIN_CREDENTIAL: 'Invalid username or password attempted'

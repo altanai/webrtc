@@ -1,5 +1,5 @@
 /**
- * function to activateButtons
+ * function to activate Timer Buttons
  * @name activateButtons
  */
 function activateButtons(timerobj) {
@@ -10,10 +10,9 @@ function activateButtons(timerobj) {
                 getElementById(timerobj.container.id).hidden = false;
             else
                 getElementById(timerobj.container.id).hidden = true;
-        }
+        };
     }
 }
-
 
 /**
  * function to start forward increasing session timer
@@ -104,17 +103,27 @@ function showTimeZone() {
  * @name showTimeZone
  */
 function showRemoteTimeZone(peerinfo) {
-    if (getElementById("remoteTimeZone_" + peerinfo.userid))
+
+    if (timerobj.span.remoteTimeZone.length <= 0) {
+        webrtcdev.warn("[timer js] showRemoteTimeZone - no remoteTimeZone span found ");
         return;
+    }
+
+    if (getElementById("remoteTimeZone_" + peerinfo.userid)) {
+        webrtcdev.warn("[timer js] showRemoteTimeZone - remoteTimeZone_" + peerinfo.userid, " already exists , do not append Time zone");
+        return;
+    }
+
     for (x in timerobj.span.remoteTimeZone) {
         let y = x + 1;
         if (y > webcallpeers.length) return;
+
         let timerspanpeer;
         if (timerobj.span.remoteTimeZone[x]) {
-            webrtcdev.info(" [timer js] showRemoteTimeZone -timerobj.span.remoteTimeZone", timerobj.span.remoteTimeZone[x], " exist for remote");
+            webrtcdev.info("[timer js] showRemoteTimeZone - timerobj.span.remoteTimeZone", timerobj.span.remoteTimeZone[x], " exist for remote");
             timerspanpeer = getElementByName(timerobj.span.remoteTimeZone[x]);
         } else {
-            webrtcdev.info(" [timer js] showRemoteTimeZone -timerobj.span.remoteTimeZone getting created for local and remotes");
+            webrtcdev.info("[timer js] showRemoteTimeZone - timerobj.span.remoteTimeZone getting created for local and remotes");
             timerspanpeer = document.createElement("li");
         }
         timerspanpeer.id = "remoteTimeZone_" + peerinfo.userid;
@@ -132,7 +141,7 @@ function startTime() {
         if (timerobj.span.currentTime && getElementByName(timerobj.span.currentTime)) {
             let timerspanlocal = getElementByName(timerobj.span.currentTime);
             timerspanlocal.innerHTML = new Date().toLocaleTimeString();
-            var t = setTimeout(startTime, 1000);
+            let t = setTimeout(startTime, 1000);
         } else {
             webrtcdev.error("[timer js ] startTime - No place for timerobj.span.currentTime_id");
         }
@@ -149,9 +158,9 @@ function startTime() {
 function createRemotetimeArea(userid) {
     let remotetimecontainer = document.createElement("ul");
     remotetimecontainer.id = "remoteTimerArea_" + userid;
-    var peerinfo = findPeerInfo(userid);
+    let peerinfo = findPeerInfo(userid);
     if (getElementById(peerinfo.videoContainer)) {
-        var parentTimecontainer = getElementById(peerinfo.videoContainer).parentNode;
+        let parentTimecontainer = getElementById(peerinfo.videoContainer).parentNode;
         parentTimecontainer.appendChild(remotetimecontainer);
         return remotetimecontainer;
     } else {
@@ -165,6 +174,12 @@ function createRemotetimeArea(userid) {
  * @name showRemoteTimer
  */
 function showRemoteTimer(peerinfo) {
+
+    if (timerobj.span.remoteTime.length <= 0) {
+        webrtcdev.warn("[timer js] showRemoteTimeZone - no remoteTimeZone span found ");
+        return;
+    }
+
     let options = {
         // year: 'numeric', month: 'numeric', day: 'numeric',
         hour: 'numeric', minute: 'numeric', second: 'numeric',
