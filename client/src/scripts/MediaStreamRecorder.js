@@ -86,7 +86,6 @@ navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMed
 if (window.webkitMediaStream) window.MediaStream = window.webkitMediaStream;
 
 var IsChrome = !!navigator.webkitGetUserMedia;
-console.log(" IsChrome " , IsChrome);
 
 // Merge all other data-types except "function"
 
