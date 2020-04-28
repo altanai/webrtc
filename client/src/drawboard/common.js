@@ -9,7 +9,7 @@ function fitToContainer(parent, canvas) {
         canvas.width = parent.offsetWidth;
         canvas.height = parent.offsetHeight;
     } catch (err) {
-        // webrtcdev.error(err);
+        webrtcdev.error(err);
     }
 }
 
@@ -34,10 +34,6 @@ let context = setContext(mainCanvas);
 let tempContext = setContext(canvas);
 let parentBox = document.getElementById("drawBox");
 
-// console.log("Main Canvas : ", mainCanvas, context);
-// console.log("Temp Canvas : ", canvas, tempContext);
-
-
 fitToContainer(parentBox, mainCanvas);
 fitToContainer(parentBox, canvas);
 
@@ -49,9 +45,8 @@ if (document.getElementById("trashBtn")) {
         window.location.reload();
     };
 } else {
-    // webrtcdev.error("trash button not found");
+    webrtcdev.error("trash button not found");
 }
-
 
 if (document.getElementById("saveBtn")) {
 
@@ -77,7 +72,7 @@ if (document.getElementById("saveBtn")) {
         a.document.write("<img src='" + e + "' alt='from canvas'/>");*/
     };
 } else {
-    // webrtcdev.error("save button not found");
+    webrtcdev.error("save button not found");
 }
 
 /*-----------------------------------------------*/
@@ -161,7 +156,6 @@ var common = {
 
         return pointToCompare;
     },
-
 
     absoluteShortened: function () {
 
@@ -494,7 +488,6 @@ function endLastPath() {
 var copiedStuff = [],
     isControlKeyPressed;
 
-// -------------------------------------------------------------
 
 function copy() {
     endLastPath();
@@ -509,8 +502,6 @@ function copy() {
         setSelection(find('drag-all-paths'), 'DragAllPaths');
     }
 }
-
-// -------------------------------------------------------------
 
 function paste() {
     endLastPath();

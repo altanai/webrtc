@@ -88,8 +88,6 @@ addEvent(canvas, isTouch ? 'touchmove' : 'mousemove', function (e) {
 
 var keyCode;
 
-
-
 function onkeydown(e) {
     keyCode = e.keyCode;
 
@@ -147,8 +145,6 @@ var lastPoint = [];
 
 window.addEventListener('message', function(event) {
 
-    console.log(" window message" , event);
-
     if (!event.data || !event.data.canvasDesignerSyncData) return;
 
     if (event.data.sender && event.data.sender == selfId) return;
@@ -183,6 +179,6 @@ function syncData(data) {
 }
 
 
-// parent post message is wokring 
+// parent post message is working
 // test this by 
 // window.frames[0].parent.postMessage("hi", '*')
