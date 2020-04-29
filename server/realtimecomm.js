@@ -9,29 +9,18 @@ exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
     var users = {};
     var sessions = {};
 
-    var io = require('socket.io');
+    var io = require('socket.io').listen(app);
+    io.origins('*:*');
+    io.on('connection', onConnection);
 
-    try {
-        io = io(app);
-        // io.set({
-        //     transports: [
-        //         'websocket'
-        //     ]
-        // });
-        io.origins('*:*');
-        io.on('connection', onConnection);
-
-    } catch (e) {
-        console.error(" Realtime connection threw Exception ", e);
-        /* transport options 
-            'websocket', 
-            'flashsocket', 
-            'htmlfile', 
-            'xhr-polling', 
-            'jsonp-polling', 
-            'polling'
-        */
-    }
+    /* transport options
+        'websocket',
+        'flashsocket',
+        'htmlfile',
+        'xhr-polling',
+        'jsonp-polling',
+        'polling'
+    */
 
     async function appendUser(socket) {
         try {
@@ -52,7 +41,7 @@ exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
             //     const result = await cache.hset(socket.userid, "data", userdata);
             //     console.log(result);
             // } else {
-                listOfUsers[socket.userid] = userdata;
+            listOfUsers[socket.userid] = userdata;
             // }
         } catch (err) {
             console.error(err);

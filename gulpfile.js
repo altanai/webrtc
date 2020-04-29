@@ -2,7 +2,7 @@ const gulp = require('gulp');
 const concat = require('gulp-concat');
 const uglify = require('gulp-babel-minify');
 const pipeline = require('readable-stream').pipeline;
-const minify = require('gulp-minify-css');
+const cleanCSS = require('gulp-clean-css');
 const replace = require('gulp-replace');
 const less = require('gulp-less');
 // const iife = require("gulp-iife");
@@ -12,6 +12,7 @@ const exec = require('child_process').exec;
 var rev = require('gulp-rev-timestamp');
 const del = require('del');
 const fs = require('fs');
+const sourcemaps = require('gulp-sourcemaps');
 
 const _properties = require('./env.js')(fs).readEnv();
 const properties = JSON.parse(_properties);
@@ -310,12 +311,16 @@ gulp.task('webrtcdevelopmentcss', function (done) {
     console.log(cssList);
     gulp.src(cssList)
         .pipe(rev({strict: true}))
-        .pipe(header(headerComment))
         .pipe(concat('webrtcdevelopment.css'))
-        .pipe(minify())
-        .pipe(less().on('error', function (error) {
-            console.error(error);
+        .pipe(gulp.dest(folderPath))
+        .pipe(sourcemaps.init())
+        .pipe(cleanCSS({debug: true}, (details) => {
+            console.log(`${details.name}: ${details.stats.originalSize}`);
+            console.log(`${details.name}: ${details.stats.minifiedSize}`);
         }))
+        .pipe(sourcemaps.write())
+        .pipe(header(headerComment))
+        .pipe(concat('webrtcdevelopment_min.css'))
         .pipe(gulp.dest(folderPath));
     done();
 

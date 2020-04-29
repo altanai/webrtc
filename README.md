@@ -117,8 +117,7 @@ To change the ports for running the https server and rest server, goto env.json
 	"host"        	: "localhost",
 	"jsdebug"      :  true,          
 	"httpsPort"    :  8086,
-	"restPort"     :  8087,
-    "extensionID"   : "elfbfompfpakbefoaicaeoabnnoihoac"
+	"restPort"     :  8087
 }
 ```
 

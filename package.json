@@ -12,10 +12,11 @@
     "font-awesome": "*",
     "glyphicons": "*",
     "grunt-contrib-uglify-es": "github:gruntjs/grunt-contrib-uglify#harmony",
+    "gulp-sourcemap": "^1.0.1",
+    "gulp-sourcemaps": "^2.6.5",
     "jquery": "*",
     "jquery-ui": "*",
     "log": "^1.4.0",
-    "mocha": "^7.1.1",
     "node": "^13.13.0",
     "node-static": "^0.7.11",
     "redis": "^3.0.2",
@@ -25,7 +26,6 @@
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
-    "mocha": "^7.1.1",
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
     "@babel/preset-es2015": "^7.0.0-beta.53",
@@ -42,6 +42,7 @@
     "gulp-babel-minify": "^0.5.1",
     "gulp-base64": "^0.1.3",
     "gulp-cat": "^0.3.3",
+    "gulp-clean-css": "^4.3.0",
     "gulp-cli": "^2.2.0",
     "gulp-concat": "^2.6.1",
     "gulp-header": "^2.0.9",
@@ -55,6 +56,7 @@
     "gulp-uglify": "^3.0.2",
     "jshint": "^2.11.0",
     "load-grunt-tasks": "3.4.0",
+    "mocha": "^7.1.2",
     "readable-stream": "^3.6.0",
     "script-loader": "^0.7.2",
     "string-replace-loader": "^2.3.0"

@@ -1,247 +1,497 @@
+/*-----------------------------------------------------------------------------------*/
+/*              Video and media Related style                                        */
+/*-----------------------------------------------------------------------------------*/
+.videoBox {
+    /*left: 10%;*/
+}
+
 .videoContainer {
-  margin: 0 20px;
-  padding: 10px;
-  border: 0;
-  background: 0 0;
+    margin: 0 20px 0 20px;
+    padding: 10px;
+    border: 0;
+    background: transparent;
 }
+
 video {
-  top: 0;
-  left: 0;
-  transition: width 0.5s ease;
-  margin: 0;
-  background-color: #000;
-  height: 100%;
-  width: 100%;
+    top: 0;
+    left: 0;
+    transition: width .5s ease;
+    margin: 0;
+    background-color: #000;
+    height: 100%;
+    width: 100%;
 }
-#localVideo,
+
+#localVideo {
+    -webkit-transition-duration: 2s;
+    -webkit-transition-property: opacity;
+    opacity: 0;
+    width: 100%;
+}
+
 #remoteVideo {
-  -webkit-transition-duration: 2s;
-  -webkit-transition-property: opacity;
-  opacity: 0;
-  width: 100%;
+    -webkit-transition-duration: 2s;
+    -webkit-transition-property: opacity;
+    opacity: 0;
+    width: 100%;
 }
-.leftVideoClass,
-.rightVideoClass {
-  background: 0 0;
-  border: transparent;
-  width: 48%;
+
+.leftVideoClass, .rightVideoClass {
+    background: transparent;
+    border: transparent;
+    width: 48%;
 }
+
 .videoControlBarClass {
-  float: left;
-  margin-left: 20px;
+    float: left;
+    margin-left: 20px;
 }
+
 .video-inner-wrapper {
-  position: relative;
+    position: relative;
 }
+
 .video-inner-wrapper div .video-inner-wrapper video {
-  position: absolute;
-  top: 0;
+    position: absolute;
+    top: 0;
 }
-.localVideoControlBarClass,
-.remoteVideoControlBarClass {
-  display: inline-table;
-  font: icon;
-  cursor: pointer;
-}
-.videoButtonClass {
-  padding-left: 10px;
-  cursor: pointer;
-}
-.chatContainerClass {
-  background: #f5f5f5;
-  border: 2px solid #ccc;
-  height: 50%;
-  padding: 5px;
-  margin: 10px;
-}
-.chatInputClass {
-  float: left;
-  width: 80%;
-}
-.whoTypingClass {
-  padding-bottom: 10px;
-  color: gray;
-}
-.userchatmsg {
-  font-size: 16px;
-  font-weight: lighter;
-  font-style: oblique;
-  text-rendering: optimizeSpeed;
-  white-space: pre-line;
-  word-wrap: break-word;
-  color: #fff;
-}
-.chatMessagesClass {
-  overflow-y: scroll;
-  width: 76%;
-}
-.mainInputBox {
-  width: 100%;
-  height: 10%;
-}
-.localMessageclass {
-  color: #99F;
-  float: left;
-}
-.remoteMessageClass {
-  color: #669;
-  float: right;
-  text-align: right;
-  padding-right: 80px;
-}
-.chatusername {
-  font-size: 13px;
-  color: #9D0C0C;
-  font-weight: 600;
-  font-stretch: expanded;
-  font-style: italic;
-}
-.msg-avatar img {
-  height: 45px;
-  border-radius: 50%;
-  float: left;
-  width: 15%;
-}
-.cursor1Class,
-.cursor2Class {
-  width: 0!important;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-}
-.cursor1Class {
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  border-bottom: 20px solid #99F;
-}
-.cursor2Class {
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  border-bottom: 20px solid #669;
-}
-.drawContainerClass,
-.locationContainerClass,
-.texteditorContainerClass {
-  border: 5px solid #777;
-}
-.drawBox {
-  height: 30%;
-}
-.drawBoard {
-  margin-top: 0;
-}
-.colors-container label {
-  width: 100px;
-  display: inline-block;
-}
-.colors-container .input-div {
-  margin-bottom: 5px;
-}
-.colors-container input,
-.line-width-text {
-  width: 25px;
-  padding: 2px 5px;
-  text-align: center;
-}
-.done {
-  border: 1px solid #E5E5E5;
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 3px;
-}
-.done:hover {
-  box-shadow: inset 0 0 12px #fff;
-}
-.done:active {
-  box-shadow: inset 0 0 52px #fff;
-}
-.arc-range-container {
-  position: absolute;
-  z-index: 1000;
+
+
+/*video::-webkit-media-controls {
   display: none;
 }
-.arc-range {
-  font-size: 18px;
-  padding: 2px 16px;
-  text-align: center;
-  width: 40px;
+video::-webkit-media-controls-play-button {}
+
+video::-webkit-media-controls-volume-slider {}
+
+video::-webkit-media-controls-mute-button {}
+
+video::-webkit-media-controls-timeline {}
+
+video::-webkit-media-controls-current-time-display {}*/
+
+
+
+
+
+/*.video-block::-webkit-media-controls {*/
+/*    display: none;*/
+/*}*/
+
+/*.video-block::-webkit-media-controls-play-button {*/
+/*}*/
+
+/*.video-block::-webkit-media-controls-volume-slider {*/
+/*}*/
+
+/*.video-block::-webkit-media-controls-mute-button {*/
+/*}*/
+
+/*.video-block::-webkit-media-controls-timeline {*/
+/*}*/
+
+/*.video-block::-webkit-media-controls-current-time-display {*/
+/*}*/
+
+
+.remoteVideoControlBarClass {
+    display: inline-table;
+    font: icon;
+    cursor: pointer;
 }
-.arc-range-container-guide {
-  margin-top: 10px;
-  color: #C5C5C5;
+
+.localVideoControlBarClass {
+    display: inline-table;
+    font: icon;
+    cursor: pointer;
 }
+
+.videoButtonClass {
+    padding-left: 10px;
+    /*padding-right: 5px;*/
+    cursor: pointer;
+}
+/*-----------------------------------------------------------------------------------*/
+/*                    Chat Related style                                        */
+/*-----------------------------------------------------------------------------------*/
+.chatContainerClass{
+	background: #f5f5f5;
+    border: 2px solid #ccc;
+    height: 50%;
+    padding: 5px;
+    margin: 10px;
+}
+
+.chatInputClass{
+    float: left;
+    width: 80%;
+}
+
+.whoTypingClass{
+    padding-bottom: 10px;
+    color: gray;
+}
+/*.chatBox{
+    background-color: rgba(85, 209, 245, 0.39);
+    height: 30%;
+
+}
+#chatBox{
+    padding: 10px 56px 10px 10px;
+}
+*/
+
+/*.chatBoard{
+    width: 100%;
+    border: 0px;
+}
+*/
+
+.userchatmsg {
+    font-size: 16px;
+    color: #000;
+    font-weight: lighter;
+    font-style: oblique;
+    text-rendering: optimizeSpeed;
+    white-space: pre-line;
+    word-wrap: break-word;
+    color:white;
+}
+
+.chatMessagesClass{
+    overflow-y: scroll;
+    width: 76%;
+}
+
+.mainInputBox{
+    width:100%;
+    height:10%;
+}
+
+.localMessageclass{
+/*  background-color:#9999FF;
+    color: #968787;*/
+    color: #9999FF;
+    float: left;
+}
+.remoteMessageClass{
+/*  background-color:#666699;
+    color: #968787;*/
+    color: #666699;
+    float:right;
+    text-align: right;
+    padding-right: 80px;
+}
+
+.chatusername {
+    font-size: 13px;
+    color: #9D0C0C;
+    font-weight: 600;
+    font-stretch: expanded;
+    font-style: italic;
+}
+
+.msg-avatar img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    float: left;
+    width: 15%;
+}
+/*-----------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------*/
+/*              Cursr share    Related style                                        */
+/*-----------------------------------------------------------------------------------*/
+.cursor1Class{
+    box-sizing: border-box; 
+    -moz-box-sizing: border-box;
+    width: 0px !important;
+    border-bottom: 20px solid #9999FF;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+}
+
+.cursor2Class{
+    box-sizing: border-box; 
+    -moz-box-sizing: border-box;
+    width: 0px !important;
+    border-bottom: 20px solid #666699;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+}
+/*-----------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------*/
+/*              Draw and paint Related style                                        */
+/*-----------------------------------------------------------------------------------*/
+.drawContainerClass{
+    border: 5px solid #777;
+}
+
+.texteditorContainerClass{
+    border: 5px solid #777;
+}
+
+.locationContainerClass{
+    border: 5px solid #777;
+}
+
+.drawBox{
+    height: 30%;
+}
+
+.drawBoard{
+    margin-top: 0px;
+}
+
+.colors-container label {
+    width: 100px;
+    display: inline-block;
+}
+
+.colors-container input {
+    width: 100px;
+    text-align: left;
+}
+
+.colors-container .input-div {
+    margin-bottom: 5px;
+}
+.line-width-text, .colors-container input {
+    width: 25px;
+    padding: 2px 5px;
+    text-align: center;
+}
+
+.done
+{
+    border: 1px solid #E5E5E5;    
+    display: inline-block;    
+    padding: 4px 10px;
+    border-radius: 3px;
+}
+.done:hover
+{
+    box-shadow: inset 0 0 12px white;
+}
+
+.done:active
+{
+  box-shadow: inset 0 0 52px white;
+}
+
+.arc-range-container
+{
+    position: absolute;
+    z-index: 1000;
+    display: none;
+}
+.arc-range
+{
+    font-size: 18px;
+    padding: 2px 16px;
+    text-align: center;
+    width: 40px;
+}
+.arc-range-container-guide
+{
+    margin-top: 10px;
+    color:#C5C5C5;
+}
+/*-----------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------*/
+/*                    Fileshare Related style                                        */
+/*-----------------------------------------------------------------------------------*/
+
+/* ---------------  progress bars -----------------------------*/
+/*
+#file-progress1{
+    color:#FFF;
+    height:20px;
+}
+#file-progress2{
+    color:#FFF;
+    height:20px
+}
+*/
+
+/* ------------------------------ File Listing containers --------------------------*/
+
 .fileviewing-box {
-  display: block;
-  height: 100vh;
-  margin-bottom: 50px;
+    display: block;
+    height: 100vh;
+    margin-bottom: 50px;
 }
+
 .fileviewing-box span {
-  float: right;
+    float: right;
 }
+
+/* ------------------------------ File sharing containers --------------------------*/
 .filesharing-box {
-  height: 60%;
-  max-height: 200px;
-  overflow-x: scroll;
-  font-size: small;
-  padding: 0;
+    height: 60%;
+    max-height: 200px;
+    overflow-x: scroll;
+    font-size: small;
+    padding: 0px;
 }
+
 .filesharing-box li {
-  color: #615aa8;
-  padding: 10px;
-  font-size: small;
-  float: right;
+    color: #615aa8;
+    padding: 10px;
+    font-size: small;
+    float: right;
 }
+
 .filesharing-box i {
-  padding-right: 10px;
-  float: right;
+    padding-right: 10px;
+    float: right;
 }
+
 .filesharing-box span {
-  display: initial!important;
-  float: right;
+    display: initial !important;
+    float: right;
 }
-[class*=filesharingWidget] {
-  height: auto;
-  width: 100%;
-  display: inline-grid !important;
-  overflow-y: scroll;
-  margin-bottom: 50px;
-  position: relative;
+
+[class*="filesharingWidget"] {
+    /*height: auto;*/
+    /*width: 100%;*/
+    /*margin-bottom: 50px;*/
+    /*position: relative;*/
+    height: auto;
+    width: 100%;
+    display: inline-grid !important;
+    overflow-y: scroll;
+    margin-bottom: 50px;
+    position: relative;
 }
-[class*=filesharingWidget] iframe {
-  height: 100vh;
+
+[class*="filesharingWidget"] iframe {
+    height: 100vh;
 }
-[class*=filesharingWidget] img {
-  height: auto!important;
-  width: 100%;
-  display: inline-grid !important;
-  margin-bottom: 20px;
-  object-fit: contain;
-  cursor: pointer;
+
+/* apply seprate height fpr single and divided*/
+[class*="filesharingWidget"] img {
+    height: auto !important;
+    width: 100%;
+    display: inline-grid !important;
+    margin-bottom: 20px;
+    object-fit: contain;
+    cursor: pointer;
 }
-[class*=filesharingWidget] video {
-  width: auto;
-  height: -webkit-fill-available;
-  object-fit: contain;
+
+[class*="filesharingWidget"] video {
+    width: auto;
+    height: -webkit-fill-available;
+    object-fit: contain;
 }
+
 .fileinputClass {
-  background: 0 0;
-  border: none;
-  bottom: 10px;
-  position: fixed;
+    background: transparent;
+    border: none;
+    bottom: 10px;
+    position: fixed;
 }
+
+/*.filesharingWidget{
+    overflow: auto;
+    height: 100%;
+}
+
+.iframeClassfileviewer{
+    width: 69%;
+    border: 0;
+    border-left: 1px solid black;
+    height: inherit;
+}*/
+
 .fileBoxClass {
-  overflow-y: hidden;
+    overflow-y: hidden;
 }
-.screenshareVideoClass {
-  transform: rotateY(180deg);
-  -webkit-transform: rotateY(180deg);
-  -moz-transform: rotateY(180deg);
+
+
+/* --------------- image rotate -----------------------------*/
+
+/*.rotate0portrait {*/
+/*    transform-origin: top left; !* IE 10+, Firefox, etc. *!*/
+/*    -webkit-transform-origin: top left; !* Chrome *!*/
+/*    -ms-transform-origin: top left; !* IE 9 *!*/
+/*    height: 100%;*/
+/*    width: 100%;*/
+/*}*/
+/*.rotate0landscape {*/
+/*    transform-origin: top left; !* IE 10+, Firefox, etc. *!*/
+/*    -webkit-transform-origin: top left; !* Chrome *!*/
+/*    -ms-transform-origin: top left; !* IE 9 *!*/
+/*    height: 100%;*/
+/*    width: 100%;*/
+/*}*/
+
+/*.rotate90portrait {*/
+/*    transform: rotate(90deg) translateY(-100%);*/
+/*    -webkit-transform: rotate(90deg) ;*/
+/*    !*-webkit-transform: rotate(90deg) translateY(-100%);*!*/
+/*    -ms-transform: rotate(90deg) translateY(-100%);*/
+/*    margin-top: 50px;*/
+/*    height: -webkit-fill-available;*/
+/*    */
+/*}*/
+/*.rotate90landscape {*/
+/*    transform: rotate(90deg) translateY(-100%);*/
+/*    -webkit-transform: rotate(90deg) ;*/
+/*    !*-webkit-transform: rotate(90deg) translateY(-100%);*!*/
+/*    -ms-transform: rotate(90deg) translateY(-100%);*/
+/*}*/
+
+/*.rotate180portrait {*/
+/*    transform: rotate(180deg) translate(-100%!*    margin-top: 150px;*/
+/*    margin-bottom: -100px;*/
+/*    margin-left: -150px; *!,-100%);*/
+/*    -webkit-transform: rotate(180deg) ;*/
+/*    !*-webkit-transform: rotate(180deg) translate(-100%,-100%);*!*/
+/*    -ms-transform: rotate(180deg) translateX(-100%,-100%);*/
+/*}*/
+/*.rotate180landscape {*/
+/*    transform: rotate(180deg) translate(-100%,-100%);*/
+/*    -webkit-transform: rotate(180deg) ;*/
+/*    !*-webkit-transform: rotate(180deg) translate(-100%,-100%);*!*/
+/*    -ms-transform: rotate(180deg) translateX(-100%,-100%);*/
+/*}*/
+
+/*.rotate270portrait {*/
+/*    transform: rotate(270deg) translateX(-100%);*/
+/*     -webkit-transform: rotate(270deg) ;*/
+/*    !*-webkit-transform: rotate(270deg) translateX(-100%);*!*/
+/*    -ms-transform: rotate(270deg) translateX(-100%);*/
+/*   !* height: -webkit-fill-available;*!*/
+/*}*/
+/*.rotate270landscape {*/
+/*    transform: rotate(270deg) translateX(-100%);*/
+/*     -webkit-transform: rotate(270deg) ;*/
+/*    !*-webkit-transform: rotate(270deg) translateX(-100%);*!*/
+/*    -ms-transform: rotate(270deg) translateX(-100%);*/
+/*}*/
+/*-----------------------------------------------------------------------------------*/
+
+
+
+/*-----------------------------------------------------------------------------------*/
+/*              Screenshare Related style                                        */
+/*-----------------------------------------------------------------------------------*/
+.screenshareVideoClass{
+    transform: rotateY(180deg);
+    -webkit-transform:rotateY(180deg); /* Safari and Chrome */
+    -moz-transform:rotateY(180deg); /* Firefox */
 }
-.time {
-  color: #000;
+/*-----------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------*/
+/*            Timer style                                        */
+/*-----------------------------------------------------------------------------------*/
+.time{
+    color: black;
 }
 .timer ul {
-  list-style-type: none;
+    list-style-type: none;
 }
-.timer li {
-  float: right;
+.timer li{
+    float: right;
 }
