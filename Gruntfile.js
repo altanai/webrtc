@@ -216,7 +216,6 @@ module.exports = function(grunt) {
                 passwordVar: 'GITHUB_PASSWORD' //ENVIRONMENT VARIABLE that contains GitHub password
               }
             }
-            }
           }
     });
 
