@@ -54,48 +54,48 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
             channel: sessionid
         });
 
-        socket.on('disconnected', function () {
+        socket.on('disconnected', function (reason) {
             webrtcdev.error("[sessionmanager] Disconnected from signaller  ");
             shownotification("Disconnected from signaller ");
-
             if (reason === 'io server disconnect') {
                 webrtcdev.error("[sessionmanager] Disconnected initiated by signaller , attempt to re-connect ");
                 // the disconnection was initiated by the server, you need to reconnect manually
                 socket.connect();
             }
         });
-    });
 
-    socket.on('connect_error', (error) => {
-        webrtcdev.error("[sessionmanager] connect_error from signaller  ");
-    });
+        // socket.on('connect_error', (error) => {
+        //     webrtcdev.error("[sessionmanager] connect_error from signaller ", error );
+        // });
+        //
+        // socket.on('connect_timeout', (timeout) => {
+        //     webrtcdev.error("[sessionmanager] connect_timeout from signaller ", timeout);
+        // });
+        //
+        // socket.on('error', (error) => {
+        //     webrtcdev.error("[sessionmanager] error from signaller  ", error);
+        // });
+        //
+        // socket.on('reconnect', (attemptNumber) => {
+        //     webrtcdev.log("[sessionmanager] Reconnect ", attemptNumber, " from signaller  ");
+        // });
+        //
+        // socket.on('reconnect_attempt', (attemptNumber) => {
+        //     webrtcdev.log("[sessionmanager] Reconnect attempt ", attemptNumber, " from signaller  ");
+        // });
+        //
+        // socket.on('reconnecting', (attemptNumber) => {
+        //     webrtcdev.log("[sessionmanager] Reconnecting from signaller  ");
+        // });
+        //
+        // socket.on('reconnect_error', (error) => {
+        //     webrtcdev.error("[sessionmanager] reconnect_error from signaller  ", error);
+        // });
+        //
+        // socket.on('reconnect_failed', () => {
+        //     webrtcdev.error("[sessionmanager] Reconnect failed from signaller  ");
+        // });
 
-    socket.on('connect_timeout', (timeout) => {
-        webrtcdev.error("[sessionmanager] connect_timeout from signaller  ");
-    });
-
-    socket.on('error', (error) => {
-        webrtcdev.error("[sessionmanager] error from signaller  ");
-    });
-
-    socket.on('reconnect', (attemptNumber) => {
-        webrtcdev.log("[sessionmanager] Reconnect from signaller  ");
-    });
-
-    socket.on('reconnect_attempt', (attemptNumber) => {
-        webrtcdev.log("[sessionmanager] Reconnect attempt from signaller  ");
-    });
-
-    socket.on('reconnecting', (attemptNumber) => {
-        webrtcdev.log("[sessionmanager] Reconnecting from signaller  ");
-    });
-
-    socket.on('reconnect_error', (error) => {
-        webrtcdev.error("[sessionmanager] reconnect_error from signaller  ");
-    });
-
-    socket.on('reconnect_failed', () => {
-        webrtcdev.error("[sessionmanager] Reconnect failed from signaller  ");
     });
 
     socket.on("presence", function (channelpresence) {
@@ -352,7 +352,7 @@ var setRtcConn = function (sessionid, sessionobj) {
                 // setting local caches
                 webrtcdev.log(" [sessionmanager onopen] setting cache - channel " + sessionid + " with self-userid " + selfuserid + " and remoteUsers " + remoteUsers);
 
-                // In debug mode let the users create multiple user sesison in same browser ,
+                // In debug mode let the users create multiple user session in same browser ,
                 // do not use localstoarge values to get old userid for resuse
                 // if (!debug) {
                 //     if (!localStorage.getItem("userid"))
@@ -633,7 +633,7 @@ var setRtcConn = function (sessionid, sessionobj) {
 
         rtcConn.onleave = function (e) {
             webrtcdev.warn(" [ session manager ] on leave - ", e.userid, e.extra.name);
-            alert(e.extra.userid + e.extra.name + "has left the session ");
+            alert(e.userid + e.extra.name + "has left the session ");
 
             if (e.extra.name)
                 shownotification(e.extra.name + "  left the conversation.");

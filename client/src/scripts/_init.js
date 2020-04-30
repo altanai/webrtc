@@ -198,10 +198,8 @@ async function getAudioPermission() {
 }
 
 
-/*-----------------------------------------------------------------------------------*/
-
 /**
- * Assigns session varables, ICE gateways and widgets
+ * Assigns session variables, ICE gateways and widgets
  * @constructor
  * @param {json} _localObj - local object.
  * @param {json} _remoteObj - remote object.
@@ -401,6 +399,7 @@ this.startCall = function (sessionobj) {
         setWidgets(rtcConn, sessionobj.widgets);
     }).then(_ => {
         startSocketSession(rtcConn, sessionobj.socketAddr, sessionobj.sessionid);
+        connectionStatus = "started";
     }).catch((err) => {
         webrtcdev.error(" [ initjs ] : Promise rejected ", err);
     });

@@ -12,7 +12,6 @@ exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
     var io = require('socket.io').listen(app);
     io.origins('*:*');
     io.on('connection', onConnection);
-
     /* transport options
         'websocket',
         'flashsocket',

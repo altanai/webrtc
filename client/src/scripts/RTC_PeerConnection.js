@@ -31,7 +31,7 @@ var MediaStreamTrack = window.MediaStreamTrack;
 
 
 /**
- * Handles all peer ide activities like setting media setting poliies , SDP constraints , creating offer answer , handling stream
+ * Handles all peer ide activities like setting media setting policies , SDP constraints , creating offer answer , handling stream
  * @method
  * @name PeerInitiator
  * @param {config} json - configuration json for SDP and RTC

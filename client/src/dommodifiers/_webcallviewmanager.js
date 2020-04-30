@@ -189,60 +189,53 @@ function updateWebCallView(peerinfo) {
  */
 function destroyWebCallView(peerInfo) {
 
-    alert("destroy left peers resources ");
-
-    webrtcdev.log("[webcallviewmanager] destroyWebCallView peerInfo", peerInfo);
+    webrtcdev.warn("[webcallviewmanager] destroyWebCallView peerInfo", peerInfo);
     if (peerInfo.videoContainer && document.getElementById(peerInfo.videoContainer)) {
-
         let video = document.getElementById(peerInfo.videoContainer);
-        if (!video) return;
-        video.onplay = video.onplaying = function () {
-            // video.parentNode.parentNode.setAttribute("hidden", true);
-            detachMediaStream(video);
-            video.setAttribute("hidden", true);
-        };
+        if (!video) {
+            webrtcdev.warn("[webcallviewmanager] destroywebcallview - video not found for the peer who left");
+        }
+        detachMediaStream(video);
+        video.setAttribute("hidden", true);
     }
 
     // clean up old file sharing boxes
     if (fileshareobj.props.fileList != "single") {
-
-        // list of all active remote user ids
-        let activeRemotepeerids = "";
-        for (i in webcallpeers) {
-            if (webcallpeers[i].type == "remote")
-                activeRemotepeerids += webcallpeers[i].userid;
-        }
-
         // if it is p2p session and only 2 File Listing boxes are already present remove the already existing remote file listing box
-        if (getElementById("fileListingRow").childElementCount >= 2) {
-            webrtcdev.warn("[filesharing modifier] more than 1 file listing rows prresent , remove the ones for peers that are no longer in session  ");
-            let filelistingrow = document.getElementById("fileListingRow");
+
+        let filelistingrow = document.getElementById("fileListingRow");
+        if (filelistingrow.childElementCount >= 2) {
+            webrtcdev.warn("[webcallviewmanager] destroywebcallview - more than 1 file listing rows present, remove the ones for peers that are no longer in session  ");
             let filelistingboxes = filelistingrow.childNodes;
 
             for (x in filelistingboxes) {
-                webrtcdev.log("[filesharing modifier] check if this dom by id is required .  filelistingboxes[x].id ", filelistingboxes[x]);
+
                 if (!filelistingboxes[x].id) break;
-                fid = filelistingboxes[x].id.split("widget-filelisting-box");
-                if (!activeRemotepeerids.includes(fid[1])) {
-                    webrtcdev.warn("[filesharing modifier] File list boxes belonging to userid ", fid[1], " need to be removed  ");
+
+                let fid = filelistingboxes[x].id.split("widget-filelisting-box");
+                if(peerInfo.userid == fid[1]) {
+                    webrtcdev.warn("[webcallviewmanager] destroywebcallview - File list boxes belonging to userid ", fid[1], " need to be removed  ");
                     filelistingrow.removeChild(filelistingboxes[x]);
+                    break;
                 }
             }
         }
 
         // if it is p2p session and only 2 File sharing boxes are already present remove the already existing remote file sharing box
-        if (getElementById("fileSharingRow").childElementCount >= 2) {
-            webrtcdev.warn("[filesharing modifier] more than 1 file listing rows present , remove the ones for peers that are no longer in session  ");
-            let fileSharingrow = document.getElementById("fileSharingRow");
+        let fileSharingrow = getElementById("fileSharingRow");
+        if (fileSharingrow.childElementCount >= 2) {
+            webrtcdev.warn("[webcallviewmanager] destroyWebCallView - more than 1 file listing rows present , remove the ones for peers that are no longer in session  ");
             let fileSharingboxes = fileSharingrow.childNodes;
 
             for (x in fileSharingboxes) {
-                webrtcdev.log("[filesharing modifier] check if this dom by id is required .filelistingboxes[x].id ", fileSharingboxes[x]);
+
                 if (!fileSharingboxes[x].id) break;
-                fid = fileSharingboxes[x].id.split("widget-sharing-box");
-                if (!activeRemotepeerids.includes(fid[1])) {
-                    webrtcdev.warn("[filesharing modifier] File list boxes belonging to userid ", fid[1], " need to be removed  ");
+
+                let fid = fileSharingboxes[x].id.split("widget-sharing-box");
+                if(peerInfo.userid == fid[1]) {
+                    webrtcdev.warn("[webcallviewmanager] destroywebcallview - File list boxes belonging to userid ", fid[1], " need to be removed  ");
                     fileSharingrow.removeChild(fileSharingboxes[x]);
+                    break;
                 }
             }
         }
@@ -259,11 +252,22 @@ function destroyWebCallView(peerInfo) {
                 webrtcdev.log("props undefined ");
         }
     }*/
+
+    // list of all active remote user ids
+    let activeRemotepeerids = "";
+    for (i in webcallpeers) {
+        if (webcallpeers[i].type == "remote")
+            activeRemotepeerids += webcallpeers[i].userid;
+    }
+
+
+    webrtcdev.log("Active Remote Peers  ", activeRemotepeerids);
 }
 
 
 /**
- * update Remote Video array of json objects
+ * update Remote Video array of json objects                webrtcdev.log("[webcallviewmanager] destroywebcallview - check if this dom by id is required, filelistingboxes[x].id ", filelistingboxes[x]);
+
  * @method
  * @name updateRemoteVideos
  * @param {json} peerinfo

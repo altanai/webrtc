@@ -3,8 +3,6 @@ Drag helper
 *********************************************/
 var dragHelper = {
 
-    // -------------------------------------------------------------
-
     global: {
         prevX: 0,
         prevY: 0,
@@ -13,19 +11,13 @@ var dragHelper = {
         startingIndex: 0
     },
 
-    // -------------------------------------------------------------
-
     mousedown: function (e) {
-
-        // -------------------------------------------------------------
 
         if (isControlKeyPressed) {
             copy();
             paste();
             isControlKeyPressed = false;
         }
-
-        // -------------------------------------------------------------
 
         var dHelper = dragHelper,
             g = dHelper.global;
@@ -98,8 +90,6 @@ var dragHelper = {
         g.ismousedown = true;
     },
 
-    // -------------------------------------------------------------
-
     mouseup: function () {
         var g = this.global;
 
@@ -111,8 +101,6 @@ var dragHelper = {
 
         g.ismousedown = false;
     },
-
-    // -------------------------------------------------------------
 
     mousemove: function (e) {
         var x = e.pageX - canvas.offsetLeft,
@@ -127,8 +115,6 @@ var dragHelper = {
 
         if (is.isDragLastPath) this.init();
     },
-
-    // -------------------------------------------------------------
 
     init: function () {
         if (!points.length) return;
@@ -172,7 +158,7 @@ var dragHelper = {
 
             tempContext.fill();
         }
-        
+
         if (p[0] === 'text') {
             tempContext.font = "15px Verdana";
             tempContext.fillText(point[0], point[1], point[2]);
@@ -257,7 +243,7 @@ var dragHelper = {
                 ], p[2]];
 
             }
-            
+
             if (p[0] === 'text') {
                 points[i] = [p[0], [
                     point[0],
@@ -311,8 +297,6 @@ var dragHelper = {
         }
     },
 
-    // -------------------------------------------------------------
-
     dragLastPath: function (x, y) {
         var g = this.global,
             prevX = g.prevX,
@@ -336,7 +320,7 @@ var dragHelper = {
 
             points[points.length - 1] = [p[0], point, p[2]];
         }
-        
+
         if (p[0] === 'text') {
 
             if (g.pointsToMove === 'head' || isMoveAllPoints) {
@@ -414,8 +398,4 @@ var dragHelper = {
             points[points.length - 1] = [p[0], point, p[2]];
         }
     }
-
-    // -------------------------------------------------------------
-
 };
-// -------------------------------------------------------------

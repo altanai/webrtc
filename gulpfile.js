@@ -174,7 +174,7 @@ var scriptList = [
     "client/src/scripts/RTC_DetectRTC.js",
     "client/src/scripts/RTC_global.js",
     // "client/src/scripts/RTC_ioshacks.js",
-    "client/src/scripts/RTC_Peerconnection.js",
+    "client/src/scripts/RTC_PeerConnection.js",
     "client/src/scripts/RTC_CodecsHandler.js",
     "client/src/scripts/RTC_OnIceCandidateHandler.js",
     "client/src/scripts/RTC_IceServerHandler.js",
