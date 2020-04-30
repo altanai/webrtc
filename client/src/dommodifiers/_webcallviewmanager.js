@@ -209,7 +209,6 @@ function destroyWebCallView(peerInfo) {
             let filelistingboxes = filelistingrow.childNodes;
 
             for (x in filelistingboxes) {
-
                 if (!filelistingboxes[x].id) break;
 
                 let fid = filelistingboxes[x].id.split("widget-filelisting-box");
@@ -228,7 +227,6 @@ function destroyWebCallView(peerInfo) {
             let fileSharingboxes = fileSharingrow.childNodes;
 
             for (x in fileSharingboxes) {
-
                 if (!fileSharingboxes[x].id) break;
 
                 let fid = fileSharingboxes[x].id.split("widget-sharing-box");
@@ -259,15 +257,12 @@ function destroyWebCallView(peerInfo) {
         if (webcallpeers[i].type == "remote")
             activeRemotepeerids += webcallpeers[i].userid;
     }
-
-
     webrtcdev.log("Active Remote Peers  ", activeRemotepeerids);
 }
 
 
 /**
- * update Remote Video array of json objects                webrtcdev.log("[webcallviewmanager] destroywebcallview - check if this dom by id is required, filelistingboxes[x].id ", filelistingboxes[x]);
-
+ * update Remote Video array of json objects
  * @method
  * @name updateRemoteVideos
  * @param {json} peerinfo

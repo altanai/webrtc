@@ -256,22 +256,29 @@ function reattachMediaStream(to, from) {
  * @param {dom} vid
  */
 function detachMediaStream(vid) {
-    webrtcdev.warn("[ Mediacontrol ] dettachMediaStream  on vid ", vid);
-    if ('srcObject' in vid) {
-        const stream = vid.srcObject;
-        const tracks = stream.getTracks();
-
-        tracks.forEach(function (track) {
-            track.stop();
-        });
-        vid.stream = "";
-        vid.srcObject = null;
-        // try {
-        //     video.srcObject = "";
-        // } catch (err) {
-        //     webrtcdev.error("[webcallviewmanager] destroyWebCallView - erorr  ", err);
-        // }
-    } else {
-        vid.src = "";
+    webrtcdev.warn("[ Mediacontrol] dettachMediaStream  on vid ", vid);
+    try {
+        if ('srcObject' in vid) {
+            const stream = vid.srcObject;
+            if (stream) {
+                const tracks = stream.getTracks();
+                tracks.forEach(function (track) {
+                    track.stop();
+                });
+                vid.stream = "";
+                vid.srcObject = null;
+            } else {
+                webrtcdev.warn("[ Mediacontrol] dettachMediaStream  no stream present on remote's video")
+            }
+            // try {
+            //     video.srcObject = "";
+            // } catch (err) {
+            //     webrtcdev.error("[webcallviewmanager] destroyWebCallView - erorr  ", err);
+            // }
+        } else {
+            vid.src = "";
+        }
+    } catch (e) {
+        webrtcdev.error("[ Mediacontrol] dettachMediaStream  error ", e);
     }
 }
