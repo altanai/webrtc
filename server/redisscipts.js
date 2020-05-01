@@ -18,7 +18,7 @@ exports.redisscipts = function () {
 
         // server.close().then(() => {
         //     // The associated Redis server is now closed.
-        //     console.log("[REdis] Redis server closed");
+        //     console.log("[Redis] Redis server closed");
         // });
     };
 

@@ -633,7 +633,6 @@ var setRtcConn = function (sessionid, sessionobj) {
 
         rtcConn.onleave = function (e) {
             webrtcdev.warn(" [ session manager ] on leave - ", e.userid, e.extra.name);
-            alert(e.userid + e.extra.name + "has left the session ");
 
             if (e.extra.name)
                 shownotification(e.extra.name + "  left the conversation.");

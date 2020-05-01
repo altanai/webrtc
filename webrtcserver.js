@@ -1,72 +1,103 @@
 var fs = require('fs');
 var _static = require('node-static');
+var http = require('http');
 var https = require('https');
-var http = require('https');
+var http2 = require('http2');
 var Log = require('log')
     , log = new Log('info');
 
+
+// -------------------- Read properties -----------------
 var _properties = require('./env.js')(fs).readEnv();
 var properties = JSON.parse(_properties);
 console.log(properties);
 
-var folderPath = "", file = "";
 
-if (properties.enviornment == "production") {
-    folderPath = './client/prod';
-} else if (properties.enviornment == "test") {
-    folderPath = './client/tests';
-} else {
-    folderPath = './client';
-}
+// -------------------- set folder path -----------------
+var folderPath = "./";
+console.log("Folder Path for this environnment ", folderPath);
 
-console.log("Folder Path for this enviornment ", folderPath);
-
-file = new _static.Server(folderPath, {
+var file = new _static.Server(folderPath, {
     cache: 3600,
     gzip: true,
-    indexFile: "home.html"
+    indexFile: properties.landingpage
 });
 
-// -------------------- Http Sever start -----------------
-var app;
+// ------------------- set secure options-----------------
+var options;
 if (properties.secure) {
-    var options = {
-        key: fs.readFileSync('ssl_certs/server.key'),
-        cert: fs.readFileSync('ssl_certs/server.crt'),
+    options = {
+        key: fs.readFileSync(properties.serverkey),
+        cert: fs.readFileSync(properties.servercert),
         requestCert: true,
         rejectUnauthorized: false
     };
-
-    app = https.createServer(options, function (request, response) {
-        request.addListener('end', function () {
-            file.serve(request, response);
-        }).resume();
-    });
-} else {
-    app = http.createServer(function (request, response) {
-        request.addListener('end', function () {
-            file.serve(request, response);
-        }).resume();
-    });
 }
-app.listen(properties.httpPort);
+
+// -------------------- Http2 Sever start -----------------
+
+// compatibility layer approach
+var app = http2
+    .createSecureServer(options, (req, res) => {
+        req.addListener('end', function () {
+            file.serve(req, res);
+        }).resume();
+    })
+    .listen(properties.http2Port);
+
+
+// steam handler  approach
+// const server = http2.createSecureServer(options);
+// server.on('stream', (stream, requestHeaders) => {
+//     // stream.respond();
+//     // stream.end('secured hello world!');
+// });
+// server.listen(properties.http2Port, () => {
+//     console.log("http2 server started on port", properties.http2Port);
+// });
+
+
+// auto push approach - tbd
+// http2
+//     .createSecureServer(options, http2Handlers)
+//     .listen(properties.http2Port, () => {
+//         console.log("http2 server started on port", properties.http2Port);
+//     });
+
+
+// -------------------- HTTPS Sever start for WSS -----------------
+
+// var app = https.createServer(options, function (request, response) {
+//     console.log("[HTTPS server] Referer :", request.headers.referer);
+//     request.addListener('end', function () {
+//         file.serve(request, response);
+//     }).resume();
+// });
+//
+// app.listen(properties.httpPort);
 
 // -------------------- Redis Sever start -----------------
+
+var rclient;
 var _redisobj = require('./build/webrtcdevelopmentServer.js').redisscipts;
 redisobj = new _redisobj();
 redisobj.startServer();
 
-var rclient = redisobj.startclient();
+rclient = redisobj.startclient();
 rclient.set("session", "webrtcdevelopment");
 
 // -------------------- Session manager server   -----------------
 
 var _realtimecomm = require('./build/webrtcdevelopmentServer.js').realtimecomm;
-var realtimecomm = _realtimecomm(app, properties, log , rclient , function (socket) {
+var realtimecomm = _realtimecomm(app, properties, log, rclient || null, function (socket) {
     try {
         var params = socket.handshake.query;
-        console.log("params");
-        rclient.set("session", "webrtcdevelopment");
+        console.log("[Realtime conn] params", params);
+
+        if (rclient)
+            rclient.hmset(params.t, params, function (err) {
+                console.error(err);
+            });
 
         if (!params.socketCustomEvent) {
             params.socketCustomEvent = 'custom-message';
@@ -89,7 +120,4 @@ var realtimecomm = _realtimecomm(app, properties, log , rclient , function (sock
 var _restapi = require('./build/webrtcdevelopmentServer.js').restapi;
 var restapi = _restapi(realtimecomm, options, app, properties);
 
-console.log("< ------------------------ HTTPS Server -------------------> ");
-
-console.log(" WebRTC server env => " + properties.enviornment + " running at\n " + properties.httpPort + "/\nCTRL + C to shutdown");
 
