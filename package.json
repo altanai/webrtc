@@ -16,6 +16,7 @@
     "gulp-sourcemaps": "^2.6.5",
     "jquery": "*",
     "jquery-ui": "*",
+    "lint": "^0.7.0",
     "log": "^1.4.0",
     "node": "^13.13.0",
     "node-static": "^0.7.11",
@@ -77,10 +78,11 @@
     }
   },
   "scripts": {
+    "lint": "jshint **/*.js",
+    "test": "mocha --recursive",
     "build": "webpack-dev-server --env.WEBRTC_ENV=development",
-    "test": "./node_modules/mocha/bin/mocha client/tests",
     "run": "gulp & node webrtcserver.js",
-    "prestart": "gulp production & apidoc -v -i /home/altanai/webrtcdev/webrtc/ -e node_modules/  -o client/docs",
+    "prestart": "gulp production & apidoc -v -i ~/webrtcdev/webrtc/ -e node_modules/ -o client/docs",
     "start": "supervisor -i ./public/ webrtcserver.js"
   },
   "repository": {
@@ -88,10 +90,14 @@
     "url": "git+https://github.com/altanai/webrtc.git"
   },
   "keywords": [
+    "altanai",
+    "voip",
+    "redis CDR",
     "webrtc",
     "tfx",
     "communication",
     "webcall",
+    "http/2.0 SDP",
     "realtime",
     "communication graphs"
   ],

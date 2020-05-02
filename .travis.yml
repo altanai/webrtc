@@ -1,19 +1,26 @@
-dist: trusty
+language: node_js
+node_js:
+  - "12"
+
+notifications:
+  email: false
+
 addons:
   apt:
     sources:
       - google-chrome
     packages:
       - google-chrome-stable
-language: node_js
-node_js:
-  - "12"
 
 before_install:
   - nvm use v12.0.0
 
 install:
-  - npm install
+  - npm ci
+
+cache:
+  directories:
+    - node_modules
 
 before_script:
   - npm install

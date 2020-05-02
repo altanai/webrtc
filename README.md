@@ -852,8 +852,8 @@ websocket response from server
 5.If channel is present join the channel 
 
 ```shell script
-  ["join-channel", {channel: "2435937115056035", sender: "2ilwvn9qq39",…}]
-   
+["join-channel", {channel: "2435937115056035", sender: "2ilwvn9qq39",…}]   
+
 ------------join channel-------------  2435937115056035  by  2ilwvn9qq39  isallowed  true
 
 [ "join-channel-resp"
@@ -864,13 +864,11 @@ websocket response from server
 }]
 ```
  
-
-
 ### getusermedia Exceptions
 
-Cases when user deosnt have ir isnt able to acces his audio/video devices due of any of reasons such as 
+Cases when user doesnt have ir isnt able to acces his audio/video devices due of any of reasons such as 
 - user has no webcam or microphone
-- intentioanlly/accidentally denied access to the webcam
+- intentionally/accidentally denied access to the webcam
 - plugs in the webcam/microphone after getUserMedia() code has initialized
 - device is already used by another app on Windows
 - user dismisses the privacy dialog
@@ -918,21 +916,24 @@ use tarnscompiler with preset env plugin for changes arraow function to normals 
 
 **Issue1** net::ERR_CONTENT_LENGTH_MISMATCH 200 (OK) \
 **solution** This error is definite mismatch between the data that is advertised in the HTTP Headers and the data transferred over the wire.
-             
-             It could come from the following:
-             
-             Server: If a server has a bug with certain modules that changes the content but don't update the content-length in the header or just doesn't work properly. It was the case for the Node HTTP Proxy at some point (see here)
-             
-             Proxy: Any proxy between you and your server could be modifying the request and not update the content-length header.
+It could come from the following:
+Server: If a server has a bug with certain modules that changes the content but don't update the content-length in the header or just doesn't work properly. It was the case for the Node HTTP Proxy at some point (see here)
+Proxy: Any proxy between you and your server could be modifying the request and not update the content-length header.
 
 ### errors on git
 
-update regiustry to  "registry": "https://registry.npmjs.org " 
-shelfed .
+**1 update registry to  "registry": "https://registry.npmjs.org "**
+shelved .
+
+**2 size and mistamtch in repo** 
+Add the node modules to .gitignore 
+```shell script
+echo node_modules/ >> .gitignore
+```
 
 ## Reporting a Vulnerability
 
-Create an issues 
+Create a issues 
 https://github.com/altanai/webrtc/issues <https://github.com/altanai/webrtc/issues>
 
 ### License
