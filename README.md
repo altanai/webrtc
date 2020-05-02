@@ -57,8 +57,8 @@ Project is divided into 4 parts
 
 1. Core RTC Conn Lib 
 2. Wrappers for the Core Lib containing feature sets and widgets like screensharing , recording , pointer share , machine learning , face detection etc
-3. Demo Applicatins like two party full-features , multi-party full features etc which implement and use the SDK by invoking the constructirs , emitters and listeners .
-4. SIgnaller over socket.io for SDP excahnge on offer answer model
+3. Demo Applications like two party full-features , multi-party full features etc which implement and use the SDK by invoking the constructirs , emitters and listeners .
+4. Signaller over socket.io for SDP exchange on offer answer model
 
 ### Building the SDK
 
@@ -469,11 +469,11 @@ Takes a snapshot from video stream . Will be created for each inidvidual peer vi
 
 ```json
 {
-    true,
-    snapshotContainer;: true,
-    button;:{
-        "pull-right btn btn-modify-video2 videoButtonClass",
-        html_on;:"<i class='fa fa-th-large' title='Take a snapshot'></i>"
+    active: true,
+    snapshotContainer: true,
+    button:{
+        class_on:"pull-right btn btn-modify-video2 videoButtonClass",
+        html_on:"<i class='fa fa-th-large' title='Take a snapshot'></i>"
     }
 } 
 ```
@@ -484,24 +484,20 @@ To enable the user to watch video in full screen mode or to inimize the video to
     
 ```json
 {
-    true,
-    max;:{
-        {                                                                // button to maximise the video to full screen mode 
-            'maxVideoButton',
-            class_on;:"pull-right btn btn-modify-video2 videoButtonClass On",
-            html_on;:"<i class='fa fa-laptop' title='full Screen'></i>",
-            class_off;:"pull-right btn btn-modify-video2 videoButtonClass Off",
-            html_off;:"<i class=' fa fa-laptop' title='full Screen'></i>"
-        }  
+    active: true,
+    max: {                                                                // button to maximise the video to full screen mode 
+            id: 'maxVideoButton',
+            class_on:"pull-right btn btn-modify-video2 videoButtonClass On",
+            html_on:"<i class='fa fa-laptop' title='full Screen'></i>",
+            class_off:"pull-right btn btn-modify-video2 videoButtonClass Off",
+            html_off:"<i class=' fa fa-laptop' title='full Screen'></i>"  
     } ,
-    {
-        {                                                                // button to minimize or hide the video 
-            'minVideoButton',
-            class_on;:"pull-right btn btn-modify-video2 videoButtonClass On",
-            html_on;:"<i class='fa fa-minus' title='minimize Video'></i>",
-            class_off;:"pull-right btn btn-modify-video2 videoButtonClass Off",
-            html_off;:"<i class='fa fa-minus' title='minimize Video'></i>"
-        }  
+    min :  {                                                                // button to minimize or hide the video 
+            id: 'minVideoButton',
+            class_on:"pull-right btn btn-modify-video2 videoButtonClass On",
+            html_on:"<i class='fa fa-minus' title='minimize Video'></i>",
+            class_off:"pull-right btn btn-modify-video2 videoButtonClass Off",
+            html_off:"<i class='fa fa-minus' title='minimize Video'></i>" 
     }                    
 }
 ```
@@ -512,18 +508,18 @@ Mutes the audio or video of the peer video . Created for each peer video.
 
 ```json
  {
-    true,
-    drawCanvasContainer;: "drawBoardRow",
-    container;:{
-            'drawContainer',
-            minbutton_id;:'minimizeDrawButton'
+    active : true,
+    drawCanvasContainer: "drawBoardRow",
+    container:{
+            id: 'drawContainer',
+            minbutton_id:'minimizeDrawButton'
         },
     {
-        "draw-webrtc" , 
-        class_on;:"btn btn-lg draw-webrtc On",
-        html_on;:'<img title="Draw" src=assets/images/icon_3.png />',
-        class_off;:"btn btn-lg draw-webrtc Off",
-        html_off;:'<img title="Draw" src=assets/images/icon_3.png />'
+        id : "draw-webrtc" , 
+        class_on:"btn btn-lg draw-webrtc On",
+        html_on:'<img title="Draw" src=assets/images/icon_3.png />',
+        class_off:"btn btn-lg draw-webrtc Off",
+        html_off:'<img title="Draw" src=assets/images/icon_3.png />'
     }
 }
 ```
@@ -532,14 +528,26 @@ Mutes the audio or video of the peer video . Created for each peer video.
 
 Allows a user to recoonect a session without refreshing a page . Will enable him to drop the session and create a new one.
 
-```ecmascript 6
+```json
 {
-    false,
-    button;:{
-        "reconnectBtn",
-        class;:"btn btn-success glyphicon glyphicon-refresh topPanelButton",
-        html;:"Reconnect",
-        resyncfiles;:false
+    active : true,
+    button:{
+        id: "reconnectBtn",
+        class:"btn btn-success glyphicon glyphicon-refresh topPanelButton",
+        html:"Reconnect",
+        resyncfiles:true
+    }
+}
+```
+or to reconnect automatically but not to resend old files 
+```json
+{
+   actiavte: true,
+    button:{
+        id: "reconnectBtn",
+        class:"btn btn-success glyphicon glyphicon-refresh topPanelButton",
+        html:"Reconnect",
+        resyncfiles:false
     }
 }
 ```
@@ -548,16 +556,16 @@ Allows a user to recoonect a session without refreshing a page . Will enable him
 
 ```json
 {
-    true,
-    pointer;:{
+    active : true,
+    pointer:{
         "fa fa-hand-o-up fa-3x"
     },
     {
-        'shareCursorButton',
-        class_on;:"pull-right btn btn-modify-video2 videoButtonClass On",
-        html_on;:"<i class='fa fa-hand-o-up' title='Cursor'></i>",
-        class_off;:"pull-right btn btn-modify-video2 videoButtonClass Off",
-        html_off;:"<i class='fa fa-hand-o-up' title='Cursor'></i>"
+        id: 'shareCursorButton',
+        class_on:"pull-right btn btn-modify-video2 videoButtonClass On",
+        html_on:"<i class='fa fa-hand-o-up' title='Cursor'></i>",
+        class_off:"pull-right btn btn-modify-video2 videoButtonClass Off",
+        html_off:"<i class='fa fa-hand-o-up' title='Cursor'></i>"
     }                   
 },
 ```
@@ -565,27 +573,29 @@ Allows a user to recoonect a session without refreshing a page . Will enable him
 ### 12. Inspector 
 ```json
 {
-    true,
-    button;:{
-        "ListenInButton",
-        textbox; : "listenInLink"
+    active: true,
+    button:{
+        id: "ListenInButton",
+        textbox : "listenInLink"
     }
 }
 ```
 ### 13. Debug 
 ```json
- false,
+{
+  active: false
+} 
 ```
 
 ### 14. Help
 
-Actiavtes the help log 
+Activate the help log 
 ```json
 {
-  true , 
-  helpContainer; : "help-view-body",
-  screenshotContainer;: "help-screenshot-body",
-  descriptionContainer;: "help-description-body"
+  active : true , 
+  helpContainer : "help-view-body",
+  screenshotContainer: "help-screenshot-body",
+  descriptionContainer: "help-description-body"
 }
 ```
 
@@ -600,86 +610,42 @@ Actiavtes the help log
 
 ### Assign individual widgets to a json object called widgets 
 
-```javascript
+```json
 	var widgets={
         
-        chat : < add;;; chat; widget; json >,
+        chat : <chat_widget_json>,
 
-        fileshare; : < fieshare;;; widget>,
+        fileshare : <fieshare widget>,
 
-        debug;   : false,
+        debug   : false,
             
-        reconnect;   :{
-                            false,
-                            button;:{
-                                "reconnectBtn",
-                                class;:"btn btn-success glyphicon glyphicon-refresh topPanelButton",
-                                html;:"Reconnect",
-                                resyncfiles;:false
-                            }
-                        },
-            {
-                        true,
-                        type;: "forward",
-                        counter;:{
-                            "countdownHours",
-                            minutes;:"countdownMinutes",
-                            seconds; :"countdownSeconds"
-                        },
-                        {
-                            0 , 
-                            min;: 3 , 
-                            sec;: 60 
-                        },
-                        {
-                            "currentTimeArea",
-                            currentTimeZone_id;:"currentTimeZoneArea",
-                            remoteTime_id; :"remoteTimeArea",
-                            remoteTimeZone_id;:"remoteTimeZoneArea",
-                            class_on;:""
-                        },
-                        {
-                            'collapseThree',
-                            minbutton_id;:'timerBtn'
-                        },
-                        {
-                            'timerBtn'
-                        }
-                    },
+        reconnect  : <reconnect_widget>,
+
+        timer : <timer_widget_json>,
+
+        fileShare :<file_share_widget>,
+
+        mute   : <muteunmute_widget>,
+
+        videoRecord : <videorecord_widget>,
+
+        snapshot : <snapshot_widget>,
+
+        cursor : <cursorsharing_widget>,
+
+        minmax  : <widget_maximize_or_minimize_video>,
+        
+        drawCanvas : <draw_widget>,
+
+        screenrecord : <screenrecord_widget>,       
             
-            chat    : < chat;;; widget >
+        screenshare : <screen_share>,
 
-            fileShare; :< file;;; share; widget >
-
-            mute;    : < mute;;; unmute; widget >
-
-            videoRecord; : < video;;; record; widget >
-
-            snapshot; : < snapshot;;; widget >
-
-            cursor; : < widget;;; for cursor sharing >
-
-            minmax;  : < widget;;; to; maximize; or; minimize; the; video >
+        listenin : <listenin_widget>,
             
-            drawCanvas;  : < draw;;; widget >
-
-            screenrecord; : < screen;;; record; widget >       
+        help : <help_widget>,
             
-            screenshare; : < screen;;; share >
-
-            listenin; : < listen in widget >
-            
-            help; : {
-              true , 
-              helpContainer; : "help-view-body",
-              screenshotContainer;: "help-screenshot-body",
-              descriptionContainer;: "help-description-body"
-            },
-            
-            {
-              true , 
-              statsConainer; : "network-stats-body"
-            }
+        stats: <stats_widget_json>
 	}
 ```
 
