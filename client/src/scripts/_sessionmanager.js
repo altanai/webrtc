@@ -618,25 +618,31 @@ var setRtcConn = function (sessionid, sessionobj) {
                         onreceivedWebrtcdevStats(e.userid, e.data.message);
                         break;
                     default:
-                        webrtcdev.warn(" unrecognizable message from peer  ", e);
+                        webrtcdev.warn("[sessionmanager] unrecognizable message from peer  ", e);
                         break;
                 }
             }
         },
 
         rtcConn.sendMessage = function (event) {
-            webrtcdev.log(" sendMessage ", event);
+            webrtcdev.log("[session manager] sendMessage ", event);
             event.userid = rtcConn.userid;
             event.extra = rtcConn.extra;
             rtcConn.sendCustomMessage(event);
         },
 
         rtcConn.onleave = function (e) {
-            webrtcdev.warn(" [ session manager ] on leave - ", e.userid, e.extra.name);
+            webrtcdev.log("[session manager] onleav -  ", e);
+            webrtcdev.warn("[session manager] onleave - userid left ", e.userid)
 
-            if (e.extra.name)
-                shownotification(e.extra.name + "  left the conversation.");
+            var peerinfo = findPeerInfo(e.userid);
 
+            if (!peerinfo) return;
+
+            if (peerinfo.name) {
+                shownotification(peerinfo.name + " left the conversation.");
+                webrtcdev.log("[session manager] onleave - name ",peerinfo.name);
+            }
             /*
             addNewMessage({
                 header: e.extra.name,
@@ -645,10 +651,9 @@ var setRtcConn = function (sessionid, sessionobj) {
                 color: e.extra.color
             }), */
 
-            var peerinfo = findPeerInfo(e.userid);
-            webrtcdev.warn(" [ session manager ] remove peerinfo ", peerinfo, " from webcallpeers ", webcallpeers);
+
+            webrtcdev.warn("[session manager]  onleave -  remove peerinfo ", peerinfo, " from webcallpeers ", webcallpeers);
             //rtcConn.playRoleOfInitiator()
-            if (!peerinfo) return;
 
             destroyWebCallView(peerinfo);
             removePeerInfo(e.userid);
@@ -658,8 +663,8 @@ var setRtcConn = function (sessionid, sessionobj) {
             webrtcdev.warn("[session manager] RTCConn on close  ", e);
         },
 
-        rtcConn.onEntireSessionClosed = function (event) {
-            webrtcdev.warn("[session manager]  on sesion  closed ", e);
+        rtcConn.onEntireSessionClosed = function (e) {
+            webrtcdev.warn("[session manager]  on Entire sesion closed ", e);
             rtcConn.attachStreams.forEach(function (stream) {
                 stream.stop();
             });
@@ -668,7 +673,7 @@ var setRtcConn = function (sessionid, sessionobj) {
         },
 
         rtcConn.onFileStart = function (file) {
-            webrtcdev.log("onFileStart", file);
+            webrtcdev.log("[sessionmanager] onFileStart", file);
             fileSharingStarted(file);
         },
 
