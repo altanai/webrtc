@@ -125,7 +125,12 @@ gulp.task('drawcss', function (done) {
     ];
     console.log(list);
     gulp.src(list)
-        // .pipe(uglify())
+        .pipe(sourcemaps.init())
+        .pipe(cleanCSS({debug: true}, (details) => {
+            console.log(`original Size ${details.name}: ${details.stats.originalSize}`);
+            console.log(`minified Size ${details.name}: ${details.stats.minifiedSize}`);
+        }))
+        .pipe(sourcemaps.write())
         .pipe(concat('drawBoardCss.css'))
         .pipe(gulp.dest(folderPath));
     done();
@@ -159,6 +164,12 @@ gulp.task('codecss', function (done) {
     ];
     console.log(list);
     gulp.src(list)
+        .pipe(sourcemaps.init())
+        .pipe(cleanCSS({debug: true}, (details) => {
+            console.log(`original Size ${details.name}: ${details.stats.originalSize}`);
+            console.log(`minified Size ${details.name}: ${details.stats.minifiedSize}`);
+        }))
+        .pipe(sourcemaps.write())
         .pipe(concat('codeEditorCss.css'))
         .pipe(gulp.dest(folderPath));
     done();
@@ -337,6 +348,12 @@ gulp.task('git_pull', function (cb) {
         cb(resp);
     });
 });
+
+// only gulp vendor js
+gulp.task('draw', gulp.series(
+    'drawcss',
+    'drawcss'
+));
 
 gulp.task('fonts', function (cb) {
     console.log(" copying fonts to home dir ");
