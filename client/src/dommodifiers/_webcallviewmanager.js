@@ -229,7 +229,7 @@ function destroyWebCallView(peerInfo) {
             for (x in fileSharingboxes) {
                 if (!fileSharingboxes[x].id) break;
 
-                let fid = fileSharingboxes[x].id.split("widget-sharing-box");
+                let fid = fileSharingboxes[x].id.split("widget-filesharing-box");
                 if(peerInfo.userid == fid[1]) {
                     webrtcdev.warn("[webcallviewmanager] destroywebcallview - File list boxes belonging to userid ", fid[1], " need to be removed  ");
                     fileSharingrow.removeChild(fileSharingboxes[x]);

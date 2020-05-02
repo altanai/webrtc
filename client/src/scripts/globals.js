@@ -4,7 +4,6 @@ var t = "";
 var e = null;
 var n = "";
 var rtcConn = null;
-var scrConn = null;
 var selfuserid = null, remoteUserId = null;
 var containerDiv;
 var webcallpeers = [];
@@ -81,3 +80,8 @@ var screen_roomid, screen_userid;
 var role = "participant";
 
 this.sessionid = "";
+
+// var isFirefox = typeof window.InstallTrigger !== 'undefined';
+// var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+// var isChrome = !!window.chrome && !isOpera;
+// var isMobileDevice = !!navigator.userAgent.match(/Android|iPhone|iPad|iPod|BlackBerry|IEMobile/i);

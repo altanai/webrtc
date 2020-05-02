@@ -1,12 +1,8 @@
 /**************************************************************
  Screenshare
  ****************************************************************/
-
-var sourceId, screen_constraints, screenStreamId;
-var isFirefox = typeof window.InstallTrigger !== 'undefined';
-var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
-var isChrome = !!window.chrome && !isOpera;
-// var isMobileDevice = !!navigator.userAgent.match(/Android|iPhone|iPad|iPod|BlackBerry|IEMobile/i);
+var scrConn = null;
+var screen_constraints, screenStreamId;
 
 var screenCallback;
 var signaler, screen, screenRoomid;
@@ -163,7 +159,7 @@ function webrtcdevSharescreen(scrroomid) {
                 socket.emit("open-channel-screenshare", {
                     channel: scrroomid,
                     sender: selfuserid,
-                    maxAllowed: 6
+                    maxAllowed: 100
                 });
                 shownotification("Making a new session for screenshare" + scrroomid);
             } else {

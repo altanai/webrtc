@@ -152,6 +152,9 @@ After the body tag of html
     build/webrtcdevelopment.css
     build/webrtcdevelopment.js
 
+or use the minified scripts 
+    build/webrtcdevelopment_min.css
+    build/webrtcdevelopment_min.js
 
 **7. Configure**
 
@@ -172,7 +175,7 @@ local object  :
             useremail   : useremail,
             role        : "participant"                 // role of user in the session , can be participant , admin , inspector
         }
-    };
+    }
 ```
 
 remote object  :
@@ -186,11 +189,11 @@ remote object  :
         userDisplay     : false,
         userMetaDisplay : false,
         dynamicVideos   : false 
-    };
+    }
 
 ```
 
-Incoming and outgoing media configiration  ( self exlanatory ) :
+Incoming and outgoing media configuration  ( self explanatory ) :
 ```json
     var incoming={
         audio :  true,
@@ -219,23 +222,24 @@ set widgets (expained in section below)
     var widgets={
     }
 ```
-Set widgets and their properties . 
+Set widgets and their properties .     startcall();
 
 
 **8. Creating session**
 
-Get session id automaically
+Get session id automatically
 ```
-sessionid = init(true);
+sessionid = webrtcdevobj.makesessionid("reload");
 ```
 or get session name from user
 ```
-sessionid = init(false);
+sessionid = webrtcdevobj.makesessionid("noreload");
 ```
-Create a session json object with turn credentials and the session created from above step
 
-set preference for the incoming and outgoing media connectection. Bydefault all are set to true . 
-```json
+**9. Create a session json object with turn credentials and the session created from above step**
+
+set preference for the incoming and outgoing media connection. By default all are set to true . 
+```javascript
     var incoming={
         audio:  true,
         video:  true,
@@ -251,26 +255,24 @@ set preference for the incoming and outgoing media connectection. Bydefault all 
     };
 ```
 
-finally initiate the webrtcdev contructor 
-```
-    var webrtcdevobj = new WebRTCdev ( 
-        session,  incoming,  outgoing ,  widgets
-    );
+**10. finally initiate the webrtcdev constructor**
+```javascript
+webrtcdevsessionobj = webrtcdevobj.setsession(local, remote, incoming, outgoing, session, getWidgets());       
 ```
 
-Start the session 
-```
-    startcall();
+**11. Start the session**
+```javascript
+ webrtcdevobj.startCall(webrtcdevsessionobj)
 ```
 
 
 ## Widgets 
-----
 
 Currently available widgets are 
     * Chat 
     * Fileshare
     * Timer
+    * Draw
     * Screen Record
     * Screen Share
     * Video Record
@@ -313,7 +315,7 @@ When the chat widget is active  , if the dom specified by the container id is pr
 ```
 Upcoming : Adding emoticons to Chat
 
-### 2. Fileshare 
+### 2. File-share 
 
 Uses the RTCDataConnection API from WebRTC to excahnge files peer to peer. Progress bar is displayed for the chunks of file transferrred out of total number of chunks. Many different kindes of file transfer have been tested such as media files ( mp3 , mp4 ) , text or pdf files , microsoft pr libra office dicuments , images ( jpg , png etc ) etc .
 
@@ -322,6 +324,7 @@ File share widgets creates uses 2 conatiners - File Share and File List . If the
 The list of files with buttons to view , hide or remove them from file viewers are in file Viewer container .
 Displaying or playing the text or media files happens in file share conainer , which also has button to maximize , minimize the viewer window or in case of images to rotate them. 
 
+For divided file share container 
 ```json
 {
     active : true,
@@ -350,6 +353,40 @@ Displaying or playing the text or media files happens in file share conainer , w
         fileList:"divided"                                  // same as aboev Can be divided , single   , hidden
     }
 }
+```
+or for single file share container for all peers 
+```json
+    let filesharewidget = {
+        active: true,
+        fileShareContainer: "fileSharingRow",
+        fileshare: {
+            rotateicon: "assets/images/refresh-icon.png",
+            minicon: "",
+            maxicon: "",
+            closeicon: "assets/images/cross-icon.png"
+        },
+        fileListContainer: "fileListingRow",
+        filelist: {
+            minicon: "",
+            maxicon: "",
+            downloadicon: "",
+            trashicon: "",
+            saveicon: "",
+            showicon: "",
+            hideicon: "",
+            stopuploadicon: ""
+        },
+        button: {
+            id: "fileshareBtn",
+            class_on: "file-share",
+            html: "File"
+        },
+        props: {
+            fileShare: "single",   //Can be divided , chat preview  , single   , hidden
+            fileList: "single"     //Can be divided , single , hidden
+        },
+        sendOldFiles: false        // If new participant join conf , or listener join , then should he receive old files or not
+    }
 ```
 
 ### 3. Timer 
@@ -403,21 +440,20 @@ Records everything pesent on the tab selected along with audio and displays reco
         class_off:"btn btn-lg screenRecordBtnClass Off",
         html_off: '<img title="Session Record" src="assets/images/icon_5.png"/>'
     }
-},   
+}
 ```
 ### 5. Screen-share 
 
 One of the most powerful features of the SDK is to capture the current screen and share it with peer over RTC Peer connection channel. Simmilar to csreen record , uses an extension and pre-declared site ownership to capture the screen and share as peer to peer stream .
 Button for screen share has 3 states - 
-- install button for inline isnatllation of extension from page , 
+- install button for inline installation of extension from page , 
 - share screen button and 
 - view button for incoming screen by peer .
 
-```json              
+```json
 {
     active : true,
     screenshareContainer: "screenShareRow",                 // container to display screen being shared
-    extensionID: props.extensionID,                         // extension id 
     button:{
         installButton:{                                     // widget button to start inline installation of extension
             id:"scrInstallButton",
@@ -469,10 +505,10 @@ Takes a snapshot from video stream . Will be created for each inidvidual peer vi
 
 ```json
 {
-    active: true,
+    active : true,
     snapshotContainer: true,
     button:{
-        class_on:"pull-right btn btn-modify-video2 videoButtonClass",
+        class_on: "pull-right btn btn-modify-video2 videoButtonClass",
         html_on:"<i class='fa fa-th-large' title='Take a snapshot'></i>"
     }
 } 
@@ -485,20 +521,24 @@ To enable the user to watch video in full screen mode or to inimize the video to
 ```json
 {
     active: true,
-    max: {                                                                // button to maximise the video to full screen mode 
+    max: {
+        button: {                                 // button to maximise the video to full screen mode 
             id: 'maxVideoButton',
             class_on:"pull-right btn btn-modify-video2 videoButtonClass On",
             html_on:"<i class='fa fa-laptop' title='full Screen'></i>",
             class_off:"pull-right btn btn-modify-video2 videoButtonClass Off",
             html_off:"<i class=' fa fa-laptop' title='full Screen'></i>"  
-    } ,
-    min :  {                                                                // button to minimize or hide the video 
+        }
+    },
+    min :{  
+      button:{                                   // button to minimize or hide the video 
             id: 'minVideoButton',
             class_on:"pull-right btn btn-modify-video2 videoButtonClass On",
             html_on:"<i class='fa fa-minus' title='minimize Video'></i>",
             class_off:"pull-right btn btn-modify-video2 videoButtonClass Off",
             html_off:"<i class='fa fa-minus' title='minimize Video'></i>" 
-    }                    
+        }  
+    }                
 }
 ```
 
@@ -507,26 +547,32 @@ To enable the user to watch video in full screen mode or to inimize the video to
 Mutes the audio or video of the peer video . Created for each peer video.
 
 ```json
- {
-    active : true,
-    drawCanvasContainer: "drawBoardRow",
-    container:{
-            id: 'drawContainer',
-            minbutton_id:'minimizeDrawButton'
-        },
-    {
-        id : "draw-webrtc" , 
-        class_on:"btn btn-lg draw-webrtc On",
-        html_on:'<img title="Draw" src=assets/images/icon_3.png />',
-        class_off:"btn btn-lg draw-webrtc Off",
-        html_off:'<img title="Draw" src=assets/images/icon_3.png />'
+{
+    active: false,
+    audio: {
+        active: false,
+        button: {
+            class_on: "pull-right videoButtonClass on",
+            html_on: "<i class='fa fa-microphone-slash'></i>",
+            class_off: "pull-right videoButtonClass off",
+            html_off: "<i class='fa fa-microphone'></i>"
+        }
+    },
+    video: {
+        active: false,
+        button: {
+            class_on: "pull-right videoButtonClass on",
+            html_on: "<i class='fa fa-video-camera'></i>",
+            class_off: "pull-right videoButtonClass off",
+            html_off: "<i class='fa fa-video-camera'></i>"
+        }
     }
 }
 ```
 
 ### 10 . Reconnect 
 
-Allows a user to recoonect a session without refreshing a page . Will enable him to drop the session and create a new one.
+Allows a user to reconnect a session without refreshing a page . Will enable him to drop the session and create a new one.
 
 ```json
 {
@@ -556,18 +602,18 @@ or to reconnect automatically but not to resend old files
 
 ```json
 {
-    active : true,
-    pointer:{
-        "fa fa-hand-o-up fa-3x"
+    active: false,
+    pointer: {
+        class_on: "fa fa-hand-o-up fa-3x"
     },
-    {
+    button: {
         id: 'shareCursorButton',
-        class_on:"pull-right btn btn-modify-video2 videoButtonClass On",
-        html_on:"<i class='fa fa-hand-o-up' title='Cursor'></i>",
-        class_off:"pull-right btn btn-modify-video2 videoButtonClass Off",
-        html_off:"<i class='fa fa-hand-o-up' title='Cursor'></i>"
-    }                   
-},
+        class_on: "pull-right videoButtonClass On",
+        html_on: "<i class='fa fa-hand-pointer-o fullscreen'></i>",
+        class_off: "pull-right videoButtonClass Off",
+        html_off: "<i class='fa fa-hand-pointer-o fullscreen'></i>"
+    }
+}
 ```
 
 ### 12. Inspector 
@@ -581,9 +627,11 @@ or to reconnect automatically but not to resend old files
 }
 ```
 ### 13. Debug 
+
+To turn debug on
 ```json
 {
-  active: false
+  debug: true
 } 
 ```
 
@@ -606,6 +654,21 @@ Activate the help log
   active : true , 
   statsConainer : "network-stats-body"
 }
+```
+
+### 16. Draw 
+```json
+     {
+        active: true,
+        drawCanvasContainer: "drawBoardRow",
+        button: {
+            id: "draw-webrtc",
+            class_on: "icon-pencil On",
+            html_on: '',
+            class_off: "icon-pencil Off",
+            html_off: ''
+        }
+    }
 ```
 
 ### Assign individual widgets to a json object called widgets 
@@ -647,12 +710,13 @@ Activate the help log
             
         stats: <stats_widget_json>
 	}
+
 ```
 
 
-## Event listners 
+## Event listeners 
 
-Implemented event listners 
+Implemented event listeners 
 
 1. onLocalConnect
 
@@ -744,18 +808,18 @@ pm2 start ecosystem.config.js
 ----------------------------------------------------------
 ## Working steps 
 
-1.create a new session
+**1.create a new session**
 
-Naviagte on browser https://localhost:8084/#2435937115056035
+Navigate on browser https://localhost:8084/#2435937115056035
 which creates websocket over socket.io wss://localhost:8084/socket.io/?EIO=3&transport=websocket
 
-2.check for channel presence
+**2.check for channel presence**
 
 first client message 
 ```json
 [ "presence", 
-  {
-    channel: "2435937115056035"
+    {
+      channel: "2435937115056035"
     }
  ]
 ```
@@ -766,7 +830,7 @@ on the server side
 ```
 websocket response from server ["presence", false]
 
-3.if channel doesnt exist already create 
+**3.If channel doesnt exist already create**
 
 client message to open channel 
 ```shell script
@@ -805,9 +869,9 @@ websocket response from server
   ]
 ```
     
-4.Join a session and check for channel presence 
+**4.Join a session and check for channel presence**
   
-  navigate another browser client to same session url such as 
+  navigate another browser client to same session url such as https://localhost:8084/#2435937115056035?name=aa&email=abc@gmail.com
   
    check presence ["presence", {channel: "2435937115056035"}]
    
@@ -815,7 +879,7 @@ websocket response from server
    
    Presence Check index of  2435937115056035  is  true
    
-5.If channel is present join the channel 
+**5.If channel is present join the channel**
 
 ```shell script
 ["join-channel", {channel: "2435937115056035", sender: "2ilwvn9qq39",…}]   

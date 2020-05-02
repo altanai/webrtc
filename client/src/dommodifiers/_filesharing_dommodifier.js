@@ -144,12 +144,12 @@ function addProgressHelper(uuid, peerinfo, filename, fileSize, file, progressHel
             webrtcdev.error(" [filehsraingJs] Progress helpler cannot be added for one peer as its absent");
             return;
         } else if (!peerinfo.fileList.container || !document.getElementById(peerinfo.fileList.container)) {
-            webrtcdev.error(" [filehsraingJs] Progress helpler cannot be added , missing fileListcontainer ");
+            webrtcdev.error("[filehsraingJs dommodifier] Progress helpler cannot be added , missing fileListcontainer ");
             return;
         }
 
         //if(!document.getElementById(filename)){
-        webrtcdev.log(" [filehsraingJs] progress helper attributes  attributes : uuid -", uuid,
+        webrtcdev.log("[filehsraingJs dommodifier] progress helper attributes  attributes : uuid -", uuid,
             "peerinfo - ", peerinfo,
             "filename - ", filename, "file size - ", fileSize,
             "progress helper class - ", progressHelperclassName,
@@ -157,7 +157,7 @@ function addProgressHelper(uuid, peerinfo, filename, fileSize, file, progressHel
             "file from - ", filefrom);
 
         let progressid = uuid + "_" + filefrom + "_" + fileto;
-        webrtcdev.log(" [startjs] addProgressHelper - progressid ", progressid);
+        webrtcdev.log("[filehsraingJs dommodifier]  addProgressHelper - progressid ", progressid);
 
         let progressul = document.createElement("ul");
         progressul.id = progressid,
@@ -188,7 +188,7 @@ function addProgressHelper(uuid, peerinfo, filename, fileSize, file, progressHel
         stopuploadButton.id = "stopuploadButton" + progressid;
         stopuploadButton.innerHTML = '<i class="fa fa-trash-o"></i>';
         stopuploadButton.onclick = function (event) {
-            webrtcdev.log(" [startjs] addProgressHelper - remove progressid ", progressid, " dom : ", document.getElementById(progressid));
+            webrtcdev.log("[filehsraingJs dommodifier]  addProgressHelper - remove progressid ", progressid, " dom : ", document.getElementById(progressid));
             hideFile(progressid);
             stopSendFile(progressid, filename, file, fileto, filefrom);
             //Once the button is clicked , remove the button
@@ -220,7 +220,7 @@ function addProgressHelper(uuid, peerinfo, filename, fileSize, file, progressHel
         // }
 
     } catch (err) {
-        webrtcdev.error(" [filehsraingJs] problem in addProgressHelper  ", err);
+        webrtcdev.error("[filehsraingJs dommodifier]  problem in addProgressHelper  ", err);
     }
 }
 
@@ -272,7 +272,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     try {
         if (!fileshareobj.active) return;
 
-        webrtcdev.log("[filesharing dommodifier js] displayList - uuid: ", uuid, " peerinfo :", peerinfo,
+        webrtcdev.log("[filesharing dommodifierjs] displayList - uuid: ", uuid, " peerinfo :", peerinfo,
             "file url : ", fileurl, " file name : ", filename, " file type :", filetype);
 
         let _filename = null;
@@ -291,10 +291,10 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
                     // fileprogress[x].getAttribute("type")=="progressbar" /removed due to not a function error
                     if (peerinfo.fileList.container && document.getElementById(peerinfo.fileList.container)) {
                         parentdom = document.getElementById(peerinfo.fileList.container);
-                        webrtcdev.log("[ filesharing js ] displayList, set up parent dom ", parentdom);
+                        webrtcdev.log("[filehsraingJs dommodifier]  displayList, set up parent dom ", parentdom);
                         parentdom.removeChild(fileprogress[x]);
                     } else {
-                        webrtcdev.log("[ filesharing dommodifier js] displayList, Not sure what does this do ", fileprogress[x]);
+                        webrtcdev.log("[filesharing dommodifier js] displayList, Not sure what does this do ", fileprogress[x]);
                         parentdom = fileprogress[x].parentNode.parentNode;
                         //parentdom.removeChild(fileprogress[x].parentNode);
                     }
