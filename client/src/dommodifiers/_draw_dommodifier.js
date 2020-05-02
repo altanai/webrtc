@@ -91,11 +91,15 @@ function assigndrawButton(drawCanvasobj) {
  * @name saveButtonCanvas
  * @param {json} bdata
  */
-var saveButtonCanvas = document.createElement("div");
-saveButtonCanvas.id = "saveButtonCanvasDraw";
-saveButtonCanvas.setAttribute("data-toggle", "modal");
-saveButtonCanvas.setAttribute("data-target", "#saveModal");
-saveButtonCanvas.onclick = function () {
-    createModalPopup("blobcanvas");
-};
-document.body.appendChild(saveButtonCanvas);
+function createSaveButton(){
+    var saveButtonCanvas = document.createElement("div");
+    saveButtonCanvas.id = "saveButtonCanvasDraw";
+    saveButtonCanvas.setAttribute("data-toggle", "modal");
+    saveButtonCanvas.setAttribute("data-target", "#saveModal");
+    saveButtonCanvas.onclick = function () {
+        createModalPopup("blobcanvas");
+    };
+    document.body.appendChild(saveButtonCanvas);
+}
+
+createSaveButton();

@@ -4,12 +4,12 @@ common
 
 function fitToContainer(parent, canvas) {
     try {
-        /*  canvas.style.width ='100%';
-        canvas.style.height='100%';*/
+        // canvas.style.width ='100%';*/
+        // canvas.height='100%';
         canvas.width = parent.offsetWidth;
         canvas.height = parent.offsetHeight;
     } catch (err) {
-        webrtcdev.error(err);
+        console.error(err);
     }
 }
 
@@ -23,7 +23,7 @@ function setContext(canv) {
         ctx.font = font;
     } catch (e) {
         // webrtcdev.error(" canvas context not set ", canv);
-        // webrtcdev.error(e);
+        console.error(e);
     }
     return ctx;
 }
@@ -37,43 +37,47 @@ let parentBox = document.getElementById("drawBox");
 fitToContainer(parentBox, mainCanvas);
 fitToContainer(parentBox, canvas);
 
-if (document.getElementById("trashBtn")) {
-    document.getElementById("trashBtn").onclick = function () {
-        tempContext.clearRect(0, 0, canvas.width, canvas.height);
-        context.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
+function createTrashButton(){
+    if (document.getElementById("trashBtn")) {
+        document.getElementById("trashBtn").onclick = function () {
+            tempContext.clearRect(0, 0, canvas.width, canvas.height);
+            context.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
 
-        window.location.reload();
-    };
-} else {
-    webrtcdev.error("trash button not found");
+            window.location.reload();
+        };
+    } else {
+        webrtcdev.error("trash button not found");
+    }
 }
+createTrashButton();
 
-if (document.getElementById("saveBtn")) {
+function createSaveButton(){
+    if (document.getElementById("saveBtn")) {
+        document.getElementById("saveBtn").onclick = function () {
+            /*
+            var aref = document.createElement("a");
+            aref.href = mainCanvas.toDataURL("image/png") ;
+            aref.download = "drawBox.png";
+            aref.click();*/
 
-    document.getElementById("saveBtn").onclick = function () {
+            parent.postMessage({
+                modalpopup: {
+                    filetype: "blobcanvas",
+                },
+                sender: selfId
+            }, '*');
 
-        /*        
-        var aref = document.createElement("a");
-        aref.href = mainCanvas.toDataURL("image/png") ;
-        aref.download = "drawBox.png";
-        aref.click();*/
-
-        parent.postMessage({
-            modalpopup: {
-                filetype: "blobcanvas",
-            },
-            sender: selfId
-        }, '*');
-
-        /*document.getElementById("saveBtn").appendChild(aref);*/
-        //window.open(mainCanvas.toDataURL("image/png") , "canvasDiagram");
-        /*var e = mainCanvas.toDataURL("image/png"),
-        a = window.open("about:blank", "image from canvas");
-        a.document.write("<img src='" + e + "' alt='from canvas'/>");*/
-    };
-} else {
-    webrtcdev.error("save button not found");
+            /*document.getElementById("saveBtn").appendChild(aref);*/
+            //window.open(mainCanvas.toDataURL("image/png") , "canvasDiagram");
+            /*var e = mainCanvas.toDataURL("image/png"),
+            a = window.open("about:blank", "image from canvas");
+            a.document.write("<img src='" + e + "' alt='from canvas'/>");*/
+        };
+    } else {
+        console.error("save button not found");
+    }
 }
+createSaveButton();
 
 /*-----------------------------------------------*/
 

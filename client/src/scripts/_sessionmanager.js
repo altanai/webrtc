@@ -632,11 +632,13 @@ var setRtcConn = function (sessionid, sessionobj) {
         },
 
         rtcConn.onleave = function (e) {
-            webrtcdev.warn(" [ session manager ] on leave - ", e.userid, e.extra.name);
-            alert(e.userid + e.extra.name + "has left the session ");
+            webrtcdev.warn(" [ session manager ] on leave - ", e.userid);
 
-            if (e.extra.name)
-                shownotification(e.extra.name + "  left the conversation.");
+            var peerinfo = findPeerInfo(e.userid);
+            if (!peerinfo) return;
+
+            if (peerinfo.name)
+                shownotification(peerinfo.name + "  left the conversation.");
 
             /*
             addNewMessage({
@@ -646,13 +648,12 @@ var setRtcConn = function (sessionid, sessionobj) {
                 color: e.extra.color
             }), */
 
-            var peerinfo = findPeerInfo(e.userid);
+
             webrtcdev.warn(" [ session manager ] remove peerinfo ", peerinfo, " from webcallpeers ", webcallpeers);
             //rtcConn.playRoleOfInitiator()
-            if (!peerinfo) return;
 
             destroyWebCallView(peerinfo);
-            removePeerInfo(e.userid);
+            removePeerInfo(peerinfo.userid);
         },
 
         rtcConn.onclose = function (e) {
