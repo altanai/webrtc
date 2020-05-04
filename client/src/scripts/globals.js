@@ -32,8 +32,8 @@ var autoload = true;
 var sessionid = null, webrtcdevIceServers = [];
 var localStream, localStreamId, remoteStream, remoteStreamId;
 var config = {
-    socketAddr : location.hostname + ":8082/",
-    signaller: location.hostname + ":8086/"
+    socketAddr : location.hostname + ":8083/",
+    signaller: location.hostname + ":8085/"
 };
 
 /* incoming and outgoing call params */

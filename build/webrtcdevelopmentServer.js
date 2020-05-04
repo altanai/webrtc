@@ -1,4 +1,4 @@
-/* Generated on:Mon May 04 2020 11:51:36 GMT+0530 (India Standard Time) || version: 5.3.2 - Altanai (@altanai)  , License : MIT  */exports.redisscipts = function () {
+/* Generated on:Mon May 04 2020 22:25:45 GMT+0530 (India Standard Time) || version: 5.3.4 - Altanai (@altanai)  , License : MIT  */exports.redisscipts = function () {
 
     const redis = require("redis");
     const RedisServer = require('redis-server');
@@ -40,7 +40,7 @@
 };
 
 
-/* Generated on:Mon May 04 2020 11:51:36 GMT+0530 (India Standard Time) || version: 5.3.2 - Altanai (@altanai)  , License : MIT  *//**
+/* Generated on:Mon May 04 2020 22:25:45 GMT+0530 (India Standard Time) || version: 5.3.4 - Altanai (@altanai)  , License : MIT  *//**
  * handled on connection of socket for every new connection
  * @method
  * @name realtimecomm
@@ -79,7 +79,7 @@ exports.realtimecomm = function (properties, options, log, cache, socketCallback
     //     let token = socket.handshake.query.token;
     //     if (isValid(token)) {
     //         return next();
-    //     }
+    //     }webrtcserver
     //     return next(new Error('authentication error'));
     // });
     io.on('connection', onConnection)
@@ -98,7 +98,6 @@ exports.realtimecomm = function (properties, options, log, cache, socketCallback
     // io.origins('*:*');
 
     server.listen(properties.wss2Port);
-    console.log("[RealtimeComm]  server state ", server.readyState); // WebSocket.OPEN)
 
     /* transport options
         'websocket',
@@ -149,7 +148,7 @@ exports.realtimecomm = function (properties, options, log, cache, socketCallback
      */
     function onConnection(socket) {
         console.log("[RealtimeComm] ----------------realtimecomm----------------------");
-        console.log("[RealtimeComm] socket state ", socket);
+        console.log("[RealtimeComm]  server state ", server.readyState); // WebSocket.OPEN
         console.log("[RealtimeComm] Socket.io env => " + properties.enviornment + " running at " + properties.wss2Port);
 
         let params = socket.handshake.query;
@@ -736,7 +735,7 @@ exports.realtimecomm = function (properties, options, log, cache, socketCallback
 //         logs[utcDateString] = arguments.toString();
 //     }
 // }
-/* Generated on:Mon May 04 2020 11:51:36 GMT+0530 (India Standard Time) || version: 5.3.2 - Altanai (@altanai)  , License : MIT  */exports.restapi = function(realtimecomm, options , app, properties) {
+/* Generated on:Mon May 04 2020 22:25:45 GMT+0530 (India Standard Time) || version: 5.3.4 - Altanai (@altanai)  , License : MIT  */exports.restapi = function(realtimecomm, options , app, properties) {
 
     var restify = require('restify');
     var server = restify.createServer(options);

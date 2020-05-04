@@ -205,13 +205,14 @@ async function getAudioPermission() {
  * @param {json} _remoteObj - remote object.
  * @param {json} incoming - incoming media stream attributes
  * @param {json} outgoing - outgoing media stream attributes
- * @param {json} session - session object.
- * @param {json} widgets - widgets object.
+ * @param {json} sessionobj - session object
+ * @param {json} widgets - widgets object
  */
-this.setsession = function (_localobj, _remoteobj, incoming, outgoing, session, widgets) {
+this.setsession = function (_localobj, _remoteobj, incoming, outgoing, sessionobj, widgets) {
 
     this.sessionid = sessionid = session.sessionid;
-    socketAddr = session.socketAddr;
+    socketAddr = sessionobj.socketAddr ;
+    signaller = sessionobj.signaller ;
     localobj = _localobj;
     remoteobj = _remoteobj;
 
@@ -270,6 +271,7 @@ this.setsession = function (_localobj, _remoteobj, incoming, outgoing, session, 
         outgoing: outgoing,
         incoming: incoming,
         socketAddr: socketAddr,
+        signaller: signaller,
         localobj: localobj,
         remoteobj: remoteobj,
         turn: turn,

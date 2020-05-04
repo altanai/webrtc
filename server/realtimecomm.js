@@ -37,7 +37,7 @@ exports.realtimecomm = function (properties, options, log, cache, socketCallback
     //     let token = socket.handshake.query.token;
     //     if (isValid(token)) {
     //         return next();
-    //     }
+    //     }webrtcserver
     //     return next(new Error('authentication error'));
     // });
     io.on('connection', onConnection)
@@ -106,8 +106,7 @@ exports.realtimecomm = function (properties, options, log, cache, socketCallback
      */
     function onConnection(socket) {
         console.log("[RealtimeComm] ----------------realtimecomm----------------------");
-        console.log("[RealtimeComm]  server state ", server.readyState); // WebSocket.OPEN)
-        console.log("[RealtimeComm] socket state ", socket);
+        console.log("[RealtimeComm]  server state ", server.readyState); // WebSocket.OPEN
         console.log("[RealtimeComm] Socket.io env => " + properties.enviornment + " running at " + properties.wss2Port);
 
         let params = socket.handshake.query;

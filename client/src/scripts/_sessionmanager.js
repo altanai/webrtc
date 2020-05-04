@@ -270,12 +270,12 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
 */
 var setRtcConn = function (sessionid, sessionobj) {
 
-    webrtcdev.log("[sessionmanager] setRtcConn - initiating RtcConn with signaller ", config.signaller);
+    webrtcdev.log("[sessionmanager] setRtcConn - initiating RtcConn with signaller ", sessionobj);
 
     rtcConn = new RTCMultiConnection(),
 
         rtcConn.channel = this.sessionid,
-        rtcConn.socketURL = config.signaller,
+        rtcConn.socketURL = sessionobj.signaller, // location for the SDP offer/answer signaller
         // rtcConn.iceServers = sessionobj.turn.iceservers || rtcConn.getIceServers() ,
 
         // turn off media till connection happens
