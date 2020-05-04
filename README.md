@@ -290,7 +290,7 @@ User RTCDataConnection api from webRTC to send peer to peer nessages within a se
 
 When the chat widget is active  , if the dom specified by the container id is present then webSDK uses as it is,  else it creates one default box 
 
-```json
+```
 {
     active: true,
     container: {
@@ -324,7 +324,7 @@ The list of files with buttons to view , hide or remove them from file viewers a
 Displaying or playing the text or media files happens in file share conainer , which also has button to maximize , minimize the viewer window or in case of images to rotate them. 
 
 For divided file share container 
-```json
+```
 {
     active : true,
     fileShareContainer : "fileSharingRow",                  // File sharing container
@@ -354,7 +354,7 @@ For divided file share container
 }
 ```
 or for single file share container for all peers 
-```json
+```
     let filesharewidget = {
         active: true,
         fileShareContainer: "fileSharingRow",
@@ -393,7 +393,7 @@ or for single file share container for all peers
 Creates or assigns a timer for teh ongoing sesssion . Also displays the geolocation and timezone of the peers if perssion if provided . Timer can start upwards or downwards. 
 Can be used for billing and policy control .
 
-```json
+```
 {
     active: true,
     type: "forward",                                        // Forwards timer starts from 0:0:00 goes thereafter, backward timer ticks backword from prespecified time limit
@@ -428,7 +428,7 @@ Can be used for billing and policy control .
 
 Records everything pesent on the tab selected along with audio and displays recording as mp4 file. Use an extension and pre-declared safe-site  to facilitate captuing the tab.
 
-```json
+```
 {
     active : true,
     videoRecordContainer: true,                                 // container for storing or displaying recorded video
@@ -449,7 +449,7 @@ Button for screen share has 3 states -
 - share screen button and 
 - view button for incoming screen by peer .
 
-```json
+```
 {
     active : true,
     screenshareContainer: "screenShareRow",                 // container to display screen being shared
@@ -485,7 +485,7 @@ Button for screen share has 3 states -
 
 Records video stream . Created for each peer video .
 
-```json
+```
 {
     active : true,
     videoRecordContainer : true,
@@ -502,7 +502,7 @@ Records video stream . Created for each peer video .
 
 Takes a snapshot from video stream . Will be created for each inidvidual peer video .
 
-```json
+```
 {
     active : true,
     snapshotContainer: true,
@@ -517,7 +517,7 @@ Takes a snapshot from video stream . Will be created for each inidvidual peer vi
 
 To enable the user to watch video in full screen mode or to inimize the video to hide it from screen. Will be seprately created for each individual peer video .
     
-```json
+```
 {
     active: true,
     max: {
@@ -545,7 +545,7 @@ To enable the user to watch video in full screen mode or to inimize the video to
 
 Mutes the audio or video of the peer video . Created for each peer video.
 
-```json
+```
 {
     active: false,
     audio: {
@@ -573,7 +573,7 @@ Mutes the audio or video of the peer video . Created for each peer video.
 
 Allows a user to recoonect a session without refreshing a page . Will enable him to drop the session and create a new one.
 
-```json
+```
 {
     active : false,
     button : {
@@ -587,7 +587,7 @@ Allows a user to recoonect a session without refreshing a page . Will enable him
 
 ### 11. Cursor
 
-```json
+```
 {
     active: false,
     pointer: {
@@ -604,7 +604,7 @@ Allows a user to recoonect a session without refreshing a page . Will enable him
 ```
 
 ### 12. Inspector 
-```json
+```
 {
     active: true,
     button:{
@@ -616,7 +616,7 @@ Allows a user to recoonect a session without refreshing a page . Will enable him
 ### 13. Debug 
 
 To turn debug on
-```json
+```
 {
   debug: false
 } 
@@ -625,7 +625,7 @@ To turn debug on
 ### 14. Help
 
 Actiavtes the help log 
-```json
+```
 {
   active: true, 
   helpContainer : "help-view-body",
@@ -636,7 +636,7 @@ Actiavtes the help log
 
 ### 15. Stats 
 
-```json
+```
 {
   active : true , 
   statsConainer : "network-stats-body"
@@ -644,23 +644,23 @@ Actiavtes the help log
 ```
 
 ### 16. Draw 
-```json
-     {
-        active: true,
-        drawCanvasContainer: "drawBoardRow",
-        button: {
-            id: "draw-webrtc",
-            class_on: "icon-pencil On",
-            html_on: '',
-            class_off: "icon-pencil Off",
-            html_off: ''
-        }
+```
+{
+    active: true,
+    drawCanvasContainer: "drawBoardRow",
+    button: {
+        id: "draw-webrtc",
+        class_on: "icon-pencil On",
+        html_on: '',
+        class_off: "icon-pencil Off",
+        html_off: ''
     }
+}
 ```
 
 ### Assign individual widgets to a json object called widgets 
 
-```json
+```
 {
     debug: false,
     reconnect: {
@@ -686,10 +686,9 @@ Actiavtes the help log
 }
 ```
 
-
 ## Event listeners 
 
-Implemented event listners 
+Implemented event listeners 
 
 1. onLocalConnect
 
@@ -703,7 +702,6 @@ Implemented event listners
 
 
 ## Keys and certs 
-
 
 Add the Key and certs
 ```shell script
@@ -833,7 +831,7 @@ information added to channel { '2435937115056035':
 ```
 
 websocket response from server
-```json
+```shell script
   [  "open-channel-resp", 
    { 
     status: true, 
@@ -845,12 +843,13 @@ websocket response from server
 **4.Join a session and check for channel presence**
   
   navigate another browser client to same session url such as https://localhost:8084/#2435937115056035?name=aa&email=abc@gmail.com
-  
+```shell script
    check presence ["presence", {channel: "2435937115056035"}]
    
    ["presence", true]
-   
+  
    Presence Check index of  2435937115056035  is  true
+```  
    
 **5.If channel is present join the channel**
 
