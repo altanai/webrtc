@@ -56,7 +56,6 @@ exports.realtimecomm = function (properties, options, log, cache, socketCallback
     // io.origins('*:*');
 
     server.listen(properties.wss2Port);
-    console.log("[RealtimeComm]  server state ", server.state);
 
     /* transport options
         'websocket',
@@ -107,6 +106,7 @@ exports.realtimecomm = function (properties, options, log, cache, socketCallback
      */
     function onConnection(socket) {
         console.log("[RealtimeComm] ----------------realtimecomm----------------------");
+        console.log("[RealtimeComm]  server state ", server.readyState); // WebSocket.OPEN)
         console.log("[RealtimeComm] socket state ", socket);
         console.log("[RealtimeComm] Socket.io env => " + properties.enviornment + " running at " + properties.wss2Port);
 

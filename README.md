@@ -781,13 +781,13 @@ pm2 start ecosystem.config.js
 
 **1.create a new session**
 
-Navigate on browser https://localhost:8084/#2435937115056035
-which creates websocket over socket.io wss://localhost:8084/socket.io/?EIO=3&transport=websocket
+Navigate on browser https://localhost:8082/#2435937115056035
+which creates websocket over socket.io wss://localhost:8083/socket.io/?EIO=3&transport=websocket
 
 **2.check for channel presence**
 
 first client message 
-```json
+```shell script
 [ "presence", 
   {
     channel: "2435937115056035"
@@ -916,7 +916,7 @@ USe gulp-babel@8.0.0
 **arrow functions realted**
 use tarnscompiler with preset env plugin for changes arrow function to normals ones before minifying
 
-### errors on webrtc client 
+### WSS errors
 
 **Issue1** net::ERR_CONTENT_LENGTH_MISMATCH 200 (OK) \
 **solution** This error is definite mismatch between the data that is advertised in the HTTP Headers and the data transferred over the wire.
@@ -994,6 +994,13 @@ But client tries polling connection
 ```
 https://localhost:8086/socket.io/?userid=iu02bk1b77g&sessionid=httpslocalhost8082clientindexhtm&transport=polling&t=N7ToS63
 ```
+    
+**Issue 6** CERT INVALID ERROR such as     
+```shell script
+NET::ERR_CERT_AUTHORITY_INVALID
+````
+**SOlution** Since the certs are self signed , navifate to the wss port on http and allow permission under teh advanced button in scren below 
+![CERT_AUTHORITY](screenshots/cert_authority.png)
             
 ### errors on git
 
@@ -1002,7 +1009,7 @@ shelved
 
 ## Reporting a Vulnerability
 
-Create an issues 
+Create an issue
 https://github.com/altanai/webrtc/issues <https://github.com/altanai/webrtc/issues>
 
 ### License
