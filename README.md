@@ -161,7 +161,7 @@ or use the minified scripts
 Create the webrtc dom object with local and remote objects
 
 local object  :
-```json
+```javascript
     var local={
 
         video           :   "myAloneVideo",            // name of the local video element
@@ -179,7 +179,7 @@ local object  :
 ```
 
 remote object  :
-```json
+```javascript
     var remote={
         videoarr        : ["myConferenceVideo", "otherConferenceVideo"], // conatiners for the video after session is made 
                                                                 // first one is usually the local video holder followed by remote video holders
@@ -194,7 +194,7 @@ remote object  :
 ```
 
 Incoming and outgoing media configuration  ( self explanatory ) :
-```json
+```javascript
     var incoming={
         audio :  true,
         video :  true,
@@ -227,11 +227,11 @@ Set widgets and their properties
 **8. Creating session**
 
 Get session id automatically
-```
+```javascript
 sessionid = webrtcdevobj.makesessionid("reload");
 ```
 or get session name from user
-```
+```javascript
 sessionid = webrtcdevobj.makesessionid("noreload");
 ```
 

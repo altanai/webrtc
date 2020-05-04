@@ -31,7 +31,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
         }
         webrtcdev.log("[sessionmanager] StartSession" + sessionid, " on address ", addr);
         socket = io.connect(addr,{
-            secure:false
+            secure:true
         });
         console.log(" socket ", socket);
     } catch (err) {

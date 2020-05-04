@@ -178,6 +178,7 @@ var RTCMultiConnection = function (roomid, forceOptions) {
         try {
             connection.socket = io(connection.socketURL + parameters);
         } catch (e) {
+            webrtcdev.error('socket.io signaller connection error ', e);
             connection.socket = io.connect(connection.socketURL + parameters, connection.socketOptions);
         }
 
