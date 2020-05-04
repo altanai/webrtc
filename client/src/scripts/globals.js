@@ -27,10 +27,14 @@ var remoteusername = "", remoteemail = "", remotecolor = "";
 
 var latitude = "", longitude = "", operatingsystem = "";
 
-/* webrtc session intilization */
+/* webrtc session intialization */
 var autoload = true;
-var sessionid = null, socketAddr = "/", webrtcdevIceServers = [];
+var sessionid = null, webrtcdevIceServers = [];
 var localStream, localStreamId, remoteStream, remoteStreamId;
+var config = {
+    socketAddr : location.hostname + ":8082/",
+    signaller: location.hostname + ":8086/"
+};
 
 /* incoming and outgoing call params */
 var incomingAudio = true, incomingVideo = true, incomingData = true;
@@ -85,3 +89,4 @@ this.sessionid = "";
 // var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
 // var isChrome = !!window.chrome && !isOpera;
 // var isMobileDevice = !!navigator.userAgent.match(/Android|iPhone|iPad|iPod|BlackBerry|IEMobile/i);
+

@@ -1,4 +1,14 @@
-exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
+/**
+ * handled on connection of socket for every new connection
+ * @method
+ * @name realtimecomm
+ * @param {json} properties
+ * @param {json} options
+ * @param {file} log external log file
+ * @param {cache} cache like redis
+ * @param {function} socketCallback
+ */
+exports.realtimecomm = function (properties, options, log, cache, socketCallback) {
 
     var listOfUsers = {};
     var shiftedModerationControls = {};
@@ -9,9 +19,45 @@ exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
     var users = {};
     var sessions = {};
 
-    var io = require('socket.io').listen(app);
-    io.origins('*:*');
-    io.on('connection', onConnection);
+    // console.log("[RealtimeComm]  properties for webrtc server " , properties, options) ;
+
+    // http2
+    // const server = require('http2').createSecureServer(options);
+
+    //https 1.1
+    const server = require('https').createServer(options);
+
+    // socketio
+    const io = require('socket.io')(server, {
+        origins: "*:*",
+        pingTimeout: 15000,
+        pingInterval: 30000
+    });
+    // io.use((socket, next) => {
+    //     let token = socket.handshake.query.token;
+    //     if (isValid(token)) {
+    //         return next();
+    //     }
+    //     return next(new Error('authentication error'));
+    // });
+    io.on('connection', onConnection)
+    io.on('disconnect', () => {
+        console.error("disconnected ");
+    });
+
+    // io.serveClient(false);
+    // secure: true,
+    // serveClient: false,
+    // io.attach(server, {
+    //     pingInterval: 10000,
+    //     pingTimeout: 5000,
+    //     cookie: false
+    // });
+    // io.origins('*:*');
+
+    server.listen(properties.wss2Port);
+    console.log("[RealtimeComm]  server state ", server.state);
+
     /* transport options
         'websocket',
         'flashsocket',
@@ -21,6 +67,12 @@ exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
         'polling'
     */
 
+    /**
+     * append user to list of user
+     * @method
+     * @name appendUser
+     * @param {socket} socket
+     */
     async function appendUser(socket) {
         try {
             var alreadyExists = listOfUsers[socket.userid];
@@ -36,19 +88,30 @@ exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
                 isPublic: false, // means: isPublicModerator
                 extra: extra || {}
             };
-            // if (cache) {
-            //     const result = await cache.hset(socket.userid, "data", userdata);
-            //     console.log(result);
-            // } else {
-            listOfUsers[socket.userid] = userdata;
-            // }
+            if (cache) {
+                const result = await cache.hset(socket.userid, "data", userdata);
+                console.log(result);
+            } else {
+                listOfUsers[socket.userid] = userdata;
+            }
         } catch (err) {
             console.error(err);
         }
     }
 
+    /**
+     * handled on connection of socket for every new connection
+     * @method
+     * @name onConnection
+     * @param {socket} socket
+     */
     function onConnection(socket) {
-        var params = socket.handshake.query;
+        console.log("[RealtimeComm] ----------------realtimecomm----------------------");
+        console.log("[RealtimeComm] socket state ", socket);
+        console.log("[RealtimeComm] Socket.io env => " + properties.enviornment + " running at " + properties.wss2Port);
+
+        let params = socket.handshake.query;
+        console.log("[RealtimeComm] Querry : ", params);
         var socketMessageEvent = params.msgEvent || 'RTCMultiConnection-Message';
 
         if (params.enableScalableBroadcast) {
@@ -79,7 +142,7 @@ exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
                     listOfUsers[user].socket.emit('extra-data-updated', socket.userid, extra);
                 }
             } catch (e) {
-                pushLogs('extra-data-updated', e);
+                console.error('extra-data-updated', e);
             }
         });
 
@@ -89,7 +152,7 @@ exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
                 if (!listOfUsers[socket.userid]) return;
                 listOfUsers[socket.userid].isPublic = true;
             } catch (e) {
-                pushLogs('become-a-public-moderator', e);
+                console.error('become-a-public-moderator', e);
             }
         });
 
@@ -98,7 +161,7 @@ exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
                 if (!listOfUsers[socket.userid]) return;
                 listOfUsers[socket.userid].isPublic = false;
             } catch (e) {
-                pushLogs('dont-make-me-moderator', e);
+                console.error('dont-make-me-moderator', e);
             }
         });
 
@@ -118,7 +181,7 @@ exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
 
                 callback(allPublicModerators);
             } catch (e) {
-                pushLogs('get-public-moderators', e);
+                console.error('get-public-moderators', e);
             }
         });
         */
@@ -150,7 +213,7 @@ exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
 
                 callback();
             } catch (e) {
-                pushLogs('changed-uuid', e);
+                console.error('changed-uuid', e);
             }
         });
 
@@ -160,7 +223,7 @@ exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
                     listOfUsers[socket.userid].password = password;
                 }
             } catch (e) {
-                pushLogs('set-password', e);
+                console.error('set-password', e);
             }
         });
 
@@ -179,7 +242,7 @@ exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
                 }
                 callback();
             } catch (e) {
-                pushLogs('disconnect-with', e);
+                console.error('disconnect-with', e);
             }
         });
 
@@ -198,7 +261,7 @@ exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
                 delete shiftedModerationControls[socket.userid];
                 callback();
             } catch (e) {
-                pushLogs('close-entire-session', e);
+                console.error('close-entire-session', e);
             }
         });
 
@@ -246,7 +309,7 @@ exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
                 };
                 console.log("information added to channel", webrtcdevchannels);
             } catch (e) {
-                console.log(" Err : info couldnt be aded to channel ", e);
+                console.error(" Err : info couldnt be added to channel ", e);
             }
 
             //send back the resposne to web client 
@@ -390,7 +453,7 @@ exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
                     listOfUsers[message.sender].connectedWith[message.remoteUserId].emit(socketMessageEvent, message);
                 }
             } catch (e) {
-                pushLogs('onMessageCallback', e);
+                console.error('onMessageCallback', e);
             }
         }
 
@@ -478,15 +541,17 @@ exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
 
                 onMessageCallback(message);
             } catch (e) {
-                pushLogs('on-socketMessageEvent', e);
+                console.error('on-socketMessageEvent', e);
             }
         });
 
         socket.on('disconnect', function () {
+            console.log("[RealtimeComm] disconnect");
             try {
-                delete socket.namespace.sockets[this.id];
+                if (socket.namespace)
+                    delete socket.namespace.sockets[this.id];
             } catch (e) {
-                pushLogs('disconnect', e);
+                console.error('disconnect', e);
             }
 
             try {
@@ -497,7 +562,7 @@ exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
                     onMessageCallback(message);
                 }
             } catch (e) {
-                pushLogs('disconnect', e);
+                console.error('disconnect', e);
             }
 
             try {
@@ -513,13 +578,14 @@ exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
                     }
                 }
             } catch (e) {
-                pushLogs('disconnect', e);
+                console.error('disconnect', e);
             }
 
             delete listOfUsers[socket.userid];
         });
 
         if (socketCallback) {
+            console.log("[RealtimeComm] callback");
             socketCallback(socket);
         }
     }
@@ -597,79 +663,34 @@ exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
         return output;
     };
 
-    console.log("----------------realtimecomm----------------------");
-    console.log(" Socket.io env => " + properties.enviornment + " running at\n " + properties.httpsPort);
-
     return module;
 };
 
-
-var enableLogs = false;
-
-try {
-    var _enableLogs = require('./config.json').enableLogs;
-
-    if (_enableLogs) {
-        enableLogs = true;
-    }
-} catch (e) {
-    enableLogs = false;
-}
-
-var fs = require('fs');
-
-function pushLogs() {
-    if (!enableLogs) return;
-
-    var logsFile = process.cwd() + '/logs.json';
-
-    var utcDateString = (new Date).toUTCString().replace(/ |-|,|:|\./g, '');
-
-    // uncache to fetch recent (up-to-dated)
-    uncache(logsFile);
-
-    var logs = {};
-
-    try {
-        logs = require(logsFile);
-    } catch (e) {
-    }
-
-    if (arguments[1] && arguments[1].stack) {
-        arguments[1] = arguments[1].stack;
-    }
-
-    try {
-        logs[utcDateString] = JSON.stringify(arguments, null, '\t');
-        fs.writeFileSync(logsFile, JSON.stringify(logs, null, '\t'));
-    } catch (e) {
-        logs[utcDateString] = arguments.toString();
-    }
-}
-
-// removing JSON from cache
-function uncache(jsonFile) {
-    searchCache(jsonFile, function (mod) {
-        delete require.cache[mod.id];
-    });
-
-    Object.keys(module.constructor._pathCache).forEach(function (cacheKey) {
-        if (cacheKey.indexOf(jsonFile) > 0) {
-            delete module.constructor._pathCache[cacheKey];
-        }
-    });
-}
-
-function searchCache(jsonFile, callback) {
-    var mod = require.resolve(jsonFile);
-
-    if (mod && ((mod = require.cache[mod]) !== undefined)) {
-        (function run(mod) {
-            mod.children.forEach(function (child) {
-                run(child);
-            });
-
-            callback(mod);
-        })(mod);
-    }
-}
+// function console.error() {
+//     if (!enableLogs) return;
+//
+//     var logsFile = process.cwd() + '/logs.json';
+//
+//     var utcDateString = (new Date).toUTCString().replace(/ |-|,|:|\./g, '');
+//
+//     // uncache to fetch recent (up-to-dated)
+//     uncache(logsFile);
+//
+//     var logs = {};
+//
+//     try {
+//         logs = require(logsFile);
+//     } catch (e) {
+//     }
+//
+//     if (arguments[1] && arguments[1].stack) {
+//         arguments[1] = arguments[1].stack;
+//     }
+//
+//     try {
+//         logs[utcDateString] = JSON.stringify(arguments, null, '\t');
+//         fs.writeFileSync(logsFile, JSON.stringify(logs, null, '\t'));
+//     } catch (e) {
+//         logs[utcDateString] = arguments.toString();
+//     }
+// }

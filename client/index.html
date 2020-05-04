@@ -18,7 +18,6 @@
     <script src="../build/webrtcdevelopment_header.js"></script>
     <link rel=stylesheet href="../build/webrtcdevelopment.css">
 
-
 </head>
 
 <body id="pagebody">
@@ -265,7 +264,7 @@
             "otherConferenceVideo3"];
 
         //Signaller
-        var signallerurl = "https://" + location.hostname + ":8082/";
+        var serverurl = "https://" + location.hostname + ":8083";
 
         // TURN / STUN
         var iceservers_array = [
@@ -277,18 +276,6 @@
                     "stun2.l.google.com:19302",
                     "stun3.l.google.com:19302",
                     "stun4.l.google.com:19302"
-                ]
-            },
-            {
-                "username": "f193c1da-dea2-11e7-90b4-4d5b9c58d279",
-                "credential": "f193c252-dea2-11e7-9c6f-24b2e4d87a65",
-                "urls": [
-                    "turn:e2.xirsys.com:80?transport=udp",
-                    "turn:e2.xirsys.com:3478?transport=udp",
-                    "turn:e2.xirsys.com:80?transport=tcp",
-                    "turn:e2.xirsys.com:3478?transport=tcp",
-                    "turns:e2.xirsys.com:443?transport=tcp",
-                    "turns:e2.xirsys.com:5349?transport=tcp"
                 ]
             }
         ];
@@ -349,7 +336,7 @@
         // prepeare session object
         session = {
             sessionid: sessionid,
-            socketAddr: signallerurl,
+            socketAddr: serverurl,
             turn: {
                 active: true,
                 iceServers: iceservers_array

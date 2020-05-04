@@ -146,7 +146,7 @@ function assignScreenRecordButton(screenrecordobj) {
     };
 }*/
 
-/*function createScreenRecordButton(){
+function createScreenRecordButton(){
 
     var recordButton= document.createElement("span");
     recordButton.className= screenrecordobj.button.class_off ;
@@ -235,5 +235,5 @@ function assignScreenRecordButton(screenrecordobj) {
     var li =document.createElement("li");
     li.appendChild(recordButton);
     document.getElementById("topIconHolder_ul").appendChild(li);
-}*/
+}
 

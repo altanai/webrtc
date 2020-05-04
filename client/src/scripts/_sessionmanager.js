@@ -30,11 +30,10 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
             addr = socketAddr;
         }
         webrtcdev.log("[sessionmanager] StartSession" + sessionid, " on address ", addr);
-        // socket = io.connect(addr, {
-        //     transports: ['websocket']
-        // });
-        socket = io.connect(addr);
-        // socket.set('log level', 3);
+        socket = io.connect(addr,{
+            secure:false
+        });
+        console.log(" socket ", socket);
     } catch (err) {
         webrtcdev.error(" problem in socket connnection", err);
         throw (" problem in socket connection");
@@ -253,6 +252,13 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
             webrtcdev.warn("unhandled channel event ");
         }
     });
+
+    socket.on('event', function(data){
+        console.log("event" , data)
+    });
+    socket.on('disconnect', function(){
+        console.error("disconneted " )
+    });
 }
 
 
@@ -264,12 +270,12 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
 */
 var setRtcConn = function (sessionid, sessionobj) {
 
-    webrtcdev.log("[sessionmanager] setRtcConn - initiating RtcConn");
+    webrtcdev.log("[sessionmanager] setRtcConn - initiating RtcConn with signaller ", config.signaller);
 
     rtcConn = new RTCMultiConnection(),
 
         rtcConn.channel = this.sessionid,
-        rtcConn.socketURL = location.hostname + ":8085/",
+        rtcConn.socketURL = config.signaller,
         // rtcConn.iceServers = sessionobj.turn.iceservers || rtcConn.getIceServers() ,
 
         // turn off media till connection happens
@@ -288,6 +294,18 @@ var setRtcConn = function (sessionid, sessionobj) {
         rtcConn.dontCaptureUserMedia = !outgoingVideo || false,
         rtcConn.dontGetRemoteStream = !outgoingVideo || false,
         rtcConn.dontAttachStream = !outgoingVideo || false,
+
+        // all values in kbps
+        rtcConn.bandwidth = {
+            screen: false,
+            audio: false,
+            video: false
+        },
+
+        rtcConn.codecs = {
+            audio: 'opus',
+            video: 'VP9'
+        },
 
         rtcConn.onNewParticipant = function (participantId, userPreferences) {
             webrtcdev.log("[sartjs] rtcconn onNewParticipant, participantId -  ", participantId, " , userPreferences - ", userPreferences);
@@ -367,8 +385,8 @@ var setRtcConn = function (sessionid, sessionobj) {
 
                 // stats widget
                 if (statisticsobj && statisticsobj.active) {
-                    //populate RTP stats
-                    showRtpstats();
+                    // populate RTP stats
+                    getWebrtcdevStats();
                 }
 
                 // Connect to webrtc
@@ -641,7 +659,7 @@ var setRtcConn = function (sessionid, sessionobj) {
 
             if (peerinfo.name) {
                 shownotification(peerinfo.name + " left the conversation.");
-                webrtcdev.log("[session manager] onleave - name ",peerinfo.name);
+                webrtcdev.log("[session manager] onleave - name ", peerinfo.name);
             }
             /*
             addNewMessage({

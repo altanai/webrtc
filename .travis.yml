@@ -5,6 +5,11 @@ addons:
       - google-chrome
     packages:
       - google-chrome-stable
+
+os:
+  - linux
+  - osx
+  - windows
 language: node_js
 node_js:
   - "12"
@@ -22,7 +27,7 @@ before_script:
 
 script:
   - gulp production
-  - npm start webrtcserver.js
+  - npm start
 
 deploy:
   - provider: npm

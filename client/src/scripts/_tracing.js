@@ -63,7 +63,7 @@ this.showUserStats = showUserStats = function () {
     if (document.getElementById("userstatus")) {
         document.getElementById("userstatus").innerHTML = data;
     } else {
-        document.getElementById("mainDiv").prepend(data);
+        document.body.append("USER Status " + data);
     }
 }
 

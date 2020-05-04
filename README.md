@@ -217,12 +217,11 @@ Incoming and outgoing media configuration  ( self explanatory ) :
 
 **7. Adding Widgets**
 
-set widgets (expained in section below)
+set widgets (explained in section below)
+```javascript
+    var widgets={     }
 ```
-    var widgets={
-    }
-```
-Set widgets and their properties .     startcall();
+Set widgets and their properties
 
 
 **8. Creating session**
@@ -688,7 +687,7 @@ Actiavtes the help log
 ```
 
 
-## Event listners 
+## Event listeners 
 
 Implemented event listners 
 
@@ -868,7 +867,7 @@ websocket response from server
 }]
 ```
  
-
+## Debugging help
 
 ### getusermedia Exceptions
 
@@ -916,22 +915,90 @@ ref : https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
 USe gulp-babel@8.0.0
 
 **arrow functions realted**
-use tarnscompiler with preset env plugin for changes arraow function to normals ones before minifying
+use tarnscompiler with preset env plugin for changes arrow function to normals ones before minifying
 
 ### errors on webrtc client 
 
 **Issue1** net::ERR_CONTENT_LENGTH_MISMATCH 200 (OK) \
 **solution** This error is definite mismatch between the data that is advertised in the HTTP Headers and the data transferred over the wire.
-             
-             It could come from the following:
-             
-             Server: If a server has a bug with certain modules that changes the content but don't update the content-length in the header or just doesn't work properly. It was the case for the Node HTTP Proxy at some point (see here)
-             
-             Proxy: Any proxy between you and your server could be modifying the request and not update the content-length header.
+ It could come from the following:
+Server: If a server has a bug with certain modules that changes the content but don't update the content-length in the header or just doesn't work properly. It was the case for the Node HTTP Proxy at some point (see here)
+Proxy: Any proxy between you and your server could be modifying the request and not update the content-length header. 
 
+
+**Issue2**  wss error connecting to webrtcserver like 
+```json
+{"code":3,"message":"Bad request"} 
+```
+or
+```shell script
+Error: read ECONNRESET
+Emitted 'error' event on TLSSocket instance at:
+    at emitErrorNT (internal/streams/destroy.js:84:8)
+    at processTicksAndRejections (internal/process/task_queues.js:84:21) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+``` 
+\
+**Solution** ECONNRESET error means that peer closed connection https://nodejs.org/api/errors.html .
+To overcome this example either set try catch and reconnect to prevent sever from crashing or client from disconnectinig 
+or if you are running the http and wss server on the sae port like i was doing . Put them on seprate ports . 
+I started seeing this problem a lot after I upgraded the http protocol version from https to http2 ( using native node module )  
+for example for http server 
+```javascript
+const app = http2.createSecureServer(options, (request, response) => {
+    request.addListener('end', function () {
+        file.serve(request, response);
+    }).resume();
+});
+app.listen(properties.http2Port);
+```
+the again declare it seprately for wss server 
+```javascript
+const server = require('http2').createSecureServer(options);
+const io = require('socket.io')(server, {
+    secure: true,
+    serveClient: false,
+    pingInterval: 10000,
+    pingTimeout: 5000,
+    cookie: false
+});
+io.origins('*:*');
+io.on('connect', onConnection);
+server.listen(properties.wss2Port);
+```
+
+**Issue 3** WSS errors on socket.io as, error in connection establishment: net::ERR_SSL_PROTOCOL_ERROR \
+or  WebSocket opening handshake was cancelled
+**solution** recheck the session connection to socket.io , especially the ports and whther or not they are already in use 
+
+**Issue 4** Error during WebSocket handshake: Unexpected response code: 403 \
+**solution** Related to ECONNRESET
+
+**Issue 5** {code: 0, message: "Transport unknown"}
+            code: 0
+            message: "Transport unknown"
+or 
+Status Code: 400 Bad Request
+**solution** Either specify same protocol on both client and servers ide or do not specify and transport protocol at all .
+For isntance this problem arises  when server specifies websocket transport but client tries connecting over polling 
+server specifying tarsnport websocket
+```javascript
+ioServer(httpApp,{
+    transports: ['websocket'],
+    secure: true
+})
+```
+But client tries polling connection
+```
+https://localhost:8086/socket.io/?userid=iu02bk1b77g&sessionid=httpslocalhost8082clientindexhtm&transport=polling&t=N7ToS63
+```
+            
 ### errors on git
 
-update regiustry to  "registry": "https://registry.npmjs.org " 
+update registry to  "registry": "https://registry.npmjs.org " 
 shelved
 
 ## Reporting a Vulnerability

@@ -19,6 +19,8 @@ this.getWebrtcdevStats = getWebrtcdevStats = function () {
 
     webrtcdev.info(" All active participants  : ", getAllActivePeers());
 
+    showCodecs();
+
     for (let x in webcallpeers) {
         webrtcdev.info(" Peer   : ", x, " - ", webcallpeers[x]);
     }
@@ -39,7 +41,7 @@ this.getWebrtcdevStats = getWebrtcdevStats = function () {
                             }
                         });
                     });
-                    webrtcdev.info("[stats] getWebrtcdevStats - self  ",selfuserid  , statsOutput);
+                    webrtcdev.info("[stats] getWebrtcdevStats - self  ", selfuserid, statsOutput);
                     resolve(statsOutput);
                 });
             }
@@ -80,8 +82,8 @@ this.getWebrtcdevStats = getWebrtcdevStats = function () {
  * @param {object} mediaStreamTrack
  * @param {function} callback
  */
-function sendWebrtcdevStats(){
-    getWebrtcdevStats.then(stats=>{
+function sendWebrtcdevStats() {
+    getWebrtcdevStats.then(stats => {
         rtcConn.send({
             type: "stats",
             message: stats
@@ -92,8 +94,8 @@ function sendWebrtcdevStats(){
 /*
 onreceivedWebrtcdevStats
  */
-function onreceivedWebrtcdevStats(userid ,stats){
-    webrtcdev.info("[stats] getWebrtcdevStats - remote userid ", userid , stats);
+function onreceivedWebrtcdevStats(userid, stats) {
+    webrtcdev.info("[stats] getWebrtcdevStats - remote userid ", userid, stats);
 }
 
 this.oldgetStats = function (mediaStreamTrack, callback, interval) {
@@ -364,6 +366,18 @@ function showStatus() {
     }, 10000);
     webrtcdev.info("[stats] WebcallPeers ", webcallpeers);
 }
+
+/**
+ * shows status of ongoing webrtc call
+ * @method
+ * @name showStatus
+ * @param {obj} conn
+ */
+function showCodecs() {
+    webrtcdev.info("[stats] codec Audio ", rtcConn.codecs.audio);
+    webrtcdev.info("[stats] Codec Video ", rtcConn.codecs.video);
+}
+
 
 // /**
 //  * shows stats of ongoing webrtc call

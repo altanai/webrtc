@@ -1,7 +1,7 @@
 var fs = require('fs');
 var _static = require('node-static');
-var http = require('http');
-var https = require('https');
+// var http = require('http');
+// var https = require('https');
 var http2 = require('http2');
 var Log = require('log')
     , log = new Log('info');
@@ -44,6 +44,8 @@ var app = http2
         }).resume();
     })
     .listen(properties.http2Port);
+console.log("< ------------------------ HTTPS Server -------------------> ");
+console.log(" WebRTC server env => " + properties.enviornment + " running at " + properties.http2Port );
 
 
 // steam handler  approach
@@ -55,26 +57,6 @@ var app = http2
 // server.listen(properties.http2Port, () => {
 //     console.log("http2 server started on port", properties.http2Port);
 // });
-
-
-// auto push approach - tbd
-// http2
-//     .createSecureServer(options, http2Handlers)
-//     .listen(properties.http2Port, () => {
-//         console.log("http2 server started on port", properties.http2Port);
-//     });
-
-
-// -------------------- HTTPS Sever start for WSS -----------------
-
-// var app = https.createServer(options, function (request, response) {
-//     console.log("[HTTPS server] Referer :", request.headers.referer);
-//     request.addListener('end', function () {
-//         file.serve(request, response);
-//     }).resume();
-// });
-//
-// app.listen(properties.httpPort);
 
 // -------------------- Redis Sever start -----------------
 
@@ -89,7 +71,7 @@ rclient.set("session", "webrtcdevelopment");
 // -------------------- Session manager server   -----------------
 
 var _realtimecomm = require('./build/webrtcdevelopmentServer.js').realtimecomm;
-var realtimecomm = _realtimecomm(app, properties, log, rclient || null, function (socket) {
+var realtimecomm = _realtimecomm( properties, options, log, null, function (socket) {
     try {
         var params = socket.handshake.query;
         console.log("[Realtime conn] params", params);

@@ -22,7 +22,7 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
 
     scrConn = new RTCMultiConnection(),
         scrConn.channel = screenRoomid,
-        scrConn.socketURL = location.hostname + ":8085/" ,
+        scrConn.socketURL = config.signaller,
         scrConn.session = {
             screen: true,
             oneway: true
