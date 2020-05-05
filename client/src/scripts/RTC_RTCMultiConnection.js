@@ -273,9 +273,10 @@
                 return;
             }
 
-            connection.captureUserMedia(function () {
-                openRoom(callback);
-            });
+            openRoom(callback);
+            // connection.captureUserMedia(function () {
+            //     openRoom(callback);
+            // });
         });
     };
 
@@ -297,9 +298,11 @@
                 return;
             }
 
-            connection.captureUserMedia(function () {
-                openRoom(callback);
-            });
+            openRoom(callback);
+
+            // connection.captureUserMedia(function () {
+            //     openRoom(callback);
+            // });
         });
     };
 
