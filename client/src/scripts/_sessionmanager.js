@@ -170,6 +170,10 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
                     webrtcdev.log(" [sessionmanager] open-channel-resp - openOrJoin offer/answer webrtc with role ", role, " response ", res);
                     resolve("ok");
                 });
+                // rtcConn.join(sessionid, function (res) {
+                //     webrtcdev.log(" [sessionmanager] open-channel-resp - openOrJoin offer/answer webrtc with role ", role, " response ", res);
+                //     resolve("ok");
+                // });
             });
 
             promise.then(_ => {
@@ -413,7 +417,7 @@ var setRtcConn = function (sessionid, sessionobj) {
             webrtcdev.error("[sessionmanager] onMediaError - ", error, " constraints ", constraints);
 
             // Join without stream
-            webrtcdev.warn("[sessionmanager] onMediaError- Joining without camera Stream");
+            webrtcdev.warn("[sessionmanager] onMediaError - Joining without camera Stream");
             shownotification(error.name + " Joining without camera Stream ", "warning");
             localVideoStreaming = false;
             // For local Peer , if camera is not allowed or not connected then put null in video containers

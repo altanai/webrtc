@@ -498,17 +498,12 @@
             password: typeof connection.password !== 'undefined' && typeof connection.password !== 'object' ? connection.password : ''
         }, function (isRoomOpened, error) {
             if (isRoomOpened === true) {
-                if (connection.enableLogs) {
-                    webrtcdev.log('isRoomOpened: ', isRoomOpened, ' roomid: ', connection.sessionid);
-                }
+                    webrtcdev.log('[RTCMultiConn] isRoomOpened: ', isRoomOpened, ' roomid: ', connection.sessionid);
                 callback(isRoomOpened, connection.sessionid);
             }
 
             if (isRoomOpened === false) {
-                if (connection.enableLogs) {
-                    webrtcdev.warn('isRoomOpened: ', error, ' roomid: ', connection.sessionid);
-                }
-
+                    webrtcdev.error('[RTCMultiConn] isRoomOpened: ', error, ' roomid: ', connection.sessionid);
                 callback(isRoomOpened, connection.sessionid, error);
             }
         });
@@ -528,8 +523,15 @@
     }
 
     function beforeJoin(userPreferences, callback) {
-        if (connection.dontCaptureUserMedia || userPreferences.isDataOnly) {
+        if (connection.dontCaptureUserMedia) {
+            webrtcdev.error(" Join with dontcapturemedia");
             callback();
+            return;
+        }
+
+        if( userPreferences.isDataOnly){
+            webrtcdev.error(" Join with isDataOnly");
+            callback()
             return;
         }
 
@@ -582,7 +584,8 @@
                     }, (session.audio || session.video) && !isAudioPlusTab(connection) ? connection.invokeGetUserMedia(null, callback) : callback);
                 }
             } else if (session.audio || session.video) {
-                connection.invokeGetUserMedia(null, callback, session);
+                // connection.invokeGetUserMedia(null, callback, session);
+                callback();
             }
         }
     }

@@ -71,10 +71,10 @@ function getCamMedia(rtcConn, outgoingVideo, outgoingAudio) {
         webrtcdev.warn("[_mediacontrol.js] getCamMedia  - Dont Capture Webcam only Mic ");
         rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error
 
-    } else {
+    } else if(!outgoingVideo && !outgoingAudio){
 
         rtcConn.dontCaptureUserMedia = true;
-        webrtcdev.error(" [_mediacontrol.js] getCamMedia - dont Capture outgoing video ", outgoingVideo);
+        webrtcdev.error(" [_mediacontrol.js] getCamMedia - dont Capture outgoing video ", outgoingVideo , " and outgoung Audio " , outgoingAudio);
         window.dispatchEvent(new CustomEvent('webrtcdev', {
             detail: {
                 servicetype: "session",
