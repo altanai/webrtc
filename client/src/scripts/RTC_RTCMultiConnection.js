@@ -300,11 +300,16 @@
                 return;
             }
 
-            openRoom(callback);
+            if(connection.session.screen){
+                // Capture USerMedia Here
+                connection.captureUserMedia(function () {
+                    openRoom(callback);
+                });
+            }else{
+                // handle get user media from Mediacontrol.js
+                openRoom(callback);
+            }
 
-            // connection.captureUserMedia(function () {
-            //     openRoom(callback);
-            // });
         });
     };
 
