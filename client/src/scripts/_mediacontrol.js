@@ -71,10 +71,12 @@ function getCamMedia(rtcConn, outgoingVideo, outgoingAudio) {
         webrtcdev.warn("[_mediacontrol.js] getCamMedia  - Dont Capture Webcam only Mic ");
         rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error
 
-    } else if(!outgoingVideo && !outgoingAudio){
+    } else if (!outgoingVideo && !outgoingAudio) {
 
         rtcConn.dontCaptureUserMedia = true;
-        webrtcdev.error(" [_mediacontrol.js] getCamMedia - dont Capture outgoing video ", outgoingVideo , " and outgoung Audio " , outgoingAudio);
+        webrtcdev.error(" [_mediacontrol.js] getCamMedia - dont Capture outgoing video ", outgoingVideo, " and outgoung Audio ", outgoingAudio);
+        // call media error handler to attach null in video
+        rtcConn.onMediaError("onNoCameraCard", "");
         window.dispatchEvent(new CustomEvent('webrtcdev', {
             detail: {
                 servicetype: "session",
@@ -85,7 +87,7 @@ function getCamMedia(rtcConn, outgoingVideo, outgoingAudio) {
 }
 
 // /**
-//  * get Video and micrpphone stream media
+//  * get Video and microphone stream media
 //  * @method
 //  * @name getCamMedia
 //  * @param {json} rtcConn
@@ -190,9 +192,19 @@ function attachMediaStream(remvid, stream) {
                         .catch(error => {
                             webrtcdev.error("[Mediacontrol] attachMediaStream - error ", error);
                             if (error.name == "NotAllowedError" && error.message.includes("play() failed")) {
-                                alert(" play failed due to auto play policy, please wait ");
+                                var r = confirm("Play failed due to auto play policy, starting video on mute, click on video to unmute");
+                                if (r == true) {
+                                    element.muted = true;
+                                    element.autoplay = true;
+                                    element.addEventListener("click", function () {
+                                        element.muted = false;
+                                    });
+                                    element.play();
+                                } else {
+                                    // txt = "You pressed Cancel!";
+                                }
                             } else if (error.name == "NotAllowedError" && error.message.includes("The play() request was interrupted by a call to pause()")) {
-                                alert(" play failed, video was pause  ");
+                                alert("Play failed, video was paused ");
                             }
                             resolve(1);
                         });
@@ -201,10 +213,11 @@ function attachMediaStream(remvid, stream) {
             return pr;
 
         } else {
-            // If no stream , just attach the src as null , do not play
+            // If no stream , just attach the src as null
             let pr = new Promise(function (resolve, reject) {
                 element.srcObject = null;
                 webrtcdev.warn("[ Mediacontrol - attachMediaStream ] Media Stream empty '' attached to ", element, " as stream is not valid ", stream);
+                element.play();
                 resolve();
             });
             return pr;

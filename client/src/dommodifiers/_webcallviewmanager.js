@@ -86,10 +86,11 @@ function updateWebCallView(peerinfo) {
             } else if (peerinfo.vid.indexOf("videoremote") > -1) {
 
                 //when video is remote
-                webrtcdev.info("[webcallviewdevmanager] updateWebCallView-  role-", peerinfo.role, " peerinfo Vid type - ", peerinfo.type);
+                webrtcdev.info("[webcallviewdevmanager] updateWebCallView - role - ", peerinfo.role, " peerinfo Vid type - ", peerinfo.type);
 
                 // handling local video transition to active
-                if (outgoingVideo && localVideo && selfVideo) {
+                if ( localVideo && selfVideo) {
+                // if (outgoingVideo && localVideo && selfVideo) {
                     // chk if local video is added to conf , else adding local video to index 0
                     //localvid : Local video container before session
                     const localvid = document.getElementsByName(localVideo)[0];
@@ -102,7 +103,7 @@ function updateWebCallView(peerinfo) {
                             webrtcdev.log("[webcallviewdevmanager] updateWebCallView - local video is playing , just reattach stream to add in session");
                             pr = reattachMediaStream(selfvid, localvid);
                         } else {
-                            webrtcdev.log("[webcallviewdevmanager] updateWebCallView - local video is not playing ,use webcallpeers for stream to add in  session");
+                            webrtcdev.log("[webcallviewdevmanager] updateWebCallView - local video is not playing ,use webcallpeers for stream to add in session");
                             pr = attachMediaStream(selfvid, webcallpeers[0].stream);
                         }
 
@@ -129,8 +130,8 @@ function updateWebCallView(peerinfo) {
                     webrtcdev.info("[webcallviewdevmanager] updateWebCallView - User is joined by a remote peer , hiding local video container",
                         "showing users conf video container with attachMediaStream and attachUserDetails ");
 
-                } else if (!outgoingVideo) {
-                    webrtcdev.error("[webcallviewdevmanager] updateWebCallView - Outgoing Local video is ", outgoingVideo);
+                // } else if (!outgoingVideo) {
+                //     webrtcdev.error("[webcallviewdevmanager] updateWebCallView - Outgoing Local video is ", outgoingVideo);
                 } else {
                     //alert(" Please Add a video container in config for video call ");
                     webrtcdev.error("[webcallviewdevmanager] updateWebCallView - Local video container not defined ");

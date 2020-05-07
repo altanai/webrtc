@@ -328,6 +328,7 @@ var setRtcConn = function (sessionid, sessionobj) {
                     webrtcdev.log("[sessionmanager] onopen selfuserid ", selfuserid, " joined the session ");
 
                     // event emitter for app client
+                    webrtcdev.log("[sessionmanager] dispatch onLocalConnect");
                     window.dispatchEvent(new CustomEvent('webrtcdev', {
                         detail: {
                             servicetype: "session",
@@ -362,7 +363,7 @@ var setRtcConn = function (sessionid, sessionobj) {
                     // remoteUsers = remoteUsers.filter(function (elem, index, self) {
                     //     return index == self.indexOf(elem);
                     // });
-
+                    webrtcdev.log("[sessionmanager] dispatch onSessionConnect");
                     window.dispatchEvent(new CustomEvent('webrtcdev', {
                         detail: {
                             servicetype: "session",
