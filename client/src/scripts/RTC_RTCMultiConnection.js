@@ -189,6 +189,7 @@
     /**
      * create a new socket connectoion
      * @method
+     * @method
      * @name connectSocket
      * @param {function} connectCallback
      */
@@ -274,6 +275,7 @@
             }
 
             openRoom(callback);
+
             // connection.captureUserMedia(function () {
             //     openRoom(callback);
             // });
