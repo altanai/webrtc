@@ -1,4 +1,4 @@
-exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
+exports.realtimecomm = function (app, properties, cache, socketCallback) {
 
     var listOfUsers = {};
     var shiftedModerationControls = {};
@@ -610,7 +610,7 @@ exports.realtimecomm = function (app, properties, log, cache, socketCallback) {
     };
 
     console.log("----------------realtimecomm----------------------");
-    console.log(" Socket.io env => " + properties.enviornment + " running at\n " + properties.httpsPort);
+    console.log(" Socket.io env => " + properties.enviornment + " running at " + properties.wssPort);
 
     return module;
 };
