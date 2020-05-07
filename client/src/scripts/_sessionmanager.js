@@ -30,8 +30,8 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
             addr = socketAddr;
         }
         webrtcdev.log("[sessionmanager] StartSession" + sessionid, " on address ", addr);
-        socket = io.connect(addr,{
-            secure:true
+        socket = io.connect(addr, {
+            secure: true
         });
         console.log(" socket ", socket);
     } catch (err) {
@@ -257,11 +257,11 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
         }
     });
 
-    socket.on('event', function(data){
-        console.log("event" , data)
+    socket.on('event', function (data) {
+        console.log("event", data)
     });
-    socket.on('disconnect', function(){
-        console.error("disconneted " )
+    socket.on('disconnect', function () {
+        console.error("disconneted ")
     });
 }
 
@@ -426,7 +426,6 @@ var setRtcConn = function (sessionid, sessionobj) {
             peerinfo.stream = "";
             peerinfo.streamid = "";
             updateWebCallView(peerinfo);
-
         },
 
         rtcConn.onstream = function (event) {
@@ -494,7 +493,7 @@ var setRtcConn = function (sessionid, sessionobj) {
                             button.disabled = false;
                             webrtcdevCleanShareScreen(e.data.screenStreamid);
                         } else {
-                            webrtcdev.warn(" unrecognized screenshare message ", e.data.message);
+                            webrtcdev.warn("[sessionmanager] unrecognized screen-share message ", e.data.message);
                         }
                         break;
                     case "chat":
@@ -536,12 +535,12 @@ var setRtcConn = function (sessionid, sessionobj) {
                         if (e.data.draw) {
                             CanvasDesigner.syncData(e.data.draw);
                         } else if (e.data.board) {
-                            webrtcdev.log(" Canvas : ", e.data);
+                            webrtcdev.log("[sessionmanager] Canvas : ", e.data);
                             if (e.data.board.from == "remote") {
                                 if (e.data.board.event == "open" && isDrawOpened != true)
                                     syncDrawBoard(e.data.board);
-                                else if (e.data.board.event == "close" && isDrawOpened == true)
-                                    syncDrawBoard(e.data.board);
+                                // else if (e.data.board.event == "close" && isDrawOpened == true)
+                                    // syncDrawBoard(e.data.board);
                             }
                         } else {
                             webrtcdev.warn(" Board data mismatch", e.data);
@@ -655,7 +654,7 @@ var setRtcConn = function (sessionid, sessionobj) {
 
         rtcConn.onleave = function (e) {
             webrtcdev.log("[session manager] onleav -  ", e);
-            webrtcdev.warn("[session manager] onleave - userid left ", e.userid)
+            webrtcdev.warn("[session manager] onleave - userid left ", e.userid);
 
             var peerinfo = findPeerInfo(e.userid);
 

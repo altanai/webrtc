@@ -1,4 +1,4 @@
-/* Generated on:Thu May 07 2020 14:02:01 GMT+0530 (India Standard Time) || version: 5.3.5 - Altanai (@altanai)  , License : MIT  */exports.redisscipts = function () {
+/* Generated on:Thu May 07 2020 16:52:32 GMT+0530 (India Standard Time) || version: 5.3.5 - Altanai (@altanai)  , License : MIT  */exports.redisscipts = function () {
 
     const redis = require("redis");
     const RedisServer = require('redis-server');
@@ -40,17 +40,18 @@
 };
 
 
-/* Generated on:Thu May 07 2020 14:02:01 GMT+0530 (India Standard Time) || version: 5.3.5 - Altanai (@altanai)  , License : MIT  *//**
+/* Generated on:Thu May 07 2020 16:52:32 GMT+0530 (India Standard Time) || version: 5.3.5 - Altanai (@altanai)  , License : MIT  */
+/**
  * handled on connection of socket for every new connection
  * @method
  * @name realtimecomm
  * @param {json} properties
  * @param {json} options
- * @param {file} log external log file
  * @param {cache} cache like redis
  * @param {function} socketCallback
  */
-exports.realtimecomm = function (properties, options, log, cache, socketCallback) {
+
+exports.realtimecomm = function (properties, options , cache, socketCallback) {
 
     var listOfUsers = {};
     var shiftedModerationControls = {};
@@ -97,7 +98,7 @@ exports.realtimecomm = function (properties, options, log, cache, socketCallback
     // });
     // io.origins('*:*');
 
-    server.listen(properties.wss2Port);
+    server.listen(properties.wssPort);
 
     /* transport options
         'websocket',
@@ -735,7 +736,7 @@ exports.realtimecomm = function (properties, options, log, cache, socketCallback
 //         logs[utcDateString] = arguments.toString();
 //     }
 // }
-/* Generated on:Thu May 07 2020 14:02:01 GMT+0530 (India Standard Time) || version: 5.3.5 - Altanai (@altanai)  , License : MIT  */exports.restapi = function(realtimecomm, options , app, properties) {
+/* Generated on:Thu May 07 2020 16:52:32 GMT+0530 (India Standard Time) || version: 5.3.5 - Altanai (@altanai)  , License : MIT  */exports.restapi = function(realtimecomm, options , app, properties) {
 
     var restify = require('restify');
     var server = restify.createServer(options);

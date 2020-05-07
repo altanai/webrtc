@@ -14,7 +14,7 @@ var screenShareStreamLocal = null;
  * @name webrtcdevPrepareScreenShare
  * @param {function} callback
  */
-function webrtcdevPrepareScreenShare(screenRoomid) {
+function webrtcdevPrepareScreenShare(screenRoomid,sessionobj) {
 
     localStorage.setItem("screenRoomid ", screenRoomid);
     webrtcdev.log("[screenshare JS] webrtcdevPrepareScreenShare - screenRoomid : ", screenRoomid);
@@ -142,7 +142,7 @@ function webrtcdevPrepareScreenShare(screenRoomid) {
 }
 
 /**
- * Prepares screenshare , send open channel and handled open channel reponse ,calls getusermedia in callback
+ * Prepares screenshare , send open channel and handled open channel response ,calls getusermedia in callback
  * @method
  * @name webrtcdevSharescreen
  */

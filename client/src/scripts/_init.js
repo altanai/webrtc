@@ -19,7 +19,7 @@ this.connectionStatus = connectionStatus;
  */
 this.makesessionid = function (autoload) {
     let sessionid = "";
-    webrtcdev.log(" Existing charecters after # ", location.href.replace('#','').length);
+    webrtcdev.log(" Existing charecters after # ", location.href.replace('#', '').length);
 
     if (location.href.replace('#', '').length) {
         // When Session should have a session name
@@ -176,7 +176,7 @@ async function getVideoPermission() {
         webrtcdev.error(err.name + ": " + err.message);
     }
     outgoingVideo = false;
-    return;
+
 }
 
 
@@ -194,7 +194,7 @@ async function getAudioPermission() {
         webrtcdev.error(err.name + ": " + err.message);
     }
     outgoingAudio = false;
-    return;
+
 }
 
 
@@ -211,8 +211,13 @@ async function getAudioPermission() {
 this.setsession = function (_localobj, _remoteobj, incoming, outgoing, sessionobj, widgets) {
 
     this.sessionid = sessionid = session.sessionid;
-    socketAddr = sessionobj.socketAddr ;
-    signaller = sessionobj.signaller ;
+
+    if (sessionobj.socketAddr) {
+        config.socketAddr = sessionobj.socketAddr;
+    }
+    if (sessionobj.signaller) {
+        config.signaller = sessionobj.signaller;
+    }
     localobj = _localobj;
     remoteobj = _remoteobj;
 
@@ -270,8 +275,8 @@ this.setsession = function (_localobj, _remoteobj, incoming, outgoing, sessionob
         sessionid: sessionid,
         outgoing: outgoing,
         incoming: incoming,
-        socketAddr: socketAddr,
-        signaller: signaller,
+        socketAddr: config.socketAddr,
+        signaller: config.signaller,
         localobj: localobj,
         remoteobj: remoteobj,
         turn: turn,
@@ -291,8 +296,9 @@ this.startCall = function (sessionobj) {
         return;
     }
 
+    console.log(" -----------------  this.sessionobj ", this.sessionobj);
     // sessionobj is ready
-    webrtcdev.log("[ initjs ] startwebrtcdev begin processing with " , sessionobj);
+    webrtcdev.log("[ initjs ] startwebrtcdev begin processing with ", sessionobj);
 
     webrtcdev.log("[ initjs ] : incoming ", sessionobj.incoming);
     webrtcdev.log("[ initjs ] : outgoing ", sessionobj.outgoing);
@@ -396,7 +402,7 @@ this.startCall = function (sessionobj) {
         resolve(sessionid);
 
     }).then(sessionid => {
-        setRtcConn(sessionid,sessionobj);
+        setRtcConn(sessionid, sessionobj);
     }).then(_ => {
         setWidgets(rtcConn, sessionobj.widgets);
     }).then(_ => {
