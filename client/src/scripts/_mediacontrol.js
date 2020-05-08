@@ -55,6 +55,19 @@ function getCamMedia(rtcConn, outgoingVideo, outgoingAudio) {
     webrtcdev.log("[startJS] getCamMedia - role :", role);
     webrtcdev.log("[startJS] getCamMedia   - outgoingVideo " + outgoingVideo + " outgoingAudio " + outgoingAudio);
 
+    webrtcdev.log("[startJS] getCamMedia - default mediaConstraints :", rtcConn.mediaConstraints);
+    var mediaConstraints = {
+        audio: {
+            mandatory: {},
+            optional: []
+        },
+        video: {
+            mandatory: {},
+            optional: [{
+                facingMode: 'user'
+            }]
+        }
+    };
     if (role == "inspector") {
 
         rtcConn.dontCaptureUserMedia = true;
@@ -66,13 +79,23 @@ function getCamMedia(rtcConn, outgoingVideo, outgoingAudio) {
         rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error
 
     } else if (!outgoingVideo && outgoingAudio) {
-
+        mediaConstraints.video = false;
+        rtcConn.mediaConstraints = mediaConstraints;
         // alert(" start  getCamMedia  - Dont Capture Webcam, only Mic");
         webrtcdev.warn("[_mediacontrol.js] getCamMedia  - Dont Capture Webcam only Mic ");
         rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error
 
-    } else if (!outgoingVideo && !outgoingAudio) {
+    }else if (outgoingVideo && !outgoingAudio) {
+        mediaConstraints.audio = false;
+        rtcConn.mediaConstraints = mediaConstraints;
+        // alert(" start  getCamMedia  - Dont Capture Miv, only webcam");
+        webrtcdev.warn("[_mediacontrol.js] getCamMedia  - Dont Capture Mic only webcam ");
+        rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error
 
+    } else if (!outgoingVideo && !outgoingAudio) {
+        mediaConstraints.video = false;
+        mediaConstraints.audio = false;
+        rtcConn.mediaConstraints = mediaConstraints;
         rtcConn.dontCaptureUserMedia = true;
         webrtcdev.error(" [_mediacontrol.js] getCamMedia - dont Capture outgoing video ", outgoingVideo, " and outgoung Audio ", outgoingAudio);
         // call media error handler to attach null in video
@@ -148,7 +171,6 @@ function attachMediaStream(remvid, stream) {
 
         // Set the remote video element
         var element = "";
-        webrtcdev.log("[ Mediacontrol - attachMediaStream ] element ", remvid);
         if ((document.getElementsByName(remvid)).length > 0) {
             element = document.getElementsByName(remvid)[0];
         } else if (remvid.video) {
@@ -157,9 +179,11 @@ function attachMediaStream(remvid, stream) {
             element = remvid;
         } else {
             return new Promise(function (resolve, reject) {
+                webrtcdev.error("[ Mediacontrol] attachMediaStream - element  not found");
                 reject(1);
             });
         }
+        webrtcdev.log("[ Mediacontrol - attachMediaStream ] element ", element);
 
         // If stream is present , attach the stream  and play
         webrtcdev.log("[ Mediacontrol - attachMediaStream ] stream ", stream);
@@ -182,7 +206,7 @@ function attachMediaStream(remvid, stream) {
                     element.src = URL.createObjectURL(stream);
                 }
 
-                webrtcdev.log("[Mediacontrol ] attachMediaStream - added src object for valid stream ");
+                webrtcdev.log("[Mediacontrol ] attachMediaStream - added srcObject for valid stream ");
                 let playPromise = element.play();
                 if (playPromise !== undefined) {
                     playPromise.then(_ => {
@@ -192,16 +216,15 @@ function attachMediaStream(remvid, stream) {
                         .catch(error => {
                             webrtcdev.error("[Mediacontrol] attachMediaStream - error ", error);
                             if (error.name == "NotAllowedError" && error.message.includes("play() failed")) {
-                                var r = confirm("Play failed due to auto play policy, starting video on mute, click on video to unmute");
-                                if (r == true) {
+                                let r = confirm("Play failed due to auto play policy, starting video on mute, click on video to unmute");
+                                if (r || !r) {
+                                    // whether uer clicks ok or cancel
                                     element.muted = true;
                                     element.autoplay = true;
                                     element.addEventListener("click", function () {
                                         element.muted = false;
                                     });
                                     element.play();
-                                } else {
-                                    // txt = "You pressed Cancel!";
                                 }
                             } else if (error.name == "NotAllowedError" && error.message.includes("The play() request was interrupted by a call to pause()")) {
                                 alert("Play failed, video was paused ");

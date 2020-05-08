@@ -296,7 +296,6 @@ this.startCall = function (sessionobj) {
         return;
     }
 
-    console.log(" -----------------  this.sessionobj ", this.sessionobj);
     // sessionobj is ready
     webrtcdev.log("[ initjs ] startwebrtcdev begin processing with ", sessionobj);
 
