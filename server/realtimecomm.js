@@ -1,14 +1,15 @@
+
 /**
  * handled on connection of socket for every new connection
  * @method
  * @name realtimecomm
  * @param {json} properties
  * @param {json} options
- * @param {file} log external log file
  * @param {cache} cache like redis
  * @param {function} socketCallback
  */
-exports.realtimecomm = function (properties, options, log, cache, socketCallback) {
+
+exports.realtimecomm = function (properties, options , cache, socketCallback) {
 
     var listOfUsers = {};
     var shiftedModerationControls = {};
@@ -55,7 +56,7 @@ exports.realtimecomm = function (properties, options, log, cache, socketCallback
     // });
     // io.origins('*:*');
 
-    server.listen(properties.wss2Port);
+    server.listen(properties.wssPort);
 
     /* transport options
         'websocket',
