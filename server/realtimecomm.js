@@ -55,7 +55,7 @@ exports.realtimecomm = function (properties, options, log, cache, socketCallback
     // });
     // io.origins('*:*');
 
-    server.listen(properties.wss2Port);
+    server.listen(properties.wssPort:);
 
     /* transport options
         'websocket',

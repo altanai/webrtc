@@ -52,29 +52,29 @@ function detectMic(callback) {
  */
 function getCamMedia(rtcConn, outgoingVideo, outgoingAudio) {
 
-    webrtcdev.log("[startJS] getCamMedia - role :", role);
-    webrtcdev.log("[startJS] getCamMedia   - outgoingVideo " + outgoingVideo + " outgoingAudio " + outgoingAudio);
+    webrtcdev.log("[mediacontrol js] getCamMedia - role :", role);
+    webrtcdev.log("[mediacontrol js] getCamMedia - outgoingVideo " + outgoingVideo + " outgoingAudio " + outgoingAudio);
 
     if (role == "inspector") {
 
         rtcConn.dontCaptureUserMedia = true;
-        webrtcdev.log("[_mediacontrol.js] getCamMedia  - Joining as inspector without camera Video");
+        webrtcdev.warn("[_mediacontrol.js] getCamMedia  - Joining as inspector without camera Video");
 
     } else if (outgoingVideo && outgoingAudio) {
 
-        webrtcdev.log("[_mediacontrol.js] getCamMedia  - Capture Media ");
+        webrtcdev.log("[mediacontrol.js] getCamMedia  - Capture Media ");
         rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error
 
     } else if (!outgoingVideo && outgoingAudio) {
 
         // alert(" start  getCamMedia  - Dont Capture Webcam, only Mic");
-        webrtcdev.warn("[_mediacontrol.js] getCamMedia  - Dont Capture Webcam only Mic ");
+        webrtcdev.warn("[mediacontrol.js] getCamMedia  - Dont Capture Webcam only Mic ");
         rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error
 
     } else if(!outgoingVideo && !outgoingAudio){
 
         rtcConn.dontCaptureUserMedia = true;
-        webrtcdev.error(" [_mediacontrol.js] getCamMedia - dont Capture outgoing video ", outgoingVideo , " and outgoung Audio " , outgoingAudio);
+        webrtcdev.error("[mediacontrol.js] getCamMedia - dont Capture outgoing video ", outgoingVideo , " and outgoung Audio " , outgoingAudio);
         window.dispatchEvent(new CustomEvent('webrtcdev', {
             detail: {
                 servicetype: "session",
@@ -146,7 +146,7 @@ function attachMediaStream(remvid, stream) {
 
         // Set the remote video element
         var element = "";
-        webrtcdev.log("[ Mediacontrol - attachMediaStream ] element ", remvid);
+        webrtcdev.log("[Mediacontrol] attachMediaStream - element ", remvid);
         if ((document.getElementsByName(remvid)).length > 0) {
             element = document.getElementsByName(remvid)[0];
         } else if (remvid.video) {
@@ -160,7 +160,7 @@ function attachMediaStream(remvid, stream) {
         }
 
         // If stream is present , attach the stream  and play
-        webrtcdev.log("[ Mediacontrol - attachMediaStream ] stream ", stream);
+        webrtcdev.log("[Mediacontrol] attachMediaStream - stream ", stream);
         if (stream && (stream.isVideo || stream.isScreen)) {
             let pr = new Promise(function (resolve, reject) {
                 //element.srcObject = stream; // src(undefined) error after refresh sometimes
@@ -180,7 +180,7 @@ function attachMediaStream(remvid, stream) {
                     element.src = URL.createObjectURL(stream);
                 }
 
-                webrtcdev.log("[Mediacontrol ] attachMediaStream - added src object for valid stream ");
+                webrtcdev.info("[Mediacontrol] attachMediaStream - added src object for valid stream ");
                 let playPromise = element.play();
                 if (playPromise !== undefined) {
                     playPromise.then(_ => {
@@ -204,7 +204,7 @@ function attachMediaStream(remvid, stream) {
             // If no stream , just attach the src as null , do not play
             let pr = new Promise(function (resolve, reject) {
                 element.srcObject = null;
-                webrtcdev.warn("[ Mediacontrol - attachMediaStream ] Media Stream empty '' attached to ", element, " as stream is not valid ", stream);
+                webrtcdev.warn("[ Mediacontrol] attachMediaStream Media Stream empty '' attached to ", element, " as stream is not valid ", stream);
                 resolve();
             });
             return pr;
@@ -212,7 +212,7 @@ function attachMediaStream(remvid, stream) {
 
     } catch (err) {
         let pr = new Promise(function (resolve, reject) {
-            webrtcdev.error(" [ Mediacontrol - attachMediaStream ]  error", err);
+            webrtcdev.error(" [ Mediacontrol] attachMediaStream - error", err);
             reject();
         });
         return pr;

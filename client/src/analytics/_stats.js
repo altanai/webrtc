@@ -9,12 +9,13 @@
  */
 this.getWebrtcdevStats = getWebrtcdevStats = function () {
 
+    webrtcdev.info(" URL  : ", window.location.href);
+
     webrtcdev.info(" Browser  : ", rtcConn.DetectRTC.browser);
 
     webrtcdev.info(" Network connection downlink : ", navigator.connection.downlink);
     webrtcdev.info(" Network connection effectiveType : ", navigator.connection.effectiveType);
     webrtcdev.info(" Network connection rtt : ", navigator.connection.rtt);
-
     webrtcdev.info(" Bandwidth  : ", rtcConn.bandwidth);
 
     webrtcdev.info(" All active participants  : ", getAllActivePeers());
