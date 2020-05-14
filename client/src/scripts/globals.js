@@ -1,27 +1,17 @@
-
 /*********** global Params ****************/
-var t = "";
-var e = null;
-var n = "";
+
 var rtcConn = null;
 var selfuserid = null, remoteUserId = null;
-var containerDiv;
+
 var webcallpeers = [];
-var sessions = {};
+
 var repeatFlagShowButton = null, repeatFlagHideButton = null, repeatFlagRemoveButton = null,
     repeatFlagStopuploadButton = null;
 
-/* DOM objects for single user video , user in conf and all other users*/
-var localVideo = null, selfVideo = null, remoteVideos = [];
-
 var webrtcDetectedBrowser = null;
 var webrtcDetectedVersion = null;
-/*var usersList     = document.getElementById("userslist");
-var numbersOfUsers  = document.getElementById("numbersofusers");
-var usersContainer  = document.getElementById("usersContainer");*/
-var tempuserid;
-var sessions = {};
 
+var tempuserid;
 var selfusername = "", selfemail = "", selfcolor = "";
 var remoteusername = "", remoteemail = "", remotecolor = "";
 
@@ -30,9 +20,11 @@ var latitude = "", longitude = "", operatingsystem = "";
 /* webrtc session intialization */
 var autoload = true;
 var sessionid = null, webrtcdevIceServers = [];
+this.sessionid = "";
+
 var localStream, localStreamId, remoteStream, remoteStreamId;
 var config = {
-    socketAddr : location.hostname + ":8083/",
+    socketAddr: location.hostname + ":8083/",
     signaller: location.hostname + ":8085/"
 };
 
@@ -40,6 +32,10 @@ var config = {
 var incomingAudio = true, incomingVideo = true, incomingData = true;
 var outgoingAudio = true, outgoingVideo = true, outgoingData = true;
 
+/* DOM objects for single user video , user in conf and all other users*/
+var localVideo = null, selfVideo = null, remoteVideos = [];
+
+/* widget objects */
 var debug = false;
 
 var timerobj = false;
@@ -78,15 +74,8 @@ var helpobj = false;
 
 var statisticsobj = false;
 
-var screen, isScreenOn = 0, chromeMediaSourceId = null, extensioninstalled;
+var screen, isScreenOn = 0, chromeMediaSourceId = null;
 var screen_roomid, screen_userid;
 
 var role = "participant";
-
-this.sessionid = "";
-
-// var isFirefox = typeof window.InstallTrigger !== 'undefined';
-// var isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
-// var isChrome = !!window.chrome && !isOpera;
-// var isMobileDevice = !!navigator.userAgent.match(/Android|iPhone|iPad|iPod|BlackBerry|IEMobile/i);
 

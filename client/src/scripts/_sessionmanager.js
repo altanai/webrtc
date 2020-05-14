@@ -30,8 +30,8 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
             addr = socketAddr;
         }
         webrtcdev.log("[sessionmanager] StartSession" + sessionid, " on address ", addr);
-        socket = io.connect(addr,{
-            secure:true
+        socket = io.connect(addr, {
+            secure: true
         });
         console.log(" socket ", socket);
     } catch (err) {
@@ -257,11 +257,11 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
         }
     });
 
-    socket.on('event', function(data){
-        console.log("event" , data)
+    socket.on('event', function (data) {
+        console.log("event", data)
     });
-    socket.on('disconnect', function(){
-        console.error("disconneted " )
+    socket.on('disconnect', function () {
+        console.error("disconneted ")
     });
 }
 
@@ -328,6 +328,7 @@ var setRtcConn = function (sessionid, sessionobj) {
                     webrtcdev.log("[sessionmanager] onopen selfuserid ", selfuserid, " joined the session ");
 
                     // event emitter for app client
+                    webrtcdev.log("[sessionmanager] dispatch onLocalConnect");
                     window.dispatchEvent(new CustomEvent('webrtcdev', {
                         detail: {
                             servicetype: "session",
@@ -363,6 +364,9 @@ var setRtcConn = function (sessionid, sessionobj) {
                     //     return index == self.indexOf(elem);
                     // });
 
+                    findPeerInfoSDP(event.userid);
+
+                    webrtcdev.log("[sessionmanager] dispatch onSessionConnect");
                     window.dispatchEvent(new CustomEvent('webrtcdev', {
                         detail: {
                             servicetype: "session",
@@ -371,11 +375,10 @@ var setRtcConn = function (sessionid, sessionobj) {
                     }));
                 }
 
-                // setting local caches
-                webrtcdev.log(" [sessionmanager onopen] setting cache - channel " + sessionid + " with self-userid " + selfuserid + " and remoteUsers " + remoteUsers);
-
                 // In debug mode let the users create multiple user session in same browser ,
                 // do not use localstoarge values to get old userid for resuse
+                // setting local caches
+                // webrtcdev.log(" [sessionmanager] onopen - setting cache - channel " + sessionid + " with self-userid " + selfuserid + " and remoteUsers " + remoteUsers);
                 // if (!debug) {
                 //     if (!localStorage.getItem("userid"))
                 //         localStorage.setItem("userid", selfuserid);
@@ -387,24 +390,13 @@ var setRtcConn = function (sessionid, sessionobj) {
                 //         localStorage.setItem("channel", sessionid);
                 // }
 
-                // stats widget
-                if (statisticsobj && statisticsobj.active) {
-                    // populate RTP stats
-                    getWebrtcdevStats();
-                }
-
-                // Connect to webrtc
+                // Connect  Self to session with either open or join
                 if (rtcConn.connectionType == "open") {
                     connectWebRTC("open", sessionid, selfuserid, []);
                 } else if (rtcConn.connectionType == "join") {
                     connectWebRTC("join", sessionid, selfuserid, remoteUsers);
                 } else {
                     shownotification("Connection type is neither open nor join", "warning");
-                }
-
-                if (timerobj && timerobj.active) {
-                    startsessionTimer(timerobj);
-                    shareTimePeer();
                 }
 
             } catch (err) {
@@ -426,7 +418,6 @@ var setRtcConn = function (sessionid, sessionobj) {
             peerinfo.stream = "";
             peerinfo.streamid = "";
             updateWebCallView(peerinfo);
-
         },
 
         rtcConn.onstream = function (event) {
@@ -442,10 +433,12 @@ var setRtcConn = function (sessionid, sessionobj) {
                 appendToPeerValue(event.userid, "stream", event.stream);
                 appendToPeerValue(event.userid, "streamid", event.streamid);
                 updateWebCallView(findPeerInfo(event.userid));
+
             } else if (role == "inspector" && event.type == "local") {
                 // ignore any incoming stream from inspector
                 webrtcdev.info("[sessionmanager] onstream - ignore any incoming stream from inspector");
                 updateWebCallView(peerinfo);
+
             } else {
                 peerinfo.type = event.type;
                 peerinfo.stream = event.stream;
@@ -494,7 +487,7 @@ var setRtcConn = function (sessionid, sessionobj) {
                             button.disabled = false;
                             webrtcdevCleanShareScreen(e.data.screenStreamid);
                         } else {
-                            webrtcdev.warn(" unrecognized screenshare message ", e.data.message);
+                            webrtcdev.warn("[sessionmanager] unrecognized screen-share message ", e.data.message);
                         }
                         break;
                     case "chat":
@@ -536,12 +529,12 @@ var setRtcConn = function (sessionid, sessionobj) {
                         if (e.data.draw) {
                             CanvasDesigner.syncData(e.data.draw);
                         } else if (e.data.board) {
-                            webrtcdev.log(" Canvas : ", e.data);
+                            webrtcdev.log("[sessionmanager] Canvas : ", e.data);
                             if (e.data.board.from == "remote") {
                                 if (e.data.board.event == "open" && isDrawOpened != true)
                                     syncDrawBoard(e.data.board);
-                                else if (e.data.board.event == "close" && isDrawOpened == true)
-                                    syncDrawBoard(e.data.board);
+                                // else if (e.data.board.event == "close" && isDrawOpened == true)
+                                    // syncDrawBoard(e.data.board);
                             }
                         } else {
                             webrtcdev.warn(" Board data mismatch", e.data);
@@ -655,7 +648,7 @@ var setRtcConn = function (sessionid, sessionobj) {
 
         rtcConn.onleave = function (e) {
             webrtcdev.log("[session manager] onleav -  ", e);
-            webrtcdev.warn("[session manager] onleave - userid left ", e.userid)
+            webrtcdev.warn("[session manager] onleave - userid left ", e.userid);
 
             var peerinfo = findPeerInfo(e.userid);
 
@@ -801,11 +794,16 @@ var openWebRTC = function (channel, userid, maxallowed) {
  * @param {string} remoteUsers
  */
 var connectWebRTC = function (type, channel, selfuserid, remoteUsers) {
-    webrtcdev.info(" [sessionmanager] ConnectWebRTC type : ", type, " , Channel :", channel,
+    webrtcdev.info(" [sessionmanager] ConnectWebRTC for Self -  type : ", type, " , Channel :", channel,
         " , self-Userid : ", selfuserid, " , and remote users : ", remoteUsers);
+
+    // update web call view for Self
+    // updateWebCallView(peerinfo);
+    updateLocalWebCallView(webcallpeers[0]);
+
     if (debug) showUserStats();
 
-    // if the Listene is active then freeze the screen
+    // if the Listenin is active then freeze the screen
     if (listeninobj.active && role == "inspector") {
         webrtcdev.info(" [sessionmanage] freezing screen for role inspector ");
         freezescreen();
@@ -867,11 +865,23 @@ var connectWebRTC = function (type, channel, selfuserid, remoteUsers) {
         }
     }
 
-    // kick start the timer
+    // stats widget
+    if (statisticsobj && statisticsobj.active) {
+        // populate RTP stats
+        getWebrtcdevStats();
+    }
+
+    // kickstart the timer
     if (timerobj && timerobj.active) {
+        //s ession timer
+        startsessionTimer(timerobj);
+        // share time with peer
+        shareTimePeer();
+        // self time
         startTime();
         showTimeZone();
     }
+
 };
 
 

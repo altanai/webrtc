@@ -43,6 +43,46 @@ function getAllActivePeers() {
     return rtcConn.peers.getAllParticipants();
 }
 
+/**
+ * find information about a peer form array of peers based on userid
+ * @method
+ * @name findPeerInfo
+ * @param {string} userid
+ */
+var findPeerInfoSDP = function (userid) {
+    webrtcdev.log("peerinfomanager] find perinfo SDP ", userid);
+    for (x in rtcConn.peers) {
+        if (rtcConn.peers[x].userid == userid) {
+            webrtcdev.log("peerinfomanager] PeerInfo Remote ", rtcConn.peers[x]);
+            let offer = rtcConn.peers[x].peer.currentRemoteDescription;
+            webrtcdev.log("peerinfomanager] PeerInfo Remote SDP ", offer.type , offer.sdp) ;
+
+            let lines = offer.sdp.split('\n')
+                .map(l => l.trim()); // split and remove trailing CR
+            lines.forEach(function (line) {
+
+                if (line.indexOf('a=fingerprint:') === 0) {
+                    let parts = line.substr(14).split(' ');
+                    console.log('algorithm', parts[0]);
+                    console.log('fingerprint', parts[1]);
+                }
+
+                if (line.indexOf('m=audio') === 0) {
+                    let parts = line.substr(8).split(' ');
+                    console.log('Audio codecs', parts);
+                }
+
+                if (line.indexOf('m=video') === 0) {
+                    let parts = line.substr(8).split(' ');
+                    console.log('Video codecs', parts);
+                }
+
+            });
+
+        }
+    }
+    return null;
+};
 
 /**
  * update already existing webcallpeers obj by appending a value , mostly used for timer zone

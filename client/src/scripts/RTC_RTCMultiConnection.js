@@ -300,11 +300,16 @@
                 return;
             }
 
-            openRoom(callback);
+            if(connection.session.screen){
+                // Capture USerMedia Here
+                connection.captureUserMedia(function () {
+                    openRoom(callback);
+                });
+            }else{
+                // handle get user media from Mediacontrol.js
+                openRoom(callback);
+            }
 
-            // connection.captureUserMedia(function () {
-            //     openRoom(callback);
-            // });
         });
     };
 
@@ -560,29 +565,29 @@
 
         if (session.audio || session.video || session.screen) {
             if (session.screen) {
-                if (DetectRTC.browser.name === 'Edge') {
-                    navigator.getDisplayMedia({
-                        video: true,
-                        audio: isAudioPlusTab(connection)
-                    }).then(function (screen) {
-                        screen.isScreen = true;
-                        mPeer.onGettingLocalMedia(screen);
-
-                        if ((session.audio || session.video) && !isAudioPlusTab(connection)) {
-                            connection.invokeGetUserMedia(null, callback);
-                        } else {
-                            callback(screen);
-                        }
-                    }, function (error) {
-                        webrtcdev.error('Unable to capture screen on Edge. HTTPs and version 17+ is required.');
-                    });
-                } else {
+                // if (DetectRTC.browser.name === 'Edge') {
+                //     navigator.getDisplayMedia({
+                //         video: true,
+                //         audio: isAudioPlusTab(connection)
+                //     }).then(function (screen) {
+                //         screen.isScreen = true;
+                //         mPeer.onGettingLocalMedia(screen);
+                //
+                //         if ((session.audio || session.video) && !isAudioPlusTab(connection)) {
+                //             connection.invokeGetUserMedia(null, callback);
+                //         } else {
+                //             callback(screen);
+                //         }
+                //     }, function (error) {
+                //         webrtcdev.error('Unable to capture screen on Edge. HTTPs and version 17+ is required.');
+                //     });
+                // } else {
                     connection.invokeGetUserMedia({
                         audio: isAudioPlusTab(connection),
                         video: true,
                         isScreen: true
                     }, (session.audio || session.video) && !isAudioPlusTab(connection) ? connection.invokeGetUserMedia(null, callback) : callback);
-                }
+                // }
             } else if (session.audio || session.video) {
                 // connection.invokeGetUserMedia(null, callback, session);
                 callback();
@@ -603,29 +608,29 @@
 
         if (session.audio || session.video || session.screen) {
             if (session.screen) {
-                if (DetectRTC.browser.name === 'Edge') {
-                    navigator.getDisplayMedia({
-                        video: true,
-                        audio: isAudioPlusTab(connection)
-                    }).then(function (screen) {
-                        screen.isScreen = true;
-                        mPeer.onGettingLocalMedia(screen);
-
-                        if ((session.audio || session.video) && !isAudioPlusTab(connection)) {
-                            var nonScreenSession = {};
-                            for (var s in session) {
-                                if (s !== 'screen') {
-                                    nonScreenSession[s] = session[s];
-                                }
-                            }
-                            connection.invokeGetUserMedia(sessionForced, callback, nonScreenSession);
-                            return;
-                        }
-                        callback(screen);
-                    }, function (error) {
-                        webrtcdev.error('Unable to capture screen on Edge. HTTPs and version 17+ is required.');
-                    });
-                } else {
+                // if (DetectRTC.browser.name === 'Edge') {
+                //     navigator.getDisplayMedia({
+                //         video: true,
+                //         audio: isAudioPlusTab(connection)
+                //     }).then(function (screen) {
+                //         screen.isScreen = true;
+                //         mPeer.onGettingLocalMedia(screen);
+                //
+                //         if ((session.audio || session.video) && !isAudioPlusTab(connection)) {
+                //             var nonScreenSession = {};
+                //             for (var s in session) {
+                //                 if (s !== 'screen') {
+                //                     nonScreenSession[s] = session[s];
+                //                 }
+                //             }
+                //             connection.invokeGetUserMedia(sessionForced, callback, nonScreenSession);
+                //             return;
+                //         }
+                //         callback(screen);
+                //     }, function (error) {
+                //         webrtcdev.error('Unable to capture screen on Edge. HTTPs and version 17+ is required.');
+                //     });
+                // } else {
                     connection.invokeGetUserMedia({
                         audio: isAudioPlusTab(connection),
                         video: true,
@@ -643,7 +648,7 @@
                         }
                         callback(stream);
                     });
-                }
+                // }
             } else if (session.audio || session.video) {
                 connection.invokeGetUserMedia(sessionForced, callback, session);
             }
@@ -709,10 +714,12 @@
 
     connection.codecs = {
         audio: 'opus',
-        video: 'VP9'
+        video: 'Av1'
     };
 
     connection.processSdp = function (sdp) {
+
+        webrtcdev.log("[RtcConn ] processSdp", sdp);
         // ignore SDP modification if unified-pan is supported
         if (isUnifiedPlanSupportedDefault()) {
             return sdp;
@@ -762,6 +769,7 @@
             });
         }
 
+        webrtcdev.log("[RtcConn ] processSdp final - ", sdp);
         return sdp;
     };
 

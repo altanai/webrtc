@@ -1,14 +1,15 @@
+
 /**
  * handled on connection of socket for every new connection
  * @method
  * @name realtimecomm
  * @param {json} properties
  * @param {json} options
- * @param {file} log external log file
  * @param {cache} cache like redis
  * @param {function} socketCallback
  */
-exports.realtimecomm = function (properties, options, log, cache, socketCallback) {
+
+exports.realtimecomm = function (properties, options , cache, socketCallback) {
 
     var listOfUsers = {};
     var shiftedModerationControls = {};
@@ -55,7 +56,7 @@ exports.realtimecomm = function (properties, options, log, cache, socketCallback
     // });
     // io.origins('*:*');
 
-    server.listen(properties.wssPort:);
+    server.listen(properties.wssPort);
 
     /* transport options
         'websocket',
@@ -343,14 +344,14 @@ exports.realtimecomm = function (properties, options, log, cache, socketCallback
                 webrtcdevchannels[data.channel].log.push(new Date().toLocaleString() + ":-User " + data.sender + " joined the channel ");
 
                 // send back the join response to webclient
-                var jevent = {
+                let jevent = {
                     status: true,
                     channel: data.channel,
                     users: webrtcdevchannels[data.channel].users
                 };
                 socket.emit("join-channel-resp", jevent);
 
-                var cevent = {
+                let cevent = {
                     status: true,
                     type: "new-join",
                     msgtype: "success",
@@ -362,7 +363,7 @@ exports.realtimecomm = function (properties, options, log, cache, socketCallback
                 console.warn(" Not aloowed to join channel , maxAllowed : ", webrtcdevchannels[data.channel].maxAllowed,
                     " current-users : ", webrtcdevchannels[data.channel].users.length);
 
-                var jevent = {
+                let jevent = {
                     status: false,
                     msgtype: "error",
                     msg: "Sorry cant join this channel"
@@ -554,8 +555,7 @@ exports.realtimecomm = function (properties, options, log, cache, socketCallback
             }
 
             try {
-                var message = shiftedModerationControls[socket.userid];
-
+                let message = shiftedModerationControls[socket.userid];
                 if (message) {
                     delete shiftedModerationControls[message.userid];
                     onMessageCallback(message);
@@ -590,11 +590,11 @@ exports.realtimecomm = function (properties, options, log, cache, socketCallback
     }
 
     module.getAll = function (format) {
-        var channels = [];
+        let channels = [];
         for (i in webrtcdevchannels) {
             channels.push(webrtcdevchannels[i]);
         }
-        var output = {
+        let output = {
             response: 'channels',
             channels: channels,
             format: format
@@ -634,7 +634,7 @@ exports.realtimecomm = function (properties, options, log, cache, socketCallback
             }
         }
 
-        var output = {
+        let output = {
             response: 'users',
             users: users,
             format: format
@@ -644,7 +644,7 @@ exports.realtimecomm = function (properties, options, log, cache, socketCallback
 
     module.getUser = function (userid, format) {
 
-        var output = {
+        let output = {
             response: 'users',
             users: (users[userid] ? users[userid] : "notfound"),
             format: format
@@ -654,7 +654,7 @@ exports.realtimecomm = function (properties, options, log, cache, socketCallback
 
     module.getChannelClients = function (channel) {
 
-        var output = {
+        let output = {
             response: 'users',
             clients: io.of('/' + channel).clients(),
             format: data.format

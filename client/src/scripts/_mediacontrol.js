@@ -55,6 +55,19 @@ function getCamMedia(rtcConn, outgoingVideo, outgoingAudio) {
     webrtcdev.log("[mediacontrol js] getCamMedia - role :", role);
     webrtcdev.log("[mediacontrol js] getCamMedia - outgoingVideo " + outgoingVideo + " outgoingAudio " + outgoingAudio);
 
+    webrtcdev.log("[startJS] getCamMedia - default mediaConstraints :", rtcConn.mediaConstraints);
+    var mediaConstraints = {
+        audio: {
+            mandatory: {},
+            optional: []
+        },
+        video: {
+            mandatory: {},
+            optional: [{
+                facingMode: 'user'
+            }]
+        }
+    };
     if (role == "inspector") {
 
         rtcConn.dontCaptureUserMedia = true;
@@ -66,15 +79,27 @@ function getCamMedia(rtcConn, outgoingVideo, outgoingAudio) {
         rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error
 
     } else if (!outgoingVideo && outgoingAudio) {
-
+        mediaConstraints.video = false;
+        rtcConn.mediaConstraints = mediaConstraints;
         // alert(" start  getCamMedia  - Dont Capture Webcam, only Mic");
         webrtcdev.warn("[mediacontrol.js] getCamMedia  - Dont Capture Webcam only Mic ");
         rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error
 
-    } else if(!outgoingVideo && !outgoingAudio){
+    } else if (outgoingVideo && !outgoingAudio) {
+        mediaConstraints.audio = false;
+        rtcConn.mediaConstraints = mediaConstraints;
+        // alert(" start  getCamMedia  - Dont Capture Miv, only webcam");
+        webrtcdev.warn("[_mediacontrol.js] getCamMedia  - Dont Capture Mic only webcam ");
+        rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error
 
+    } else if (!outgoingVideo && !outgoingAudio) {
+        mediaConstraints.video = false;
+        mediaConstraints.audio = false;
+        rtcConn.mediaConstraints = mediaConstraints;
         rtcConn.dontCaptureUserMedia = true;
-        webrtcdev.error("[mediacontrol.js] getCamMedia - dont Capture outgoing video ", outgoingVideo , " and outgoung Audio " , outgoingAudio);
+        webrtcdev.error(" [_mediacontrol.js] getCamMedia - dont Capture outgoing video ", outgoingVideo, " and outgoung Audio ", outgoingAudio);
+        // call media error handler to attach null in video
+        rtcConn.onMediaError("onNoCameraCard", "");
         window.dispatchEvent(new CustomEvent('webrtcdev', {
             detail: {
                 servicetype: "session",
@@ -85,7 +110,7 @@ function getCamMedia(rtcConn, outgoingVideo, outgoingAudio) {
 }
 
 // /**
-//  * get Video and micrpphone stream media
+//  * get Video and microphone stream media
 //  * @method
 //  * @name getCamMedia
 //  * @param {json} rtcConn
@@ -146,7 +171,6 @@ function attachMediaStream(remvid, stream) {
 
         // Set the remote video element
         var element = "";
-        webrtcdev.log("[Mediacontrol] attachMediaStream - element ", remvid);
         if ((document.getElementsByName(remvid)).length > 0) {
             element = document.getElementsByName(remvid)[0];
         } else if (remvid.video) {
@@ -155,9 +179,11 @@ function attachMediaStream(remvid, stream) {
             element = remvid;
         } else {
             return new Promise(function (resolve, reject) {
+                webrtcdev.error("[ Mediacontrol] attachMediaStream - element  not found");
                 reject(1);
             });
         }
+        webrtcdev.log("[ Mediacontrol - attachMediaStream ] element ", element);
 
         // If stream is present , attach the stream  and play
         webrtcdev.log("[Mediacontrol] attachMediaStream - stream ", stream);
@@ -181,6 +207,7 @@ function attachMediaStream(remvid, stream) {
                 }
 
                 webrtcdev.info("[Mediacontrol] attachMediaStream - added src object for valid stream ");
+
                 let playPromise = element.play();
                 if (playPromise !== undefined) {
                     playPromise.then(_ => {
@@ -190,9 +217,18 @@ function attachMediaStream(remvid, stream) {
                         .catch(error => {
                             webrtcdev.error("[Mediacontrol] attachMediaStream - error ", error);
                             if (error.name == "NotAllowedError" && error.message.includes("play() failed")) {
-                                alert(" play failed due to auto play policy, please wait ");
+                                let r = confirm("Play failed due to auto play policy, starting video on mute, click on video to unmute");
+                                if (r || !r) {
+                                    // whether uer clicks ok or cancel
+                                    element.muted = true;
+                                    element.autoplay = true;
+                                    element.addEventListener("click", function () {
+                                        element.muted = false;
+                                    });
+                                    element.play();
+                                }
                             } else if (error.name == "NotAllowedError" && error.message.includes("The play() request was interrupted by a call to pause()")) {
-                                alert(" play failed, video was pause  ");
+                                alert("Play failed, video was paused ");
                             }
                             resolve(1);
                         });
@@ -201,10 +237,11 @@ function attachMediaStream(remvid, stream) {
             return pr;
 
         } else {
-            // If no stream , just attach the src as null , do not play
+            // If no stream , just attach the src as null
             let pr = new Promise(function (resolve, reject) {
                 element.srcObject = null;
-                webrtcdev.warn("[ Mediacontrol] attachMediaStream Media Stream empty '' attached to ", element, " as stream is not valid ", stream);
+                webrtcdev.warn("[ Mediacontrol - attachMediaStream ] Media Stream empty '' attached to ", element, " as stream is not valid ", stream);
+                element.play();
                 resolve();
             });
             return pr;
@@ -230,6 +267,8 @@ function reattachMediaStream(to, from) {
     try {
         // If stream is present , attach the stream and play
         let pr = new Promise(function (resolve, reject) {
+            if (to.srcObject) resolve(1);
+
             to.srcObject = from.srcObject;
             webrtcdev.log('[Mediacontrol] reattachMediaStream - added src object for valid stream ', to);
             let playPromise = to.play();
@@ -260,7 +299,7 @@ function detachMediaStream(vid) {
     try {
         if ('srcObject' in vid) {
             const stream = vid.srcObject;
-            if (stream) {
+            if (stream && stream != "") {
                 const tracks = stream.getTracks();
                 tracks.forEach(function (track) {
                     track.stop();
@@ -268,7 +307,7 @@ function detachMediaStream(vid) {
                 vid.stream = "";
                 vid.srcObject = null;
             } else {
-                webrtcdev.warn("[ Mediacontrol] dettachMediaStream  no stream present on remote's video")
+                webrtcdev.warn("[ Mediacontrol] dettachMediaStream  no stream present on remote's video");
             }
             // try {
             //     video.srcObject = "";
