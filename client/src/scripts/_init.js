@@ -9,6 +9,7 @@ var pendingFileTransfer = [];
 var connectionStatus = null;
 
 this.connectionStatus = connectionStatus;
+this.version ='@@version';
 
 /**
  * creates sessionid

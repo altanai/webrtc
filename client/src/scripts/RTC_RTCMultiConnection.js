@@ -1020,7 +1020,7 @@
         e.mediaElement.parentNode.removeChild(e.mediaElement);
     };
 
-    connection.direction = 'many-to-many';
+    connection.direction = 'many-to-many'; // or  'one-way'
 
     connection.removeStream = function (streamid, remoteUserId) {
         var stream;
@@ -1821,36 +1821,36 @@
     });
 
     connection.isLowBandwidth = false;
-    if (navigator && navigator.connection && navigator.connection.type) {
-        connection.isLowBandwidth = navigator.connection.type.toString().toLowerCase().search(/wifi|cell/g) !== -1;
-        if (connection.isLowBandwidth) {
-            connection.bandwidth = {
-                audio: false,
-                video: false,
-                screen: false
-            };
-
-            if (connection.mediaConstraints.audio && connection.mediaConstraints.audio.optional && connection.mediaConstraints.audio.optional.length) {
-                var newArray = [];
-                connection.mediaConstraints.audio.optional.forEach(function (opt) {
-                    if (typeof opt.bandwidth === 'undefined') {
-                        newArray.push(opt);
-                    }
-                });
-                connection.mediaConstraints.audio.optional = newArray;
-            }
-
-            if (connection.mediaConstraints.video && connection.mediaConstraints.video.optional && connection.mediaConstraints.video.optional.length) {
-                var newArray = [];
-                connection.mediaConstraints.video.optional.forEach(function (opt) {
-                    if (typeof opt.bandwidth === 'undefined') {
-                        newArray.push(opt);
-                    }
-                });
-                connection.mediaConstraints.video.optional = newArray;
-            }
-        }
-    }
+    // if (navigator && navigator.connection && navigator.connection.type) {
+    //     connection.isLowBandwidth = navigator.connection.type.toString().toLowerCase().search(/wifi|cell/g) !== -1;
+    //     if (connection.isLowBandwidth) {
+    //         connection.bandwidth = {
+    //             audio: false,
+    //             video: false,
+    //             screen: false
+    //         };
+    //
+    //         if (connection.mediaConstraints.audio && connection.mediaConstraints.audio.optional && connection.mediaConstraints.audio.optional.length) {
+    //             var newArray = [];
+    //             connection.mediaConstraints.audio.optional.forEach(function (opt) {
+    //                 if (typeof opt.bandwidth === 'undefined') {
+    //                     newArray.push(opt);
+    //                 }
+    //             });
+    //             connection.mediaConstraints.audio.optional = newArray;
+    //         }
+    //
+    //         if (connection.mediaConstraints.video && connection.mediaConstraints.video.optional && connection.mediaConstraints.video.optional.length) {
+    //             var newArray = [];
+    //             connection.mediaConstraints.video.optional.forEach(function (opt) {
+    //                 if (typeof opt.bandwidth === 'undefined') {
+    //                     newArray.push(opt);
+    //                 }
+    //             });
+    //             connection.mediaConstraints.video.optional = newArray;
+    //         }
+    //     }
+    // }
 
     connection.getExtraData = function (remoteUserId, callback) {
         if (!remoteUserId) throw 'remoteUserId is required.';

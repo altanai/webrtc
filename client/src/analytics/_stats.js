@@ -10,6 +10,7 @@
 this.getWebrtcdevStats = getWebrtcdevStats = function () {
 
     webrtcdev.info(" URL  : ", window.location.href);
+    webrtcdev.info(" Bandwidth  : ", this.version);
 
     webrtcdev.info(" Browser  : ", rtcConn.DetectRTC.browser);
 

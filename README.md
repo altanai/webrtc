@@ -703,6 +703,11 @@ Implemented event listeners
 
 ## Keys and certs 
 
+To generate a CSR for external Certificate Authority such as Go daddy
+```shell script
+
+```
+
 Add the Key and certs
 ```shell script
 openssl req -x509 -newkey rsa:4096 -sha256 -nodes -keyout ssl_certs/server.key -out ssl_certs/server.crt -subj "/CN=webrtc.altanai.com" -days 3650
@@ -994,15 +999,37 @@ But client tries polling connection
 ```
 https://localhost:8086/socket.io/?userid=iu02bk1b77g&sessionid=httpslocalhost8082clientindexhtm&transport=polling&t=N7ToS63
 ```
+
+### errors on SSL certs 
     
 **Issue 6** CERT INVALID ERROR such as     
 ```shell script
 NET::ERR_CERT_AUTHORITY_INVALID
 ````
-**SOlution** Since the certs are self signed , navifate to the wss port on http and allow permission under teh advanced button in scren below 
+**Solution** Since the certs are self signed , navigate to the wss port on http and allow permission under teh advanced button in scren below 
 ![CERT_AUTHORITY](screenshots/cert_authority.png)
-            
-### errors on git
+
+**Issue 7** GoDaddy SSL ecrts key gives no start line     
+```shell script
+  library: 'PEM routines',
+  function: 'get_name',
+  reason: 'no start line',
+  code: 'ERR_OSSL_PEM_NO_START_LINE'
+````
+**Solution** first check whether the key file has valid certificate 
+```shell script
+openssl x509 -text -in file.key
+```
+Check if it prints an error including the text "unable to load certificate", then your file is not sufficient.
+See if the format is correct 
+```shell script
+openssl pkcs8 -in key.txt  -inform pem
+Error reading key
+140542854250944:error:0909006C:PEM routines:get_name:no start line:../crypto/pem/pem_lib.c:745:Expecting: ENCRYPTED PRIVATE KEY  
+```
+If not then resave the file with charectar encoding UTF-8 and Line ending Unix/Linux 
+           
+### Errors on git
 
 update registry to  "registry": "https://registry.npmjs.org " 
 shelved

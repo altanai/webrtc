@@ -256,6 +256,7 @@ gulp.task('webrtcdevelopmentjs', function (done) {
     console.log(scriptList);
     pipeline(gulp.src(scriptList, {allowEmpty: true}),
         replace(/use strict/g, ''),
+        replace(/@@version/g, version),
         header(headerComment),
         concat('webrtcdevelopment.js'),
         gulp.dest(folderPath),

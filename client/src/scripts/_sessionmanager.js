@@ -126,7 +126,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
                 //     webrtcdev.log(" [sessionmanager] open-channel-resp - openOrJoin offer/answer webrtc ", selfuserid, " with role ", role, " responese ", res);
                 // });
                 rtcConn.open(event.channel, function (res) {
-                    webrtcdev.log(" [sessionmanager] offer/answer webrtc with role ", role, " responese ", res);
+                    webrtcdev.info(" [sessionmanager] offer/answer webrtc with role ", role, " responese ", res);
                     resolve("ok");
                 });
             });
@@ -167,7 +167,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
                 // rtcConn.connectionDescription = rtcConn.join(event.channel); gives session not avaible as session in not present in list of rooms
                 let sessionid = event.channel;
                 rtcConn.openOrJoin(sessionid, function (res) {
-                    webrtcdev.log(" [sessionmanager] open-channel-resp - openOrJoin offer/answer webrtc with role ", role, " response ", res);
+                    webrtcdev.info(" [sessionmanager] open-channel-resp - openOrJoin offer/answer webrtc with role ", role, " response ", res);
                     resolve("ok");
                 });
                 // rtcConn.join(sessionid, function (res) {
@@ -285,6 +285,7 @@ var setRtcConn = function (sessionid, sessionobj) {
         // turn off media till connection happens
         webrtcdev.log("[sessionmanager] set dontAttachStream , dontCaptureUserMedia , dontGetRemoteStream as true "),
 
+        rtcConn.direction = 'many-to-many', // other options 'one-way'
         rtcConn.session = {
             video: outgoingVideo || true,
             audio: outgoingAudio || true,
@@ -295,21 +296,25 @@ var setRtcConn = function (sessionid, sessionobj) {
             OfferToReceiveVideo: incomingVideo || true
         },
 
-        rtcConn.dontCaptureUserMedia = !outgoingVideo || false,
-        rtcConn.dontGetRemoteStream = !outgoingVideo || false,
-        rtcConn.dontAttachStream = !outgoingVideo || false,
+        // rtcConn.dontCaptureUserMedia = !outgoingVideo || false,
+        // rtcConn.dontGetRemoteStream = !outgoingVideo || false,
+        // rtcConn.dontAttachStream = !outgoingVideo || false,
 
+        // Bandwidth Optimization
+        rtcConn.isLowBandwidth = navigator.connection.downlink <1 ;
         // all values in kbps
-        rtcConn.bandwidth = {
-            screen: false,
-            audio: false,
-            video: false
-        },
+        // rtcConn.bandwidth = {
+        //     screen: false,
+        //     audio: false,
+        //     video: false
+        // },
 
         rtcConn.codecs = {
             audio: 'opus',
             video: 'VP9'
         },
+
+        rtcConn.version ='@@version',
 
         rtcConn.onNewParticipant = function (participantId, userPreferences) {
             webrtcdev.log("[sartjs] rtcconn onNewParticipant, participantId -  ", participantId, " , userPreferences - ", userPreferences);
