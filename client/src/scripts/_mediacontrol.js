@@ -168,7 +168,7 @@ function getCamMedia(rtcConn, outgoingVideo, outgoingAudio) {
  */
 function attachMediaStream(remvid, stream) {
     try {
-
+        webrtcdev.log("[Mediacontrol] attachMediaStream - remvid ", remvid);
         // Set the remote video element
         var element = "";
         if ((document.getElementsByName(remvid)).length > 0) {
@@ -188,71 +188,68 @@ function attachMediaStream(remvid, stream) {
         // If stream is present , attach the stream  and play
         webrtcdev.log("[Mediacontrol] attachMediaStream - stream ", stream);
         if (stream && (stream.isVideo || stream.isScreen)) {
-            let pr = new Promise(function (resolve, reject) {
+            return new Promise(function (resolve, reject) {
                 //element.srcObject = stream; // src(undefined) error after refresh sometimes
-
                 // Older browsers may not have srcObject
-                if ('srcObject' in element) {
-                    try {
+                try {
+                    if ('srcObject' in element) {
                         element.srcObject = stream;
-                    } catch (err) {
-                        if (err.name != "TypeError") {
-                            throw err;
-                        }
-                        // Even if they do, they may only support MediaStream
-                        element.src = URL.createObjectURL(stream);
+                    } else {
+                        throw "srcObjct not supported ";
                     }
-                } else {
+                } catch (err) {
+                    webrtcdev.error("[Mediacontrol] attachMediaStream - ", err);
+                    if (err.name == "TypeError") {
+                        throw err;
+                    }
+                    // Even if they do, they may only support MediaStream
                     element.src = URL.createObjectURL(stream);
+                } finally {
+                    webrtcdev.info("[Mediacontrol] attachMediaStream - added src object for ", stream.type, " valid stream ", stream.streamid, " to element ", element);
+                    resolve(element);
                 }
-                webrtcdev.info("[Mediacontrol] attachMediaStream - added src object for valid stream to element ", element);
+
             })
-            .then(element => {
-                let playPromise = element.play();
-                playPromise.then(_ => {
-                    webrtcdev.log("[Mediacontrol] attachMediaStream  - element started playing ", element);
-                    resolve(1);
-                })
-                    .catch(error => {
-                        webrtcdev.error("[Mediacontrol] attachMediaStream - video play error ", error);
-                        if (error.name == "NotAllowedError" && error.message.includes("play() failed")) {
-                            let r = confirm("Play failed due to auto play policy, starting video on mute, click on video to unmute");
-                            if (r || !r) {
-                                // whether uer clicks ok or cancel
-                                element.muted = true;
-                                element.autoplay = true;
-                                element.addEventListener("click", function () {
-                                    element.muted = false;
-                                });
-                                element.play();
+                .then(element => {
+                    let playPromise = element.play();
+                    playPromise.then(_ => {
+                        webrtcdev.log("[Mediacontrol] attachMediaStream  - element started playing ", element);
+                    })
+                        .catch(error => {
+                            webrtcdev.error("[Mediacontrol] attachMediaStream - video play error ", error);
+                            if (error.name == "NotAllowedError" && error.message.includes("play() failed")) {
+                                let r = confirm("Play failed due to auto play policy, starting video on mute, click on video to unmute");
+                                if (r || !r) {
+                                    // whether uer clicks ok or cancel
+                                    element.muted = true;
+                                    element.autoplay = true;
+                                    element.addEventListener("click", function () {
+                                        element.muted = false;
+                                    });
+                                    element.play();
+                                }
+                            } else if (error.name == "NotAllowedError" && error.message.includes("The play() request was interrupted by a call to pause()")) {
+                                alert("Play failed, video was paused ");
                             }
-                        } else if (error.name == "NotAllowedError" && error.message.includes("The play() request was interrupted by a call to pause()")) {
-                            alert("Play failed, video was paused ");
-                        }
-                        resolve(1);
-                    });
-            });
-            return pr;
+                        });
+                });
 
-        } else {
-
-            webrtcdev.error("[Mediacontrol] attachMediaStream - stream is neither video nor screen  ", stream);
+        } else if (stream == "") {
             // If no stream , just attach the src as null
-            let pr = new Promise(function (resolve, reject) {
+            return new Promise(function (resolve, reject) {
                 element.srcObject = null;
                 webrtcdev.warn("[ Mediacontrol - attachMediaStream ] Media Stream empty '' attached to ", element, " as stream is not valid ", stream);
                 element.play();
                 resolve();
             });
-            return pr;
+        } else {
+            webrtcdev.error("[Mediacontrol] attachMediaStream - stream is not recognized ", stream);
+            throw "unrecognized media stream";
         }
 
     } catch (err) {
-        let pr = new Promise(function (resolve, reject) {
-            webrtcdev.error("[Mediacontrol] attachMediaStream - error", err);
-            reject();
-        });
-        return pr;
+        webrtcdev.error("[Mediacontrol] attachMediaStream - error", err);
+        return Promise.reject(new Error('attachMediaStream failed'));
     }
 }
 

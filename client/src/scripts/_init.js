@@ -20,7 +20,8 @@ this.version ='@@version';
  */
 this.makesessionid = function (autoload) {
     let sessionid = "";
-    webrtcdev.log(" Existing charecters after # ", location.href.replace('#', '').length);
+    webrtcdev.log("[Init] Location  ", location.href);
+    webrtcdev.log("[Init] Existing charecters after # ", location.href.replace('#', '').length);
 
     if (location.href.replace('#', '').length) {
         // When Session should have a session name

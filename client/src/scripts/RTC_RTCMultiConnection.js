@@ -487,11 +487,11 @@
     connection.publicRoomIdentifier = '';
 
     function openRoom(callback) {
-        if (connection.enableLogs) {
-            webrtcdev.log('Sending open-room signal to socket.io');
-        }
+
+        webrtcdev.log('Sending open-room signal to Signaller');
 
         connection.waitingForLocalMedia = false;
+
         connection.socket.emit('open-room', {
             sessionid: connection.sessionid,
             session: connection.session,

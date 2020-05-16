@@ -418,7 +418,7 @@ var setRtcConn = function (sessionid, sessionobj) {
             shownotification(error.name + " Joining without camera Stream ", "warning");
             localVideoStreaming = false;
             // For local Peer , if camera is not allowed or not connected then put null in video containers
-            let peerinfo = webcallpeers[0];
+            let peerinfo = findPeerInfo(selfuserid);
             peerinfo.type = "Local";
             peerinfo.stream = "";
             peerinfo.streamid = "";
@@ -435,13 +435,15 @@ var setRtcConn = function (sessionid, sessionobj) {
                 //userid, username, usecolor, useremail, userrole, type
                 updatePeerInfo(event.userid, event.extra.name, event.extra.color, event.extra.email, event.extra.role, event.type);
                 webrtcdev.log(" [sessionmanager] onstream - updated local peerinfo for open-channel ");
-                appendToPeerValue(event.userid, "stream", event.stream);
-                appendToPeerValue(event.userid, "streamid", event.streamid);
-                updateWebCallView(findPeerInfo(event.userid));
+                peerinfo = findPeerInfo(event.userid);
+                appendToPeerValue(peerinfo.userid, "stream", event.stream);
+                appendToPeerValue(peerinfo.userid, "streamid", event.streamid);
+                updateWebCallView(peerinfo);
+                webrtcdev.log(" [sessionmanager] onstream - updated webcallview for ", peerinfo.userid);
 
             } else if (role == "inspector" && event.type == "local") {
                 // ignore any incoming stream from inspector
-                webrtcdev.info("[sessionmanager] onstream - ignore any incoming stream from inspector");
+                webrtcdev.warn("[sessionmanager] onstream - ignore any incoming stream from inspector");
                 updateWebCallView(peerinfo);
 
             } else {
@@ -449,6 +451,7 @@ var setRtcConn = function (sessionid, sessionobj) {
                 peerinfo.stream = event.stream;
                 peerinfo.streamid = event.stream.streamid;
                 updateWebCallView(peerinfo);
+                webrtcdev.log(" [sessionmanager] onstream - updated webcallview for ", peerinfo.userid);
             }
         },
 
@@ -800,7 +803,7 @@ var openWebRTC = function (channel, userid, maxallowed) {
  */
 var connectWebRTC = function (type, channel, selfuserid, remoteUsers) {
     webrtcdev.info(" [sessionmanager] ConnectWebRTC for Self -  type : ", type, " , Channel :", channel,
-        " , self-Userid : ", selfuserid, " , and remote users : ", remoteUsers);
+        " , selfuserid : ", selfuserid, " , and remote users : ", remoteUsers);
 
     // update web call view for Self
     // updateWebCallView(peerinfo);
