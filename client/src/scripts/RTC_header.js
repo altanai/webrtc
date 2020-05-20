@@ -120,7 +120,7 @@ var RTCMultiConnection = function (roomid, forceOptions) {
 
     function SocketConnection(connection, connectCallback) {
 
-        webrtcdev.log(" >>>>s  SocketConnection ", connection);
+        webrtcdev.log(" >>>>  SocketConnection ", connection);
 
         function isData(session) {
             return !session.audio && !session.video && !session.screen && session.data;
@@ -176,7 +176,10 @@ var RTCMultiConnection = function (roomid, forceOptions) {
         }
 
         try {
-            connection.socket = io(connection.socketURL + parameters);
+            connection.socket = io(connection.socketURL + parameters, {
+                transports: ['websocket'],
+                upgrade: false
+            });
         } catch (e) {
             webrtcdev.error('socket.io signaller connection error ', e);
             connection.socket = io.connect(connection.socketURL + parameters, connection.socketOptions);

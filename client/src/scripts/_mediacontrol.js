@@ -63,6 +63,8 @@ function getCamMedia(rtcConn, outgoingVideo, outgoingAudio) {
         video: {
             mandatory: {},
             optional: [{
+                height: 480,
+                width: 640,
                 facingMode: 'user'
             }]
         }
@@ -195,7 +197,7 @@ function attachMediaStream(remvid, stream) {
                     if ('srcObject' in element) {
                         element.srcObject = stream;
                     } else {
-                        throw "srcObjct not supported ";
+                        throw "srcObjct not supported";
                     }
                 } catch (err) {
                     webrtcdev.error("[Mediacontrol] attachMediaStream - ", err);
@@ -206,14 +208,17 @@ function attachMediaStream(remvid, stream) {
                     element.src = URL.createObjectURL(stream);
                 } finally {
                     webrtcdev.info("[Mediacontrol] attachMediaStream - added src object for ", stream.type, " valid stream ", stream.streamid, " to element ", element);
-                    resolve(element);
+                    element.onloadedmetadata = function(e) {
+                        resolve(element);
+                    };
                 }
 
             })
                 .then(element => {
+
                     let playPromise = element.play();
                     playPromise.then(_ => {
-                        webrtcdev.log("[Mediacontrol] attachMediaStream  - element started playing ", element);
+                        webrtcdev.log("[Mediacontrol] attachMediaStream - element started playing ", element);
                     })
                         .catch(error => {
                             webrtcdev.error("[Mediacontrol] attachMediaStream - video play error ", error);
@@ -301,16 +306,11 @@ function detachMediaStream(vid) {
                 tracks.forEach(function (track) {
                     track.stop();
                 });
-                vid.stream = "";
+                // vid.stream = null;
                 vid.srcObject = null;
             } else {
                 webrtcdev.warn("[ Mediacontrol] dettachMediaStream  no stream present on remote's video");
             }
-            // try {
-            //     video.srcObject = "";
-            // } catch (err) {
-            //     webrtcdev.error("[webcallviewmanager] destroyWebCallView - erorr  ", err);
-            // }
         } else {
             vid.src = "";
         }

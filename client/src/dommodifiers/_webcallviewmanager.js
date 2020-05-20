@@ -127,12 +127,18 @@ function updateLocalWebCallView(selfpeerinfo) {
 
             if (selfvid.played.length <= 0) {
                 let pr;
-                if (localvid.played.length > 0) {
-                    webrtcdev.log("[webcallviewdevmanager] updateLocalWebCallView - local video is playing, just reattach stream to add in session");
-                    pr = reattachMediaStream(selfvid, localvid);
-                } else {
-                    webrtcdev.log("[webcallviewdevmanager] updateLocalWebCallView - local video is not playing, use webcallpeers for stream to add in session");
-                    pr = attachMediaStream(selfvid, selfpeerinfo.stream);
+
+                if(localvid.srcObject){
+                    if (localvid.played.length > 0) {
+                        webrtcdev.log("[webcallviewdevmanager] updateLocalWebCallView - local video is playing, just reattach stream to add in session");
+                        pr = reattachMediaStream(selfvid, localvid);
+                    } else {
+                        webrtcdev.log("[webcallviewdevmanager] updateLocalWebCallView - local video is not playing, use webcallpeers for stream to add in session");
+                        pr = attachMediaStream(selfvid, selfpeerinfo.stream);
+                    }
+                }else{
+                    // local video is not having astream
+                    pr = Promise.resolve("done");
                 }
 
                 pr.then(_ => {

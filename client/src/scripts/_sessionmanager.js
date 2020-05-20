@@ -25,13 +25,11 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
         selfuserid = rtcConn.userid;
 
     try {
-        let addr = "/";
-        if (socketAddr != "/") {
-            addr = socketAddr;
-        }
-        webrtcdev.log("[sessionmanager] StartSession" + sessionid, " on address ", addr);
-        socket = io.connect(addr, {
-            secure: true
+        webrtcdev.log("[sessionmanager] StartSession" + sessionid, " on address ", socketAddr);
+        socket = io.connect(socketAddr, {
+            secure: true,
+            transports: ['websocket'],
+            upgrade: false
         });
         console.log(" socket ", socket);
     } catch (err) {
@@ -166,14 +164,14 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
                     rtcConn.remoteUsers = event.users;
                 // rtcConn.connectionDescription = rtcConn.join(event.channel); gives session not avaible as session in not present in list of rooms
                 let sessionid = event.channel;
-                rtcConn.openOrJoin(sessionid, function (res) {
-                    webrtcdev.info(" [sessionmanager] open-channel-resp - openOrJoin offer/answer webrtc with role ", role, " response ", res);
-                    resolve("ok");
-                });
-                // rtcConn.join(sessionid, function (res) {
-                //     webrtcdev.log(" [sessionmanager] open-channel-resp - openOrJoin offer/answer webrtc with role ", role, " response ", res);
+                // rtcConn.openOrJoin(sessionid, function (res) {
+                //     webrtcdev.info("[sessionmanager] open-channel-resp - openOrJoin offer/answer webrtc with role ", role, " response ", res);
                 //     resolve("ok");
                 // });
+                rtcConn.join(sessionid, function (res) {
+                    webrtcdev.log("[sessionmanager] open-channel-resp - openOrJoin offer/answer webrtc with role ", role, " response ", res);
+                    resolve("ok");
+                });
             });
 
             promise.then(_ => {
@@ -301,20 +299,20 @@ var setRtcConn = function (sessionid, sessionobj) {
         // rtcConn.dontAttachStream = !outgoingVideo || false,
 
         // Bandwidth Optimization
-        rtcConn.isLowBandwidth = navigator.connection.downlink <1 ;
-        // all values in kbps
-        // rtcConn.bandwidth = {
-        //     screen: false,
-        //     audio: false,
-        //     video: false
-        // },
+        rtcConn.isLowBandwidth = navigator.connection.downlink < 1;
+    // all values in kbps
+    // rtcConn.bandwidth = {
+    //     screen: false,
+    //     audio: false,
+    //     video: false
+    // },
 
-        rtcConn.codecs = {
-            audio: 'opus',
-            video: 'VP9'
-        },
+    rtcConn.codecs = {
+        audio: 'opus',
+        video: 'VP9'
+    },
 
-        rtcConn.version ='@@version',
+        rtcConn.version = '@@version',
 
         rtcConn.onNewParticipant = function (participantId, userPreferences) {
             webrtcdev.log("[sartjs] rtcconn onNewParticipant, participantId -  ", participantId, " , userPreferences - ", userPreferences);
@@ -542,7 +540,7 @@ var setRtcConn = function (sessionid, sessionobj) {
                                 if (e.data.board.event == "open" && isDrawOpened != true)
                                     syncDrawBoard(e.data.board);
                                 // else if (e.data.board.event == "close" && isDrawOpened == true)
-                                    // syncDrawBoard(e.data.board);
+                                // syncDrawBoard(e.data.board);
                             }
                         } else {
                             webrtcdev.warn(" Board data mismatch", e.data);
