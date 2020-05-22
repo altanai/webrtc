@@ -26,14 +26,10 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
 
     try {
         webrtcdev.log("[sessionmanager] StartSession" + sessionid, " on address ", socketAddr);
-        socket = io.connect(socketAddr, {
-            secure: true,
-            transports: ['websocket'],
-            upgrade: false
-        });
+        socket = io.connect(socketAddr);
         console.log(" socket ", socket);
     } catch (err) {
-        webrtcdev.error(" problem in socket connnection", err);
+        webrtcdev.error(" problem in socket connection", err);
         throw (" problem in socket connection");
     }
 
@@ -107,7 +103,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
         webrtcdev.log("[sessionmanager] --------------open-channel-resp---------------------  ", event);
         if (event.status && event.channel == sessionid) {
 
-            let promise = new Promise(function (resolve) {
+            let promise = new Promise(function (resolve, reject) {
                 webrtcdev.log("[sessionmanager] open-channel-resp - ",
                     " Session video:", outgoingVideo,
                     " audio: ", outgoingAudio,
@@ -116,20 +112,24 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
                     " OfferToReceiveVideo: ", incomingVideo
                 );
 
-                rtcConn.connectionType = "open";
-
                 let sessionid = event.channel;
-                // rtcConn.openOrJoin(sessionid, function (res) {
-                // resolve("ok");
-                //     webrtcdev.log(" [sessionmanager] open-channel-resp - openOrJoin offer/answer webrtc ", selfuserid, " with role ", role, " responese ", res);
-                // });
-                rtcConn.open(event.channel, function (res) {
-                    webrtcdev.info(" [sessionmanager] offer/answer webrtc with role ", role, " responese ", res);
-                    resolve("ok");
+                rtcConn.openOrJoin(sessionid, function (res) {
+                    webrtcdev.log(" [sessionmanager] open-channel-resp - openOrJoin session id  ", sessionid, "responese ", res);
+                    if (res) {
+                        resolve("ok");
+                    } else {
+                        webrtcdev.error(" [sessionmanager] open-channel-resp Errored from signaller ");
+                        reject();
+                    }
                 });
+                // rtcConn.open(event.channel, function (res) {
+                //     webrtcdev.info(" [sessionmanager] offer/answer webrtc with role ", role, " responese ", res);
+                //     resolve("ok");
+                // });
             });
 
             promise.then(_ => {
+                webrtcdev.info(" [sessionmanager] open-channel-resp - offer/answer  userid ", selfuserid, " with role ", role);
                 updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local");
             }).then(_ => {
                 getCamMedia(rtcConn, outgoingVideo, outgoingAudio);
@@ -160,30 +160,33 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
             );
 
             let promise = new Promise(function (resolve, reject) {
-                rtcConn.connectionType = "join",
-                    rtcConn.remoteUsers = event.users;
+                rtcConn.remoteUsers = event.users;
                 // rtcConn.connectionDescription = rtcConn.join(event.channel); gives session not avaible as session in not present in list of rooms
                 let sessionid = event.channel;
-                // rtcConn.openOrJoin(sessionid, function (res) {
-                //     webrtcdev.info("[sessionmanager] open-channel-resp - openOrJoin offer/answer webrtc with role ", role, " response ", res);
+                rtcConn.openOrJoin(sessionid, function (res) {
+                    webrtcdev.info("[sessionmanager] join-channel-resp - openOrJoin session ", sessionid, " response - ", res);
+                    if (res) {
+                        resolve("ok");
+                    } else {
+                        webrtcdev.error(" [sessionmanager] join-channel-resp -  openOrJoin  Errored from signaller ");
+                        reject();
+                    }
+                });
+                // rtcConn.join(sessionid, function (res) {
+                //     webrtcdev.log("[sessionmanager] open-channel-resp - openOrJoin offer/answer webrtc with role ", role, " response ", res);
                 //     resolve("ok");
                 // });
-                rtcConn.join(sessionid, function (res) {
-                    webrtcdev.log("[sessionmanager] open-channel-resp - openOrJoin offer/answer webrtc with role ", role, " response ", res);
-                    resolve("ok");
-                });
             });
 
             promise.then(_ => {
-                // rtcConn.connectionDescription = rtcConn.openOrJoin(event.channel);
-                webrtcdev.info(" [sessionmanager] rtcConn.connectionDescription  ", rtcConn.connectionDescription);
-                webrtcdev.info(" [sessionmanager] offer/answer webrtc  ", selfuserid, " with role ", role);
-                // for a new joiner , update his local info
+                webrtcdev.info(" [sessionmanager] join-channel-resp - rtcConn.connectionDescription  ", rtcConn.connectionDescription);
+                webrtcdev.info(" [sessionmanager] join-channel-resp - offer/answer  userid ", selfuserid, " with role ", role);
+                // for a new joiner , update his local peerinfo
                 updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local");
             }).then(_ => {
                 getCamMedia(rtcConn, outgoingVideo, outgoingAudio);
             }).catch((reason) => {
-                webrtcdev.error('[sessionmanager] join channel response -  Handle rejected promise (' + reason + ')');
+                webrtcdev.error('[sessionmanager] join-channel-resp -  Handle rejected promise (' + reason + ')');
             });
 
             if (event.message)
@@ -342,7 +345,7 @@ var setRtcConn = function (sessionid, sessionobj) {
                 } else {
                     // Add remote peer userid to remoteUsers
                     remoteUsers = rtcConn.peers.getAllParticipants();
-                    webrtcdev.log(" [sessionmanager] onopen- Collecting remote peers", remoteUsers);
+                    webrtcdev.log(" [sessionmanager] onopen by remote suers - Collecting remote peers", remoteUsers);
 
                     // add new peers
                     for (x in remoteUsers) {
@@ -367,7 +370,9 @@ var setRtcConn = function (sessionid, sessionobj) {
                     //     return index == self.indexOf(elem);
                     // });
 
-                    findPeerInfoSDP(event.userid);
+                    webrtcdev.log(" SDP" ,findPeerInfoSDP(event.userid));
+
+                    connectWebRTC("join", sessionid, selfuserid, remoteUsers);
 
                     webrtcdev.log("[sessionmanager] dispatch onSessionConnect");
                     window.dispatchEvent(new CustomEvent('webrtcdev', {
@@ -394,13 +399,13 @@ var setRtcConn = function (sessionid, sessionobj) {
                 // }
 
                 // Connect  Self to session with either open or join
-                if (rtcConn.connectionType == "open") {
-                    connectWebRTC("open", sessionid, selfuserid, []);
-                } else if (rtcConn.connectionType == "join") {
-                    connectWebRTC("join", sessionid, selfuserid, remoteUsers);
-                } else {
-                    shownotification("Connection type is neither open nor join", "warning");
-                }
+                // if (rtcConn.connectionType == "open") {
+                //     connectWebRTC("open", sessionid, selfuserid, []);
+                // } else if (rtcConn.connectionType == "join") {
+                //     connectWebRTC("join", sessionid, selfuserid, remoteUsers);
+                // } else {
+                //     shownotification("Connection type is neither open nor join", "warning");
+                // }
 
             } catch (err) {
                 shownotification("problem in session open ", "warning");
