@@ -6,7 +6,8 @@
  */
 function updateWebCallView(peerinfo) {
     let myrole = role;
-    webrtcdev.log("[webcallviewmanager] - updateWebCallView with ", peerinfo.userid,
+    webrtcdev.log("[webcallviewmanager] - " +
+        " with ", peerinfo.userid,
         " peerinfo", peerinfo, " peerinfo role ", peerinfo.role, " | myrole :", myrole);
 
     switch (myrole) {

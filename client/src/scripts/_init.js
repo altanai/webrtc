@@ -9,7 +9,7 @@ var pendingFileTransfer = [];
 var connectionStatus = null;
 
 this.connectionStatus = connectionStatus;
-this.version ='@@version';
+this.version = '@@version';
 
 /**
  * creates sessionid
@@ -317,54 +317,54 @@ this.startCall = function (sessionobj) {
 
     webrtcdev.log(" [ initjs  ] : role ", role);
 
+
+    let sessionid = sessionobj.sessionid;
+
+    webrtcdev.log(" [ initjs ] : sessionid : " + sessionid + " and localStorage  ", localStorage);
+
+    if (localStorage.length >= 1 && localStorage.getItem("channel") !== sessionid) {
+        webrtcdev.log("[ intijs ] : Current Session ID " + sessionid + " doesnt match cached channel id " + localStorage.getItem("channel") + "-> clearCaches()");
+        clearCaches();
+    } else {
+        webrtcdev.log(" [ initjs ] : no action taken on localStorage");
+    }
+
+    webrtcdev.log(" [ initjs ] : localobj ", localobj);
+    webrtcdev.log(" [ initjs ] : remoteobj ", remoteobj);
+
+    /* When user is single */
+    localVideo = localobj.video;
+
+    /* when user is in conference */
+    let remotearr = remoteobj.videoarr;
+    /* first video container in remotearr belongs to user */
+    if (outgoingVideo) {
+        selfVideo = remotearr[0];
+    }
+    /* create arr for remote peers videos */
+    if (!remoteobj.dynamicVideos) {
+        for (let x = 1; x < remotearr.length; x++) {
+            remoteVideos.push(remotearr[x]);
+        }
+    }
+
+    //* set self global variables  */
+    if (localobj.hasOwnProperty('userdetails')) {
+        let obj = localobj.userdetails;
+        webrtcdev.info("localobj userdetails ", obj);
+        selfusername = obj.username || "LOCAL";
+        selfcolor = obj.usercolor || "";
+        selfemail = obj.useremail || "";
+        role = obj.role || "participant";
+    } else {
+        webrtcdev.warn("localobj has no userdetails ");
+    }
+
+    if (role == "inspector") {
+        resolve("done");
+    }
+
     return new Promise((resolve, reject) => {
-
-        let sessionid = sessionobj.sessionid;
-
-        webrtcdev.log(" [ initjs ] : sessionid : " + sessionid + " and localStorage  ", localStorage);
-
-        if (localStorage.length >= 1 && localStorage.getItem("channel") !== sessionid) {
-            webrtcdev.log("[ intijs ] : Current Session ID " + sessionid + " doesnt match cached channel id " + localStorage.getItem("channel") + "-> clearCaches()");
-            clearCaches();
-        } else {
-            webrtcdev.log(" [ initjs ] : no action taken on localStorage");
-        }
-
-        webrtcdev.log(" [ initjs ] : localobj ", localobj);
-        webrtcdev.log(" [ initjs ] : remoteobj ", remoteobj);
-
-        /* When user is single */
-        localVideo = localobj.video;
-
-        /* when user is in conference */
-        let remotearr = remoteobj.videoarr;
-        /* first video container in remotearr belongs to user */
-        if (outgoingVideo) {
-            selfVideo = remotearr[0];
-        }
-        /* create arr for remote peers videos */
-        if (!remoteobj.dynamicVideos) {
-            for (let x = 1; x < remotearr.length; x++) {
-                remoteVideos.push(remotearr[x]);
-            }
-        }
-
-        //* set self global variables  */
-        if (localobj.hasOwnProperty('userdetails')) {
-            let obj = localobj.userdetails;
-            webrtcdev.info("localobj userdetails ", obj);
-            selfusername = obj.username || "LOCAL";
-            selfcolor = obj.usercolor || "";
-            selfemail = obj.useremail || "";
-            role = obj.role || "participant";
-        } else {
-            webrtcdev.warn("localobj has no userdetails ");
-        }
-
-        if (role == "inspector") {
-            resolve("done");
-        }
-
         detectWebcam().then(hasWebcam => {
             webrtcdev.log('Has Webcam: ' + (hasWebcam ? 'yes' : 'no'));
             if (!hasWebcam) {
@@ -400,6 +400,7 @@ this.startCall = function (sessionobj) {
 
         // Permission to show desktop notifications
         getNotficationPermission();
+
         resolve(sessionid);
 
     }).then(sessionid => {
