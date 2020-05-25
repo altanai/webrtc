@@ -38,15 +38,14 @@ var MediaStreamTrack = window.MediaStreamTrack;
  */
 function PeerInitiator(config) {
 
-    navigator.mediaDevices.getUserMedia({
-        audio: true,
-        video: true
-    });
+    // navigator.mediaDevices.getUserMedia({
+    //     audio: true,
+    //     video: true
+    // });
 
     if (!RTCPeerConnection) {
         throw 'WebRTC 1.0 (RTCPeerConnection) API are NOT available in this browser.';
     }
-
     webrtcdev.log(" [PeerInitiator] RTCPeerConnection - ", RTCPeerConnection);
 
     var connection = config.rtcMultiConnection;
@@ -193,10 +192,12 @@ function PeerInitiator(config) {
 
     localStreams.forEach(function (localStream) {
         if (config.remoteSdp && config.remoteSdp.remotePeerSdpConstraints && config.remoteSdp.remotePeerSdpConstraints.dontGetRemoteStream) {
+            webrtcdev.warn("[RTC PC ] PeerInitiator - localStreams remotePeerSdpConstraints.dontGetRemoteStream ", config.remoteSdp.remotePeerSdpConstraints.dontGetRemoteStream);
             return;
         }
 
         if (config.dontAttachLocalStream) {
+            webrtcdev.warn("[RTC PC ] PeerInitiator - localStreams dontAttachLocalStream", config.dontAttachLocalStream);
             return;
         }
 
@@ -343,22 +344,6 @@ function PeerInitiator(config) {
         peer.addIceCandidate(new RTCIceCandidate(remoteCandidate));
     };
 
-    function oldAddRemoteSdp(remoteSdp, cb) {
-        cb = cb || function () {
-        };
-
-        if (DetectRTC.browser.name !== 'Safari') {
-            remoteSdp.sdp = connection.processSdp(remoteSdp.sdp);
-        }
-        peer.setRemoteDescription(new RTCSessionDescription(remoteSdp), cb, function (error) {
-            if (!!connection.enableLogs) {
-                webrtcdev.error('setRemoteDescription failed', '\n', error, '\n', remoteSdp.sdp);
-            }
-
-            cb();
-        });
-    }
-
     this.addRemoteSdp = function (remoteSdp, cb) {
         cb = cb || function () {
         };
@@ -367,17 +352,12 @@ function PeerInitiator(config) {
             remoteSdp.sdp = connection.processSdp(remoteSdp.sdp);
         }
 
-        peer.setRemoteDescription(new RTCSessionDescription(remoteSdp)).then(cb, function (error) {
-            if (!!connection.enableLogs) {
-                webrtcdev.error('setRemoteDescription failed', '\n', error, '\n', remoteSdp.sdp);
-            }
-
+        peer.setRemoteDescription(new RTCSessionDescription(remoteSdp))
+        .then(cb, function (error) {
+            webrtcdev.error('[RTC PC] setRemoteDescription failed', '\n', error, '\n', remoteSdp.sdp);
             cb();
         }).catch(function (error) {
-            if (!!connection.enableLogs) {
-                webrtcdev.error('setRemoteDescription failed', '\n', error, '\n', remoteSdp.sdp);
-            }
-
+            webrtcdev.error('[RTC PC] setRemoteDescription failed', '\n', error, '\n', remoteSdp.sdp);
             cb();
         });
     };
@@ -479,6 +459,8 @@ function PeerInitiator(config) {
     });
 
     function createOfferOrAnswer(_method) {
+        webrtcdev.log("[RTC PC] createOfferOrAnswer ", _method);
+        webrtcdev.log("[RTC PC] createOfferOrAnswer SDP ", defaults.sdpConstraints);
         peer[_method](defaults.sdpConstraints).then(function (localSdp) {
             if (DetectRTC.browser.name !== 'Safari') {
                 localSdp.sdp = connection.processSdp(localSdp.sdp);

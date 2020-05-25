@@ -40,15 +40,15 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
     }
 
     // Socket Listeners
-    socket.on("connect", function () {
-        webrtcdev.log("[sessionmanager] connected to signaller ");
+    socket.on("connect", function (e) {
+        webrtcdev.log("[sessionmanager] connected to signaller ",e);
 
         socket.emit("presence", {
             channel: sessionid
         });
 
         socket.on('disconnected', function (reason) {
-            webrtcdev.error("[sessionmanager] Disconnected from signaller  ");
+            webrtcdev.error("[sessionmanager] Disconnected from signaller ",reason);
             shownotification("Disconnected from signaller ");
             if (reason === 'io server disconnect') {
                 webrtcdev.error("[sessionmanager] Disconnected initiated by signaller , attempt to re-connect ");
@@ -103,36 +103,33 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
         webrtcdev.log("[sessionmanager] --------------open-channel-resp---------------------  ", event);
         if (event.status && event.channel == sessionid) {
 
-            let promise = new Promise(function (resolve, reject) {
-                webrtcdev.log("[sessionmanager] open-channel-resp - ",
-                    " Session video:", outgoingVideo,
-                    " audio: ", outgoingAudio,
-                    " data: ", outgoingData,
-                    " OfferToReceiveAudio: ", incomingAudio,
-                    " OfferToReceiveVideo: ", incomingVideo
-                );
+            webrtcdev.log("[sessionmanager] open-channel-resp - ",
+                " Session video:", outgoingVideo,
+                " audio: ", outgoingAudio,
+                " data: ", outgoingData,
+                " OfferToReceiveAudio: ", incomingAudio,
+                " OfferToReceiveVideo: ", incomingVideo
+            );
 
+            new Promise(function (resolve, reject) {
+                getCamMedia(rtcConn, outgoingVideo, outgoingAudio);
+                setTimeout(resolve, 3000, "");
+             })
+            .then(_ => {
                 let sessionid = event.channel;
                 rtcConn.openOrJoin(sessionid, function (res) {
-                    webrtcdev.log(" [sessionmanager] open-channel-resp - openOrJoin session id  ", sessionid, "responese ", res);
+                    webrtcdev.log(" [sessionmanager] open-channel-resp - openOrJoin session id  ", sessionid, "response ", res);
                     if (res) {
-                        resolve("ok");
+                        webrtcdev.info(" [sessionmanager] open-channel-resp - openOrJoin ok,  userid ", selfuserid, " with role ", role);
+                        updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local");
                     } else {
                         webrtcdev.error(" [sessionmanager] open-channel-resp Errored from signaller ");
-                        reject();
                     }
                 });
                 // rtcConn.open(event.channel, function (res) {
-                //     webrtcdev.info(" [sessionmanager] offer/answer webrtc with role ", role, " responese ", res);
-                //     resolve("ok");
+                //     webrtcdev.info(" [sessionmanager] open-channel-resp - Open ok,  userid ", selfuserid, " with role ", role);
+                //     updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local");
                 // });
-            });
-
-            promise.then(_ => {
-                webrtcdev.info(" [sessionmanager] open-channel-resp - offer/answer  userid ", selfuserid, " with role ", role);
-                updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local");
-            }).then(_ => {
-                getCamMedia(rtcConn, outgoingVideo, outgoingAudio);
             }).catch(reason => {
                 webrtcdev.error(' [sessionmanager] Handle rejected promise (' + reason + ')');
             });
@@ -159,32 +156,28 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
                 " OfferToReceiveVideo: ", incomingVideo
             );
 
-            let promise = new Promise(function (resolve, reject) {
+             new Promise(function (resolve, reject) {
+                getCamMedia(rtcConn, outgoingVideo, outgoingAudio);
+                setTimeout(resolve, 3000, "");
+            })
+            .then(_ => {
                 rtcConn.remoteUsers = event.users;
                 // rtcConn.connectionDescription = rtcConn.join(event.channel); gives session not avaible as session in not present in list of rooms
                 let sessionid = event.channel;
                 rtcConn.openOrJoin(sessionid, function (res) {
                     webrtcdev.info("[sessionmanager] join-channel-resp - openOrJoin session ", sessionid, " response - ", res);
                     if (res) {
-                        resolve("ok");
+                        webrtcdev.info(" [sessionmanager] join-channel-resp - openOrJoin ok,  userid ", selfuserid, " with role ", role);
+                        // for a new joiner , update his local peerinfo
+                        updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local");
                     } else {
                         webrtcdev.error(" [sessionmanager] join-channel-resp -  openOrJoin  Errored from signaller ");
-                        reject();
                     }
                 });
                 // rtcConn.join(sessionid, function (res) {
-                //     webrtcdev.log("[sessionmanager] open-channel-resp - openOrJoin offer/answer webrtc with role ", role, " response ", res);
-                //     resolve("ok");
+                //     webrtcdev.info(" [sessionmanager] join-channel-resp - Join ok,  userid ", selfuserid, " with role ", role);
+                //     updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local");
                 // });
-            });
-
-            promise.then(_ => {
-                webrtcdev.info(" [sessionmanager] join-channel-resp - rtcConn.connectionDescription  ", rtcConn.connectionDescription);
-                webrtcdev.info(" [sessionmanager] join-channel-resp - offer/answer  userid ", selfuserid, " with role ", role);
-                // for a new joiner , update his local peerinfo
-                updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local");
-            }).then(_ => {
-                getCamMedia(rtcConn, outgoingVideo, outgoingAudio);
             }).catch((reason) => {
                 webrtcdev.error('[sessionmanager] join-channel-resp -  Handle rejected promise (' + reason + ')');
             });
@@ -283,9 +276,6 @@ var setRtcConn = function (sessionid, sessionobj) {
         rtcConn.socketURL = sessionobj.signaller, // location for the SDP offer/answer signaller
         // rtcConn.iceServers = sessionobj.turn.iceservers || rtcConn.getIceServers() ,
 
-        // turn off media till connection happens
-        webrtcdev.log("[sessionmanager] set dontAttachStream , dontCaptureUserMedia , dontGetRemoteStream as true "),
-
         rtcConn.direction = 'many-to-many', // other options 'one-way'
         rtcConn.session = {
             video: outgoingVideo || true,
@@ -300,20 +290,27 @@ var setRtcConn = function (sessionid, sessionobj) {
         // rtcConn.dontCaptureUserMedia = !outgoingVideo || false,
         // rtcConn.dontGetRemoteStream = !outgoingVideo || false,
         // rtcConn.dontAttachStream = !outgoingVideo || false,
+        rtcConn.dontCaptureUserMedia = false,
+        rtcConn.dontGetRemoteStream = false,
+        rtcConn.dontAttachStream = false;
+        webrtcdev.log("[sessionmanager] set dontCaptureUserMedia ", rtcConn.dontCaptureUserMedia ,
+            ", dontGetRemoteStream , ",  rtcConn.dontGetRemoteStream,
+            ", dontAttachStream ", rtcConn.dontAttachStream),
 
         // Bandwidth Optimization
         rtcConn.isLowBandwidth = navigator.connection.downlink < 1;
-    // all values in kbps
-    // rtcConn.bandwidth = {
-    //     screen: false,
-    //     audio: false,
-    //     video: false
-    // },
 
-    rtcConn.codecs = {
-        audio: 'opus',
-        video: 'VP9'
-    },
+        // To limit bandwidth
+        rtcConn.bandwidth = {
+            screen: true,
+            audio: true,
+            video: true
+        },
+
+        rtcConn.codecs = {
+            audio: 'opus',
+            video: 'VP9'
+        },
 
         rtcConn.version = '@@version',
 
@@ -370,8 +367,16 @@ var setRtcConn = function (sessionid, sessionobj) {
                     //     return index == self.indexOf(elem);
                     // });
 
-                    webrtcdev.log(" SDP" ,findPeerInfoSDP(event.userid));
+                    webrtcdev.log(" SDP", findPeerInfoSDP(event.userid));
 
+                    // Connect  Self to session with either open or join
+                    // if (rtcConn.connectionType == "open") {
+                    //     connectWebRTC("open", sessionid, selfuserid, []);
+                    // } else if (rtcConn.connectionType == "join") {
+                    //     connectWebRTC("join", sessionid, selfuserid, remoteUsers);
+                    // } else {
+                    //     shownotification("Connection type is neither open nor join", "warning");
+                    // }
                     connectWebRTC("join", sessionid, selfuserid, remoteUsers);
 
                     webrtcdev.log("[sessionmanager] dispatch onSessionConnect");
@@ -386,26 +391,18 @@ var setRtcConn = function (sessionid, sessionobj) {
                 // In debug mode let the users create multiple user session in same browser ,
                 // do not use localstoarge values to get old userid for resuse
                 // setting local caches
-                // webrtcdev.log(" [sessionmanager] onopen - setting cache - channel " + sessionid + " with self-userid " + selfuserid + " and remoteUsers " + remoteUsers);
-                // if (!debug) {
-                //     if (!localStorage.getItem("userid"))
-                //         localStorage.setItem("userid", selfuserid);
-                //
-                //     if (!localStorage.getItem("remoteUsers"))
-                //         localStorage.setItem("remoteUsers", remoteUsers);
-                //
-                //     if (!localStorage.getItem("channel"))
-                //         localStorage.setItem("channel", sessionid);
-                // }
+                webrtcdev.log(" [sessionmanager] onopen - setting cache - channel " + sessionid + " with self-userid " + selfuserid + " and remoteUsers " + remoteUsers);
+                if (!debug) {
+                    if (!localStorage.getItem("userid"))
+                        localStorage.setItem("userid", selfuserid);
 
-                // Connect  Self to session with either open or join
-                // if (rtcConn.connectionType == "open") {
-                //     connectWebRTC("open", sessionid, selfuserid, []);
-                // } else if (rtcConn.connectionType == "join") {
-                //     connectWebRTC("join", sessionid, selfuserid, remoteUsers);
-                // } else {
-                //     shownotification("Connection type is neither open nor join", "warning");
-                // }
+                    if (!localStorage.getItem("remoteUsers"))
+                        localStorage.setItem("remoteUsers", remoteUsers);
+
+                    if (!localStorage.getItem("channel"))
+                        localStorage.setItem("channel", sessionid);
+                }
+
 
             } catch (err) {
                 shownotification("problem in session open ", "warning");
@@ -435,6 +432,7 @@ var setRtcConn = function (sessionid, sessionobj) {
             var peerinfo = findPeerInfo(event.userid);
             if (!peerinfo) {
                 webrtcdev.error("[sessionmanager] onstream - PeerInfo not present in webcallpeers ", event.userid, " creating it now ");
+
                 //userid, username, usecolor, useremail, userrole, type
                 updatePeerInfo(event.userid, event.extra.name, event.extra.color, event.extra.email, event.extra.role, event.type);
                 webrtcdev.log(" [sessionmanager] onstream - updated local peerinfo for open-channel ");
@@ -796,6 +794,34 @@ var openWebRTC = function (channel, userid, maxallowed) {
 
 
 /**
+ * function to join a webrtc socket channel
+ * @method
+ * @name joinWebRTC
+ * @param {string} channel
+ * @param {string} userid
+ */
+var joinWebRTC = function (channel, userid) {
+    shownotification("Joining an existing session " + channel);
+    webrtcdev.info(" [sessionmanager] joinWebRTC channel: ", channel);
+
+    if (debug) showUserStats();
+
+    socket.emit("join-channel", {
+        channel: channel,
+        sender: userid,
+        extra: {
+            userid: userid,
+            name: selfusername || "",
+            color: selfcolor || "",
+            email: selfemail || "",
+            role: role || "participant"
+        }
+    });
+};
+
+
+
+/**
  * connect to a webrtc socket channel
  * @method
  * @name connectWebRTC
@@ -894,31 +920,3 @@ var connectWebRTC = function (type, channel, selfuserid, remoteUsers) {
     }
 
 };
-
-
-/**
- * function to join a webrtc socket channel
- * @method
- * @name joinWebRTC
- * @param {string} channel
- * @param {string} userid
- */
-var joinWebRTC = function (channel, userid) {
-    shownotification("Joining an existing session " + channel);
-    webrtcdev.info(" [sessionmanager] joinWebRTC channel: ", channel);
-
-    if (debug) showUserStats();
-
-    socket.emit("join-channel", {
-        channel: channel,
-        sender: userid,
-        extra: {
-            userid: userid,
-            name: selfusername || "",
-            color: selfcolor || "",
-            email: selfemail || "",
-            role: role || "participant"
-        }
-    });
-};
-

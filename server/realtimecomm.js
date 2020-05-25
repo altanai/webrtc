@@ -20,7 +20,7 @@ exports.realtimecomm = function (properties, options , cache, socketCallback) {
     var users = {};
     var sessions = {};
 
-    console.log("[RealtimeComm]  properties for webrtc server " , properties, options) ;
+    console.log("[RealtimeComm]  properties for webrtc server " , properties) ;
 
     // http2
     // const server = require('http2').createSecureServer(options);

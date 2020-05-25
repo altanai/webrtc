@@ -33,7 +33,10 @@ var incomingAudio = true, incomingVideo = true, incomingData = true;
 var outgoingAudio = true, outgoingVideo = true, outgoingData = true;
 
 /* DOM objects for single user video , user in conf and all other users*/
-var localVideo = null, selfVideo = null, remoteVideos = [];
+var localVideo = null, selfVideo = null , remoteVideos;
+
+// global remoteVideos to be access from devwebfrtcobject on client
+this.remoteVideos = remoteVideos = [];
 
 /* widget objects */
 var debug = false;

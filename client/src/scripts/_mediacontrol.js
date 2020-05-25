@@ -190,63 +190,43 @@ function attachMediaStream(remvid, stream) {
         // If stream is present , attach the stream  and play
         webrtcdev.log("[Mediacontrol] attachMediaStream - stream ", stream);
         if (stream && (stream.isVideo || stream.isScreen)) {
-            return new Promise(function (resolve, reject) {
-                //element.srcObject = stream; // src(undefined) error after refresh sometimes
-                // Older browsers may not have srcObject
-                try {
-                    if ('srcObject' in element) {
-                        element.srcObject = stream;
-                    } else {
-                        throw "srcObjct not supported";
+            //element.srcObject = stream; // src(undefined) error after refresh sometimes
+            // Older browsers may not have srcObject
+            try {
+                element.srcObject = stream;
+            } catch (err) {
+                webrtcdev.error("[Mediacontrol] attachMediaStream - ", err);
+                element.src = URL.createObjectURL(stream);
+            } finally {
+                webrtcdev.info("[Mediacontrol] attachMediaStream - added srcObject for ", stream.type, " valid stream ", stream.streamid, " to element ", element);
+                // element.onloadedmetadata = function (e) {
+                return element.play().then(_ => {
+                    webrtcdev.log("[Mediacontrol] attachMediaStream - element started playing ", element);
+                }).catch(error => {
+                    webrtcdev.error("[Mediacontrol] attachMediaStream - video play error ", error);
+                    if (error.name == "NotAllowedError" && error.message.includes("play() failed")) {
+                        let r = confirm("Play failed due to auto play policy, starting video on mute, click on video to unmute");
+                        if (r || !r) {
+                            // whether uer clicks ok or cancel
+                            element.muted = true;
+                            element.autoplay = true;
+                            element.addEventListener("click", function () {
+                                element.muted = false;
+                            });
+                            element.play();
+                        }
+                    } else if (error.name == "NotAllowedError" && error.message.includes("The play() request was interrupted by a call to pause()")) {
+                        alert("Play failed, video was paused ");
                     }
-                } catch (err) {
-                    webrtcdev.error("[Mediacontrol] attachMediaStream - ", err);
-                    if (err.name == "TypeError") {
-                        throw err;
-                    }
-                    // Even if they do, they may only support MediaStream
-                    element.src = URL.createObjectURL(stream);
-                } finally {
-                    webrtcdev.info("[Mediacontrol] attachMediaStream - added src object for ", stream.type, " valid stream ", stream.streamid, " to element ", element);
-                    element.onloadedmetadata = function(e) {
-                        resolve(element);
-                    };
-                }
-
-            })
-                .then(element => {
-
-                    let playPromise = element.play();
-                    playPromise.then(_ => {
-                        webrtcdev.log("[Mediacontrol] attachMediaStream - element started playing ", element);
-                    })
-                        .catch(error => {
-                            webrtcdev.error("[Mediacontrol] attachMediaStream - video play error ", error);
-                            if (error.name == "NotAllowedError" && error.message.includes("play() failed")) {
-                                let r = confirm("Play failed due to auto play policy, starting video on mute, click on video to unmute");
-                                if (r || !r) {
-                                    // whether uer clicks ok or cancel
-                                    element.muted = true;
-                                    element.autoplay = true;
-                                    element.addEventListener("click", function () {
-                                        element.muted = false;
-                                    });
-                                    element.play();
-                                }
-                            } else if (error.name == "NotAllowedError" && error.message.includes("The play() request was interrupted by a call to pause()")) {
-                                alert("Play failed, video was paused ");
-                            }
-                        });
                 });
+                // };
+            }
 
         } else if (stream == "") {
             // If no stream , just attach the src as null
-            return new Promise(function (resolve, reject) {
-                element.srcObject = null;
-                webrtcdev.warn("[ Mediacontrol - attachMediaStream ] Media Stream empty '' attached to ", element, " as stream is not valid ", stream);
-                element.play();
-                resolve();
-            });
+            element.srcObject = null;
+            webrtcdev.warn("[ Mediacontrol - attachMediaStream ] Media Stream empty '' attached to ", element, " as stream is not valid ", stream);
+            return element.play();
         } else {
             webrtcdev.error("[Mediacontrol] attachMediaStream - stream is not recognized ", stream);
             throw "unrecognized media stream";
@@ -262,31 +242,43 @@ function attachMediaStream(remvid, stream) {
  * Re attach media stream from one dom to another dom element
  * @method
  * @name reattachMediaStream
- * @param {dom} to
- * @param {dom} from
+ * @param {video dom} element
+ * @param {video dom} from
  */
-function reattachMediaStream(to, from) {
+function reattachMediaStream(element, from) {
     try {
         // If stream is present , attach the stream and play
-        let pr = new Promise(function (resolve, reject) {
-            if (to.srcObject) resolve(1);
 
-            to.srcObject = from.srcObject;
-            webrtcdev.log('[Mediacontrol] reattachMediaStream - added src object for valid stream ', to);
-            let playPromise = to.play();
-            if (playPromise !== undefined) {
-                playPromise.then(_ => {
-                    resolve(1);
-                })
-                    .catch(error => {
-                        webrtcdev.error("[Mediacontrol] reattachMediaStream - error ", error);
-                        reject(1);
-                    });
-            }
-        });
-        return pr;
+        if (element.srcObject && element.srcObject.active) {
+            webrtcdev.log("[Mediacontrol] reattachMediaStream - element has srcObject and is active ");
+            return Promise.resolve(1);
+        } else {
+            element.srcObject = from.srcObject;
+            webrtcdev.log("[Mediacontrol] reattachMediaStream - added src object for valid stream ", element);
+
+            return element.play().then(_ => {
+                webrtcdev.log("[Mediacontrol] reattachMediaStream - element started playing ", element);
+            }).catch(error => {
+                webrtcdev.error("[Mediacontrol] reattachMediaStream - video play error ", error);
+                if (error.name == "NotAllowedError" && error.message.includes("play() failed")) {
+                    let r = confirm("Play failed due to auto play policy, starting video on mute, click on video to unmute");
+                    if (r || !r) {
+                        // whether uer clicks ok or cancel
+                        element.muted = true;
+                        element.autoplay = true;
+                        element.addEventListener("click", function () {
+                            element.muted = false;
+                        });
+                        element.play();
+                    }
+                } else if (error.name == "NotAllowedError" && error.message.includes("The play() request was interrupted by a call to pause()")) {
+                    alert("Play failed, video was paused ");
+                }
+            });
+        }
     } catch (err) {
         webrtcdev.error("[media control] reattachMediaStream err ", err);
+        return Promise.reject(new Error('reattachMediaStream failed'));
     }
 }
 
@@ -294,7 +286,7 @@ function reattachMediaStream(to, from) {
  * Dettach media stream from dom
  * @method
  * @name detachMediaStream
- * @param {dom} vid
+ * @param {video dom} vid
  */
 function detachMediaStream(vid) {
     webrtcdev.warn("[ Mediacontrol] dettachMediaStream  on vid ", vid);
@@ -316,5 +308,7 @@ function detachMediaStream(vid) {
         }
     } catch (e) {
         webrtcdev.error("[ Mediacontrol] dettachMediaStream  error ", e);
+    } finally {
+        vid.id = null;
     }
 }

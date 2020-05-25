@@ -409,7 +409,7 @@ var RTCMultiConnection = function (roomid, forceOptions) {
         });
 
         connection.socket.on('user-connected', function (userid) {
-            webrtcdev.log('[RTC header] user-connected');
+            webrtcdev.log('[RTC header] A user-connected connected to the session ');
             if (userid === connection.userid) {
                 return;
             }

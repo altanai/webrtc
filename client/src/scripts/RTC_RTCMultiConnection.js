@@ -23,6 +23,8 @@
      * @param {function} callback
      */
     mPeer.onGettingLocalMedia = function (stream, callback) {
+        webrtcdev.log("[RTC ] onGettingLocalMedia");
+
         callback = callback || function () {
         };
 
@@ -35,6 +37,7 @@
         try {
             stream.type = 'local';
         } catch (e) {
+            webrtcdev.errro("[RTC] onGettingLocalMedia- eeror in setting Remote stream type ", e)
         }
 
         connection.setStreamEndHandler(stream);
@@ -63,12 +66,12 @@
             };
 
             try {
-                setHarkEvents(connection, connection.streamEvents[stream.streamid]);
-                setMuteHandlers(connection, connection.streamEvents[stream.streamid]);
+                // setHarkEvents(connection, connection.streamEvents[stream.streamid]);
+                // setMuteHandlers(connection, connection.streamEvents[stream.streamid]);
 
                 connection.onstream(connection.streamEvents[stream.streamid]);
-            } catch (e) {
-                //
+            } catch (error) {
+                webrtcdev.error("[RTC ]  onGettingLocalMedia ", error);
             }
 
             callback();
@@ -83,9 +86,13 @@
      * @param {function} callback
      */
     mPeer.onGettingRemoteMedia = function (stream, remoteUserId) {
+
+        webrtcdev.log("[RTC ] onGettingRemoteMedia");
+
         try {
             stream.type = 'remote';
         } catch (e) {
+            webrtcdev.error("[RTC ] onGettingRemoteMedia eeror in setting Remote stream type ", e)
         }
 
         connection.setStreamEndHandler(stream, 'remote-stream');
@@ -106,9 +113,12 @@
                 streamid: stream.streamid
             };
 
-            setMuteHandlers(connection, connection.streamEvents[stream.streamid]);
-
-            connection.onstream(connection.streamEvents[stream.streamid]);
+            try {
+                // setMuteHandlers(connection, connection.streamEvents[stream.streamid]);catch(error){
+                connection.onstream(connection.streamEvents[stream.streamid]);
+            } catch (error) {
+                webrtcdev.error("[RTC ] onGettingRemoteMedia ", error)
+            }
         }, connection);
     };
 
@@ -300,12 +310,12 @@
                 return;
             }
 
-            if(connection.session.screen){
+            if (connection.session.screen) {
                 // Capture USerMedia Here
                 connection.captureUserMedia(function () {
                     openRoom(callback);
                 });
-            }else{
+            } else {
                 // handle get user media from Mediacontrol.js
                 openRoom(callback);
             }
@@ -503,12 +513,12 @@
             password: typeof connection.password !== 'undefined' && typeof connection.password !== 'object' ? connection.password : ''
         }, function (isRoomOpened, error) {
             if (isRoomOpened === true) {
-                    webrtcdev.log('[RTCMultiConn] isRoomOpened: ', isRoomOpened, ' roomid: ', connection.sessionid);
+                webrtcdev.log('[RTCMultiConn] isRoomOpened: ', isRoomOpened, ' roomid: ', connection.sessionid);
                 callback(isRoomOpened, connection.sessionid);
             }
 
             if (isRoomOpened === false) {
-                    webrtcdev.error('[RTCMultiConn] isRoomOpened: ', error, ' roomid: ', connection.sessionid);
+                webrtcdev.error('[RTCMultiConn] isRoomOpened: ', error, ' roomid: ', connection.sessionid);
                 callback(isRoomOpened, connection.sessionid, error);
             }
         });
@@ -534,7 +544,7 @@
             return;
         }
 
-        if( userPreferences.isDataOnly){
+        if (userPreferences.isDataOnly) {
             webrtcdev.error(" Join with isDataOnly");
             callback()
             return;
@@ -582,11 +592,11 @@
                 //         webrtcdev.error('Unable to capture screen on Edge. HTTPs and version 17+ is required.');
                 //     });
                 // } else {
-                    connection.invokeGetUserMedia({
-                        audio: isAudioPlusTab(connection),
-                        video: true,
-                        isScreen: true
-                    }, (session.audio || session.video) && !isAudioPlusTab(connection) ? connection.invokeGetUserMedia(null, callback) : callback);
+                connection.invokeGetUserMedia({
+                    audio: isAudioPlusTab(connection),
+                    video: true,
+                    isScreen: true
+                }, (session.audio || session.video) && !isAudioPlusTab(connection) ? connection.invokeGetUserMedia(null, callback) : callback);
                 // }
             } else if (session.audio || session.video) {
                 // connection.invokeGetUserMedia(null, callback, session);
@@ -601,7 +611,7 @@
         var session = sessionForced || connection.session;
 
         if (connection.dontCaptureUserMedia || isData(session)) {
-            webrtcdev.warn("[RTCConn] dont capture media ");
+            webrtcdev.error("[RTCConn] dont capture media flag is on or connection is Data only ");
             callback();
             return;
         }
@@ -631,23 +641,23 @@
                 //         webrtcdev.error('Unable to capture screen on Edge. HTTPs and version 17+ is required.');
                 //     });
                 // } else {
-                    connection.invokeGetUserMedia({
-                        audio: isAudioPlusTab(connection),
-                        video: true,
-                        isScreen: true
-                    }, function (stream) {
-                        if ((session.audio || session.video) && !isAudioPlusTab(connection)) {
-                            var nonScreenSession = {};
-                            for (var s in session) {
-                                if (s !== 'screen') {
-                                    nonScreenSession[s] = session[s];
-                                }
+                connection.invokeGetUserMedia({
+                    audio: isAudioPlusTab(connection),
+                    video: true,
+                    isScreen: true
+                }, function (stream) {
+                    if ((session.audio || session.video) && !isAudioPlusTab(connection)) {
+                        var nonScreenSession = {};
+                        for (var s in session) {
+                            if (s !== 'screen') {
+                                nonScreenSession[s] = session[s];
                             }
-                            connection.invokeGetUserMedia(sessionForced, callback, nonScreenSession);
-                            return;
                         }
-                        callback(stream);
-                    });
+                        connection.invokeGetUserMedia(sessionForced, callback, nonScreenSession);
+                        return;
+                    }
+                    callback(stream);
+                });
                 // }
             } else if (session.audio || session.video) {
                 connection.invokeGetUserMedia(sessionForced, callback, session);
@@ -989,35 +999,37 @@
     };
 
     connection.onstream = function (e) {
-        var parentNode = connection.videosContainer;
-        parentNode.insertBefore(e.mediaElement, parentNode.firstChild);
-        var played = e.mediaElement.play();
-
-        if (typeof played !== 'undefined') {
-            played.catch(function () {
-            }).then(function () {
-                setTimeout(function () {
-                    e.mediaElement.play();
-                }, 2000);
-            });
-            return;
-        }
-
-        setTimeout(function () {
-            e.mediaElement.play();
-        }, 2000);
+        webrtcdev.warn("[RTC] onstream");
+        // var parentNode = connection.videosContainer;
+        // parentNode.insertBefore(e.mediaElement, parentNode.firstChild);
+        // var played = e.mediaElement.play();
+        //
+        // if (typeof played !== 'undefined') {
+        //     played.catch(function () {
+        //     }).then(function () {
+        //         setTimeout(function () {
+        //             e.mediaElement.play();
+        //         }, 2000);
+        //     });
+        //     return;
+        // }
+        //
+        // setTimeout(function () {
+        //     e.mediaElement.play();
+        // }, 2000);
     };
 
     connection.onstreamended = function (e) {
-        if (!e.mediaElement) {
-            e.mediaElement = document.getElementById(e.streamid);
-        }
-
-        if (!e.mediaElement || !e.mediaElement.parentNode) {
-            return;
-        }
-
-        e.mediaElement.parentNode.removeChild(e.mediaElement);
+        webrtcdev.warn("[RTC] onstreamended");
+        // if (!e.mediaElement) {
+        //     e.mediaElement = document.getElementById(e.streamid);
+        // }
+        //
+        // if (!e.mediaElement || !e.mediaElement.parentNode) {
+        //     return;
+        // }
+        //
+        // e.mediaElement.parentNode.removeChild(e.mediaElement);
     };
 
     connection.direction = 'many-to-many'; // or  'one-way'
@@ -1886,18 +1898,14 @@
 
         connection.join(connection.sessionid);
 
-        if (connection.enableLogs) {
-            webrtcdev.warn('Userid already taken.', useridAlreadyTaken, 'Your new userid:', connection.userid);
-        }
+        webrtcdev.warn('Userid already taken.', useridAlreadyTaken, 'Your new userid:', connection.userid);
     };
 
     connection.trickleIce = true;
     connection.version = '@@version';
 
     connection.onSettingLocalDescription = function (event) {
-        if (connection.enableLogs) {
-            webrtcdev.info('Set local description for remote user', event.userid);
-        }
+        webrtcdev.info('Set local description for remote user', event.userid);
     };
 
     connection.resetScreen = function () {
@@ -1914,7 +1922,7 @@
     };
 
     // if disabled, "event.mediaElement" for "onstream" will be NULL
-    connection.autoCreateMediaElement = true;
+    connection.autoCreateMediaElement = false;
 
     // set password
     connection.password = null;
@@ -1932,15 +1940,11 @@
     };
 
     connection.onSocketDisconnect = function (event) {
-        if (connection.enableLogs) {
-            webrtcdev.warn('socket.io connection is closed');
-        }
+        webrtcdev.warn('socket.io connection is closed');
     };
 
     connection.onSocketError = function (event) {
-        if (connection.enableLogs) {
-            webrtcdev.warn('socket.io connection is failed');
-        }
+        webrtcdev.warn('socket.io connection is failed');
     };
 
     // error messages
