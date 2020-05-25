@@ -174,16 +174,16 @@ function attachMediaStream(remvid, stream) {
         // Set the remote video element
         var element = "";
         if ((document.getElementsByName(remvid)).length > 0) {
-            element = document.getElementsByName(remvid)[0];
+            webrtcdev.error("[Mediacontrol] attachMediaStream - remvid is already playing ");
+            // element = document.getElementsByName(remvid)[0];
+            return Promise.resolve();
         } else if (remvid.video) {
             element = remvid.video;
         } else if (remvid.nodeName == "VIDEO") {
             element = remvid;
         } else {
-            return new Promise(function (resolve, reject) {
-                webrtcdev.error("[ Mediacontrol] attachMediaStream - element  not found");
-                reject(1);
-            });
+            webrtcdev.error("[ Mediacontrol] attachMediaStream - element  not found");
+            return Promise.reject("video not found to attach stream");
         }
         webrtcdev.log("[Mediacontrol] attachMediaStream - element ", element);
 
@@ -216,7 +216,21 @@ function attachMediaStream(remvid, stream) {
                             element.play();
                         }
                     } else if (error.name == "NotAllowedError" && error.message.includes("The play() request was interrupted by a call to pause()")) {
-                        alert("Play failed, video was paused ");
+                        // alert("Play failed, video was paused ");
+                        setTimeout(function () {
+                                element.play();
+                            }, 2000);
+                    } else if (error.name == "AbortError" && error.message.includes("The play() request was interrupted by a new load request")) {
+                        // alert("Play failed, video was loaded with stream too fast");
+                        element.pause();
+                        setTimeout(function () {
+                            element.play();
+                        }, 2000);
+                    } else {
+                        // alert("Play failed, Retrying video play in 2 seconds ");
+                        setTimeout(function () {
+                                element.play();
+                            }, 2000);
                     }
                 });
                 // };
@@ -226,7 +240,8 @@ function attachMediaStream(remvid, stream) {
             // If no stream , just attach the src as null
             element.srcObject = null;
             webrtcdev.warn("[ Mediacontrol - attachMediaStream ] Media Stream empty '' attached to ", element, " as stream is not valid ", stream);
-            return element.play();
+            // return element.play();
+            return Promise.resolve();
         } else {
             webrtcdev.error("[Mediacontrol] attachMediaStream - stream is not recognized ", stream);
             throw "unrecognized media stream";

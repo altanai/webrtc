@@ -159,26 +159,25 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
             new Promise(function (resolve, reject) {
                 getCamMedia(rtcConn, outgoingVideo, outgoingAudio);
                 setTimeout(resolve, 3000, "");
-            })
-                .then(_ => {
-                    rtcConn.remoteUsers = event.users;
-                    // rtcConn.connectionDescription = rtcConn.join(event.channel); gives session not avaible as session in not present in list of rooms
-                    let sessionid = event.channel;
-                    rtcConn.openOrJoin(sessionid, function (res) {
-                        webrtcdev.info("[sessionmanager] join-channel-resp - openOrJoin session ", sessionid, " response - ", res);
-                        if (res) {
-                            webrtcdev.info(" [sessionmanager] join-channel-resp - openOrJoin ok,  userid ", selfuserid, " with role ", role);
-                            // for a new joiner , update his local peerinfo
-                            updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local");
-                        } else {
-                            webrtcdev.error(" [sessionmanager] join-channel-resp -  openOrJoin  Errored from signaller ");
-                        }
-                    });
-                    // rtcConn.join(sessionid, function (res) {
-                    //     webrtcdev.info(" [sessionmanager] join-channel-resp - Join ok,  userid ", selfuserid, " with role ", role);
-                    //     updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local");
-                    // });
-                }).catch((reason) => {
+            }).then(_ => {
+                rtcConn.remoteUsers = event.users;
+                // rtcConn.connectionDescription = rtcConn.join(event.channel); gives session not avaible as session in not present in list of rooms
+                let sessionid = event.channel;
+                rtcConn.openOrJoin(sessionid, function (res) {
+                    webrtcdev.info("[sessionmanager] join-channel-resp - openOrJoin session ", sessionid, " response - ", res);
+                    if (res) {
+                        webrtcdev.info(" [sessionmanager] join-channel-resp - openOrJoin ok,  userid ", selfuserid, " with role ", role);
+                        // for a new joiner , update his local peerinfo
+                        updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local");
+                    } else {
+                        webrtcdev.error(" [sessionmanager] join-channel-resp -  openOrJoin  Errored from signaller ");
+                    }
+                });
+                // rtcConn.join(sessionid, function (res) {
+                //     webrtcdev.info(" [sessionmanager] join-channel-resp - Join ok,  userid ", selfuserid, " with role ", role);
+                //     updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local");
+                // });
+            }).catch((reason) => {
                 webrtcdev.error('[sessionmanager] join-channel-resp -  Handle rejected promise (' + reason + ')');
             });
 
@@ -186,7 +185,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
                 shownotification(event.msgtype + " : " + event.message);
         } else {
             // signaller doesnt allow channel Join
-            webrtcdev.error(" [sessionmanager] Could not join this channel, Server refused");
+            webrtcdev.error("[sessionmanager] Could not join this channel, Server refused");
             alert("Could not join this channel, Server refused. Please end this session and create another session");
         }
     });
@@ -194,68 +193,17 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
     socket.on("channel-event", function (event) {
         webrtcdev.log("[sessionmanager] --------------channel-event---------------------  ", event);
         if (event.type == "new-join" && event.msgtype != "error") {
-            webrtcdev.log("[session manager ] - new-join-channel ");
-
-            // check if maxAllowed capacity of the session isnot reached before updating peer info, else return
-            if (remoteobj.maxAllowed != "unlimited" && webcallpeers.length <= remoteobj.maxAllowed) {
-                webrtcdev.log("[sessionmanager] channel-event : peer length " + webcallpeers.length + " is less than max capacity of session  of the session " + remoteobj.maxAllowed);
-                let participantId = event.data.sender;
-                if (!participantId) {
-                    webrtcdev.error("[sessionmanager] channel-event : userid not present in channel-event:" + event.type);
-                    reject("userid not found");
-                }
-                let peerinfo = findPeerInfo(participantId);
-                let name = event.data.extra.name,
-                    color = event.data.extra.color,
-                    email = event.data.extra.email,
-                    role = event.data.extra.role;
-                if (!peerinfo) {
-                    webrtcdev.log("[sessionmanager] channel-event : PeerInfo not already present, create new peerinfo");
-                    // If peerinfo is not present for new participant , treat him as Remote
-                    if (name == "LOCAL") {
-                        name = "REMOTE";
-                    }
-                    updatePeerInfo(participantId, name, color, email, role, "remote");
-                    shownotification(event.data.extra.role + "  " + event.type);
-                } else {
-                    // Peer was already present, this is s rejoin
-                    webrtcdev.log("[sessionmanager] channel-event : PeerInfo was already present, this is s rejoin, update the peerinfo ");
-                    updatePeerInfo(participantId, name, color, email, role, "remote");
-                    shownotification(event.data.extra.role + " " + event.type);
-                }
-
-                if (!peerinfo) {
-                    peerinfo = findPeerInfo(participantId)
-                }
-                peerinfo.type = "remote";
-                peerinfo.stream = "";
-                peerinfo.streamid = "";
-                updateWebCallView(peerinfo);
-
-                // event emitter for local connect
-                // window.dispatchEvent(new CustomEvent('webrtcdev', {
-                //     detail: {
-                //         servicetype: "session",
-                //         action: "onLocalConnect"
-                //     },
-                // }));
-
-            } else {
-                // max capacity of session is reached
-                webrtcdev.error("[sessionmanager] channel-event : max capacity of session is reached ", remoteobj.maxAllowed);
-                shownotificationWarning("Another user is trying to join this channel but max count [ " + remoteobj.maxAllowed + " ] is reached");
-            }
-
+            webrtcdev.log("[session manager] - new-join-channel ");
         } else {
-            webrtcdev.warn("unhandled channel event ");
+            webrtcdev.warn("[session manager] - unhandled channel event ");
         }
     });
 
     socket.on('event', function (data) {
-        console.log("event", data)
+        console.log("event", data);
     });
     socket.on('disconnect', function () {
-        console.error("disconneted ")
+        console.error("disconneted ");
     });
 }
 
@@ -293,6 +241,7 @@ var setRtcConn = function (sessionid, sessionobj) {
         rtcConn.dontCaptureUserMedia = false,
         rtcConn.dontGetRemoteStream = false,
         rtcConn.dontAttachStream = false;
+
     webrtcdev.log("[sessionmanager] set dontCaptureUserMedia ", rtcConn.dontCaptureUserMedia,
         ", dontGetRemoteStream , ", rtcConn.dontGetRemoteStream,
         ", dontAttachStream ", rtcConn.dontAttachStream),
@@ -314,60 +263,22 @@ var setRtcConn = function (sessionid, sessionobj) {
 
         rtcConn.version = '@@version',
 
-        rtcConn.onNewParticipant = function (participantId, userPreferences) {
-            webrtcdev.log("[sartjs] rtcconn onNewParticipant, participantId -  ", participantId, " , userPreferences - ", userPreferences);
-            //shownotification("[sartjs] onNewParticipant userPreferences.connectionDescription.sender : " + participantId + " name : "+ remoteusername + " requests new participation ");
-            rtcConn.acceptParticipationRequest(participantId, userPreferences);
-        },
+        // rtcConn.onNewParticipant = function (participantId, userPreferences) {
+        //     webrtcdev.log("[sartjs] rtcconn onNewParticipant, participantId -  ", participantId, " , userPreferences - ", userPreferences);
+        //     //shownotification("[sartjs] onNewParticipant userPreferences.connectionDescription.sender : " + participantId + " name : "+ remoteusername + " requests new participation ");
+        //     rtcConn.acceptParticipationRequest(participantId, userPreferences);
+        // },
 
         rtcConn.onopen = function (event) {
-            webrtcdev.log("[sessionmanager] rtconn onopen - by ", event.userid, event);
+            webrtcdev.log("[sessionmanager] onopen - by ", event.userid, event);
             try {
 
                 shownotification(event.extra.name + " joined session ", "info");
                 showdesktopnotification(document.title, event.extra.name + " joined session ");
 
                 if (event.userid == selfuserid) {
-                    webrtcdev.log("[sessionmanager] onopen selfuserid ", selfuserid, " joined the session ");
+                    webrtcdev.log("[sessionmanager] onopen - selfuserid ", selfuserid, " joined the session ");
 
-                    // event emitter for app client
-                    webrtcdev.log("[sessionmanager] dispatch onLocalConnect");
-                    window.dispatchEvent(new CustomEvent('webrtcdev', {
-                        detail: {
-                            servicetype: "session",
-                            action: "onLocalConnect"
-                        },
-                    }));
-
-                } else {
-                    // Add remote peer userid to remoteUsers
-                    remoteUsers = rtcConn.peers.getAllParticipants();
-                    webrtcdev.log(" [sessionmanager] onopen by remote suers - Collecting remote peers", remoteUsers);
-
-                    // add new peers
-                    for (x in remoteUsers) {
-                        webrtcdev.log(" [sessionmanager] join-channel. Adding remote peer ", remoteUsers[x]);
-                        if (remoteUsers[x] == event.userid) {
-                            let remoterole = event.extra.role || "participant", // will fail in case of 2 listeners
-                                remotecolor = event.extra.color,
-                                remoteemail = event.extra.email,
-                                remoteusername = (event.extra.name == "LOCAL" ? "REMOTE" : event.extra.name);
-
-                            updatePeerInfo(remoteUsers[x], remoteusername, remotecolor, remoteemail, remoterole, "remote");
-                            if (remoterole == "inspector") {
-                                shownotificationWarning("This session is being inspected ");
-                            }
-                            break;
-                        }
-                        webrtcdev.log(" [sessionmanager onopen] created/updated local peerinfo for open-channel ");
-                    }
-
-                    // Remove Duplicates from remote
-                    // remoteUsers = remoteUsers.filter(function (elem, index, self) {
-                    //     return index == self.indexOf(elem);
-                    // });
-
-                    webrtcdev.log(" SDP", findPeerInfoSDP(event.userid));
 
                     // Connect  Self to session with either open or join
                     // if (rtcConn.connectionType == "open") {
@@ -379,7 +290,74 @@ var setRtcConn = function (sessionid, sessionobj) {
                     // }
                     setupCallView("join", sessionid, selfuserid, remoteUsers);
 
-                    webrtcdev.log("[sessionmanager] dispatch onSessionConnect");
+                    // event emitter for app client
+                    webrtcdev.log("[sessionmanager] onopen - dispatch onLocalConnect");
+                    window.dispatchEvent(new CustomEvent('webrtcdev', {
+                        detail: {
+                            servicetype: "session",
+                            action: "onLocalConnect"
+                        },
+                    }));
+
+                } else {
+                    // Add remote peer userid to remoteUsers
+                    // remoteUsers = rtcConn.peers.getAllParticipants();
+                    // webrtcdev.log(" [sessionmanager] onopen by remote suers - Collecting remote peers", remoteUsers);
+                    //
+                    // // add new peers
+                    // for (x in remoteUsers) {
+                    //     webrtcdev.log(" [sessionmanager] join-channel. Adding remote peer ", remoteUsers[x]);
+                    //     if (remoteUsers[x] == event.userid) {
+                    // .... update remote peerinfo
+                    //     }
+                    //     webrtcdev.log(" [sessionmanager onopen] created/updated local peerinfo for open-channel ");
+                    // }
+
+                    // Remove Duplicates from remote
+                    // remoteUsers = remoteUsers.filter(function (elem, index, self) {
+                    //     return index == self.indexOf(elem);
+                    // });
+
+                    webrtcdev.log(" SDP", findPeerInfoSDP(event.userid));
+
+                    // check if maxAllowed capacity of the session isnot reached before updating peer info, else return
+                    if (remoteobj.maxAllowed != "unlimited" && webcallpeers.length <= remoteobj.maxAllowed) {
+                        webrtcdev.log("[sessionmanager] onopen: peer length " + webcallpeers.length + " is less than max capacity of session  of the session " + remoteobj.maxAllowed);
+                        // let participantId = event.userid;
+                        // if (!participantId) {
+                        //     webrtcdev.error("[sessionmanager] onopen : userid not present in event :" + event.type);
+                        //     return;
+                        // }
+                        let peerinfo = findPeerInfo(event.userid);
+                        let name = event.extra.name,
+                            color = event.extra.color,
+                            email = event.extra.email,
+                            role = event.extra.role;
+                        if (!peerinfo) {
+                            webrtcdev.log("[sessionmanager] onopne - create new peerinfo");
+                            // If peerinfo is not present for new participant , treat him as Remote
+                            if (name == "LOCAL") {
+                                name = "REMOTE";
+                            }
+                            updatePeerInfo(event.userid, name, color, email, role, "remote");
+                            shownotification(event.extra.role + "  " + event.type);
+                        } else {
+                            // Peer was already present, this is s rejoin
+                            webrtcdev.log("[sessionmanager] onopen - PeerInfo was already present, this is s rejoin, update the peerinfo ");
+                            updatePeerInfo(event.userid, name, color, email, role, "remote");
+                            shownotification(event.extra.role + " " + event.type);
+                        }
+                        peerinfo.stream = "";
+                        peerinfo.streamid = "";
+                        updateWebCallView(peerinfo);
+
+                    } else {
+                        // max capacity of session is reached
+                        webrtcdev.error("[sessionmanager] onopen - max capacity of session is reached ", remoteobj.maxAllowed);
+                        shownotificationWarning("Another user is trying to join this channel but max count [ " + remoteobj.maxAllowed + " ] is reached");
+                    }
+
+                    webrtcdev.log("[sessionmanager] onopen - dispatch onSessionConnect");
                     window.dispatchEvent(new CustomEvent('webrtcdev', {
                         detail: {
                             servicetype: "session",
@@ -391,7 +369,7 @@ var setRtcConn = function (sessionid, sessionobj) {
                 // In debug mode let the users create multiple user session in same browser ,
                 // do not use localstoarge values to get old userid for resuse
                 // setting local caches
-                webrtcdev.log(" [sessionmanager] onopen - setting cache - channel " + sessionid + " with self-userid " + selfuserid + " and remoteUsers " + remoteUsers);
+                // webrtcdev.log(" [sessionmanager] onopen - setting cache - channel " + sessionid + " with self-userid " + selfuserid + " and remoteUsers " + remoteUsers);
                 if (!debug) {
                     if (!localStorage.getItem("userid"))
                         localStorage.setItem("userid", selfuserid);
@@ -402,8 +380,7 @@ var setRtcConn = function (sessionid, sessionobj) {
                     if (!localStorage.getItem("channel"))
                         localStorage.setItem("channel", sessionid);
                 }
-
-
+                
             } catch (err) {
                 shownotification("problem in session open ", "warning");
                 webrtcdev.error("[sessionmanager] onopen - problem in session open", err);
@@ -831,8 +808,8 @@ var joinWebRTC = function (channel, userid) {
 var setupCallView = function (type, channel, selfuserid, remoteUsers) {
     // update web call view for Self
     var peerinfo = findPeerInfo(selfuserid);
-    if(peerinfo.setup=="done'"){
-        webrtcdev.info(" [sessionmanager] setupCallView is laready done for peer" , peerinfo);
+    if (peerinfo.setup == "done'") {
+        webrtcdev.info(" [sessionmanager] setupCallView is laready done for peer", peerinfo);
         return;
     }
 
@@ -911,5 +888,5 @@ var setupCallView = function (type, channel, selfuserid, remoteUsers) {
         showTimeZone();
     }
 
-    appendToPeerValue(selfuserid,"setup","done");
+    appendToPeerValue(selfuserid, "setup", "done");
 };
