@@ -68,7 +68,16 @@ function updateWebCallView(peerinfo) {
             } else if (peerinfo.type == "remote" && peerinfo.vid.indexOf("videoremote") > -1) {
                 //when video is remote
                 updateRemoteWebCalView(peerinfo).then(_ => {
-                    updateLocalWebCallView(webcallpeers[0]);
+                    // updateLocalWebCallView(webcallpeers[0]);
+                    // Connect  Self to session with either open or join
+                    // if (rtcConn.connectionType == "open") {
+                    //     setupCallView("open", sessionid, selfuserid);
+                    // } else if (rtcConn.connectionType == "join") {
+                    //     setupCallView("join", sessionid, selfuserid);
+                    // } else {
+                    //     shownotification("Connection type is neither open nor join", "warning");
+                    // }
+                    setupCallView("join", sessionid, selfuserid);
                 });
 
             } else {

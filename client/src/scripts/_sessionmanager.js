@@ -160,8 +160,6 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
                 getCamMedia(rtcConn, outgoingVideo, outgoingAudio);
                 setTimeout(resolve, 3000, "");
             }).then(_ => {
-                rtcConn.remoteUsers = event.users;
-                // rtcConn.connectionDescription = rtcConn.join(event.channel); gives session not avaible as session in not present in list of rooms
                 let sessionid = event.channel;
                 rtcConn.openOrJoin(sessionid, function (res) {
                     webrtcdev.info("[sessionmanager] join-channel-resp - openOrJoin session ", sessionid, " response - ", res);
@@ -279,17 +277,6 @@ var setRtcConn = function (sessionid, sessionobj) {
                 if (event.userid == selfuserid) {
                     webrtcdev.log("[sessionmanager] onopen - selfuserid ", selfuserid, " joined the session ");
 
-
-                    // Connect  Self to session with either open or join
-                    // if (rtcConn.connectionType == "open") {
-                    //     setupCallView("open", sessionid, selfuserid, []);
-                    // } else if (rtcConn.connectionType == "join") {
-                    //     setupCallView("join", sessionid, selfuserid, remoteUsers);
-                    // } else {
-                    //     shownotification("Connection type is neither open nor join", "warning");
-                    // }
-                    setupCallView("join", sessionid, selfuserid, remoteUsers);
-
                     // event emitter for app client
                     webrtcdev.log("[sessionmanager] onopen - dispatch onLocalConnect");
                     window.dispatchEvent(new CustomEvent('webrtcdev', {
@@ -323,18 +310,13 @@ var setRtcConn = function (sessionid, sessionobj) {
                     // check if maxAllowed capacity of the session isnot reached before updating peer info, else return
                     if (remoteobj.maxAllowed != "unlimited" && webcallpeers.length <= remoteobj.maxAllowed) {
                         webrtcdev.log("[sessionmanager] onopen: peer length " + webcallpeers.length + " is less than max capacity of session  of the session " + remoteobj.maxAllowed);
-                        // let participantId = event.userid;
-                        // if (!participantId) {
-                        //     webrtcdev.error("[sessionmanager] onopen : userid not present in event :" + event.type);
-                        //     return;
-                        // }
                         let peerinfo = findPeerInfo(event.userid);
                         let name = event.extra.name,
                             color = event.extra.color,
                             email = event.extra.email,
                             role = event.extra.role;
                         if (!peerinfo) {
-                            webrtcdev.log("[sessionmanager] onopne - create new peerinfo");
+                            webrtcdev.log("[sessionmanager] onopen - create new peerinfo");
                             // If peerinfo is not present for new participant , treat him as Remote
                             if (name == "LOCAL") {
                                 name = "REMOTE";
@@ -348,6 +330,7 @@ var setRtcConn = function (sessionid, sessionobj) {
                             shownotification(event.extra.role + " " + event.type);
                         }
                         peerinfo.stream = "";
+                        peerinfo.streamid = "";
                         peerinfo.streamid = "";
                         updateWebCallView(peerinfo);
 
@@ -369,18 +352,17 @@ var setRtcConn = function (sessionid, sessionobj) {
                 // In debug mode let the users create multiple user session in same browser ,
                 // do not use localstoarge values to get old userid for resuse
                 // setting local caches
-                // webrtcdev.log(" [sessionmanager] onopen - setting cache - channel " + sessionid + " with self-userid " + selfuserid + " and remoteUsers " + remoteUsers);
                 if (!debug) {
                     if (!localStorage.getItem("userid"))
                         localStorage.setItem("userid", selfuserid);
 
-                    if (!localStorage.getItem("remoteUsers"))
-                        localStorage.setItem("remoteUsers", remoteUsers);
+                    // if (!localStorage.getItem("remoteUsers"))
+                    //     localStorage.setItem("remoteUsers", remoteUsers);
 
                     if (!localStorage.getItem("channel"))
                         localStorage.setItem("channel", sessionid);
                 }
-                
+
             } catch (err) {
                 shownotification("problem in session open ", "warning");
                 webrtcdev.error("[sessionmanager] onopen - problem in session open", err);
@@ -803,11 +785,10 @@ var joinWebRTC = function (channel, userid) {
  * @param {string} type
  * @param {string} channel
  * @param {string} userid
- * @param {string} remoteUsers
  */
-var setupCallView = function (type, channel, selfuserid, remoteUsers) {
+var setupCallView = function (type, channel, userid) {
     // update web call view for Self
-    var peerinfo = findPeerInfo(selfuserid);
+    var peerinfo = findPeerInfo(userid);
     if (peerinfo.setup == "done'") {
         webrtcdev.info(" [sessionmanager] setupCallView is laready done for peer", peerinfo);
         return;
@@ -829,9 +810,9 @@ var setupCallView = function (type, channel, selfuserid, remoteUsers) {
 
         // Create File Sharing Div
         if (fileshareobj.props.fileShare == "single") {
-            createFileSharingDiv(_peerinfo);
+            createFileSharingDiv(peerinfo);
             //max display the local / single fileshare
-            getElementById(_peerinfo.fileShare.outerbox).style.width = "100%";
+            getElementById(peerinfo.fileShare.outerbox).style.width = "100%";
 
         } else if (fileshareobj.props.fileShare == "divided") {
 
@@ -839,7 +820,7 @@ var setupCallView = function (type, channel, selfuserid, remoteUsers) {
             // Do not create file share and file viewer for inspector's own session
             if (role != "inspector") {
                 webrtcdev.log(" [sessionmanager] creating local file sharing");
-                createFileSharingDiv(_peerinfo);
+                createFileSharingDiv(peerinfo);
             } else {
                 webrtcdev.log("[sessionmanager] Since it is an inspector's own session , not creating local File viewer and list");
             }
@@ -863,9 +844,9 @@ var setupCallView = function (type, channel, selfuserid, remoteUsers) {
 
         // Creating File listing div
         if (fileshareobj.props.fileList == "single") {
-            document.getElementById(_peerinfo.fileList.outerbox).style.width = "100%";
+            document.getElementById(peerinfo.fileList.outerbox).style.width = "100%";
         } else if (fileshareobj.props.fileShare != "single") {
-            webrtcdev.log("No Seprate div created for this peer since fileshare container is single");
+            webrtcdev.log("No Separate div created for this peer since fileshare container is single");
         } else {
             webrtcdev.error("fileshareobj.props.fileShare undefined ");
         }
