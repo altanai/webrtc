@@ -57,18 +57,19 @@ function getCamMedia(rtcConn, outgoingVideo, outgoingAudio) {
 
     var mediaConstraints = {
         audio: {
-            mandatory: {},
-            optional: []
+            // "googEchoCancellation": "false",
+            // "googNoiseSuppression": "false",
+            // "googHighpassFilter": "false",
+            // "googTypingNoiseDetection": "false"
         },
         video: {
-            mandatory: {},
-            optional: [{
-                height: 480,
-                width: 640,
+                frameRate: 20,
+                height: 240,
+                width: 320,
                 facingMode: 'user'
-            }]
         }
     };
+
     if (role == "inspector") {
 
         rtcConn.dontCaptureUserMedia = true;

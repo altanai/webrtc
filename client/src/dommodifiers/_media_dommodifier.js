@@ -216,6 +216,7 @@ function createAudioMuteButton(muteobj, controlBarName, peerinfo) {
             peerinfo.stream.unmute({
                 audio: !0
             });
+            rtcConn.streamEvents.selectFirst('local').mediaElement.muted = true;
             audioButton.className = muteobj.audio.button.class_on;
             audioButton.innerHTML = muteobj.audio.button.html_on;
         }

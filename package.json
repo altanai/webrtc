@@ -1,6 +1,6 @@
 {
   "name": "webrtcdevelopment",
-  "version": "5.5.0",
+  "version": "6.0.1",
   "description": "webrtc based communication and collaboration client. Contains lot of experiments modules ",
   "main": "webrtcserver.js",
   "engines": {
