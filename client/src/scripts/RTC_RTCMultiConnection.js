@@ -92,7 +92,7 @@
         try {
             stream.type = 'remote';
         } catch (e) {
-            webrtcdev.error("[RTC ] onGettingRemoteMedia eeror in setting Remote stream type ", e)
+            webrtcdev.error("[RTC ] onGettingRemoteMedia error in setting Remote stream type ", e);
         }
 
         connection.setStreamEndHandler(stream, 'remote-stream');

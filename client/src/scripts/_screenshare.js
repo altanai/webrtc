@@ -9,12 +9,12 @@ var signaler, screen, screenRoomid;
 var screenShareStreamLocal = null;
 
 /**
- * function set up Srcreens share session RTC peer connection
+ * function set up Screenshare session RTC peer connection
  * @method
  * @name webrtcdevPrepareScreenShare
  * @param {function} callback
  */
-function webrtcdevPrepareScreenShare(screenRoomid,sessionobj) {
+function webrtcdevPrepareScreenShare(screenRoomid, sessionobj) {
 
     localStorage.setItem("screenRoomid ", screenRoomid);
     webrtcdev.log("[screenshare JS] webrtcdevPrepareScreenShare - screenRoomid : ", screenRoomid);
@@ -32,6 +32,15 @@ function webrtcdevPrepareScreenShare(screenRoomid,sessionobj) {
             OfferToReceiveVideo: true
         },
         // scrConn.dontCaptureUserMedia = false,
+
+        scrConn.mediaConstraints={
+            audio: false,
+            video: {
+                frameRate: 20,
+                height: 240,
+                width: 320,
+            }
+        },
 
         scrConn.onMediaError = function (error, constraints) {
             webrtcdev.error("[screenshareJS] on stream in _screenshare :", error, constraints);
@@ -60,11 +69,38 @@ function webrtcdevPrepareScreenShare(screenRoomid,sessionobj) {
                     screenStreamId = event.streamid;
                 }
 
+                let svideos = document.getElementById("screenShareRow").querySelectorAll("video");
+                for (x in svideos) {
+                    if (!svideos[x].playing) {
+                        svideos[x].hidden = true;
+                    }
+                }
+
                 let video = document.createElement('video');
+                video.muted = true;
+                // video.control = true;
+                video.id = "video_"+screenRoomid;
+                // video.addEventListener("stalled ", function () {
+                //     alert(" video is stalled ");
+                // }, true);
+                //
+                // video.addEventListener("seeked", function () {
+                //     alert(" video is seeked ");
+                // }, true);
+                //
+                // video.addEventListener("emptied", function () {
+                //     alert(" video is emptied ");
+                // }, true);
+                //
+                // video.addEventListener("ended", function () {
+                //     alert(" video is ended ");
+                // }, true);
+
                 let stream = event.stream;
-                attachMediaStream(video, stream);
-                //video.id = peerInfo.videoContainer;
-                getElementById(screenshareobj.screenshareContainer).appendChild(video);
+                attachMediaStream(video, stream).then(_ => {
+                    getElementById(screenshareobj.screenshareContainer).appendChild(video);
+                });
+
                 showelem(screenshareobj.screenshareContainer);
                 rtcConn.send({
                     type: "screenshare",

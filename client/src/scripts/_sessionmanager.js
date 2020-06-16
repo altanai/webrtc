@@ -256,7 +256,7 @@ var setRtcConn = function (sessionid, sessionobj) {
 
     rtcConn.codecs = {
         audio: 'opus',
-        video: 'VP9'
+        video: 'VP8'
     },
 
     rtcConn.version = '@@version',
