@@ -32,6 +32,7 @@ function webrtcdevPrepareScreenShare(screenRoomid, sessionobj) {
             OfferToReceiveVideo: true
         },
         // scrConn.dontCaptureUserMedia = false,
+        scrConn.iceServers = turn.iceServers,
 
         scrConn.mediaConstraints={
             audio: false,

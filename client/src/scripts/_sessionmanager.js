@@ -220,8 +220,7 @@ var setRtcConn = function (sessionid, sessionobj) {
 
         rtcConn.channel = this.sessionid,
         rtcConn.socketURL = sessionobj.signaller, // location for the SDP offer/answer signaller
-        // rtcConn.iceServers = sessionobj.turn.iceservers || rtcConn.getIceServers() ,
-
+        rtcConn.iceServers = sessionobj.turn.iceServers, // || rtcConn.getIceServers()
         rtcConn.direction = 'many-to-many', // other options 'one-way'
         rtcConn.session = {
             video: outgoingVideo || true,
