@@ -70,7 +70,7 @@ function webrtcdevPrepareScreenShare(screenRoomid, sessionobj) {
                     screenStreamId = event.streamid;
                 }
 
-                let svideos = document.getElementById("screenShareRow").querySelectorAll("video");
+                let svideos = document.getElementById(screenshareobj.screenshareContainer).querySelectorAll("video");
                 for (x in svideos) {
                     if (!svideos[x].playing) {
                         svideos[x].hidden = true;
@@ -296,6 +296,14 @@ function webrtcdevCleanShareScreen(streamid) {
         scrConn.removeStream(streamid);
         scrConn.close();
         scrConn = null;
+
+
+        let svideos = document.getElementById(screenshareobj.screenshareContainer).querySelectorAll("video");
+        for (x in svideos) {
+            if (!svideos[x].playing) {
+                svideos[x].hidden = true;
+            }
+        }
 
         if (screenshareobj.screenshareContainer && getElementById(screenshareobj.screenshareContainer)) {
             getElementById(screenshareobj.screenshareContainer).innerHTML = "";

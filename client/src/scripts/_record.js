@@ -75,15 +75,7 @@ function stopRecord(peerinfo) {
     }
     let recorder = listOfRecorders[streamid];
     recorder.stopRecording(function (url) {
-
-        webrtcdev.log(" url ", url);
         let blob = recorder.getBlob();
-        if (!peerinfo) {
-            if (selfuserid)
-                peerinfo = findPeerInfo(selfuserid);
-            else
-                peerinfo = findPeerInfo(rtcConn.userid);
-        }
 
         /*        
         window.open( URL.createObjectURL(blob) );
@@ -93,13 +85,22 @@ function stopRecord(peerinfo) {
         $.post('/server-address', formData, serverCallback);*/
 
         let recordVideoname = "recordedvideo" + new Date().getTime();
-        peerinfo.filearray.push(recordVideoname);
-        let numFile = document.createElement("div");
-        numFile.value = peerinfo.filearray.length;
-        let fileurl = URL.createObjectURL(blob);
+        var _peerinfo;
+        if(selfuserid)
+            _peerinfo = findPeerInfo(selfuserid);
+        else
+            _peerinfo = findPeerInfo(rtcConn.userid);
+        _peerinfo.filearray.push(recordVideoname);
 
-        displayList(peerinfo.uuid, peerinfo, fileurl, recordVideoname, "videoRecording");
-        displayFile(peerinfo.uuid, peerinfo, fileurl, recordVideoname, "videoRecording");
+        let numFile = document.createElement("div");
+        numFile.value = _peerinfo.filearray.length;
+        let fileurl = URL.createObjectURL(blob);
+        if(fileshareobj.active) {
+            displayList(_peerinfo.uuid, _peerinfo, fileurl, recordVideoname, "videoRecording");
+            displayFile(_peerinfo.uuid, _peerinfo, fileurl, recordVideoname, "videoRecording");
+        }else{
+            displayFile(_peerinfo.uuid, _peerinfo, fileurl, recordVideoname, "videoRecording");
+        }
     });
 }
 
