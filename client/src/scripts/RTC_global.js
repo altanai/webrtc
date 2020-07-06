@@ -332,6 +332,12 @@ function isUnifiedPlanSupportedDefault() {
     return canAddTransceiver && isUnifiedPlanSuppored();
 }
 
+/**
+ * find whether sdpSemantics is 'unified-plan' , plan-b or something else
+ * @method
+ * @name isUnifiedPlanSuppored
+ * @return {boolean} isUnifiedPlanSuppored
+ */
 function isUnifiedPlanSuppored() {
     var isUnifiedPlanSupported = false;
 

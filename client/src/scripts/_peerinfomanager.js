@@ -63,18 +63,23 @@ var findPeerInfoSDP = function (userid) {
 
                 if (line.indexOf('a=fingerprint:') === 0) {
                     let parts = line.substr(14).split(' ');
-                    console.log('algorithm', parts[0]);
-                    console.log('fingerprint', parts[1]);
+                    console.log('algorithm - ', parts[0]);
+                    console.log('fingerprint - ', parts[1]);
                 }
 
                 if (line.indexOf('m=audio') === 0) {
                     let parts = line.substr(8).split(' ');
-                    console.log('Audio codecs', parts);
+                    console.log('Audio codecs - ', parts);
                 }
 
                 if (line.indexOf('m=video') === 0) {
                     let parts = line.substr(8).split(' ');
-                    console.log('Video codecs', parts);
+                    console.log('Video codecs - ', parts);
+                }
+
+                if (line.indexOf('c=IN IP4') === 0) {
+                    let parts = line.substr(9).split(' ');
+                    console.log('Contact line - ', parts);
                 }
 
             });

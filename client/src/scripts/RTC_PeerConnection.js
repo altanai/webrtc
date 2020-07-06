@@ -349,6 +349,7 @@ function PeerInitiator(config) {
         };
 
         if (DetectRTC.browser.name !== 'Safari') {
+            webrtcdev.log("[RTC PC] addRemoteSdp ");
             remoteSdp.sdp = connection.processSdp(remoteSdp.sdp);
         }
 
@@ -460,10 +461,12 @@ function PeerInitiator(config) {
 
     function createOfferOrAnswer(_method) {
         webrtcdev.log("[RTC PC] createOfferOrAnswer ", _method);
-        webrtcdev.log("[RTC PC] createOfferOrAnswer SDP ", defaults.sdpConstraints);
+        webrtcdev.log("[RTC PC] createOfferOrAnswer SDP ------------------- defaults.sdpConstraints ", defaults.sdpConstraints);
         peer[_method](defaults.sdpConstraints).then(function (localSdp) {
             if (DetectRTC.browser.name !== 'Safari') {
+                webrtcdev.log("[RTC PC] createOfferOrAnswer ---------- Local SDP before processSdp ", localSdp.sdp );
                 localSdp.sdp = connection.processSdp(localSdp.sdp);
+                webrtcdev.log("[RTC PC] createOfferOrAnswer ---------- Local SDP after processSdp ", localSdp.sdp );
             }
             peer.setLocalDescription(localSdp).then(function () {
                 if (!connection.trickleIce) return;

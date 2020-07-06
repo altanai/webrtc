@@ -724,20 +724,33 @@
 
     connection.codecs = {
         audio: 'opus',
-        video: 'Av1'
+        video: 'H264'
     };
+
+    if (typeof CodecsHandler !== 'undefined') {
+        connection.BandwidthHandler = connection.CodecsHandler = CodecsHandler;
+    }
 
     connection.processSdp = function (sdp) {
 
-        webrtcdev.log("[RtcConn ] processSdp", sdp);
+        webrtcdev.log("[RtcConn ] processSdp -----------------------", sdp);
+        webrtcdev.log("[RtcConn ] processSdp ----------------------- connection.codecs.video ", connection.codecs.video);
+
         // ignore SDP modification if unified-pan is supported
-        if (isUnifiedPlanSupportedDefault()) {
-            return sdp;
-        }
+        // if (isUnifiedPlanSupportedDefault()) {
+        //     webrtcdev.log("[RtcConn ] processSdp - As UnifiedPlanSupportedDefault is supported , avoid processing SDP ");
+        //     return sdp;
+        // }
 
         if (DetectRTC.browser.name === 'Safari') {
             return sdp;
         }
+
+        // var availSendCodecs = RTCRtpTransceiver.sender.getCapabilities("video").codecs;
+        // var availReceiveCodecs = RTCRtpTransceiver.receiver.getCapabilities("video").codecs;
+        //
+        // webrtcdev.log("[RtcConn ] processSdp  availSendCodecs " , availSendCodecs);
+        // webrtcdev.log("[RtcConn ] processSdp  availReceiveCodecs " , availReceiveCodecs);
 
         if (connection.codecs.video.toUpperCase() === 'VP8') {
             sdp = CodecsHandler.preferCodec(sdp, 'vp8');
@@ -755,37 +768,36 @@
             sdp = CodecsHandler.removeNonG722(sdp);
         }
 
-        if (DetectRTC.browser.name === 'Firefox') {
-            return sdp;
-        }
+        // Todo : Remove commented , done temporarily for the MCU changes
+        // if (DetectRTC.browser.name === 'Firefox') {
+        //     return sdp;
+        // }
+        //
+        // if (connection.bandwidth.video || connection.bandwidth.screen) {
+        //     sdp = CodecsHandler.setApplicationSpecificBandwidth(sdp, connection.bandwidth, !!connection.session.screen);
+        // }
+        //
+        // if (connection.bandwidth.video) {
+        //     sdp = CodecsHandler.setVideoBitrates(sdp, {
+        //         min: connection.bandwidth.video * 8 * 1024,
+        //         max: connection.bandwidth.video * 8 * 1024
+        //     });
+        // }
+        //
+        // if (connection.bandwidth.audio) {
+        //     sdp = CodecsHandler.setOpusAttributes(sdp, {
+        //         maxaveragebitrate: connection.bandwidth.audio * 8 * 1024,
+        //         maxplaybackrate: connection.bandwidth.audio * 8 * 1024,
+        //         stereo: 1,
+        //         maxptime: 3
+        //     });
+        // }
 
-        if (connection.bandwidth.video || connection.bandwidth.screen) {
-            sdp = CodecsHandler.setApplicationSpecificBandwidth(sdp, connection.bandwidth, !!connection.session.screen);
-        }
-
-        if (connection.bandwidth.video) {
-            sdp = CodecsHandler.setVideoBitrates(sdp, {
-                min: connection.bandwidth.video * 8 * 1024,
-                max: connection.bandwidth.video * 8 * 1024
-            });
-        }
-
-        if (connection.bandwidth.audio) {
-            sdp = CodecsHandler.setOpusAttributes(sdp, {
-                maxaveragebitrate: connection.bandwidth.audio * 8 * 1024,
-                maxplaybackrate: connection.bandwidth.audio * 8 * 1024,
-                stereo: 1,
-                maxptime: 3
-            });
-        }
+        sdp = CodecsHandler.addMediaGateway(sdp);
 
         webrtcdev.log("[RtcConn ] processSdp final - ", sdp);
         return sdp;
     };
-
-    if (typeof CodecsHandler !== 'undefined') {
-        connection.BandwidthHandler = connection.CodecsHandler = CodecsHandler;
-    }
 
     connection.mediaConstraints = {
         audio: {
