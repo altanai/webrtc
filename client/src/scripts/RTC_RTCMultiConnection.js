@@ -731,6 +731,10 @@
         connection.BandwidthHandler = connection.CodecsHandler = CodecsHandler;
     }
 
+    connection.processMcuSdp = function(sdp) {
+       return CodecsHandler.addMediaGateway(sdp);
+    };
+
     connection.processSdp = function (sdp) {
 
         webrtcdev.log("[RtcConn ] processSdp -----------------------", sdp);
@@ -792,8 +796,6 @@
         //         maxptime: 3
         //     });
         // }
-
-        sdp = CodecsHandler.addMediaGateway(sdp);
 
         webrtcdev.log("[RtcConn ] processSdp final - ", sdp);
         return sdp;
