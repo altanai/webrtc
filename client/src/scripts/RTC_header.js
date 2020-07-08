@@ -735,8 +735,8 @@ var RTCMultiConnection = function (roomid, forceOptions) {
             this.renegotiatePeer(remoteUserId);
         };
 
-        this.onNegotiationNeeded = function (message, remoteUserId) {
-        };
+        this.onNegotiationNeeded = function (message, remoteUserId) {};
+
         this.addNegotiatedMessage = function (message, remoteUserId) {
             if (message.type && message.sdp) {
                 if (message.type == 'answer') {
