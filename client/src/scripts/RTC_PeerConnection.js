@@ -173,7 +173,7 @@ function PeerInitiator(config) {
         };
     }
 
-    webrtcdev.log("[PeerInitiator ] peer.getSnders ", peer.getSenders());
+    webrtcdev.log("[PeerInitiator ] peer.getSenders ", peer.getSenders());
     if (!peer.getLocalStreams && peer.getSenders) {
         peer.getLocalStreams = function () {
             var stream = new MediaStream();
@@ -201,6 +201,7 @@ function PeerInitiator(config) {
                     streamsToShare: streamsToShare
                 });
             }
+            webrtcdev.log("[PeerInitiator ] peer.onicecandidate  , candidate not found , return with local description ");
             return;
         }
 
@@ -214,7 +215,7 @@ function PeerInitiator(config) {
             sdpMLineIndex: event.candidate.sdpMLineIndex
         });
 
-        webrtcdev.log("[PeerInitiator] onicecandidate - done adding ", event.candidate.candidate);
+        webrtcdev.log("[PeerInitiator] onicecandidate - update local SDP with ", event.candidate.candidate);
     };
 
     localStreams.forEach(function (localStream) {
@@ -250,7 +251,24 @@ function PeerInitiator(config) {
         }
     });
 
+    peer.onicegatheringstatechange = ev => {
+        let connection = ev.target;
+
+        switch(connection.iceGatheringState) {
+            case "gathering":
+                /* collection of candidates has begun */
+                webrtcdev.log("[RTC PC] onicegatheringstatechange - gathering ");
+                break;
+            case "complete":
+                /* collection of candidates is finished */
+                webrtcdev.log("[RTC PC] onicegatheringstatechange - complete ");
+                break;
+        }
+    };
+
     peer.oniceconnectionstatechange = peer.onsignalingstatechange = function () {
+        webrtcdev.log("[RTC PC] ontrack event - oniceconnectionstatechange ", peer.iceConnectionState );
+        webrtcdev.log("[RTC PC] ontrack event - onsignalingstatechange " , peer.signalingState);
         var extra = self.extra;
         if (connection.peers[self.userid]) {
             extra = connection.peers[self.userid].extra || extra;
@@ -493,6 +511,13 @@ function PeerInitiator(config) {
         };
     });
 
+    /**
+     * create Offer Or Answer
+     * @method
+     * @name createOfferOrAnswer
+     * @param {string} _method createOffer or createAnswer
+     * @return {RTCPeerconnection} peer
+     */
     function createOfferOrAnswer(_method) {
         webrtcdev.log("[RTC PC] createOfferOrAnswer ", _method, " , defaults.sdpConstraints ", defaults.sdpConstraints);
         peer[_method](defaults.sdpConstraints).then(function (localSdp) {
@@ -502,7 +527,7 @@ function PeerInitiator(config) {
             peer.setLocalDescription(localSdp).then(function () {
 
                 webrtcdev.log("[RTC PC] createOfferOrAnswer --- connection ", connection);
-                webrtcdev.log("[RTC PC] createOfferOrAnswer --- localSDP ", localSdp);
+                webrtcdev.log("[RTC PC] createOfferOrAnswer --- localSDP ", localSdp.type , localSdp.sdp);
 
                 if (!connection.trickleIce) {
                     webrtcdev.error("[RTC PC] not trickleICE ");

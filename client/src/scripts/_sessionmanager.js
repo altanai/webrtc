@@ -221,15 +221,10 @@ var setRtcConn = function (sessionid, sessionobj) {
         rtcConn.channel = this.sessionid,
         rtcConn.socketURL = sessionobj.signaller, // location for the SDP offer/answer signaller
 
-        // rtcConn.iceServers = [] , // sessionobj.turn.iceServers, // || rtcConn.getIceServers()
+        rtcConn.iceServers = sessionobj.turn.iceServers, // || rtcConn.getIceServers()
 
         // ---------------------start - for MCU POC ----------------------
-        // rtcConn.iceServers = [{
-        //     urls: "turn:54.193.51.199?transport=udp",
-        //     username: "",
-        //     credential: ""
-        // }],
-        rtcConn.iceServers = [],
+        //rtcConn.iceServers = [],
         rtcConn.iceTransportPolicy = "all" , // all , relay
         rtcConn.bundlePolicy = "balanced",
         rtcConn.rtcpMuxPolicy = "require",
@@ -257,17 +252,13 @@ var setRtcConn = function (sessionid, sessionobj) {
         //         googCpuOveruseDetection: true
         //     }],
         //     mandatory: {}
-        // };
+        // },
         rtcConn.optionalArgument = {},
 
-        // rtcConn.sdpConstraints.mandatory = {
-        //     OfferToReceiveAudio: incomingAudio || true,
-        //     OfferToReceiveVideo: incomingVideo || true
-        // },
         rtcConn.sdpConstraints = {
             mandatory: {
-                OfferToReceiveAudio: true,
-                OfferToReceiveVideo: true
+                OfferToReceiveAudio: incomingAudio || true,
+                OfferToReceiveVideo: incomingVideo || true
             },
             optional: [{
                 VoiceActivityDetection: false
@@ -276,8 +267,8 @@ var setRtcConn = function (sessionid, sessionobj) {
 
         rtcConn.candidates = {
             host: true,
-            stun: false,
-            turn: false
+            stun: true,
+            turn: true
         },
 
         // rtcConn.session = {
