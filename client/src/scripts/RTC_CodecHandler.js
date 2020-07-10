@@ -96,7 +96,7 @@ var CodecsHandler = (function () {
      */
     function splitLines(sdp) {
 
-        console.log("[RTC Codechandler] splitLines ========== SDP ", sdp );
+        console.log("[RTC Codechandler] splitLines ========== SDP ", sdp);
         var info = {};
         sdp.split('\n').forEach(function (line) {
             if (line.indexOf('m=video') === 0) {
@@ -121,7 +121,7 @@ var CodecsHandler = (function () {
                 info.h264LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
             }
         });
-        console.log("[RTC Codechandler] ========== Info ", info );
+        console.log("[RTC Codechandler] ========== Info ", info);
         return info;
     }
 
@@ -196,22 +196,37 @@ var CodecsHandler = (function () {
      * @return  {SDP} sdp
      */
     function addMediaGateway(sdp) {
-        console.log("[RTC codecHandler] ============================================== addMediaGateway - 54.193.51.199");
+        var mcuip = '54.193.51.199';
+        webrtcdev.log("[RTC codecHandler] ================ addMediaGateway -", mcuip);
 
         let lines = sdp.split('\n')
             .map(l => l.trim()); // split and remove trailing CR
         lines.forEach(function (line) {
 
+            if (line.indexOf('o=-') === 0) {
+                console.log('[RTC codecHandler]  Origin line - ', line);
+
+                let parts = line.substr(33).split(' ');
+                // o=- 6057333675814921621 2 IN IP4 127.0.0.1
+
+                if(parts != mcuip) {
+                    var regex = new RegExp(parts, "g");
+                    sdp = sdp.replace(regex, mcuip);
+                    webrtcdev.log('[RTC codecHandler]  Replaced o line regex-', regex, " with ", mcuip);
+                }
+            }
+
             if (line.indexOf('c=IN IP4') === 0) {
                 console.log('[RTC codecHandler]  Contact line - ', line);
 
                 let parts = line.substr(9).split(' ');
-                console.log('[RTC codecHandler]  Contact line - ', parts);
                 // sdp = sdp.replace(/(c=IN IP4)\w+/g, 'c=IN IP4 54.193.51.199');
 
-                var regex = new RegExp(parts, "g");
-                console.log('[RTC codecHandler]  Contact line  regex-', regex );
-                sdp = sdp.replace(regex, '54.193.51.199');
+                if(parts != mcuip) {
+                    var regex = new RegExp(parts, "g");
+                    sdp = sdp.replace(regex, mcuip);
+                    webrtcdev.log('[RTC codecHandler]  Replaced c line regex-', regex, " with ", mcuip);
+                }
             }
 
         });
@@ -229,7 +244,7 @@ var CodecsHandler = (function () {
      * @return {SDP} sdp
      */
     function setBAS(sdp, bandwidth, isScreen) {
-        console.log("[RTC Codechandler] setBAS --------------------- sdp before  ", sdp );
+        console.log("[RTC Codechandler] setBAS --------------------- sdp before  ", sdp);
         if (!bandwidth) {
             return sdp;
         }
@@ -267,7 +282,7 @@ var CodecsHandler = (function () {
             sdp = sdp.replace(/a=mid:video\r\n/g, 'a=mid:video\r\nb=AS:' + bandwidth.video + '\r\n');
         }
 
-        console.log("[RTC Codechandler] setBAS --------------------- sdp after  ", sdp );
+        console.log("[RTC Codechandler] setBAS --------------------- sdp after  ", sdp);
         return sdp;
     }
 

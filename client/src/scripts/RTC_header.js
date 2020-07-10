@@ -735,9 +735,11 @@ var RTCMultiConnection = function (roomid, forceOptions) {
             this.renegotiatePeer(remoteUserId);
         };
 
-        this.onNegotiationNeeded = function (message, remoteUserId) {
-        };
+        this.onNegotiationNeeded = function (message, remoteUserId) {};
+
         this.addNegotiatedMessage = function (message, remoteUserId) {
+
+            webrtcdev.log("[RTC Header] addNegotiatedMessage" , message);
             if (message.type && message.sdp) {
                 if (message.type == 'answer') {
                     if (connection.peers[remoteUserId]) {
@@ -753,9 +755,7 @@ var RTCMultiConnection = function (roomid, forceOptions) {
                     }
                 }
 
-                if (connection.enableLogs) {
-                    webrtcdev.log('Remote peer\'s sdp:', message.sdp);
-                }
+                webrtcdev.log('Remote peer\'s sdp:', message.sdp);
                 return;
             }
 
@@ -764,9 +764,7 @@ var RTCMultiConnection = function (roomid, forceOptions) {
                     connection.peers[remoteUserId].addRemoteCandidate(message);
                 }
 
-                if (connection.enableLogs) {
-                    webrtcdev.log('Remote peer\'s candidate pairs:', message.candidate);
-                }
+                webrtcdev.log('Remote peer\'s candidate pairs:', message.candidate);
                 return;
             }
 

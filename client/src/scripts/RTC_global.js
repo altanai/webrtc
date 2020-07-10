@@ -313,8 +313,14 @@ function isUnifiedPlanSupportedDefault() {
     var canAddTransceiver = false;
 
     try {
-        if (typeof RTCRtpTransceiver === 'undefined') return false;
-        if (!('currentDirection' in RTCRtpTransceiver.prototype)) return false;
+        if (typeof RTCRtpTransceiver === 'undefined') {
+            webrtcdev.error("[RTC global] RTCRtpTransceiver  not supported  ");
+            return false;
+        }
+        if (!('currentDirection' in RTCRtpTransceiver.prototype)) {
+            webrtcdev.error("[RTC global] RTCRtpTransceiver currentDirection not present  ");
+            return false;
+        }
 
         var tempPc = new RTCPeerConnection();
 
@@ -322,11 +328,13 @@ function isUnifiedPlanSupportedDefault() {
             tempPc.addTransceiver('audio');
             canAddTransceiver = true;
         } catch (e) {
+            webrtcdev.error("[RTC global] RTCRtpTransceiver addTransceiver error ", e);
         }
 
         tempPc.close();
     } catch (e) {
         canAddTransceiver = false;
+        webrtcdev.error("[RTC global] RTCRtpTransceiver error ", e);
     }
 
     return canAddTransceiver && isUnifiedPlanSuppored();

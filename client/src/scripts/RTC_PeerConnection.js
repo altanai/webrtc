@@ -34,7 +34,7 @@ var MediaStreamTrack = window.MediaStreamTrack;
  * Handles all peer ide activities like setting media setting policies , SDP constraints , creating offer answer , handling stream
  * @method
  * @name PeerInitiator
- * @param {config} json - configuration json for SDP and RTC
+ * @param {json} config - configuration json for SDP and RTC
  */
 function PeerInitiator(config) {
 
@@ -122,49 +122,71 @@ function PeerInitiator(config) {
                 params.sdpSemantics = connection.sdpSemantics || 'unified-plan';
             }
 
-            if (!connection.iceServers || !connection.iceServers.length) {
-                params = null;
-                connection.optionalArgument = null;
-            }
+            // if (!connection.iceServers || !connection.iceServers.length) {
+            //     params = null;
+            //     connection.optionalArgument = null;
+            // }
 
             webrtcdev.log("[PeerInitiator] RTCPeerConnection params - ", params, " connection.optionalArgument ", connection.optionalArgument);
             peer = new RTCPeerConnection(params, connection.optionalArgument);
-        } catch (e) {
-            try {
-                var params = {
-                    iceServers: connection.iceServers
-                };
 
-                peer = new RTCPeerConnection(params);
-            } catch (e) {
-                peer = new RTCPeerConnection();
-            }
+        } catch (e) {
+            webrtcdev.error("[RTC PC ] PeerInitiator -  error ", e, " try making peerconection witghout optional arguments , just with paarms like iceservers");
+            // try {
+            //     var params = {
+            //         iceServers: connection.iceServers
+            //     };
+            //     peer = new RTCPeerConnection(params);
+            // } catch (e) {
+            //     peer = new RTCPeerConnection();
+            //     webrtcdev.error("[RTC PC ] PeerInitiator - error again ", e, " create empty RTC Peerconnection without params or optional arguments  ");
+            // }
         }
     } else {
         peer = config.peerRef;
     }
 
+    // Codec Preference
+    // let codec = [];
+
+    // const transceiver = peer.addTransceiver('audio');
+    // const audiocapabilities = RTCRtpSender.getCapabilities('audio');
+    // webrtcdev.log("[PeerInitiator ] Audio Capabilities ", audiocapabilities);
+    // codec.push(audiocapabilities.codecs[0]);
+
+    // const transceiver = peer.addTransceiver('video');
+    // const videocapabilities = RTCRtpSender.getCapabilities('video');
+    // webrtcdev.log("[PeerInitiator ] Video Capabilities ", videocapabilities);
+    // codec.push(videocapabilities.codecs[2]);
+    //
+    // transceiver.setCodecPreferences(codec);
+
+    webrtcdev.log("[PeerInitiator ] peer.getReceivers ", peer.getReceivers());
     if (!peer.getRemoteStreams && peer.getReceivers) {
         peer.getRemoteStreams = function () {
             var stream = new MediaStream();
             peer.getReceivers().forEach(function (receiver) {
                 stream.addTrack(receiver.track);
             });
+            webrtcdev.log("[PeerInitiator] RTCPeerConnection - getReceivers and addTrack ");
             return [stream];
         };
     }
 
+    webrtcdev.log("[PeerInitiator ] peer.getSnders ", peer.getSenders());
     if (!peer.getLocalStreams && peer.getSenders) {
         peer.getLocalStreams = function () {
             var stream = new MediaStream();
             peer.getSenders().forEach(function (sender) {
                 stream.addTrack(sender.track);
             });
+            webrtcdev.log("[PeerInitiator] RTCPeerConnection - getSenders and addTrack ");
             return [stream];
         };
     }
 
     peer.onicecandidate = function (event) {
+        webrtcdev.log("[PeerInitiator ] peer.onicecandidate  ", event);
         if (!event.candidate) {
             if (!connection.trickleIce) {
                 var localSdp = peer.localDescription;
@@ -182,12 +204,17 @@ function PeerInitiator(config) {
             return;
         }
 
-        if (!connection.trickleIce) return;
+        if (!connection.trickleIce) {
+            webrtcdev.error("[PeerInitiator] onicecandidate - trickleIce not set ");
+            return;
+        }
         config.onLocalCandidate({
             candidate: event.candidate.candidate,
             sdpMid: event.candidate.sdpMid,
             sdpMLineIndex: event.candidate.sdpMLineIndex
         });
+
+        webrtcdev.log("[PeerInitiator] onicecandidate - done adding ", event.candidate.candidate);
     };
 
     localStreams.forEach(function (localStream) {
@@ -267,7 +294,11 @@ function PeerInitiator(config) {
     var dontDuplicate = {};
 
     peer.ontrack = function (event) {
+
+        webrtcdev.log("[RTC PC] ontrack event - " , event );
         if (!event || event.type !== 'track') return;
+
+        if (!event.stream ) return;
 
         event.stream = event.streams[event.streams.length - 1];
 
@@ -341,6 +372,7 @@ function PeerInitiator(config) {
     }
 
     this.addRemoteCandidate = function (remoteCandidate) {
+        webrtcdev.log("[RTC PC] addRemoteCandidate - remoteCandidate ", remoteCandidate);
         peer.addIceCandidate(new RTCIceCandidate(remoteCandidate));
     };
 
@@ -349,17 +381,17 @@ function PeerInitiator(config) {
         };
 
         if (DetectRTC.browser.name !== 'Safari') {
-            webrtcdev.log("[RTC PC] addRemoteSdp ---- modify the SDP before setting remote Description");
-            remoteSdp.sdp = connection.processSdp(remoteSdp.sdp);
+            //webrtcdev.log("[RTC PC] addRemoteSdp ---- modify the SDP before setting remote Description");
+            //remoteSdp.sdp = connection.processSdp(remoteSdp.sdp);
             webrtcdev.log("[RTC PC] addRemoteSdp ---- modify the SDP with MCU media gateway before setting remote Description");
             remoteSdp.sdp = connection.processMcuSdp(remoteSdp.sdp);
         }
 
         peer.setRemoteDescription(new RTCSessionDescription(remoteSdp))
-        .then(cb, function (error) {
-            webrtcdev.error('[RTC PC] setRemoteDescription failed', '\n', error, '\n', remoteSdp.sdp);
-            cb();
-        }).catch(function (error) {
+            .then(cb, function (error) {
+                webrtcdev.error('[RTC PC] setRemoteDescription failed', '\n', error, '\n', remoteSdp.sdp);
+                cb();
+            }).catch(function (error) {
             webrtcdev.error('[RTC PC] setRemoteDescription failed', '\n', error, '\n', remoteSdp.sdp);
             cb();
         });
@@ -462,19 +494,26 @@ function PeerInitiator(config) {
     });
 
     function createOfferOrAnswer(_method) {
-        webrtcdev.log("[RTC PC] createOfferOrAnswer ", _method , " , defaults.sdpConstraints ", defaults.sdpConstraints);
+        webrtcdev.log("[RTC PC] createOfferOrAnswer ", _method, " , defaults.sdpConstraints ", defaults.sdpConstraints);
         peer[_method](defaults.sdpConstraints).then(function (localSdp) {
-            if (DetectRTC.browser.name !== 'Safari') {
-                localSdp.sdp = connection.processSdp(localSdp.sdp);
-            }
+            // if (DetectRTC.browser.name !== 'Safari') {
+            //     localSdp.sdp = connection.processSdp(localSdp.sdp);
+            // }
             peer.setLocalDescription(localSdp).then(function () {
-                if (!connection.trickleIce) return;
 
-                if(_method == "createOffer" ){
-                    webrtcdev.log("[RTC PC] created Offered ---- modify the SDP with MCU media gateway before setting local Description");
+                webrtcdev.log("[RTC PC] createOfferOrAnswer --- connection ", connection);
+                webrtcdev.log("[RTC PC] createOfferOrAnswer --- localSDP ", localSdp);
+
+                if (!connection.trickleIce) {
+                    webrtcdev.error("[RTC PC] not trickleICE ");
+                    return;
+                }
+
+                if (_method == "createOffer") {
+                    webrtcdev.log("[RTC PC] created Offered - modify the SDP with MCU media gateway before setting local Description");
                     localSdp.sdp = connection.processMcuSdp(localSdp.sdp, "localSdp");
-                }else if ( _method == "createAnswer"){
-                    webrtcdev.log("[RTC PC] created Answer ---- modify the SDP with MCU media gateway before setting local Description");
+                } else if (_method == "createAnswer") {
+                    webrtcdev.log("[RTC PC] created Answer - modify the SDP with MCU media gateway before setting local Description");
                     localSdp.sdp = connection.processMcuSdp(localSdp.sdp, "localSdp");
                 }
 
@@ -491,13 +530,10 @@ function PeerInitiator(config) {
 
                 connection.onSettingLocalDescription(self);
             }, function (error) {
-                if (!connection.enableLogs) return;
-                webrtcdev.error('setLocalDescription error', error);
+                webrtcdev.error('[RTC PC] setLocalDescription error', error);
             });
         }, function (error) {
-            if (!!connection.enableLogs) {
-                webrtcdev.error('sdp-error', error);
-            }
+            webrtcdev.error('[RTC PC] setLocalDescription sdp-error', error);
         });
     }
 
