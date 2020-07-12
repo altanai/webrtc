@@ -131,7 +131,7 @@ function PeerInitiator(config) {
             peer = new RTCPeerConnection(params, connection.optionalArgument);
 
         } catch (e) {
-            webrtcdev.error("[RTC PC ] PeerInitiator -  error ", e, " try making peerconection witghout optional arguments , just with paarms like iceservers");
+            webrtcdev.error("[RTC PC ] PeerInitiator -  error ", e, " try making peerconnection without optional arguments , just with paarms like iceservers");
             // try {
             //     var params = {
             //         iceServers: connection.iceServers
@@ -147,19 +147,20 @@ function PeerInitiator(config) {
     }
 
     // Codec Preference
-    // let codec = [];
+    let codec_audio = [];
+    const transceiver_audio = peer.addTransceiver('audio');
+    const audiocapabilities = RTCRtpSender.getCapabilities('audio');
+    webrtcdev.log("[PeerInitiator ] Audio Capabilities ", audiocapabilities);
+    codec_audio.push(audiocapabilities.codecs[0]);
+    transceiver_audio.setCodecPreferences(codec_audio);
 
-    // const transceiver = peer.addTransceiver('audio');
-    // const audiocapabilities = RTCRtpSender.getCapabilities('audio');
-    // webrtcdev.log("[PeerInitiator ] Audio Capabilities ", audiocapabilities);
-    // codec.push(audiocapabilities.codecs[0]);
-
-    // const transceiver = peer.addTransceiver('video');
-    // const videocapabilities = RTCRtpSender.getCapabilities('video');
-    // webrtcdev.log("[PeerInitiator ] Video Capabilities ", videocapabilities);
-    // codec.push(videocapabilities.codecs[2]);
-    //
-    // transceiver.setCodecPreferences(codec);
+    let codec_video = [];
+    const transceiver = peer.addTransceiver('video');
+    const videocapabilities = RTCRtpSender.getCapabilities('video');
+    webrtcdev.log("[PeerInitiator ] Video Capabilities ", videocapabilities);
+    codec_video.push(videocapabilities.codecs[0]);
+    codec_video.push(videocapabilities.codecs[1]);
+    transceiver.setCodecPreferences(codec_video);
 
     webrtcdev.log("[PeerInitiator ] peer.getReceivers ", peer.getReceivers());
     if (!peer.getRemoteStreams && peer.getReceivers) {
@@ -167,8 +168,8 @@ function PeerInitiator(config) {
             var stream = new MediaStream();
             peer.getReceivers().forEach(function (receiver) {
                 stream.addTrack(receiver.track);
+                webrtcdev.log("[PeerInitiator] RTCPeerConnection ---------------------- getReceivers and addTrack ");
             });
-            webrtcdev.log("[PeerInitiator] RTCPeerConnection - getReceivers and addTrack ");
             return [stream];
         };
     }
@@ -179,14 +180,16 @@ function PeerInitiator(config) {
             var stream = new MediaStream();
             peer.getSenders().forEach(function (sender) {
                 stream.addTrack(sender.track);
+                webrtcdev.log("[PeerInitiator] RTCPeerConnection ----------------------- getSenders and addTrack ");
             });
-            webrtcdev.log("[PeerInitiator] RTCPeerConnection - getSenders and addTrack ");
             return [stream];
         };
     }
 
     peer.onicecandidate = function (event) {
         webrtcdev.log("[PeerInitiator ] peer.onicecandidate  ", event);
+
+        //end-of-candidate
         if (!event.candidate) {
             if (!connection.trickleIce) {
                 var localSdp = peer.localDescription;
@@ -201,7 +204,7 @@ function PeerInitiator(config) {
                     streamsToShare: streamsToShare
                 });
             }
-            webrtcdev.log("[PeerInitiator ] peer.onicecandidate  , candidate not found , return with local description ");
+            webrtcdev.log("[PeerInitiator ] peer.onicecandidate - end-of-candidate , return with local description ");
             return;
         }
 
@@ -209,8 +212,51 @@ function PeerInitiator(config) {
             webrtcdev.error("[PeerInitiator] onicecandidate - trickleIce not set ");
             return;
         }
+
+        //add candidate for messaging to remote
+
+        // add_MCU_Icecandidate
+        // let mcucandidate_audio = {
+        //     sdpMid: 0,
+        //     sdpMLineIndex: 0,
+        //     candidate: "candidate:1 1 udp 2015363327 54.193.51.199 43865 typ host"
+        // };
+        // peer.addIceCandidate(mcucandidate_audio)
+        //     .then(_ => {
+        //         console.log("[RTC PC] createOfferOrAnswer addIceCandidate() - Added MCU ICE ");
+        //         //end-of-cadidate
+        //         let iceCandidate = new RTCIceCandidate(mcucandidate_audio);
+        //         peer.addIceCandidate(iceCandidate);
+        //     })
+        //     .catch(e => {
+        //         console.error("[RTC PC ] createOfferOrAnswer - Failure during addIceCandidate(): " + e.name);
+        //     });
+
+        // let mcucandidate_video = {
+        //     sdpMid: 1,
+        //     sdpMLineIndex: 1,
+        //     candidate: "candidate:1 1 udp 2015363327 54.193.51.199 43865 typ host"
+        // };
+        // peer.addIceCandidate(mcucandidate_video)
+        //     .then(_ => {
+        //         console.log("[RTC PC ] createOfferOrAnswer  addIceCandidate() - Added MCU ICE ");
+        //         //end-of-cadidate
+        //         peer.addIceCandidate({candidate: ''});
+        //     })
+        //     .catch(e => {
+        //         console.error("[RTC PC ] createOfferOrAnswer - Failure during addIceCandidate(): " + e.name);
+        //     });
+
+        // original
+        // config.onLocalCandidate({
+        //     candidate: event.candidate.candidate,
+        //     sdpMid: event.candidate.sdpMid,
+        //     sdpMLineIndex: event.candidate.sdpMLineIndex
+        // });
+
+        // Force candidate for MCU host
         config.onLocalCandidate({
-            candidate: event.candidate.candidate,
+            candidate: "candidate:1 1 udp 2015363327 54.193.51.199 43865 typ host",
             sdpMid: event.candidate.sdpMid,
             sdpMLineIndex: event.candidate.sdpMLineIndex
         });
@@ -253,8 +299,8 @@ function PeerInitiator(config) {
 
     peer.onicegatheringstatechange = ev => {
         let connection = ev.target;
-
-        switch(connection.iceGatheringState) {
+        webrtcdev.log("[RTC PC] onicegatheringstatechange -", connection.iceGatheringState );
+        switch (connection.iceGatheringState) {
             case "gathering":
                 /* collection of candidates has begun */
                 webrtcdev.log("[RTC PC] onicegatheringstatechange - gathering ");
@@ -266,9 +312,9 @@ function PeerInitiator(config) {
         }
     };
 
-    peer.oniceconnectionstatechange = peer.onsignalingstatechange = function () {
-        webrtcdev.log("[RTC PC] ontrack event - oniceconnectionstatechange ", peer.iceConnectionState );
-        webrtcdev.log("[RTC PC] ontrack event - onsignalingstatechange " , peer.signalingState);
+    peer.oniceconnectionstatechange = peer.onsignalingstatechange = function (ev) {
+
+        // webrtcdev.log("[RTC PC] ontrack event - onsignalingstatechange " , peer.signalingState);
         var extra = self.extra;
         if (connection.peers[self.userid]) {
             extra = connection.peers[self.userid].extra || extra;
@@ -276,6 +322,13 @@ function PeerInitiator(config) {
 
         if (!peer) {
             return;
+        }
+
+        if (peer.iceConnectionState === "failed" ||
+            peer.iceConnectionState === "disconnected" ||
+            peer.iceConnectionState === "closed") {
+            // Handle the failure
+            webrtcdev.log("[RTC PC] ontrack event - oniceconnectionstatechange ", peer.iceConnectionState );
         }
 
         config.onPeerStateChanged({
@@ -313,10 +366,10 @@ function PeerInitiator(config) {
 
     peer.ontrack = function (event) {
 
-        webrtcdev.log("[RTC PC] ontrack event - " , event );
+        webrtcdev.log("[RTC PC] ontrack event - ", event);
         if (!event || event.type !== 'track') return;
 
-        if (!event.stream ) return;
+        if (!event.stream) return;
 
         event.stream = event.streams[event.streams.length - 1];
 
@@ -391,7 +444,23 @@ function PeerInitiator(config) {
 
     this.addRemoteCandidate = function (remoteCandidate) {
         webrtcdev.log("[RTC PC] addRemoteCandidate - remoteCandidate ", remoteCandidate);
-        peer.addIceCandidate(new RTCIceCandidate(remoteCandidate));
+
+        // addMCUICecandidate
+        // let mcucandidate = {candidate: "candidate:1 1 udp 2015363327 54.193.51.199 43865 typ host"};
+        // peer.addIceCandidate(mcucandidate)
+        //     .then(_ => {
+        //         console.log(" Added MCU ICE ");
+        //     })
+        //     .catch(e => {
+        //         console.error("Failure during addIceCandidate(): " + e.name);
+        //     });
+
+        //end-of-cadidate
+        // peer.addIceCandidate({candidate: ''});
+
+        let iceCandidate = new RTCIceCandidate(remoteCandidate);
+        webrtcdev.log("[RTC PC] addRemoteCandidate - RTCIceCandidate " ,iceCandidate );
+        peer.addIceCandidate(iceCandidate);
     };
 
     this.addRemoteSdp = function (remoteSdp, cb) {
@@ -403,6 +472,7 @@ function PeerInitiator(config) {
             //remoteSdp.sdp = connection.processSdp(remoteSdp.sdp);
             webrtcdev.log("[RTC PC] addRemoteSdp ---- modify the SDP with MCU media gateway before setting remote Description");
             remoteSdp.sdp = connection.processMcuSdp(remoteSdp.sdp);
+
         }
 
         peer.setRemoteDescription(new RTCSessionDescription(remoteSdp))
@@ -527,7 +597,7 @@ function PeerInitiator(config) {
             peer.setLocalDescription(localSdp).then(function () {
 
                 webrtcdev.log("[RTC PC] createOfferOrAnswer --- connection ", connection);
-                webrtcdev.log("[RTC PC] createOfferOrAnswer --- localSDP ", localSdp.type , localSdp.sdp);
+                webrtcdev.log("[RTC PC] createOfferOrAnswer --- localSDP ", localSdp.type, localSdp.sdp);
 
                 if (!connection.trickleIce) {
                     webrtcdev.error("[RTC PC] not trickleICE ");

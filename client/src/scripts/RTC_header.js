@@ -735,6 +735,12 @@ var RTCMultiConnection = function (roomid, forceOptions) {
             this.renegotiatePeer(remoteUserId);
         };
 
+        this.onNegotiationStarted = function (remoteUserId, states) {
+        };
+
+        this.onNegotiationCompleted = function (remoteUserId, states) {
+        };
+
         this.onNegotiationNeeded = function (message, remoteUserId) {};
 
         this.addNegotiatedMessage = function (message, remoteUserId) {
@@ -823,10 +829,13 @@ var RTCMultiConnection = function (roomid, forceOptions) {
 
         this.onGettingRemoteMedia = function (stream, remoteUserId) {
         };
+
         this.onRemovingRemoteMedia = function (stream, remoteUserId) {
         };
+
         this.onGettingLocalMedia = function (localStream) {
         };
+
         this.onLocalMediaError = function (error, constraints) {
             connection.onMediaError(error, constraints);
         };
@@ -906,11 +915,6 @@ var RTCMultiConnection = function (roomid, forceOptions) {
 
         this.onPeerStateChanged = function (state) {
             connection.onPeerStateChanged(state);
-        };
-
-        this.onNegotiationStarted = function (remoteUserId, states) {
-        };
-        this.onNegotiationCompleted = function (remoteUserId, states) {
         };
 
         this.getRemoteStreams = function (remoteUserId) {

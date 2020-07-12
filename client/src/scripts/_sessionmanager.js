@@ -278,7 +278,7 @@ var setRtcConn = function (sessionid, sessionobj) {
         // },
         rtcConn.session = {
             video: true,
-            audio: false,
+            audio: true,
             data: false
         },
 
