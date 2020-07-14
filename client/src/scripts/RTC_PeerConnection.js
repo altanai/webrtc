@@ -122,10 +122,10 @@ function PeerInitiator(config) {
                 params.sdpSemantics = connection.sdpSemantics || 'unified-plan';
             }
 
-            // if (!connection.iceServers || !connection.iceServers.length) {
-            //     params = null;
-            //     connection.optionalArgument = null;
-            // }
+            if (!connection.iceServers || !connection.iceServers.length) {
+                params = null;
+                connection.optionalArgument = null;
+            }
 
             webrtcdev.log("[PeerInitiator] RTCPeerConnection params - ", params, " connection.optionalArgument ", connection.optionalArgument);
             peer = new RTCPeerConnection(params, connection.optionalArgument);
@@ -147,20 +147,20 @@ function PeerInitiator(config) {
     }
 
     // Codec Preference
-    let codec_audio = [];
-    const transceiver_audio = peer.addTransceiver('audio');
-    const audiocapabilities = RTCRtpSender.getCapabilities('audio');
-    webrtcdev.log("[PeerInitiator ] Audio Capabilities ", audiocapabilities);
-    codec_audio.push(audiocapabilities.codecs[0]);
-    transceiver_audio.setCodecPreferences(codec_audio);
-
-    let codec_video = [];
-    const transceiver = peer.addTransceiver('video');
-    const videocapabilities = RTCRtpSender.getCapabilities('video');
-    webrtcdev.log("[PeerInitiator ] Video Capabilities ", videocapabilities);
-    codec_video.push(videocapabilities.codecs[0]);
-    codec_video.push(videocapabilities.codecs[1]);
-    transceiver.setCodecPreferences(codec_video);
+    // let codec_audio = [];
+    // const transceiver_audio = peer.addTransceiver('audio');
+    // const audiocapabilities = RTCRtpSender.getCapabilities('audio');
+    // webrtcdev.log("[PeerInitiator ] Audio Capabilities ", audiocapabilities);
+    // codec_audio.push(audiocapabilities.codecs[0]);
+    // transceiver_audio.setCodecPreferences(codec_audio);
+    //
+    // let codec_video = [];
+    // const transceiver = peer.addTransceiver('video');
+    // const videocapabilities = RTCRtpSender.getCapabilities('video');
+    // webrtcdev.log("[PeerInitiator ] Video Capabilities ", videocapabilities);
+    // codec_video.push(videocapabilities.codecs[0]);
+    // codec_video.push(videocapabilities.codecs[1]);
+    // transceiver.setCodecPreferences(codec_video);
 
     webrtcdev.log("[PeerInitiator ] peer.getReceivers ", peer.getReceivers());
     if (!peer.getRemoteStreams && peer.getReceivers) {
@@ -248,18 +248,18 @@ function PeerInitiator(config) {
         //     });
 
         // original
-        // config.onLocalCandidate({
-        //     candidate: event.candidate.candidate,
-        //     sdpMid: event.candidate.sdpMid,
-        //     sdpMLineIndex: event.candidate.sdpMLineIndex
-        // });
-
-        // Force candidate for MCU host
         config.onLocalCandidate({
-            candidate: "candidate:1 1 udp 2015363327 54.193.51.199 43865 typ host",
+            candidate: event.candidate.candidate,
             sdpMid: event.candidate.sdpMid,
             sdpMLineIndex: event.candidate.sdpMLineIndex
         });
+
+        // Force candidate for MCU host
+        // config.onLocalCandidate({
+        //     candidate: "candidate:1 1 udp 2015363327 54.193.51.199 43865 typ host",
+        //     sdpMid: event.candidate.sdpMid,
+        //     sdpMLineIndex: event.candidate.sdpMLineIndex
+        // });
 
         webrtcdev.log("[PeerInitiator] onicecandidate - update local SDP with ", event.candidate.candidate);
     };
@@ -470,8 +470,8 @@ function PeerInitiator(config) {
         if (DetectRTC.browser.name !== 'Safari') {
             //webrtcdev.log("[RTC PC] addRemoteSdp ---- modify the SDP before setting remote Description");
             //remoteSdp.sdp = connection.processSdp(remoteSdp.sdp);
-            webrtcdev.log("[RTC PC] addRemoteSdp ---- modify the SDP with MCU media gateway before setting remote Description");
-            remoteSdp.sdp = connection.processMcuSdp(remoteSdp.sdp);
+            // webrtcdev.log("[RTC PC] addRemoteSdp ---- modify the SDP with MCU media gateway before setting remote Description");
+            // remoteSdp.sdp = connection.processMcuSdp(remoteSdp.sdp);
 
         }
 
@@ -604,13 +604,13 @@ function PeerInitiator(config) {
                     return;
                 }
 
-                if (_method == "createOffer") {
-                    webrtcdev.log("[RTC PC] created Offered - modify the SDP with MCU media gateway before setting local Description");
-                    localSdp.sdp = connection.processMcuSdp(localSdp.sdp, "localSdp");
-                } else if (_method == "createAnswer") {
-                    webrtcdev.log("[RTC PC] created Answer - modify the SDP with MCU media gateway before setting local Description");
-                    localSdp.sdp = connection.processMcuSdp(localSdp.sdp, "localSdp");
-                }
+                // if (_method == "createOffer") {
+                //     webrtcdev.log("[RTC PC] created Offered - modify the SDP with MCU media gateway before setting local Description");
+                //     localSdp.sdp = connection.processMcuSdp(localSdp.sdp, "localSdp");
+                // } else if (_method == "createAnswer") {
+                //     webrtcdev.log("[RTC PC] created Answer - modify the SDP with MCU media gateway before setting local Description");
+                //     localSdp.sdp = connection.processMcuSdp(localSdp.sdp, "localSdp");
+                // }
 
                 config.onLocalSdp({
                     type: localSdp.type,

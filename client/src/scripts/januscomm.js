@@ -16,7 +16,8 @@ wsHandlers = {
     },
 
     'message': function (event) {
-        let resp = JSON.parse(event);
+
+        let resp = JSON.parse(event.data);
         console.log("Jsocket Resp ", resp);
 
         if (resp.janus == "success" && resp.data.id) {

@@ -341,8 +341,8 @@ var setRtcConn = function (sessionid, sessionobj) {
                     // Add remote peer userid to remoteUsers
                     // remoteUsers = rtcConn.peers.getAllParticipants();
                     // webrtcdev.log(" [sessionmanager] onopen by remote suers - Collecting remote peers", remoteUsers);
-                    //
-                    // // add new peers
+
+                    //  add new peers
                     // for (x in remoteUsers) {
                     //     webrtcdev.log(" [sessionmanager] join-channel. Adding remote peer ", remoteUsers[x]);
                     //     if (remoteUsers[x] == event.userid) {
@@ -401,7 +401,7 @@ var setRtcConn = function (sessionid, sessionobj) {
                 }
 
                 // In debug mode let the users create multiple user session in same browser ,
-                // do not use localstoarge values to get old userid for resuse
+                // do not use localstorage values to get old userid for resuse
                 // setting local caches
                 if (!debug) {
                     if (!localStorage.getItem("userid"))

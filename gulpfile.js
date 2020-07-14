@@ -184,6 +184,7 @@ var scriptList = [
     "client/src/scripts/RTC_FileProgressBarHandler.js",
     // "client/src/scripts/RTC_Translator.js",
     "client/src/scripts/RTC_RTCMultiConnection.js",
+    "client/src/scripts/januscomm.js",
     "client/src/scripts/RTC_footer.js",
 
     // --------------------- helper libs
