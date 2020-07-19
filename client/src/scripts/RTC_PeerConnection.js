@@ -153,7 +153,7 @@ function PeerInitiator(config) {
     // webrtcdev.log("[PeerInitiator ] Audio Capabilities ", audiocapabilities);
     // codec_audio.push(audiocapabilities.codecs[0]);
     // transceiver_audio.setCodecPreferences(codec_audio);
-    //
+
     // let codec_video = [];
     // const transceiver = peer.addTransceiver('video');
     // const videocapabilities = RTCRtpSender.getCapabilities('video');
