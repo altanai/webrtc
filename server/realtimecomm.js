@@ -20,7 +20,7 @@ exports.realtimecomm = function (properties, options , cache, socketCallback) {
     var users = {};
     var sessions = {};
 
-    // console.log("[RealtimeComm]  properties for webrtc server " , properties, options) ;
+    console.log("[RealtimeComm]  properties for webrtc server " , properties) ;
 
     // http2
     // const server = require('http2').createSecureServer(options);
@@ -29,43 +29,16 @@ exports.realtimecomm = function (properties, options , cache, socketCallback) {
     const server = require('https').createServer(options);
 
     // socketio
-    const io = require('socket.io')(server, {
-        origins: "*:*",
-        pingTimeout: 15000,
-        pingInterval: 30000
-    });
-    // io.use((socket, next) => {
-    //     let token = socket.handshake.query.token;
-    //     if (isValid(token)) {
-    //         return next();
-    //     }webrtcserver
-    //     return next(new Error('authentication error'));
-    // });
-    io.on('connection', onConnection)
+    const io = require('socket.io')(server);
+    io.on('connection', onConnection);
     io.on('disconnect', () => {
         console.error("disconnected ");
     });
 
-    // io.serveClient(false);
-    // secure: true,
-    // serveClient: false,
-    // io.attach(server, {
-    //     pingInterval: 10000,
-    //     pingTimeout: 5000,
-    //     cookie: false
-    // });
-    // io.origins('*:*');
-
     server.listen(properties.wssPort);
-
-    /* transport options
-        'websocket',
-        'flashsocket',
-        'htmlfile',
-        'xhr-polling',
-        'jsonp-polling',
-        'polling'
-    */
+    console.log("[RealtimeComm] ----------------realtimecomm----------------------");
+    console.log("[RealtimeComm]  server state ", server.readyState); // WebSocket.OPEN
+    console.log("[RealtimeComm] Socket.io env => " + properties.enviornment + " running at " + properties.wssPort);
 
     /**
      * append user to list of user
@@ -106,12 +79,9 @@ exports.realtimecomm = function (properties, options , cache, socketCallback) {
      * @param {socket} socket
      */
     function onConnection(socket) {
-        console.log("[RealtimeComm] ----------------realtimecomm----------------------");
-        console.log("[RealtimeComm]  server state ", server.readyState); // WebSocket.OPEN
-        console.log("[RealtimeComm] Socket.io env => " + properties.enviornment + " running at " + properties.wss2Port);
 
         let params = socket.handshake.query;
-        console.log("[RealtimeComm] Querry : ", params);
+        console.log("[RealtimeComm] onConnection -  Querry : ", params);
         var socketMessageEvent = params.msgEvent || 'RTCMultiConnection-Message';
 
         if (params.enableScalableBroadcast) {

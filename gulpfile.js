@@ -70,14 +70,14 @@ gulp.task('vendorjs', function (done) {
 
 /*gulp.task('adminjs',function() {
     console.log(" gulping admin script  ");
-    list=[ 
+    list=[
         "client/build/scripts/admin.js",
-    ]; 
+    ];
     console.log(list);
     gulp.src(list)
         .pipe(uglify())
-        .pipe(concat('webrtcdevelopmentAdmin.js'))  
-        .pipe(gulp.dest(folderPath+'minScripts/')); 
+        .pipe(concat('webrtcdevelopmentAdmin.js'))
+        .pipe(gulp.dest(folderPath+'minScripts/'));
 });*/
 
 gulp.task('server', function (done) {
@@ -175,7 +175,7 @@ var scriptList = [
     "client/src/scripts/RTC_global.js",
     // "client/src/scripts/RTC_ioshacks.js",
     "client/src/scripts/RTC_PeerConnection.js",
-    "client/src/scripts/RTC_CodecsHandler.js",
+    "client/src/scripts/RTC_CodecHandler.js",
     "client/src/scripts/RTC_OnIceCandidateHandler.js",
     "client/src/scripts/RTC_IceServerHandler.js",
     "client/src/scripts/RTC_getUserMediaHandler.js",
@@ -184,6 +184,7 @@ var scriptList = [
     "client/src/scripts/RTC_FileProgressBarHandler.js",
     // "client/src/scripts/RTC_Translator.js",
     "client/src/scripts/RTC_RTCMultiConnection.js",
+    // "client/src/scripts/januscomm.js",
     "client/src/scripts/RTC_footer.js",
 
     // --------------------- helper libs
@@ -347,7 +348,7 @@ gulp.task('fonts', function (cb) {
     });
 });
 
-// gulp webrtc dev css and js along with server changes 
+// gulp webrtc dev css and js along with server changes
 gulp.task('default', gulp.series(
     'webrtcdevelopmentjs',
     'webrtcdevelopmentcss',

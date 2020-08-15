@@ -3,7 +3,7 @@
  *********************************************************/
 
 /**
- * function to Create a video contaioner and attach it to remote obj
+ * function to Create a video container and attach it to remote obj
  * @method
  * @name createVideoContainer
  */
@@ -105,7 +105,7 @@ function attachControlButtons(vid, peerinfo) {
     }
 
     if (videoRecordobj.active) {
-        controlBar.appendChild(createRecordButton(videoRecordobj , controlBarName, peerinfo));
+        controlBar.appendChild(createRecordButton(videoRecordobj, controlBarName, peerinfo));
     }
 
     if (cursorobj.active) {
@@ -216,6 +216,7 @@ function createAudioMuteButton(muteobj, controlBarName, peerinfo) {
             peerinfo.stream.unmute({
                 audio: !0
             });
+            rtcConn.streamEvents.selectFirst('local').mediaElement.muted = true;
             audioButton.className = muteobj.audio.button.class_on;
             audioButton.innerHTML = muteobj.audio.button.html_on;
         }
@@ -285,7 +286,7 @@ function attachUserDetails(vid, peerinfo) {
     }
     let nameBox = document.createElement("div");
     // nameBox.setAttribute("style", "background-color:" + peerinfo.color),
-        nameBox.className = "videoHeaderClass",
+    nameBox.className = "videoHeaderClass",
         nameBox.innerHTML = peerinfo.name ,
         nameBox.id = "videoheaders" + peerinfo.userid;
 

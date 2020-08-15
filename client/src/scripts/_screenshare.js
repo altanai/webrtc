@@ -9,37 +9,68 @@ var signaler, screen, screenRoomid;
 var screenShareStreamLocal = null;
 
 /**
- * function set up Srcreens share session RTC peer connection
+ * function set up Screenshare session RTC peer connection
  * @method
  * @name webrtcdevPrepareScreenShare
  * @param {function} callback
  */
-function webrtcdevPrepareScreenShare(screenRoomid,sessionobj) {
+function webrtcdevPrepareScreenShare(screenRoomid, sessionobj) {
 
     localStorage.setItem("screenRoomid ", screenRoomid);
     webrtcdev.log("[screenshare JS] webrtcdevPrepareScreenShare - screenRoomid : ", screenRoomid);
-    webrtcdev.log("[screenshare JS] webrtcdevPrepareScreenShare - filling up iceServers : ", webrtcdevIceServers);
+    webrtcdev.log("[screenshare JS] webrtcdevPrepareScreenShare  with sessionnobj : ", sessionobj, " config " , config );
 
     scrConn = new RTCMultiConnection(),
+
         scrConn.channel = screenRoomid,
-        scrConn.socketURL = config.signaller,
+
+        scrConn.socketURL = sessionobj.signaller, // location for the SDP offer/answer signaller
+
+        scrConn.iceServers = sessionobj.turn.iceServers, // || rtcConn.getIceServers()
+
+        scrConn.candidates = {
+            host: true,
+            stun: true,
+            turn: true
+        },
+
         scrConn.session = {
             screen: true,
             oneway: true
         },
+
+        scrConn.direction = 'one-way', // other options 'many-to-many'
+
         scrConn.sdpConstraints.mandatory = {
             OfferToReceiveAudio: false,
             OfferToReceiveVideo: true
         },
-        // scrConn.dontCaptureUserMedia = false,
+
+        scrConn.mediaConstraints = {
+            audio: false,
+            video: {
+                frameRate: 20,
+                height: 240,
+                width: 320,
+            }
+        },
+
+        scrConn.dontCaptureUserMedia = false,
+        scrConn.dontGetRemoteStream = false,
+        scrConn.dontAttachStream = false,
+
+        scrConn.codecs = {
+            audio: 'opus',
+            video: 'VP9'
+        },
 
         scrConn.onMediaError = function (error, constraints) {
-            webrtcdev.error("[screenshareJS] on stream in _screenshare :", error, constraints);
+            webrtcdev.error("[screenshareJS] onMediaError in _screenshare :", error, constraints);
             shownotificationWarning(error.name);
         },
 
         scrConn.onstream = function (event) {
-            webrtcdev.log("[screenshareJS] on stream in _screenshare :", event);
+            webrtcdev.log("[screenshareJS] onstream in _screenshare :", event);
 
             if (debug) {
                 let nameBox = document.createElement("span");
@@ -60,11 +91,38 @@ function webrtcdevPrepareScreenShare(screenRoomid,sessionobj) {
                     screenStreamId = event.streamid;
                 }
 
+                let svideos = document.getElementById(screenshareobj.screenshareContainer).querySelectorAll("video");
+                for (x in svideos) {
+                    if (!svideos[x].playing) {
+                        svideos[x].hidden = true;
+                    }
+                }
+
                 let video = document.createElement('video');
+                video.muted = true;
+                //video.control = true;
+                video.id = "video_" + screenRoomid;
+                // video.addEventListener("stalled ", function () {
+                //     alert(" video is stalled ");
+                // }, true);
+                //
+                // video.addEventListener("seeked", function () {
+                //     alert(" video is seeked ");
+                // }, true);
+                //
+                // video.addEventListener("emptied", function () {
+                //     alert(" video is emptied ");
+                // }, true);
+                //
+                // video.addEventListener("ended", function () {
+                //     alert(" video is ended ");
+                // }, true);
+
                 let stream = event.stream;
-                attachMediaStream(video, stream);
-                //video.id = peerInfo.videoContainer;
-                getElementById(screenshareobj.screenshareContainer).appendChild(video);
+                attachMediaStream(video, stream).then(_ => {
+                    getElementById(screenshareobj.screenshareContainer).appendChild(video);
+                });
+
                 showelem(screenshareobj.screenshareContainer);
                 rtcConn.send({
                     type: "screenshare",
@@ -75,7 +133,7 @@ function webrtcdevPrepareScreenShare(screenRoomid,sessionobj) {
             } else {
                 // Local got screen share stream
                 shownotificationWarning("started streaming local screen");
-                webrtcdev.log("[screenshareJS] on stream local ");
+                webrtcdev.log("[screenshareJS] onstream local , send message to remote to connect to scr room");
                 rtcConn.send({
                     type: "screenshare",
                     screenid: screenRoomid,
@@ -128,8 +186,9 @@ function webrtcdevPrepareScreenShare(screenRoomid,sessionobj) {
         },
 
         scrConn.socketMessageEvent = 'scrRTCMultiConnection-Message',
-        scrConn.socketCustomEvent = 'scrRTCMultiConnection-Custom-Message';
+        scrConn.socketCustomEvent = 'scrRTCMultiConnection-Custom-Message',
 
+        scrConn.enableFileSharing = false;
     // if (turn && turn != 'none') {
     //     if (!webrtcdevIceServers) {
     //         webrtcdev.error("[screensharejs] ICE server not found yet in screenshare session");
@@ -147,10 +206,11 @@ function webrtcdevPrepareScreenShare(screenRoomid,sessionobj) {
  * @name webrtcdevSharescreen
  */
 function webrtcdevSharescreen(scrroomid) {
-    webrtcdev.log("[screenshareJS] webrtcdevSharescreen, preparing screenshare by initiating ScrConn , scrroomid - ", scrroomid);
+    webrtcdev.log("[screenshareJS] webrtcdevSharescreen, preparing screen-share by initiating ScrConn , scrroomid - ", scrroomid);
+    webrtcdev.log("[screenshareJS] webrtcdevSharescreen, sessionobj - ", sessionobj);
 
     return new Promise((resolve, reject) => {
-        scrConn = webrtcdevPrepareScreenShare(scrroomid);
+        scrConn = webrtcdevPrepareScreenShare(scrroomid, sessionobj);
         resolve(scrroomid);
     })
         .then(function (scrroomid) {
@@ -188,9 +248,10 @@ function webrtcdevSharescreen(scrroomid) {
  */
 function connectScrWebRTC(type, scrroomid) {
     webrtcdev.log("[screenshareJS] connectScrWebRTC, first preparing screenshare by initiating ScrConn , scrroomid - ", scrroomid);
+    webrtcdev.log("[screenshareJS] webrtcdevSharescreen, sessionobj - ", sessionobj);
 
     return new Promise((resolve, reject) => {
-        webrtcdevPrepareScreenShare(scrroomid);
+        webrtcdevPrepareScreenShare(scrroomid, sessionobj);
         resolve(scrroomid);
     })
         .then(function (scrroomid) {
@@ -259,6 +320,14 @@ function webrtcdevCleanShareScreen(streamid) {
         scrConn.removeStream(streamid);
         scrConn.close();
         scrConn = null;
+
+
+        let svideos = document.getElementById(screenshareobj.screenshareContainer).querySelectorAll("video");
+        for (x in svideos) {
+            if (!svideos[x].playing) {
+                svideos[x].hidden = true;
+            }
+        }
 
         if (screenshareobj.screenshareContainer && getElementById(screenshareobj.screenshareContainer)) {
             getElementById(screenshareobj.screenshareContainer).innerHTML = "";

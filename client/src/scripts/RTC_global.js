@@ -99,7 +99,10 @@ function getRandomString() {
 // todo: add API documentation for connection.autoCreateMediaElement
 
 function getRMCMediaElement(stream, callback, connection) {
+    webrtcdev.log("[RTC global] getRMCMediaElement");
+
     if (!connection.autoCreateMediaElement) {
+        webrtcdev.log("[RTC global] getRMCMediaElement - not autoCreateMediaElement");
         callback({});
         return;
     }
@@ -125,8 +128,8 @@ function getRMCMediaElement(stream, callback, connection) {
     mediaElement.setAttribute('muted', false);
     mediaElement.setAttribute('volume', 1);
 
-    // http://goo.gl/WZ5nFl
-    // Firefox don't yet support onended for any stream (remote/local)
+    // // http://goo.gl/WZ5nFl
+    // // Firefox don't yet support onended for any stream (remote/local)
     if (DetectRTC.browser.name === 'Firefox') {
         var streamEndedEvent = 'ended';
 
@@ -310,8 +313,14 @@ function isUnifiedPlanSupportedDefault() {
     var canAddTransceiver = false;
 
     try {
-        if (typeof RTCRtpTransceiver === 'undefined') return false;
-        if (!('currentDirection' in RTCRtpTransceiver.prototype)) return false;
+        if (typeof RTCRtpTransceiver === 'undefined') {
+            webrtcdev.error("[RTC global] RTCRtpTransceiver  not supported  ");
+            return false;
+        }
+        if (!('currentDirection' in RTCRtpTransceiver.prototype)) {
+            webrtcdev.error("[RTC global] RTCRtpTransceiver currentDirection not present  ");
+            return false;
+        }
 
         var tempPc = new RTCPeerConnection();
 
@@ -319,16 +328,24 @@ function isUnifiedPlanSupportedDefault() {
             tempPc.addTransceiver('audio');
             canAddTransceiver = true;
         } catch (e) {
+            webrtcdev.error("[RTC global] RTCRtpTransceiver addTransceiver error ", e);
         }
 
         tempPc.close();
     } catch (e) {
         canAddTransceiver = false;
+        webrtcdev.error("[RTC global] RTCRtpTransceiver error ", e);
     }
 
     return canAddTransceiver && isUnifiedPlanSuppored();
 }
 
+/**
+ * find whether sdpSemantics is 'unified-plan' , plan-b or something else
+ * @method
+ * @name isUnifiedPlanSuppored
+ * @return {boolean} isUnifiedPlanSuppored
+ */
 function isUnifiedPlanSuppored() {
     var isUnifiedPlanSupported = false;
 

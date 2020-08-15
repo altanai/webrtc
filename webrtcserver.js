@@ -10,7 +10,7 @@ var Log = require('log')
 // -------------------- Read properties -----------------
 var _properties = require('./env.js')(fs).readEnv();
 var properties = JSON.parse(_properties);
-console.log(properties);
+console.log("Properties ", properties);
 
 
 // -------------------- set folder path -----------------

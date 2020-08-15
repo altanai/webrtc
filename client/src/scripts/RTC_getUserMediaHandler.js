@@ -41,7 +41,7 @@ window.currentUserMediaRequest = {
 
 
 /**
- * Handles media obtained after getusermedia webrtc API using callback functions
+ * Gets user media based on undefined , screen of audio/video constraints
  * @method
  * @name getUserMediaHandler
  * @param {options} json - media capture options
@@ -55,6 +55,12 @@ function getUserMediaHandler(options) {
 
     var idInstance = JSON.stringify(options.localMediaConstraints);
 
+    /**
+     * Handles media stream obtained after getusermedia webrtc API using callback functions
+     * @method
+     * @name getUserMediaHandler
+     * @param {options} json - media capture options
+     */
     function streaming(stream, returnBack) {
         setStreamType(options.localMediaConstraints, stream);
 
@@ -89,22 +95,25 @@ function getUserMediaHandler(options) {
     if (currentUserMediaRequest.streams[idInstance]) {
         streaming(currentUserMediaRequest.streams[idInstance].stream, true);
     } else {
-        var isBlackBerry = !!(/BB10|BlackBerry/i.test(navigator.userAgent || ''));
-        if (isBlackBerry || typeof navigator.mediaDevices === 'undefined' || typeof navigator.mediaDevices.getUserMedia !== 'function') {
 
-            navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-
-            navigator.getUserMedia(options.localMediaConstraints, function (stream) {
-                stream.streamid = stream.streamid || stream.id || getRandomString();
-                stream.idInstance = idInstance;
-                streaming(stream);
-            }, function (error) {
-                options.onLocalMediaError(error, options.localMediaConstraints);
-            });
-            return;
-        }
+        // var isBlackBerry = !!(/BB10|BlackBerry/i.test(navigator.userAgent || ''));
+        // if (isBlackBerry || typeof navigator.mediaDevices === 'undefined' || typeof navigator.mediaDevices.getUserMedia !== 'function') {
+        //
+        //     navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+        //
+        //     navigator.getUserMedia(options.localMediaConstraints, function (stream) {
+        //         stream.streamid = stream.streamid || stream.id || getRandomString();
+        //         stream.idInstance = idInstance;
+        //         streaming(stream);
+        //     }, function (error) {
+        //         options.onLocalMediaError(error, options.localMediaConstraints);
+        //     });
+        //     return;
+        // }
 
         if (typeof navigator.mediaDevices === 'undefined') {
+            webrtcdev.log("[ getusermediahandler ] Capture undefined - localMediaConstraints : ", options.localMediaConstraints);
+
             navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
             var getUserMediaSuccess = function () {
             };
@@ -113,6 +122,7 @@ function getUserMediaHandler(options) {
 
             var getUserMediaStream, getUserMediaError;
             navigator.mediaDevices = {
+
                 getUserMedia: function (hints) {
                     navigator.getUserMedia(hints, function (getUserMediaSuccess) {
                         getUserMediaSuccess(stream);
@@ -148,6 +158,9 @@ function getUserMediaHandler(options) {
         }
 
         if (options.localMediaConstraints.isScreen === true) {
+
+            webrtcdev.log("[ getusermediahandler ] Capture screen  - localMediaConstraints : ", options.localMediaConstraints);
+
             if (navigator.mediaDevices.getDisplayMedia) {
                 navigator.mediaDevices.getDisplayMedia(options.localMediaConstraints).then(function (stream) {
                     stream.streamid = stream.streamid || stream.id || getRandomString();
@@ -172,15 +185,19 @@ function getUserMediaHandler(options) {
             return;
         }
 
-        webrtcdev.log("[ getusermediahandler ] localMediaConstraints : ", options.localMediaConstraints);
+        else{
+            webrtcdev.log("[ getusermediahandler ] Capture Video camera  - localMediaConstraints : ", options.localMediaConstraints);
 
-        navigator.mediaDevices.getUserMedia(options.localMediaConstraints).then(function (stream) {
-            stream.streamid = stream.streamid || stream.id || getRandomString();
-            stream.idInstance = idInstance;
-
-            streaming(stream);
-        }).catch(function (error) {
-            options.onLocalMediaError(error, options.localMediaConstraints);
-        });
+            navigator.mediaDevices.getUserMedia(options.localMediaConstraints)
+                .then(function (stream) {
+                    stream.streamid = stream.streamid || stream.id || getRandomString();
+                    stream.idInstance = idInstance;
+                    webrtcdev.log("[ getusermediahandler ] Local stream obtained with stream id ", stream.streamid );
+                    streaming(stream);
+                }).catch(function (error) {
+                webrtcdev.error("[ getusermediahandler ] error in getting Local stream ", error);
+                options.onLocalMediaError(error, options.localMediaConstraints);
+            });
+        }
     }
 }
