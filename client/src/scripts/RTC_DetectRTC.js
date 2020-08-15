@@ -570,10 +570,9 @@
         }
 
         var servers = {
-            // iceServers: [{
-            //     urls: 'stun:stun.l.google.com:19302'
-            // }]
-            iceServers: [{}]
+            iceServers: [{
+                urls: 'stun:stun.l.google.com:19302'
+            }]
         };
 
         var pc = new RTCPeerConnection(servers, peerConfig);

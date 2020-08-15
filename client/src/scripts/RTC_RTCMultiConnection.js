@@ -800,6 +800,10 @@
         return sdp;
     };
 
+    if (typeof CodecsHandler !== 'undefined') {
+        connection.BandwidthHandler = connection.CodecsHandler = CodecsHandler;
+    }
+
     connection.mediaConstraints = {
         audio: {
             mandatory: {},

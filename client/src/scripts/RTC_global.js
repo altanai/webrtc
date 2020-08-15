@@ -112,11 +112,11 @@ function getRMCMediaElement(stream, callback, connection) {
         isAudioOnly = true;
     }
 
-    // if (DetectRTC.browser.name === 'Firefox') {
-    //     if (connection.session.video || connection.session.screen) {
-    //         isAudioOnly = false;
-    //     }
-    // }
+    if (DetectRTC.browser.name === 'Firefox') {
+        if (connection.session.video || connection.session.screen) {
+            isAudioOnly = false;
+        }
+    }
 
     var mediaElement = document.createElement(isAudioOnly ? 'audio' : 'video');
 
@@ -130,52 +130,52 @@ function getRMCMediaElement(stream, callback, connection) {
 
     // // http://goo.gl/WZ5nFl
     // // Firefox don't yet support onended for any stream (remote/local)
-    // if (DetectRTC.browser.name === 'Firefox') {
-    //     var streamEndedEvent = 'ended';
-    //
-    //     if ('oninactive' in mediaElement) {
-    //         streamEndedEvent = 'inactive';
-    //     }
-    //
-    //     mediaElement.addEventListener(streamEndedEvent, function () {
-    //         // fireEvent(stream, streamEndedEvent, stream);
-    //         currentUserMediaRequest.remove(stream.idInstance);
-    //
-    //         if (stream.type === 'local') {
-    //             streamEndedEvent = 'ended';
-    //
-    //             if ('oninactive' in stream) {
-    //                 streamEndedEvent = 'inactive';
-    //             }
-    //
-    //             StreamsHandler.onSyncNeeded(stream.streamid, streamEndedEvent);
-    //
-    //             connection.attachStreams.forEach(function (aStream, idx) {
-    //                 if (stream.streamid === aStream.streamid) {
-    //                     delete connection.attachStreams[idx];
-    //                 }
-    //             });
-    //
-    //             var newStreamsArray = [];
-    //             connection.attachStreams.forEach(function (aStream) {
-    //                 if (aStream) {
-    //                     newStreamsArray.push(aStream);
-    //                 }
-    //             });
-    //             connection.attachStreams = newStreamsArray;
-    //
-    //             var streamEvent = connection.streamEvents[stream.streamid];
-    //
-    //             if (streamEvent) {
-    //                 connection.onstreamended(streamEvent);
-    //                 return;
-    //             }
-    //             if (this.parentNode) {
-    //                 this.parentNode.removeChild(this);
-    //             }
-    //         }
-    //     }, false);
-    // }
+    if (DetectRTC.browser.name === 'Firefox') {
+        var streamEndedEvent = 'ended';
+
+        if ('oninactive' in mediaElement) {
+            streamEndedEvent = 'inactive';
+        }
+
+        mediaElement.addEventListener(streamEndedEvent, function () {
+            // fireEvent(stream, streamEndedEvent, stream);
+            currentUserMediaRequest.remove(stream.idInstance);
+
+            if (stream.type === 'local') {
+                streamEndedEvent = 'ended';
+
+                if ('oninactive' in stream) {
+                    streamEndedEvent = 'inactive';
+                }
+
+                StreamsHandler.onSyncNeeded(stream.streamid, streamEndedEvent);
+
+                connection.attachStreams.forEach(function (aStream, idx) {
+                    if (stream.streamid === aStream.streamid) {
+                        delete connection.attachStreams[idx];
+                    }
+                });
+
+                var newStreamsArray = [];
+                connection.attachStreams.forEach(function (aStream) {
+                    if (aStream) {
+                        newStreamsArray.push(aStream);
+                    }
+                });
+                connection.attachStreams = newStreamsArray;
+
+                var streamEvent = connection.streamEvents[stream.streamid];
+
+                if (streamEvent) {
+                    connection.onstreamended(streamEvent);
+                    return;
+                }
+                if (this.parentNode) {
+                    this.parentNode.removeChild(this);
+                }
+            }
+        }, false);
+    }
 
     var played = mediaElement.play();
     if (typeof played !== 'undefined') {

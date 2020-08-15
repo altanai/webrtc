@@ -297,20 +297,20 @@ function PeerInitiator(config) {
         }
     });
 
-    peer.onicegatheringstatechange = ev => {
-        let connection = ev.target;
-        webrtcdev.log("[RTC PC] onicegatheringstatechange -", connection.iceGatheringState );
-        switch (connection.iceGatheringState) {
-            case "gathering":
-                /* collection of candidates has begun */
-                webrtcdev.log("[RTC PC] onicegatheringstatechange - gathering ");
-                break;
-            case "complete":
-                /* collection of candidates is finished */
-                webrtcdev.log("[RTC PC] onicegatheringstatechange - complete ");
-                break;
-        }
-    };
+    // peer.onicegatheringstatechange = ev => {
+    //     let connection = ev.target;
+    //     webrtcdev.log("[RTC PC] onicegatheringstatechange -", connection.iceGatheringState );
+    //     switch (connection.iceGatheringState) {
+    //         case "gathering":
+    //             /* collection of candidates has begun */
+    //             webrtcdev.log("[RTC PC] onicegatheringstatechange - gathering ");
+    //             break;
+    //         case "complete":
+    //             /* collection of candidates is finished */
+    //             webrtcdev.log("[RTC PC] onicegatheringstatechange - complete ");
+    //             break;
+    //     }
+    // };
 
     peer.oniceconnectionstatechange = peer.onsignalingstatechange = function (ev) {
 
@@ -369,7 +369,7 @@ function PeerInitiator(config) {
         webrtcdev.log("[RTC PC] ontrack event - ", event);
         if (!event || event.type !== 'track') return;
 
-        if (!event.stream) return;
+        // if (!event.stream) return;
 
         event.stream = event.streams[event.streams.length - 1];
 
@@ -463,16 +463,32 @@ function PeerInitiator(config) {
         peer.addIceCandidate(iceCandidate);
     };
 
+    function oldAddRemoteSdp(remoteSdp, cb) {
+        cb = cb || function () {
+        };
+
+        if (DetectRTC.browser.name !== 'Safari') {
+            remoteSdp.sdp = connection.processSdp(remoteSdp.sdp);
+        }
+        peer.setRemoteDescription(new RTCSessionDescription(remoteSdp), cb, function (error) {
+            if (!!connection.enableLogs) {
+                webrtcdev.error('setRemoteDescription failed', '\n', error, '\n', remoteSdp.sdp);
+            }
+
+            cb();
+        });
+    }
+
     this.addRemoteSdp = function (remoteSdp, cb) {
         cb = cb || function () {
         };
 
         if (DetectRTC.browser.name !== 'Safari') {
-            //webrtcdev.log("[RTC PC] addRemoteSdp ---- modify the SDP before setting remote Description");
-            //remoteSdp.sdp = connection.processSdp(remoteSdp.sdp);
+            webrtcdev.log("[RTC PC] addRemoteSdp - modify the SDP before setting remote Description");
+            remoteSdp.sdp = connection.processSdp(remoteSdp.sdp);
+
             // webrtcdev.log("[RTC PC] addRemoteSdp ---- modify the SDP with MCU media gateway before setting remote Description");
             // remoteSdp.sdp = connection.processMcuSdp(remoteSdp.sdp);
-
         }
 
         peer.setRemoteDescription(new RTCSessionDescription(remoteSdp))
@@ -591,9 +607,10 @@ function PeerInitiator(config) {
     function createOfferOrAnswer(_method) {
         webrtcdev.log("[RTC PC] createOfferOrAnswer ", _method, " , defaults.sdpConstraints ", defaults.sdpConstraints);
         peer[_method](defaults.sdpConstraints).then(function (localSdp) {
-            // if (DetectRTC.browser.name !== 'Safari') {
-            //     localSdp.sdp = connection.processSdp(localSdp.sdp);
-            // }
+            if (DetectRTC.browser.name !== 'Safari') {
+                localSdp.sdp = connection.processSdp(localSdp.sdp);
+            }
+
             peer.setLocalDescription(localSdp).then(function () {
 
                 webrtcdev.log("[RTC PC] createOfferOrAnswer - connection ", connection);
