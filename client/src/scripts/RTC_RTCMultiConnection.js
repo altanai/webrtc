@@ -738,7 +738,7 @@
 
     connection.processSdp = function (sdp) {
 
-        webrtcdev.log("[RtcConn ] processSdp ----------------------- connection.codecs.video ", connection.codecs.video);
+        webrtcdev.log("[RtcConn ] processSdp - connection.codecs.video ", connection.codecs.video);
 
         // ignore SDP modification if unified-plan is supported
         if (isUnifiedPlanSupportedDefault()) {

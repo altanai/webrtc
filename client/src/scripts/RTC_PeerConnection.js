@@ -596,8 +596,8 @@ function PeerInitiator(config) {
             // }
             peer.setLocalDescription(localSdp).then(function () {
 
-                webrtcdev.log("[RTC PC] createOfferOrAnswer --- connection ", connection);
-                webrtcdev.log("[RTC PC] createOfferOrAnswer --- localSDP ", localSdp.type, localSdp.sdp);
+                webrtcdev.log("[RTC PC] createOfferOrAnswer - connection ", connection);
+                webrtcdev.log("[RTC PC] createOfferOrAnswer - localSDP ", localSdp.type, localSdp.sdp);
 
                 if (!connection.trickleIce) {
                     webrtcdev.error("[RTC PC] not trickleICE ");
