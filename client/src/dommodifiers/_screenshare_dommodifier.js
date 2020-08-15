@@ -113,13 +113,18 @@ function createScreenShareButton(screenshareobj) {
         if (screenShareButton.className == screenshareobj.button.shareButton.class_off) {
             let time = new Date().getUTCMilliseconds();
             screenRoomid = "screenshare" + "_" + sessionid + "_" + time;
+
             webrtcdevSharescreen(screenRoomid);
+
             screenShareButton.className = screenshareobj.button.shareButton.class_on;
             screenShareButton.innerHTML = screenshareobj.button.shareButton.html_on;
+
         } else if (screenShareButton.className == screenshareobj.button.shareButton.class_on) {
             screenShareButton.className = screenshareobj.button.shareButton.class_off;
             screenShareButton.innerHTML = screenshareobj.button.shareButton.html_off;
+
             webrtcdevStopShareScreen();
+
         } else {
             webrtcdev.log("[screenshare js] createScreenshareButton , classname is neither on nor off", screenShareButton.className);
         }
@@ -138,7 +143,7 @@ function createScreenShareButton(screenshareobj) {
  * @param {json} scrshareBtn
  */
 function assignScreenShareButton(scrshareBtn) {
-    webrtcdev.log("assignScreenShareButton", scrshareBtn);
+    webrtcdev.log("[screenshare dommodifier] assignScreenShareButton", scrshareBtn);
     let button = getElementById(scrshareBtn.id);
 
     button.onclick = function (event) {

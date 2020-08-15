@@ -55,7 +55,7 @@ var findPeerInfoSDP = function (userid) {
         if (rtcConn.peers[x].userid == userid) {
             webrtcdev.log("peerinfomanager] PeerInfo Remote ", rtcConn.peers[x]);
             let offer = rtcConn.peers[x].peer.currentRemoteDescription;
-            webrtcdev.log("peerinfomanager] PeerInfo Remote SDP ", offer.type , offer.sdp) ;
+            webrtcdev.log("peerinfomanager] PeerInfo Remote SDP ", offer.type, offer.sdp);
 
             let lines = offer.sdp.split('\n')
                 .map(l => l.trim()); // split and remove trailing CR
@@ -63,18 +63,23 @@ var findPeerInfoSDP = function (userid) {
 
                 if (line.indexOf('a=fingerprint:') === 0) {
                     let parts = line.substr(14).split(' ');
-                    console.log('algorithm', parts[0]);
-                    console.log('fingerprint', parts[1]);
+                    console.log('algorithm - ', parts[0]);
+                    console.log('fingerprint - ', parts[1]);
                 }
 
                 if (line.indexOf('m=audio') === 0) {
                     let parts = line.substr(8).split(' ');
-                    console.log('Audio codecs', parts);
+                    console.log('Audio codecs - ', parts);
                 }
 
                 if (line.indexOf('m=video') === 0) {
                     let parts = line.substr(8).split(' ');
-                    console.log('Video codecs', parts);
+                    console.log('Video codecs - ', parts);
+                }
+
+                if (line.indexOf('c=IN IP4') === 0) {
+                    let parts = line.substr(9).split(' ');
+                    console.log('Contact line - ', parts);
                 }
 
             });
@@ -90,22 +95,48 @@ var findPeerInfoSDP = function (userid) {
  * @name appendToPeerValue
  * @param {string} userid
  * @param {json} key
- * @param {json} value
+ * @param {json} value4970gww6eg9
  */
-function appendToPeerValue(pid, key, value) {
+function appendToPeerValue(userid, key, value) {
     try {
-        webrtcdev.log("[peerinfomanager] appendToPeerValue - update peer - ", pid, " by key ", key, " with value ", value);
-        for (x in webcallpeers) {
-            if (webcallpeers[x].userid == pid) {
-                webcallpeers[x][key] = value;
-                webrtcdev.log("[peerinfomanager]  appendToPeerValue - updated peerValue ", webcallpeers[x]);
-                break;
-            }
+        webrtcdev.log("[peerinfomanager] appendToPeerValue - update peer - " + userid + " by key - " + key + " with value ", value);
+        if (!key || !value) return;
+        let peerInfo = findPeerInfo(userid);
+        webrtcdev.log("[peerinfomanager] appendToPeerValue peerInfo before  updating ", peerInfo, peerInfo[key]);
+
+        // for (k in peerInfo) {
+        //     webrtcdev.log( k , peerInfo[k] );
+        //     if (peerInfo.hasOwnProperty(k) && k==key) {
+        //         removefromPeerValue(userid, key);
+        //     }
+        // }
+        if(peerInfo[key] || peerInfo.hasOwnProperty(key) ) {
+            webrtcdev.log("[peerinfomanager] appendToPeerValue - key "+ key +" already exists in peerinfo with value  " + peerInfo[key] );
+            removefromPeerValue(userid, key);
         }
+
+        peerInfo[key] = value;
+        // for (x in webcallpeers) {
+        //     if (webcallpeers[x].userid == pid) {
+        //         webcallpeers[x][key] = value;
+        //         return;
+        //     }
+        // }
+        let pindex = findPeerInfoIndex(peerInfo.userid);
+        webcallpeers[pindex] = peerInfo;
+        webrtcdev.log("[peerinfomanager] appendToPeerValue - update webcallpeers index " + pindex, webcallpeers[pindex]);
     } catch (e) {
         webrtcdev.error("[peerinfomanager] appendToPeerValue errorr - ", e);
     }
 }
+
+
+function removefromPeerValue(userid, key) {
+    webrtcdev.log("[peerinfomanager] removefromPeerValue " + userid + " key " + key);
+    let peerInfo = findPeerInfo(userid);
+    return delete peerInfo[key];
+}
+
 
 /**
  * remove info about a peer in list of peers (webcallpeers)
@@ -140,7 +171,7 @@ function removePeerInfo(userid) {
  * @param {string} type
  */
 function updatePeerInfo(userid, username, usecolor, useremail, userrole, type) {
-    webrtcdev.log("[peerinfomanager] updatePeerInfo-  ", userid, username, usecolor, useremail, userrole, type);
+    webrtcdev.log("[peerinfomanager] updatePeerInfo-  " + userid + username + usecolor + useremail + userrole + type);
 
     // if userid deosnt exist , exit
     if (!userid) {
@@ -182,7 +213,7 @@ function updatePeerInfo(userid, username, usecolor, useremail, userrole, type) {
             vid: "video" + type + "_" + userid
         };
         webcallpeers.push(peerInfo);
-        webrtcdev.log("[peerinfomanager] updatedPeerInfo -  newly created peerinfo", peerInfo);
+        webrtcdev.log("[peerinfomanager] updatedPeerInfo -  newly created peerinfo");
     }
 
     if (fileshareobj.active) {
@@ -219,8 +250,9 @@ function updatePeerInfo(userid, username, usecolor, useremail, userrole, type) {
         }
     }
 
-    let pindex = findPeerInfoIndex(userid);
+    let pindex = findPeerInfoIndex(peerInfo.userid);
     webcallpeers[pindex] = peerInfo;
+    webrtcdev.log("[peerinfomanager] updatePeerInfo " + pindex, webcallpeers[pindex]);
 }
 
 /**

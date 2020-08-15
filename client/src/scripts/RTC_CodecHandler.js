@@ -2,13 +2,21 @@
 
 var CodecsHandler = (function () {
 
+    /**
+     * Set preferred codec at first position in SDP
+     * @method
+     * @name preferCodec
+     * @param {config} json - configuration json for SDP and RTC
+     */
     function preferCodec(sdp, codecName) {
+        console.log(" ===================== prefer codecs ", codecName);
         var info = splitLines(sdp);
 
         if (!info.videoCodecNumbers) {
             return sdp;
         }
 
+        // if the preferred codec is already at first position 0 in videoCodecNumbers , then return SDP unmodified
         if (codecName === 'vp8' && info.vp8LineNumber === info.videoCodecNumbers[0]) {
             return sdp;
         }
@@ -26,6 +34,15 @@ var CodecsHandler = (function () {
         return sdp;
     }
 
+    /**
+     * Recorder the  preferred codec to first position in SDP
+     * @method
+     * @name preferCodecHelper
+     * @param {SDP} sdp
+     * @param {Codec} codec name of the codecs
+     * @param {array} info array of codec numbers
+     * @param  {booleam} ignore
+     */
     function preferCodecHelper(sdp, codec, info, ignore) {
         var preferCodecNumber = '';
 
@@ -70,7 +87,16 @@ var CodecsHandler = (function () {
         return sdp;
     }
 
+    /**
+     * Split the SDP into array
+     * @method
+     * @name splitLines
+     * @param {SDP} sdp
+     * @return {json} info
+     */
     function splitLines(sdp) {
+
+        console.log("[RTC Codechandler] splitLines ========== SDP ", sdp);
         var info = {};
         sdp.split('\n').forEach(function (line) {
             if (line.indexOf('m=video') === 0) {
@@ -95,10 +121,17 @@ var CodecsHandler = (function () {
                 info.h264LineNumber = line.replace('a=rtpmap:', '').split(' ')[0];
             }
         });
-
+        console.log("[RTC Codechandler] ========== Info ", info);
         return info;
     }
 
+    /**
+     * Remove vpx codecs
+     * @method
+     * @name removeVPX
+     * @param {SDP} sdp
+     * @return  {SDP} sdp
+     */
     function removeVPX(sdp) {
         var info = splitLines(sdp);
 
@@ -143,11 +176,75 @@ var CodecsHandler = (function () {
         });
     }
 
+    /**
+     * Remove Non G722 codecs
+     * @method
+     * @name removeNonG722
+     * @param {SDP} sdp
+     * @return  {SDP} sdp
+     */
     function removeNonG722(sdp) {
         return sdp.replace(/m=audio ([0-9]+) RTP\/SAVPF ([0-9 ]*)/g, 'm=audio $1 RTP\/SAVPF 9');
     }
 
+
+    /**
+     * add Media Gateway
+     * @method
+     * @name addMediaGateway
+     * @param {SDP} sdp
+     * @return  {SDP} sdp
+     */
+    function addMediaGateway(sdp) {
+        var mcuip = '54.193.51.199';
+        webrtcdev.log("[RTC codecHandler] ================ addMediaGateway -", mcuip);
+
+        let lines = sdp.split('\n')
+            .map(l => l.trim()); // split and remove trailing CR
+        lines.forEach(function (line) {
+
+            if (line.indexOf('o=-') === 0) {
+                console.log('[RTC codecHandler]  Origin line - ', line);
+
+                let parts = line.substr(33).split(' ');
+                // o=- 6057333675814921621 2 IN IP4 127.0.0.1
+
+                if(parts != mcuip) {
+                    var regex = new RegExp(parts, "g");
+                    sdp = sdp.replace(regex, mcuip);
+                    webrtcdev.log('[RTC codecHandler]  Replaced o line regex-', regex, " with ", mcuip);
+                }
+            }
+
+            if (line.indexOf('c=IN IP4') === 0) {
+                console.log('[RTC codecHandler]  Contact line - ', line);
+
+                let parts = line.substr(9).split(' ');
+                // sdp = sdp.replace(/(c=IN IP4)\w+/g, 'c=IN IP4 54.193.51.199');
+
+                if(parts != mcuip) {
+                    var regex = new RegExp(parts, "g");
+                    sdp = sdp.replace(regex, mcuip);
+                    webrtcdev.log('[RTC codecHandler]  Replaced c line regex-', regex, " with ", mcuip);
+                }
+            }
+
+        });
+
+        return sdp;
+    }
+
+    /**
+     * Split the SDP into array
+     * @method
+     * @name setBAS
+     * @param {SDP} sdp
+     * @param {json} bandwidth
+     * @param {boolean} isScreen
+     * @return {SDP} sdp
+     */
     function setBAS(sdp, bandwidth, isScreen) {
+        console.log("[RTC Codechandler] setBAS --------------------- sdp before  ", sdp);
         if (!bandwidth) {
             return sdp;
         }
@@ -185,6 +282,7 @@ var CodecsHandler = (function () {
             sdp = sdp.replace(/a=mid:video\r\n/g, 'a=mid:video\r\nb=AS:' + bandwidth.video + '\r\n');
         }
 
+        console.log("[RTC Codechandler] setBAS --------------------- sdp after  ", sdp);
         return sdp;
     }
 
@@ -338,6 +436,7 @@ var CodecsHandler = (function () {
 
     return {
         removeVPX: removeVPX,
+        addMediaGateway: addMediaGateway,
         disableNACK: disableNACK,
         prioritize: prioritize,
         removeNonG722: removeNonG722,

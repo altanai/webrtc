@@ -366,7 +366,7 @@ function showStatus() {
         webrtcdev.info("[stats]", result.connectionType.remote.candidateType);
         webrtcdev.info("[stats]", result.connectionType.transport);
     }, 10000);
-    webrtcdev.info("[stats] WebcallPeers ", webcallpeers);
+    webrtcdev.info("[stats] webcallpeers ", webcallpeers);
 }
 
 /**

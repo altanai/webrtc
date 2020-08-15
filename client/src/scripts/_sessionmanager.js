@@ -220,39 +220,88 @@ var setRtcConn = function (sessionid, sessionobj) {
 
         rtcConn.channel = this.sessionid,
         rtcConn.socketURL = sessionobj.signaller, // location for the SDP offer/answer signaller
-        // rtcConn.iceServers = sessionobj.turn.iceservers || rtcConn.getIceServers() ,
+
+        rtcConn.iceServers = sessionobj.turn.iceServers, // || rtcConn.getIceServers()
+
+        // ---------------------start - for MCU POC ----------------------
+        //rtcConn.iceServers = [],
+        rtcConn.iceTransportPolicy = "all" , // all , relay
+        rtcConn.bundlePolicy = "balanced",
+        rtcConn.rtcpMuxPolicy = "require",
+        rtcConn.iceCandidatePoolSize = 0,
+        rtcConn.sdpSemantics = "unified-plan",
+
+        // rtcConn.optionalArgument = {
+        //     optional: [{
+        //         DtlsSrtpKeyAgreement: true
+        //     }, {
+        //         googImprovedWifiBwe: true
+        //     }, {
+        //         googScreencastMinBitrate: 300
+        //     }, {
+        //         googIPv6: true
+        //     }, {
+        //         googDscp: true
+        //     }, {
+        //         googCpuUnderuseThreshold: 55
+        //     }, {
+        //         googCpuOveruseThreshold: 85
+        //     }, {
+        //         googSuspendBelowMinBitrate: true
+        //     }, {
+        //         googCpuOveruseDetection: true
+        //     }],
+        //     mandatory: {}
+        // },
+        rtcConn.optionalArgument = {},
+
+        rtcConn.sdpConstraints = {
+            mandatory: {
+                OfferToReceiveAudio: incomingAudio || true,
+                OfferToReceiveVideo: incomingVideo || true
+            },
+            optional: [{
+                VoiceActivityDetection: false
+            }]
+        },
+
+        rtcConn.candidates = {
+            host: true,
+            stun: true,
+            turn: true
+        },
+
+        // rtcConn.session = {
+        //     video: outgoingVideo || true,
+        //     audio: outgoingAudio || true,
+        //     data: outgoingData || true
+        // },
+        rtcConn.session = {
+            video: true,
+            audio: true,
+            data: false
+        },
+
+        // ---------------- end - MCU POC changes ----------------------------
 
         rtcConn.direction = 'many-to-many', // other options 'one-way'
-        rtcConn.session = {
-            video: outgoingVideo || true,
-            audio: outgoingAudio || true,
-            data: outgoingData || true
-        },
-        rtcConn.sdpConstraints.mandatory = {
-            OfferToReceiveAudio: incomingAudio || true,
-            OfferToReceiveVideo: incomingVideo || true
-        },
 
         // rtcConn.dontCaptureUserMedia = !outgoingVideo || false,
         // rtcConn.dontGetRemoteStream = !outgoingVideo || false,
         // rtcConn.dontAttachStream = !outgoingVideo || false,
         rtcConn.dontCaptureUserMedia = false,
         rtcConn.dontGetRemoteStream = false,
-        rtcConn.dontAttachStream = false;
-
-    webrtcdev.log("[sessionmanager] set dontCaptureUserMedia ", rtcConn.dontCaptureUserMedia,
-        ", dontGetRemoteStream , ", rtcConn.dontGetRemoteStream,
-        ", dontAttachStream ", rtcConn.dontAttachStream),
+        rtcConn.dontAttachStream = false,
 
         // Bandwidth Optimization
-        rtcConn.isLowBandwidth = navigator.connection.downlink < 1;
+        rtcConn.isLowBandwidth = navigator.connection.downlink < 1,
 
-    // To limit bandwidth
-    rtcConn.bandwidth = {
-        screen: true,
-        audio: true,
-        video: true
-    },
+        // To limit bandwidth
+        rtcConn.bandwidth = {
+            screen: true,
+            audio: true,
+            video: true
+        },
 
         rtcConn.codecs = {
             audio: 'opus',
@@ -268,7 +317,9 @@ var setRtcConn = function (sessionid, sessionobj) {
         // },
 
         rtcConn.onopen = function (event) {
-            webrtcdev.log("[sessionmanager] onopen - by ", event.userid, event);
+
+            webrtcdev.log("[sessionmanager] onopen - event ", event);
+
             try {
 
                 shownotification(event.extra.name + " joined session ", "info");
@@ -290,8 +341,8 @@ var setRtcConn = function (sessionid, sessionobj) {
                     // Add remote peer userid to remoteUsers
                     // remoteUsers = rtcConn.peers.getAllParticipants();
                     // webrtcdev.log(" [sessionmanager] onopen by remote suers - Collecting remote peers", remoteUsers);
-                    //
-                    // // add new peers
+
+                    //  add new peers
                     // for (x in remoteUsers) {
                     //     webrtcdev.log(" [sessionmanager] join-channel. Adding remote peer ", remoteUsers[x]);
                     //     if (remoteUsers[x] == event.userid) {
@@ -323,15 +374,15 @@ var setRtcConn = function (sessionid, sessionobj) {
                             }
                             updatePeerInfo(event.userid, name, color, email, role, "remote");
                             shownotification(event.extra.role + "  " + event.type);
+                            peerinfo = findPeerInfo(event.userid);
                         } else {
                             // Peer was already present, this is s rejoin
                             webrtcdev.log("[sessionmanager] onopen - PeerInfo was already present, this is s rejoin, update the peerinfo ");
                             updatePeerInfo(event.userid, name, color, email, role, "remote");
                             shownotification(event.extra.role + " " + event.type);
                         }
-                        peerinfo.stream = "";
-                        peerinfo.streamid = "";
-                        peerinfo.streamid = "";
+                        // peerinfo.stream = "";
+                        // peerinfo.streamid = "";
                         updateWebCallView(peerinfo);
 
                     } else {
@@ -350,7 +401,7 @@ var setRtcConn = function (sessionid, sessionobj) {
                 }
 
                 // In debug mode let the users create multiple user session in same browser ,
-                // do not use localstoarge values to get old userid for resuse
+                // do not use localstorage values to get old userid for resuse
                 // setting local caches
                 if (!debug) {
                     if (!localStorage.getItem("userid"))
@@ -390,16 +441,17 @@ var setRtcConn = function (sessionid, sessionobj) {
 
             var peerinfo = findPeerInfo(event.userid);
             if (!peerinfo) {
-                webrtcdev.error("[sessionmanager] onstream - PeerInfo not present in webcallpeers ", event.userid, " creating it now ");
+                webrtcdev.error("[sessionmanager] onstream - PeerInfo not present in webcallpeers " + event.userid + " creating it now ");
+                let userid = event.userid;
+                //create peerinfo with userid, username, usecolor, useremail, userrole, type
+                updatePeerInfo(userid, event.extra.name, event.extra.color, event.extra.email, event.extra.role, event.type);
+                appendToPeerValue(userid, "stream", event.stream);
+                appendToPeerValue(userid, "streamid", event.stream.streamid);
 
-                //userid, username, usecolor, useremail, userrole, type
-                updatePeerInfo(event.userid, event.extra.name, event.extra.color, event.extra.email, event.extra.role, event.type);
-                webrtcdev.log(" [sessionmanager] onstream - updated local peerinfo for open-channel ");
-                peerinfo = findPeerInfo(event.userid);
-                appendToPeerValue(peerinfo.userid, "stream", event.stream);
-                appendToPeerValue(peerinfo.userid, "streamid", event.streamid);
+                // update webcallview with newly created peerinfo
+                peerinfo = findPeerInfo(userid);
                 updateWebCallView(peerinfo);
-                webrtcdev.log(" [sessionmanager] onstream - updated webcallview for ", peerinfo.userid);
+                webrtcdev.log(" [sessionmanager] onstream - updated webcallview for ", userid);
 
             } else if (role == "inspector" && event.type == "local") {
                 // ignore any incoming stream from inspector
@@ -407,9 +459,12 @@ var setRtcConn = function (sessionid, sessionobj) {
                 updateWebCallView(peerinfo);
 
             } else {
-                peerinfo.type = event.type;
-                peerinfo.stream = event.stream;
-                peerinfo.streamid = event.stream.streamid;
+                webrtcdev.error("[sessionmanager] onstream - PeerInfo updated with incoming stream and stream id ");
+                appendToPeerValue(userid, "type", event.type);
+                appendToPeerValue(userid, "stream", event.stream);
+                appendToPeerValue(userid, "streamid", event.stream.streamid);
+
+                peerinfo = findPeerInfo(userid);
                 updateWebCallView(peerinfo);
                 webrtcdev.log(" [sessionmanager] onstream - updated webcallview for ", peerinfo.userid);
             }
@@ -869,5 +924,5 @@ var setupCallView = function (type, channel, userid) {
         showTimeZone();
     }
 
-    appendToPeerValue(selfuserid, "setup", "done");
+    // appendToPeerValue(selfuserid, "setup", "done");
 };

@@ -57,18 +57,19 @@ function getCamMedia(rtcConn, outgoingVideo, outgoingAudio) {
 
     var mediaConstraints = {
         audio: {
-            mandatory: {},
-            optional: []
+            // "googEchoCancellation": "false",
+            // "googNoiseSuppression": "false",
+            // "googHighpassFilter": "false",
+            // "googTypingNoiseDetection": "false"
         },
         video: {
-            mandatory: {},
-            optional: [{
-                height: 480,
-                width: 640,
-                facingMode: 'user'
-            }]
+            frameRate: 20,
+            height: 240,
+            width: 320,
+            facingMode: 'user'
         }
     };
+
     if (role == "inspector") {
 
         rtcConn.dontCaptureUserMedia = true;
@@ -100,14 +101,15 @@ function getCamMedia(rtcConn, outgoingVideo, outgoingAudio) {
         rtcConn.dontCaptureUserMedia = true;
         webrtcdev.error(" [_mediacontrol.js] getCamMedia - dont Capture outgoing video ", outgoingVideo, " and outgoung Audio ", outgoingAudio);
         webrtcdev.log("[startJS] getCamMedia - default mediaConstraints :", rtcConn.mediaConstraints);
+
         // call media error handler to attach null in video
-        rtcConn.onMediaError("onNoCameraCard", "");
-        window.dispatchEvent(new CustomEvent('webrtcdev', {
-            detail: {
-                servicetype: "session",
-                action: "onNoCameraCard"
-            }
-        }));
+        // rtcConn.onMediaError("onNoCameraCard", "");
+        // window.dispatchEvent(new CustomEvent('webrtcdev', {
+        //     detail: {
+        //         servicetype: "session",
+        //         action: "onNoCameraCard"
+        //     }
+        // }));
     }
 }
 
@@ -136,7 +138,7 @@ function getCamMedia(rtcConn, outgoingVideo, outgoingAudio) {
 // function transitionToActive(_remoteVideo, _localVideo, _miniVideo) {
 //     _remoteVideo.style.opacity = 1;
 //     if (localVideo != null) {
-//         setTimeout(function () {
+//         setTimeout(functionObject.defineProperty(HTMLMediaElement.prototype, 'playing', {
 //             _localVideo.src = '';
 //         }, 500);
 //     }
@@ -213,24 +215,40 @@ function attachMediaStream(remvid, stream) {
                             element.addEventListener("click", function () {
                                 element.muted = false;
                             });
-                            element.play();
+                            element.play().then(_ => {
+                                webrtcdev.info("[Mediacontrol] attachMediaStream - retry  ok ");
+                            }).catch(err => {
+                                webrtcdev.error("[Mediacontrol] attachMediaStream - error", err);
+                            });
                         }
                     } else if (error.name == "NotAllowedError" && error.message.includes("The play() request was interrupted by a call to pause()")) {
                         // alert("Play failed, video was paused ");
                         setTimeout(function () {
-                                element.play();
-                            }, 2000);
+                            element.play().then(_ => {
+                                webrtcdev.info("[Mediacontrol] attachMediaStream - retry  ok ");
+                            }).catch(err => {
+                                webrtcdev.error("[Mediacontrol] attachMediaStream - error", err);
+                            });
+                        }, 3000);
                     } else if (error.name == "AbortError" && error.message.includes("The play() request was interrupted by a new load request")) {
                         // alert("Play failed, video was loaded with stream too fast");
                         element.pause();
                         setTimeout(function () {
-                            element.play();
-                        }, 2000);
+                            element.play().then(_ => {
+                                webrtcdev.info("[Mediacontrol] attachMediaStream - retry  ok ");
+                            }).catch(err => {
+                                webrtcdev.error("[Mediacontrol] attachMediaStream - error", err);
+                            });
+                        }, 3000);
                     } else {
                         // alert("Play failed, Retrying video play in 2 seconds ");
                         setTimeout(function () {
-                                element.play();
-                            }, 2000);
+                            element.play().then(_ => {
+                                webrtcdev.info("[Mediacontrol] attachMediaStream - retry  ok ");
+                            }).catch(err => {
+                                webrtcdev.error("[Mediacontrol] attachMediaStream - error", err);
+                            });
+                        }, 3000);
                     }
                 });
                 // };
@@ -327,3 +345,9 @@ function detachMediaStream(vid) {
         vid.id = null;
     }
 }
+
+Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
+    get: function () {
+        return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
+    }
+})

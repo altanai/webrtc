@@ -92,7 +92,7 @@
         try {
             stream.type = 'remote';
         } catch (e) {
-            webrtcdev.error("[RTC ] onGettingRemoteMedia eeror in setting Remote stream type ", e)
+            webrtcdev.error("[RTC ] onGettingRemoteMedia error in setting Remote stream type ", e);
         }
 
         connection.setStreamEndHandler(stream, 'remote-stream');
@@ -724,20 +724,37 @@
 
     connection.codecs = {
         audio: 'opus',
-        video: 'Av1'
+        video: 'vp9'
+    };
+
+    if (typeof CodecsHandler !== 'undefined') {
+        connection.BandwidthHandler = connection.CodecsHandler = CodecsHandler;
+    }
+
+    connection.processMcuSdp = function(sdp, sdptype) {
+        webrtcdev.log("[RtcConn ] processMcuSdp - sdptype " , sdptype );
+        return CodecsHandler.addMediaGateway(sdp);
     };
 
     connection.processSdp = function (sdp) {
 
-        webrtcdev.log("[RtcConn ] processSdp", sdp);
+        webrtcdev.log("[RtcConn ] processSdp ----------------------- connection.codecs.video ", connection.codecs.video);
+
         // ignore SDP modification if unified-pan is supported
-        if (isUnifiedPlanSupportedDefault()) {
-            return sdp;
-        }
+        // if (isUnifiedPlanSupportedDefault()) {
+        //     webrtcdev.log("[RtcConn ] processSdp - As UnifiedPlanSupportedDefault is supported , avoid processing SDP ");
+        //     return sdp;
+        // }
 
         if (DetectRTC.browser.name === 'Safari') {
             return sdp;
         }
+
+        // var availSendCodecs = RTCRtpTransceiver.sender.getCapabilities("video").codecs;
+        // var availReceiveCodecs = RTCRtpTransceiver.receiver.getCapabilities("video").codecs;
+        //
+        // webrtcdev.log("[RtcConn ] processSdp  availSendCodecs " , availSendCodecs);
+        // webrtcdev.log("[RtcConn ] processSdp  availReceiveCodecs " , availReceiveCodecs);
 
         if (connection.codecs.video.toUpperCase() === 'VP8') {
             sdp = CodecsHandler.preferCodec(sdp, 'vp8');
@@ -782,10 +799,6 @@
         webrtcdev.log("[RtcConn ] processSdp final - ", sdp);
         return sdp;
     };
-
-    if (typeof CodecsHandler !== 'undefined') {
-        connection.BandwidthHandler = connection.CodecsHandler = CodecsHandler;
-    }
 
     connection.mediaConstraints = {
         audio: {
@@ -904,7 +917,7 @@
 
     connection.iceCandidatePoolSize = null; // 0
 
-    connection.bundlePolicy = null; // max-bundle
+    connection.bundlePolicy = null; // max-bundle , balanced ,
 
     connection.rtcpMuxPolicy = null; // "require" or "negotiate"
 
@@ -1024,11 +1037,9 @@
         // if (!e.mediaElement) {
         //     e.mediaElement = document.getElementById(e.streamid);
         // }
-        //
         // if (!e.mediaElement || !e.mediaElement.parentNode) {
         //     return;
         // }
-        //
         // e.mediaElement.parentNode.removeChild(e.mediaElement);
     };
 

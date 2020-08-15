@@ -28,6 +28,10 @@ var config = {
     signaller: location.hostname + ":8085/"
 };
 
+/* turn*/
+
+var turn = [];
+
 /* incoming and outgoing call params */
 var incomingAudio = true, incomingVideo = true, incomingData = true;
 var outgoingAudio = true, outgoingVideo = true, outgoingData = true;

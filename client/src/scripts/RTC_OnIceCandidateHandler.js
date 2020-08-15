@@ -38,9 +38,7 @@ var OnIceCandidateHandler = (function () {
             return;
         }
 
-        if (connection.enableLogs) {
-            webrtcdev.debug('Your candidate pairs:', candidate);
-        }
+        webrtcdev.debug('Your candidate pairs:', candidate);
 
         return {
             candidate: candidate,
