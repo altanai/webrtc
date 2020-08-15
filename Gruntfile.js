@@ -1,7 +1,6 @@
-
 "use strict";
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 
     require('load-grunt-tasks')(grunt, {
         pattern: 'grunt-*',
@@ -9,12 +8,11 @@ module.exports = function(grunt) {
         scope: 'devDependencies'
     });
 
-
     // Project configuration.
     grunt.initConfig({
 
         pkg: grunt.file.readJSON("package.json"),
-        
+
         concat: {
             options: {
                 stripBanners: true,
@@ -105,7 +103,7 @@ module.exports = function(grunt) {
         //         dest: 'build/<%= pkg.name %>.min.js'
         //     }
         // },
-      
+
         jshint: {
             files: ['Gruntfile.js', 'client/src/scripts/start.js', 'test/**/*.js'],
             options: {
@@ -153,7 +151,7 @@ module.exports = function(grunt) {
         // },
 
         // clean: ['./temp', 'RTCMultiConnection.js'],
-        
+
         uglify: {
             // options: {
             //     mangle: false,
@@ -167,7 +165,7 @@ module.exports = function(grunt) {
                 dest: 'client/build/webrtcdevelopment.min.js'
             }
         },
-        
+
         // copy: {
         //     main: {
         //         options: {
@@ -179,61 +177,61 @@ module.exports = function(grunt) {
         //     },
         // }
 
-        list_nodemodules:{
-            
-        },
+        list_nodemodules: {},
 
         release: {
             options: {
-              bump: true, //default: true
-              changelog: true, //default: false
-              changelogText: '<%= version %>\n', //default: '### <%= version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n'
-              file: 'package.json', //default: package.json
-              add: true, //default: true
-              commit: true, //default: true
-              tag: false, //default: true
-              push: true, //default: true
-              pushTags: false, //default: true
-              npm: true, //default: true
-              npmtag: false, //default: no tag
-              indentation: '\t', //default: '  ' (two spaces)
-              //folder: 'folder/to/publish/to/npm', //default project root
-              tagName: 'some-tag-<%= version %>', //default: '<%= version %>'
-              commitMessage: 'check out my release <%= version %>', //default: 'release <%= version %>'
-              tagMessage: 'tagging version <%= version %>', //default: 'Version <%= version %>',
-              beforeBump: [], // optional grunt tasks to run before file versions are bumped
-              afterBump: [], // optional grunt tasks to run after file versions are bumped
-              beforeRelease: [], // optional grunt tasks to run after release version is bumped up but before release is packaged
-              afterRelease: [], // optional grunt tasks to run after release is packaged
-              updateVars: [], // optional grunt config objects to update (this will update/set the version property on the object specified)
-              github: {
-                apiRoot: 'https://github.com', // Default: https://github.com
-                repo: 'altanai/webrtc', //put your user/repo here
-                accessTokenVar: 'GITHUB_ACCESS_TOKE', //ENVIRONMENT VARIABLE that contains GitHub Access Token
-         
-                // Or you can use username and password env variables, we discourage you to do so
-                usernameVar: 'GITHUB_USER', //ENVIRONMENT VARIABLE that contains GitHub username
-                passwordVar: 'GITHUB_PASSWORD' //ENVIRONMENT VARIABLE that contains GitHub password
-              }
+                bump: true, //default: true
+                changelog: true, //default: false
+                changelogText: '<%= version %>\n', //default: '### <%= version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n'
+                file: 'package.json', //default: package.json
+                add: true, //default: true
+                commit: true, //default: true
+                tag: false, //default: true
+                push: true, //default: true
+                pushTags: false, //default: true
+                npm: true, //default: true
+                npmtag: false, //default: no tag
+                indentation: '\t', //default: '  ' (two spaces)
+                //folder: 'folder/to/publish/to/npm', //default project root
+                tagName: 'some-tag-<%= version %>', //default: '<%= version %>'
+                commitMessage: 'check out my release <%= version %>', //default: 'release <%= version %>'
+                tagMessage: 'tagging version <%= version %>', //default: 'Version <%= version %>',
+                beforeBump: [], // optional grunt tasks to run before file versions are bumped
+                afterBump: [], // optional grunt tasks to run after file versions are bumped
+                beforeRelease: [], // optional grunt tasks to run after release version is bumped up but before release is packaged
+                afterRelease: [], // optional grunt tasks to run after release is packaged
+                updateVars: [], // optional grunt config objects to update (this will update/set the version property on the object specified)
+                github: {
+                    apiRoot: 'https://github.com', // Default: https://github.com
+                    repo: 'altanai/webrtc', //put your user/repo here
+                    accessTokenVar: 'GITHUB_ACCESS_TOKE', //ENVIRONMENT VARIABLE that contains GitHub Access Token
+
+                    // Or you can use username and password env variables, we discourage you to do so
+                    usernameVar: 'GITHUB_USER', //ENVIRONMENT VARIABLE that contains GitHub username
+                    passwordVar: 'GITHUB_PASSWORD' //ENVIRONMENT VARIABLE that contains GitHub password
+                }
             }
-          }
-    });
-
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-
-    // grunt.loadNpmTasks('grunt-publish');
-    grunt.loadNpmTasks('grunt-release');
+        }
+    }
+}
+)
 
 
-    // Default task(s).
-    grunt.registerTask('dev', ['concat','jshint','uglify']);
-    // grunt.registerTask('production', ['jshint','uglify','copy']);
-    grunt.registerTask('production', ['list_nodemodules','concat','uglify','copy']);
-    grunt.registerTask('default', ['concat']);
-    grunt.registerTask('release', ['release']);
-    // grunt.registerTask('rtcconn', ['concat', 'replace', 'jsbeautifier', 'uglify', 'copy', 'clean']);
+grunt.loadNpmTasks('grunt-contrib-copy');
+grunt.loadNpmTasks('grunt-contrib-uglify');
+grunt.loadNpmTasks('grunt-contrib-jshint');
+grunt.loadNpmTasks('grunt-contrib-watch');
 
-};
+// grunt.loadNpmTasks('grunt-publish');
+grunt.loadNpmTasks('grunt-release');
+
+// Default task(s).
+grunt.registerTask('dev', ['concat', 'jshint', 'uglify']);
+// grunt.registerTask('production', ['jshint','uglify','copy']);
+grunt.registerTask('production', ['list_nodemodules', 'concat', 'uglify', 'copy']);
+grunt.registerTask('default', ['concat']);
+grunt.registerTask('release', ['release']);
+// grunt.registerTask('rtcconn', ['concat', 'replace', 'jsbeautifier', 'uglify', 'copy', 'clean']);
+
+}

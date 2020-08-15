@@ -2,13 +2,12 @@
 /*                    Reconnect JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 
-
-function createButtonRedial(){
-    var reconnectButton= document.createElement("span");
+function createButtonRedial(reconnectobj){
+    let reconnectButton= document.createElement("span");
     reconnectButton.className= reconnectobj.button.class;
     reconnectButton.innerHTML= reconnectobj.button.html;
     reconnectButton.onclick=function(){
-        var r = confirm("Do you want to reconnet ?");
+        let r = confirm("Do you want to reconnet ?");
         if (r == true) {
           //location.reload();
 
@@ -21,12 +20,12 @@ function createButtonRedial(){
            //do nothing
         }
     };
-    var li =document.createElement("li");
+    let li =document.createElement("li");
     li.appendChild(reconnectButton);
     document.getElementById("topIconHolder_ul").appendChild(li);
 }
 
-function assignButtonRedial(id){
+function assignButtonRedial(id,reconnectobj){
     document.getElementById(id).onclick=function(){
         var r = confirm("Do you want to reconnect ?");
         if (r == true) {

@@ -2,76 +2,76 @@
 Admin
 ******************************************************************/
 
-var socket;
-var webrtcdevDataObj;
-var usersDataObj;
-var channelsFeed= document.getElementById("channelsFeed");
+let socket;
+let webrtcdevDataObj;
+let usersDataObj;
+const channelsFeed = document.getElementById("channelsFeed");
 
-var WebRTCdevadmin= function(signaller){
+var WebRTCdevadmin = function (signaller) {
     console.log("[adminjs] connect to ", signaller);
-    try{
-        socket= io.connect(signaller);
+    try {
+        socket = io.connect(signaller);
 
-        socket.on('response_to_admin_enquire', function(message) {
-            console.log("[adminjs] response_to_admin_enquire -", message );
-            switch (message.response){
+        socket.on('response_to_admin_enquire', function (message) {
+            console.log("[adminjs] response_to_admin_enquire -", message);
+            switch (message.response) {
                 case "channels":
                     console.log("[adminjs] chnanels ");
                     let channelinfo = message.channelinfo;
-                    if(message.format=="list"){
+                    if (message.format == "list") {
                         clearList("channellistArea");
-                        for (i in Object.keys(channelinfo)) { 
+                        for (i in Object.keys(channelinfo)) {
                             /*drawList("channellistArea" , Object.keys(webrtcdevDataObj)[i]);*/
-                            drawList("channellistArea" , channelinfo[i]);
+                            drawList("channellistArea", channelinfo[i]);
                         }
-                    }else if(message.format=="table"){
-                        drawTable("webrtcdevTableBody",channelinfo);
-                    }else{
+                    } else if (message.format == "table") {
+                        drawTable("webrtcdevTableBody", channelinfo);
+                    } else {
                         webrtcdev.error("format not specified ");
                     }
-                break;
-            
+                    break;
+
                 case "users":
                     console.log("[adminjs] users ");
                     users = message.users;
-                    if(message.format=="list"){
+                    if (message.format == "list") {
                         clearList("userslistArea");
-                        for (i in usersDataObj) { 
-                            drawList("userslistArea" , usersDataObj[i]);
+                        for (i in usersDataObj) {
+                            drawList("userslistArea", usersDataObj[i]);
                         }
                     }
-                break;
+                    break;
 
                 case "all":
-                    channelsFeed.innerHTML=JSON.stringify(message.channels, null, 4);
-                break;
+                    channelsFeed.innerHTML = JSON.stringify(message.channels, null, 4);
+                    break;
 
                 default :
-                    webrtcdev.log("unrecognizable response from signaller " , message);
+                    webrtcdev.log("unrecognizable response from signaller ", message);
             }
         });
-    }catch(e){
+    } catch (e) {
         console.error(e);
     }
 };
 
-function onLoadAdmin(){
+function onLoadAdmin() {
     socket.emit('admin_enquire', {
-        ask:'channels',
+        ask: 'channels',
         format: 'list'
     });
 }
 
 $('#channels_list').click(function () {
     socket.emit('admin_enquire', {
-        ask:'channels',
+        ask: 'channels',
         format: 'list'
     });
 });
 
-$("#channelFindBtn").click(function(){
+$("#channelFindBtn").click(function () {
     socket.emit('admin_enquire', {
-        ask:'channels',
+        ask: 'channels',
         find: $("#channelFindInput").val(),
         format: 'list'
     });
@@ -79,47 +79,47 @@ $("#channelFindBtn").click(function(){
 
 $('#users_list').click(function () {
     socket.emit('admin_enquire', {
-        ask:'users',
+        ask: 'users',
         format: 'list'
     });
 });
 
 $('#channels_table').click(function () {
     socket.emit('admin_enquire', {
-        ask:'channels',
+        ask: 'channels',
         format: 'table'
     });
 });
 
 $('#channels_json').click(function () {
     socket.emit('admin_enquire', {
-        ask:'all',
+        ask: 'all',
         format: 'json'
     });
 });
 
 $('#channel_clients').click(function () {
-    socket.emit('admin_enquire', 
+    socket.emit('admin_enquire',
         {
-            ask:'channel_clients',
+            ask: 'channel_clients',
             channel: 'https172162010780841524489749781952'
         });
 });
 
-function clearList(element){
-    $("#"+element).empty();
+function clearList(element) {
+    $("#" + element).empty();
 }
 
-function drawList(element , listitem){
-    $("#"+element).append("<li class='list-group-item'>"+listitem+"</li>");
+function drawList(element, listitem) {
+    $("#" + element).append("<li className='list-group-item'>" + listitem + "</li>");
 }
 
-function drawTable(tablebody , data) {
-    for (i in Object.keys(data)) { 
-        var key=Object.keys(data)[i];
-        
-        drawTableRow(tablebody ,i , data[key].channel , data[key].timestamp, data[key].users , 
-            data[key].status , data[key].endtimestamp , 0 );
+function drawTable(tablebody, data) {
+    for (i in Object.keys(data)) {
+        let key = Object.keys(data)[i];
+
+        drawTableRow(tablebody, i, data[key].channel, data[key].timestamp, data[key].users,
+            data[key].status, data[key].endtimestamp, 0);
         /*                    
         for (j in data[key].users) {
             users.push(data[key].users[j]);
@@ -127,10 +127,10 @@ function drawTable(tablebody , data) {
     }
 }
 
-function drawTableRow(tablebody ,i ,  channel , timestamp , users , 
-    status , endtimestamp , duration) {
+function drawTableRow(tablebody, i, channel, timestamp, users,
+                      status, endtimestamp, duration) {
 
-    var row = $("<tr class='success' />");
+    let row = $("<tr className='success' />");
     row.append($("<td>" + i + "</td>"));
     row.append($("<td>" + channel + "</td>"));
     row.append($("<td>" + timestamp + "</td>"));
@@ -138,20 +138,20 @@ function drawTableRow(tablebody ,i ,  channel , timestamp , users ,
     row.append($("<td>" + status + "</td>"));
     row.append($("<td>" + endtimestamp + "</td>"));
     row.append($("<td>" + duration + "</td>"));
-    $("#"+tablebody).append(row);
+    $("#" + tablebody).append(row);
     /*row.append($("<td id='usersRow'>" + drawUsersTable("usersRow" , rowData.users) + "</td>"));*/
 }
 
 function drawUsersTable(users) {
-    var usersTable=document.createElement("table");
+    let usersTable = document.createElement("table");
     $("#usersRow").append(usersTable);
     for (var i = 0; i < users.length; i++) {
-        drawUsersRow(usersTable , data[i]);
+        drawUsersRow(usersTable, data[i]);
     }
 }
 
 function drawUsersRow(userData) {
-    var row = $("<tr />")
+    let row = $("<tr />");
     $("#table").append(row);
     row.append($("<td>" + userData + "</td>"));
 }

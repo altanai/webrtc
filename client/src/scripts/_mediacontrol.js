@@ -1,292 +1,329 @@
-/***************************************************
-video handling 
-*********************************************************/
+/**----------------------------------
+ webrtc get media
+ ------------------------------------*/
 
-function appendVideo(e, style) {
-    createVideoContainer(e, style, function(div) {
-        var video = document.createElement('video');
-        video.className = style;
-        video.setAttribute('style', 'height:auto;opacity:1;');
-        video.controls=false;
-        video.id = e.userid;
-        video.src = URL.createObjectURL(e.stream);
-        viden.hidden=false;
-        var remote = document.getElementById('remote');
-        div.appendChild(video);
-        video.play();
+/**
+ * Detect if webcam is accessible by browser
+ * @method
+ * @name detectWebcam
+ * @param {function} callback
+ */
+function detectWebcam() {
+    return new Promise(function (resolve, reject) {
+        let md = navigator.mediaDevices;
+        if (!md || !md.enumerateDevices) {
+            webrtcdev.warn(" detectwebcam cant detect devices ");
+            resolve(false);
+        }
+        webrtcdev.log(" detectwebcam mediaDevices object - ", md);
+        md.enumerateDevices().then(devices => {
+            webrtcdev.log(" detectwebcam individual devices - ", devices);
+            resolve(devices.some(device => 'videoinput' === device.kind));
+        });
     });
 }
 
-function createVideoContainer(e, style, callback) {
-    var div = document.createElement('div');
-    div.setAttribute('style', style || 'float:left;opacity: 1;width: 32%;');
-    remote.insertBefore(div, remote.firstChild);
-    if (callback) callback(div);
+/**
+ * Detect if Mic is accessible by browser
+ * @method
+ * @name detectMic
+ * @param {function} callback
+ */
+function detectMic(callback) {
+    return new Promise(function (resolve, reject) {
+        let md = navigator.mediaDevices;
+        if (!md || !md.enumerateDevices) {
+            resolve(false);
+        }
+
+        md.enumerateDevices().then(devices => {
+            resolve(devices.some(device => 'audioinput' === device.kind));
+        });
+    });
 }
 
-/************************************
-       User Detail attchmenet to Video Element
-*******************************************/
-function attachUserDetails(vid , peerinfo){
-    var nameBox=document.createElement("div");
-    nameBox.setAttribute("style","background-color:"+ peerinfo.color);
-    nameBox.className = "videoHeaderClass";
-    nameBox.innerHTML = peerinfo.name+"<br/>";
-    // vid.parentNode.appendChild(nameBox); 
-    vid.parentNode.insertBefore(nameBox, vid.parentNode.firstChild);
-}
+/**
+ * get Video and micrpphone stream media
+ * @method
+ * @name getCamMedia
+ * @param {json} rtcConn
+ * @param {booolean} outgoingVideo
+ * @param {booolean} outgoingAudio
+ */
+function getCamMedia(rtcConn, outgoingVideo, outgoingAudio) {
 
-function attachMetaUserDetails(vid , peerinfo){
-    webrtcdev.log(peerinfo.userid+ ":" + peerinfo.type);
-    var detailsbox = document.createElement("span");
-    detailsbox.setAttribute("style","background-color:"+ peerinfo.color);
-    detailsbox.innerHTML = peerinfo.userid+ ":" + peerinfo.type+"<br/>";
-    vid.parentNode.insertBefore(detailsbox, vid.parentNode.firstChild);
-}
+    webrtcdev.log("[mediacontrol js] getCamMedia - role :", role);
+    webrtcdev.log("[mediacontrol js] getCamMedia - outgoingVideo " + outgoingVideo + " outgoingAudio " + outgoingAudio);
 
-function attachControlButtons( vid ,  peerinfo){
+    var mediaConstraints = {
+        audio: {
+            mandatory: {},
+            optional: []
+        },
+        video: {
+            mandatory: {},
+            optional: [{
+                height: 480,
+                width: 640,
+                facingMode: 'user'
+            }]
+        }
+    };
+    if (role == "inspector") {
 
-    var stream = peerinfo.stream;
-    var streamid = peerinfo.streamid;
-    var controlBarName =  peerinfo.controlBarName;
-    var snapshotViewer =  peerinfo.fileSharingContainer ;
+        rtcConn.dontCaptureUserMedia = true;
+        webrtcdev.warn("[_mediacontrol.js] getCamMedia  - Joining as inspector without camera Video");
+    } else if (outgoingVideo && outgoingAudio) {
+        webrtcdev.log("[startJS] getCamMedia - default mediaConstraints :", rtcConn.mediaConstraints);
+        webrtcdev.log("[mediacontrol.js] getCamMedia  - Capture Full Media ");
+        rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error
+    } else if (!outgoingVideo && outgoingAudio) {
+        mediaConstraints.video = false;
+        rtcConn.mediaConstraints = mediaConstraints;
+        webrtcdev.log("[startJS] getCamMedia - default mediaConstraints :", rtcConn.mediaConstraints);
+        // alert(" start  getCamMedia  - Dont Capture Webcam, only Mic");
+        webrtcdev.warn("[mediacontrol.js] getCamMedia  - Dont Capture Webcam only Mic ");
+        rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error
 
-    //Preventing multple control bars 
-    var c = vid.parentNode.childNodes;
-    for (i = 0; i < c.length; i++) {
-        //webrtcdev.log("ChildNode of video Parent " , c[i]);
-        if(c[i].nodeName=="DIV" && c[i].id!=undefined){
-            if( c[i].id.indexOf("control")>-1 ){
-                webrtcdev.log("control bar exists already  , delete the previous one before adding new one");
-                vid.parentNode.removeChild(c[i]);
+    } else if (outgoingVideo && !outgoingAudio) {
+        mediaConstraints.audio = false;
+        rtcConn.mediaConstraints = mediaConstraints;
+        webrtcdev.log("[startJS] getCamMedia - default mediaConstraints :", rtcConn.mediaConstraints);
+        // alert(" start  getCamMedia  - Dont Capture Miv, only webcam");
+        webrtcdev.warn("[_mediacontrol.js] getCamMedia  - Dont Capture Mic only webcam ");
+        rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error
+
+    } else if (!outgoingVideo && !outgoingAudio) {
+        mediaConstraints.video = false;
+        mediaConstraints.audio = false;
+        rtcConn.mediaConstraints = mediaConstraints;
+        rtcConn.dontCaptureUserMedia = true;
+        webrtcdev.error(" [_mediacontrol.js] getCamMedia - dont Capture outgoing video ", outgoingVideo, " and outgoung Audio ", outgoingAudio);
+        webrtcdev.log("[startJS] getCamMedia - default mediaConstraints :", rtcConn.mediaConstraints);
+        // call media error handler to attach null in video
+        rtcConn.onMediaError("onNoCameraCard", "");
+        window.dispatchEvent(new CustomEvent('webrtcdev', {
+            detail: {
+                servicetype: "session",
+                action: "onNoCameraCard"
             }
+        }));
+    }
+}
+
+// /**
+//  * get Video and microphone stream media
+//  * @method
+//  * @name getCamMedia
+//  * @param {json} rtcConn
+//  */
+// function waitForRemoteVideo(_remoteStream, _remoteVideo, _localVideo, _miniVideo) {
+//     var videoTracks = _remoteStream.getVideoTracks();
+//     if (videoTracks.length === 0 || _remoteVideo.currentTime > 0) {
+//         transitionToActive(_remoteVideo, _localVideo, _miniVideo);
+//     } else {
+//         setTimeout(function () {
+//             waitForRemoteVideo(_remoteStream, _remoteVideo, _localVideo, _miniVideo)
+//         }, 100);
+//     }
+// }
+//
+// /**
+//  * transition To Active
+//  * @method
+//  * @name transitionToActive
+//  */
+// function transitionToActive(_remoteVideo, _localVideo, _miniVideo) {
+//     _remoteVideo.style.opacity = 1;
+//     if (localVideo != null) {
+//         setTimeout(function () {
+//             _localVideo.src = '';
+//         }, 500);
+//     }
+//     if (miniVideo != null) {
+//         setTimeout(function () {
+//             _miniVideo.style.opacity = 1;
+//         }, 1000);
+//     }
+// }
+//
+// /**
+//  * transition To Waiting
+//  * @method
+//  * @name transitionToWaiting
+//  */
+// function transitionToWaiting(localVideo , miniVideo) {
+//     setTimeout(function () {
+//         localVideo.srcObject = miniVideo.srcObject;
+//         localVideo.muted = true;
+//         miniVideo.srcObject = null;
+//         remoteVideo.srcObject = null;
+//     }, 500);
+// }
+
+/**
+ * attach media stream to dom element
+ * @method
+ * @name attachMediaStream
+ * @param {string} remvid
+ * @param {stream} stream
+ */
+function attachMediaStream(remvid, stream) {
+    try {
+        webrtcdev.log("[Mediacontrol] attachMediaStream - remvid ", remvid);
+        // Set the remote video element
+        var element = "";
+        if ((document.getElementsByName(remvid)).length > 0) {
+            webrtcdev.error("[Mediacontrol] attachMediaStream - remvid is already playing ");
+            // element = document.getElementsByName(remvid)[0];
+            return Promise.resolve();
+        } else if (remvid.video) {
+            element = remvid.video;
+        } else if (remvid.nodeName == "VIDEO") {
+            element = remvid;
+        } else {
+            webrtcdev.error("[ Mediacontrol] attachMediaStream - element  not found");
+            return Promise.reject("video not found to attach stream");
         }
-    }
+        webrtcdev.log("[Mediacontrol] attachMediaStream - element ", element);
 
-    // Control bar holds media control elements like , mute unmute , fillscreen ,. recird , snapshot
-    var controlBar= document.createElement("div");
-    controlBar.id = controlBarName;
-
-    if(peerinfo.type=="local")
-        controlBar.className= "localVideoControlBarClass";
-    else
-        controlBar.className= "remoteVideoControlBarClass";
-
-    if(debug){
-        var nameBox=document.createElement("div");
-        nameBox.innerHTML=vid.id;
-        controlBar.appendChild(nameBox);  
-    }
-
-    if(muteobj.active){
-        if(muteobj.audio.active){
-            controlBar.appendChild(createAudioMuteButton(controlBarName , peerinfo));
-        }
-        if(muteobj.video.active){
-            controlBar.appendChild(createVideoMuteButton(controlBarName , peerinfo));        
-        }
-    }
-    
-    if(snapshotobj.active){
-        controlBar.appendChild(createSnapshotButton(controlBarName , peerinfo));
-    }
-
-    if(videoRecordobj.active){
-        controlBar.appendChild(createRecordButton(controlBarName, peerinfo, streamid, stream ));
-    }
-
-    if(cursorobj.active){
-        //assignButtonCursor(cursorobj.button.id);
-        controlBar.appendChild(createCursorButton(controlBarName, peerinfo ));
-    }
-
-    if(minmaxobj.active){
-        controlBar.appendChild(createFullScreenButton(controlBarName, peerinfo, streamid, stream ));
-        controlBar.appendChild(createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream ));
-    }
-
-    vid.parentNode.appendChild(controlBar);        
-}
-
-/************************************
-        control Buttons attchmenet to Video Element
-*******************************************/
-function createFullScreenButton(controlBarName, peerinfo, streamid, stream ){
-    var button = document.createElement("span");
-    button.id = controlBarName+"fullscreeButton";
-    button.setAttribute("title", "Full Screen");
-    button.className = minmaxobj.max.button.class_off;
-    button.innerHTML = minmaxobj.max.button.html_off;
-
-    // button.setAttribute("data-placement", "bottom");
-    // button.setAttribute("data-toggle", "tooltip");
-    // button.setAttribute("data-container", "body");
-
-    button.onclick = function() {
-        if(button.className == minmaxobj.max.button.class_off){
-            var vid = document.getElementById(peerinfo.videoContainer);
-            vid.webkitRequestFullScreen();
-            button.className=minmaxobj.max.button.class_on;
-            button.innerHTML=minmaxobj.max.button.html_on;
-        } 
-        else{            
-            button.className=minmaxobj.max.button.class_off;
-            button.innerHTML=minmaxobj.max.button.html_off;
-        }     
-        //syncButton(audioButton.id);        
-    };
-    return button;
-}
-
-
-function createMinimizeVideoButton(controlBarName, peerinfo, streamid, stream){
-    var button = document.createElement("span");
-    button.id = controlBarName+"minmizevideoButton";
-    button.setAttribute("title", "Minimize Video");
-    button.className = minmaxobj.min.button.class_off;
-    button.innerHTML = minmaxobj.min.button.html_off;
-    var vid=document.getElementById(peerinfo.videoContainer);
-    button.onclick = function() {
-        if(button.className == minmaxobj.min.button.class_off){
-            vid.hidden = true;
-            button.className=minmaxobj.min.button.class_on;
-            button.innerHTML=minmaxobj.min.button.html_on;
-        } 
-        else{ 
-            vid.hidden = false;           
-            button.className=minmaxobj.min.button.class_off;
-            button.innerHTML=minmaxobj.min.button.html_off;
-        }     
-        //syncButton(audioButton.id);        
-    };
-    return button;
-}
-
-
-function createAudioMuteButton(controlBarName , peerinfo){
-    var audioButton=document.createElement("span");
-    audioButton.id=controlBarName+"audioButton";
-    audioButton.setAttribute("data-val","mute");
-    audioButton.setAttribute("title", "Toggle Audio");
-    // audioButton.setAttribute("data-placement", "bottom");
-    // audioButton.setAttribute("data-toggle", "tooltip");
-    // audioButton.setAttribute("data-container", "body");
-    audioButton.className=muteobj.audio.button.class_on;
-    audioButton.innerHTML=muteobj.audio.button.html_on;
-    audioButton.onclick = function() {
-        if(audioButton.className == muteobj.audio.button.class_on ){
-            peerinfo.stream.mute({
-                audio: !0
-            });
-            audioButton.className=muteobj.audio.button.class_off;
-            audioButton.innerHTML=muteobj.audio.button.html_off;
-        } 
-        else{            
-            peerinfo.stream.unmute({
-                audio: !0
-            });
-            audioButton.className=muteobj.audio.button.class_on;
-            audioButton.innerHTML=muteobj.audio.button.html_on;
-        }     
-        syncButton(audioButton.id);        
-    };
-    return audioButton;
-}
-
-function createVideoMuteButton(controlBarName , peerinfo){
-    var videoButton=document.createElement("span");
-    videoButton.id=controlBarName+"videoButton";
-    videoButton.setAttribute("title", "Toggle Video");
-    videoButton.setAttribute("data-container", "body");
-    videoButton.className=muteobj.video.button.class_on;   
-    videoButton.innerHTML=muteobj.video.button.html_on;     
-    videoButton.onclick= function(event) {
-        if(videoButton.className == muteobj.video.button.class_on ){
-            peerinfo.stream.mute({
-                video: !0
-            });
-            videoButton.innerHTML=muteobj.video.button.html_off;
-            videoButton.className=muteobj.video.button.class_off;   
-        } 
-        else{ 
-            peerinfo.stream.unmute({
-                video: !0
-            });
-            videoButton.innerHTML=muteobj.video.button.html_on;
-            videoButton.className=muteobj.video.button.class_on; 
-        }  
-        syncButton(videoButton.id);
-    }; 
-    return videoButton;
-}
-
-
-function waitForRemoteVideo(_remoteStream , _remoteVideo , _localVideo  , _miniVideo ) {
-    var videoTracks = _remoteStream.getVideoTracks();
-    if (videoTracks.length === 0 || _remoteVideo.currentTime > 0) {
-        transitionToActive(_remoteVideo ,_localVideo ,  _miniVideo);
-    } else {
-        setTimeout(function(){
-            waitForRemoteVideo(_remoteStream , _remoteVideo , _localVideo  , _miniVideo )
-        }, 100);
-    }
-}
-
-function transitionToActive(_remoteVideo ,_localVideo ,  _miniVideo) {
-    _remoteVideo.style.opacity = 1;
-    if(localVideo!=null){
-        setTimeout(function() {
-            _localVideo.src = '';
-        }, 500); 
-    }
-    if(miniVideo!=null){
-        setTimeout(function() {
-            _miniVideo.style.opacity = 1;
-        }, 1000); 
-    }
-}
-
-function transitionToWaiting() {
-    card.style.webkitTransform = 'rotateY(0deg)';
-    setTimeout(function() {
-        localVideo.src = miniVideo.src;
-        localVideo.muted = true;
-        miniVideo.src = '';
-        remoteVideo.src = '';
-        localVideo.style.opacity = 1;
-    }, 500);
-    miniVideo.style.opacity = 0;
-    remoteVideo.style.opacity = 0;
-}
-
-function attachMediaStream(element, stream) {
-    try{
-        webrtcdev.log("[ Mediacontrol - attachMediaStream ] ",
-            "element.srcObject", typeof element.src ,typeof element.srcObject ,
-             " || stream " + stream );
-        
-        if(stream){
-            //if (typeof element.src == 'string') {
-            //    element.src = URL.createObjectURL(stream);
-            //}else if (typeof element.srcObject == 'object') {
+        // If stream is present , attach the stream  and play
+        webrtcdev.log("[Mediacontrol] attachMediaStream - stream ", stream);
+        if (stream && (stream.isVideo || stream.isScreen)) {
+            //element.srcObject = stream; // src(undefined) error after refresh sometimes
+            // Older browsers may not have srcObject
+            try {
                 element.srcObject = stream;
-            //}else{
-            //    webrtcdev.log('Error attaching stream to element.' , element , stream);
-            //}
+            } catch (err) {
+                webrtcdev.error("[Mediacontrol] attachMediaStream - ", err);
+                element.src = URL.createObjectURL(stream);
+            } finally {
+                webrtcdev.info("[Mediacontrol] attachMediaStream - added srcObject for ", stream.type, " valid stream ", stream.streamid, " to element ", element);
+                // element.onloadedmetadata = function (e) {
+                return element.play().then(_ => {
+                    webrtcdev.log("[Mediacontrol] attachMediaStream - element started playing ", element);
+                }).catch(error => {
+                    webrtcdev.error("[Mediacontrol] attachMediaStream - video play error ", error);
+                    if (error.name == "NotAllowedError" && error.message.includes("play() failed")) {
+                        let r = confirm("Play failed due to auto play policy, starting video on mute, click on video to unmute");
+                        if (r || !r) {
+                            // whether uer clicks ok or cancel
+                            element.muted = true;
+                            element.autoplay = true;
+                            element.addEventListener("click", function () {
+                                element.muted = false;
+                            });
+                            element.play();
+                        }
+                    } else if (error.name == "NotAllowedError" && error.message.includes("The play() request was interrupted by a call to pause()")) {
+                        // alert("Play failed, video was paused ");
+                        setTimeout(function () {
+                                element.play();
+                            }, 2000);
+                    } else if (error.name == "AbortError" && error.message.includes("The play() request was interrupted by a new load request")) {
+                        // alert("Play failed, video was loaded with stream too fast");
+                        element.pause();
+                        setTimeout(function () {
+                            element.play();
+                        }, 2000);
+                    } else {
+                        // alert("Play failed, Retrying video play in 2 seconds ");
+                        setTimeout(function () {
+                                element.play();
+                            }, 2000);
+                    }
+                });
+                // };
+            }
 
-            element.play();
-            webrtcdev.log(" Media Stream attached to " , element , " succesfully");
-        }else{
-            //element.src = "";
-            webrtcdev.debug(" Media Stream not attached to " , element  , " as stream is not valid " , stream);
+        } else if (stream == "") {
+            // If no stream , just attach the src as null
+            element.srcObject = null;
+            webrtcdev.warn("[ Mediacontrol - attachMediaStream ] Media Stream empty '' attached to ", element, " as stream is not valid ", stream);
+            // return element.play();
+            return Promise.resolve();
+        } else {
+            webrtcdev.error("[Mediacontrol] attachMediaStream - stream is not recognized ", stream);
+            throw "unrecognized media stream";
         }
 
-    }catch(e){
-        webrtcdev.error(" [ Mediacontrol - attachMediaStream ]  error" , e);
+    } catch (err) {
+        webrtcdev.error("[Mediacontrol] attachMediaStream - error", err);
+        return Promise.reject(new Error('attachMediaStream failed'));
     }
-
 }
 
-function reattachMediaStream(to, from) {
-    to.src = from.src;
+/**
+ * Re attach media stream from one dom to another dom element
+ * @method
+ * @name reattachMediaStream
+ * @param {video dom} element
+ * @param {video dom} from
+ */
+function reattachMediaStream(element, from) {
+    try {
+        // If stream is present , attach the stream and play
+
+        if (element.srcObject && element.srcObject.active) {
+            webrtcdev.log("[Mediacontrol] reattachMediaStream - element has srcObject and is active ");
+            return Promise.resolve(1);
+        } else {
+            element.srcObject = from.srcObject;
+            webrtcdev.log("[Mediacontrol] reattachMediaStream - added src object for valid stream ", element);
+
+            return element.play().then(_ => {
+                webrtcdev.log("[Mediacontrol] reattachMediaStream - element started playing ", element);
+            }).catch(error => {
+                webrtcdev.error("[Mediacontrol] reattachMediaStream - video play error ", error);
+                if (error.name == "NotAllowedError" && error.message.includes("play() failed")) {
+                    let r = confirm("Play failed due to auto play policy, starting video on mute, click on video to unmute");
+                    if (r || !r) {
+                        // whether uer clicks ok or cancel
+                        element.muted = true;
+                        element.autoplay = true;
+                        element.addEventListener("click", function () {
+                            element.muted = false;
+                        });
+                        element.play();
+                    }
+                } else if (error.name == "NotAllowedError" && error.message.includes("The play() request was interrupted by a call to pause()")) {
+                    alert("Play failed, video was paused ");
+                }
+            });
+        }
+    } catch (err) {
+        webrtcdev.error("[media control] reattachMediaStream err ", err);
+        return Promise.reject(new Error('reattachMediaStream failed'));
+    }
+}
+
+/**
+ * Dettach media stream from dom
+ * @method
+ * @name detachMediaStream
+ * @param {video dom} vid
+ */
+function detachMediaStream(vid) {
+    webrtcdev.warn("[ Mediacontrol] dettachMediaStream  on vid ", vid);
+    try {
+        if ('srcObject' in vid) {
+            const stream = vid.srcObject;
+            if (stream && stream != "") {
+                const tracks = stream.getTracks();
+                tracks.forEach(function (track) {
+                    track.stop();
+                });
+                // vid.stream = null;
+                vid.srcObject = null;
+            } else {
+                webrtcdev.warn("[ Mediacontrol] dettachMediaStream  no stream present on remote's video");
+            }
+        } else {
+            vid.src = "";
+        }
+    } catch (e) {
+        webrtcdev.error("[ Mediacontrol] dettachMediaStream  error ", e);
+    } finally {
+        vid.id = null;
+    }
 }

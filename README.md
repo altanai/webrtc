@@ -81,7 +81,6 @@ gulp production
 ```
 
 
-
 ## Get Started
 ----
 
@@ -93,53 +92,52 @@ git clone https://github.com/altanai/webrtc.git webrtc
 ```
 
 **2. install nvm ( node version manager )**
-```
+```shell script
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.2/install.sh | bash
 . ~/.nvm/nvm.sh
-nvm install v5.0.0
-nvm use v5.0.0
+nvm install v12.0.0
+nvm use v12.0.0
 ```
 
 **3. install npm and update the dependencies**
 It will read the package.json and update the dependencies in node_modules folder on project location
 
 ```
-	sudo apt-get install npm
-	npm install 
+sudo apt-get install npm
+npm install 
 ```
 
 **4. Change ENV variables and Test**
 
 To change the ports for running the https server and rest server, goto env.json
-```
+```json
 {       
     "hostname"      : "host",        
 	"enviornment"   : "local",        
 	"host"        	: "localhost",
 	"jsdebug"      :  true,          
 	"httpsPort"    :  8086,
-	"restPort"     :  8087,
-    "extensionID"   : "elfbfompfpakbefoaicaeoabnnoihoac"
+	"restPort"     :  8087
 }
 ```
 
 To run the tests
 ```
-	npm test
+npm test
 ```
 
 **5. Start up the Server**
 
 To start the Server in dev mode  and stop the server as soon as Ctrl+ C is hit or the terminal widnow is closed . 
 ```
-	node webrtcserver.js
+node webrtcserver.js
 ```
 read more about [node](https://nodejs.org/en/about/ )
 
 To start the Server using npm start ( using package.json) , behaves same as earlier run using node. We use supervisor to restart the server incase of exceptions or new code .
 
 ```
-	npm start
+npm start
 ```
 
 **6. JS and CSS Libs**
@@ -147,7 +145,6 @@ To start the Server using npm start ( using package.json) , behaves same as earl
 Make a webpage and give holders for video and button elements that SDK will use .
 
 Inside the head tag of html
-
     build/webrtcdevelopment_header.css
     build/webrtcdevelopment_header.js
 
@@ -155,13 +152,16 @@ After the body tag of html
     build/webrtcdevelopment.css
     build/webrtcdevelopment.js
 
+or use the minified scripts 
+    build/webrtcdevelopment_min.css
+    build/webrtcdevelopment_min.js
 
 **7. Configure**
 
 Create the webrtc dom object with local and remote objects
 
 local object  :
-```
+```javascript
     var local={
 
         video           :   "myAloneVideo",            // name of the local video element
@@ -175,11 +175,11 @@ local object  :
             useremail   : useremail,
             role        : "participant"                 // role of user in the session , can be participant , admin , inspector
         }
-    };
+    }
 ```
 
 remote object  :
-```
+```javascript
     var remote={
         videoarr        : ["myConferenceVideo", "otherConferenceVideo"], // conatiners for the video after session is made 
                                                                 // first one is usually the local video holder followed by remote video holders
@@ -189,12 +189,12 @@ remote object  :
         userDisplay     : false,
         userMetaDisplay : false,
         dynamicVideos   : false 
-    };
+    }
 
 ```
 
-Incoming and outgoing media configiration  ( self exlanatory ) :
-```
+Incoming and outgoing media configuration  ( self explanatory ) :
+```javascript
     var incoming={
         audio :  true,
         video :  true,
@@ -217,28 +217,28 @@ Incoming and outgoing media configiration  ( self exlanatory ) :
 
 **7. Adding Widgets**
 
-set widgets (expained in section below)
+set widgets (explained in section below)
+```javascript
+    var widgets={     }
 ```
-    var widgets={
-    }
-```
-Set widgets and their properties . 
+Set widgets and their properties
 
 
 **8. Creating session**
 
-Get session id automaically
-```
-sessionid = init(true);
+Get session id automatically
+```javascript
+sessionid = webrtcdevobj.makesessionid("reload");
 ```
 or get session name from user
+```javascript
+sessionid = webrtcdevobj.makesessionid("noreload");
 ```
-sessionid = init(false);
-```
-Create a session json object with turn credentials and the session created from above step
 
-set preference for the incoming and outgoing media connectection. Bydefault all are set to true . 
-```
+**9. Create a session json object with turn credentials and the session created from above step**
+
+set preference for the incoming and outgoing media connection. By default all are set to true . 
+```javascript
     var incoming={
         audio:  true,
         video:  true,
@@ -254,26 +254,24 @@ set preference for the incoming and outgoing media connectection. Bydefault all 
     };
 ```
 
-finally initiate the webrtcdev contructor 
-```
-    var webrtcdevobj = new WebRTCdev ( 
-        session,  incoming,  outgoing ,  widgets
-    );
+**10. finally initiate the webrtcdev constructor**
+```javascript
+webrtcdevsessionobj = webrtcdevobj.setsession(local, remote, incoming, outgoing, session, getWidgets());       
 ```
 
-Start the session 
-```
-    startcall();
+**11. Start the session**
+```javascript
+ webrtcdevobj.startCall(webrtcdevsessionobj)
 ```
 
 
 ## Widgets 
-----
 
 Currently available widgets are 
     * Chat 
     * Fileshare
     * Timer
+    * Draw
     * Screen Record
     * Screen Share
     * Video Record
@@ -292,7 +290,7 @@ User RTCDataConnection api from webRTC to send peer to peer nessages within a se
 
 When the chat widget is active  , if the dom specified by the container id is present then webSDK uses as it is,  else it creates one default box 
 
-```             
+```
 {
     active: true,
     container: {
@@ -316,7 +314,7 @@ When the chat widget is active  , if the dom specified by the container id is pr
 ```
 Upcoming : Adding emoticons to Chat
 
-### 2. Fileshare 
+### 2. File-share 
 
 Uses the RTCDataConnection API from WebRTC to excahnge files peer to peer. Progress bar is displayed for the chunks of file transferrred out of total number of chunks. Many different kindes of file transfer have been tested such as media files ( mp3 , mp4 ) , text or pdf files , microsoft pr libra office dicuments , images ( jpg , png etc ) etc .
 
@@ -325,6 +323,7 @@ File share widgets creates uses 2 conatiners - File Share and File List . If the
 The list of files with buttons to view , hide or remove them from file viewers are in file Viewer container .
 Displaying or playing the text or media files happens in file share conainer , which also has button to maximize , minimize the viewer window or in case of images to rotate them. 
 
+For divided file share container 
 ```
 {
     active : true,
@@ -353,6 +352,40 @@ Displaying or playing the text or media files happens in file share conainer , w
         fileList:"divided"                                  // same as aboev Can be divided , single   , hidden
     }
 }
+```
+or for single file share container for all peers 
+```
+    let filesharewidget = {
+        active: true,
+        fileShareContainer: "fileSharingRow",
+        fileshare: {
+            rotateicon: "assets/images/refresh-icon.png",
+            minicon: "",
+            maxicon: "",
+            closeicon: "assets/images/cross-icon.png"
+        },
+        fileListContainer: "fileListingRow",
+        filelist: {
+            minicon: "",
+            maxicon: "",
+            downloadicon: "",
+            trashicon: "",
+            saveicon: "",
+            showicon: "",
+            hideicon: "",
+            stopuploadicon: ""
+        },
+        button: {
+            id: "fileshareBtn",
+            class_on: "file-share",
+            html: "File"
+        },
+        props: {
+            fileShare: "single",   //Can be divided , chat preview  , single   , hidden
+            fileList: "single"     //Can be divided , single , hidden
+        },
+        sendOldFiles: false        // If new participant join conf , or listener join , then should he receive old files or not
+    }
 ```
 
 ### 3. Timer 
@@ -406,21 +439,20 @@ Records everything pesent on the tab selected along with audio and displays reco
         class_off:"btn btn-lg screenRecordBtnClass Off",
         html_off: '<img title="Session Record" src="assets/images/icon_5.png"/>'
     }
-},   
+}
 ```
 ### 5. Screen-share 
 
 One of the most powerful features of the SDK is to capture the current screen and share it with peer over RTC Peer connection channel. Simmilar to csreen record , uses an extension and pre-declared site ownership to capture the screen and share as peer to peer stream .
 Button for screen share has 3 states - 
-- install button for inline isnatllation of extension from page , 
+- install button for inline installation of extension from page , 
 - share screen button and 
 - view button for incoming screen by peer .
 
-```                 
+```
 {
     active : true,
     screenshareContainer: "screenShareRow",                 // container to display screen being shared
-    extensionID: props.extensionID,                         // extension id 
     button:{
         installButton:{                                     // widget button to start inline installation of extension
             id:"scrInstallButton",
@@ -475,11 +507,10 @@ Takes a snapshot from video stream . Will be created for each inidvidual peer vi
     active : true,
     snapshotContainer: true,
     button:{
-        class_on:"pull-right btn btn-modify-video2 videoButtonClass",
+        class_on: "pull-right btn btn-modify-video2 videoButtonClass",
         html_on:"<i class='fa fa-th-large' title='Take a snapshot'></i>"
     }
 } 
-
 ```
 
 ### 8. Minimising/ maximising Video
@@ -488,9 +519,9 @@ To enable the user to watch video in full screen mode or to inimize the video to
     
 ```
 {
-    active : true,
-    max:{
-        button:{                                                                // button to maximise the video to full screen mode 
+    active: true,
+    max: {
+        button: {                                 // button to maximise the video to full screen mode 
             id: 'maxVideoButton',
             class_on:"pull-right btn btn-modify-video2 videoButtonClass On",
             html_on:"<i class='fa fa-laptop' title='full Screen'></i>",
@@ -498,9 +529,9 @@ To enable the user to watch video in full screen mode or to inimize the video to
             html_off:"<i class=' fa fa-laptop' title='full Screen'></i>"
         }  
     } ,
-    min :{
-        button:{                                                                // button to minimize or hide the video 
-            id: 'minVideoButton',
+    min : {
+        button: {                                  // button to minimize or hide the video 
+            id : 'minVideoButton',
             class_on:"pull-right btn btn-modify-video2 videoButtonClass On",
             html_on:"<i class='fa fa-minus' title='minimize Video'></i>",
             class_off:"pull-right btn btn-modify-video2 videoButtonClass Off",
@@ -515,19 +546,25 @@ To enable the user to watch video in full screen mode or to inimize the video to
 Mutes the audio or video of the peer video . Created for each peer video.
 
 ```
- {
-    active: true,
-    drawCanvasContainer: "drawBoardRow",
-    container:{
-            id:'drawContainer',
-            minbutton_id:'minimizeDrawButton'
-        },
-    button:{
-        id: "draw-webrtc" , 
-        class_on:"btn btn-lg draw-webrtc On",
-        html_on:'<img title="Draw" src=assets/images/icon_3.png />',
-        class_off:"btn btn-lg draw-webrtc Off",
-        html_off:'<img title="Draw" src=assets/images/icon_3.png />'
+{
+    active: false,
+    audio: {
+        active: false,
+        button: {
+            class_on: "pull-right videoButtonClass on",
+            html_on: "<i class='fa fa-microphone-slash'></i>",
+            class_off: "pull-right videoButtonClass off",
+            html_off: "<i class='fa fa-microphone'></i>"
+        }
+    },
+    video: {
+        active: false,
+        button: {
+            class_on: "pull-right videoButtonClass on",
+            html_on: "<i class='fa fa-video-camera'></i>",
+            class_off: "pull-right videoButtonClass off",
+            html_off: "<i class='fa fa-video-camera'></i>"
+        }
     }
 }
 ```
@@ -538,12 +575,12 @@ Allows a user to recoonect a session without refreshing a page . Will enable him
 
 ```
 {
-    active: false,
-    button:{
+    active : false,
+    button : {
         id: "reconnectBtn",
         class:"btn btn-success glyphicon glyphicon-refresh topPanelButton",
         html:"Reconnect",
-        resyncfiles:false
+        resyncfiles : false
     }
 }
 ```
@@ -552,18 +589,18 @@ Allows a user to recoonect a session without refreshing a page . Will enable him
 
 ```
 {
-    active : true,
-    pointer:{
+    active: false,
+    pointer: {
         class_on: "fa fa-hand-o-up fa-3x"
     },
-    button:{
+    button: {
         id: 'shareCursorButton',
-        class_on:"pull-right btn btn-modify-video2 videoButtonClass On",
-        html_on:"<i class='fa fa-hand-o-up' title='Cursor'></i>",
-        class_off:"pull-right btn btn-modify-video2 videoButtonClass Off",
-        html_off:"<i class='fa fa-hand-o-up' title='Cursor'></i>"
-    }                   
-},
+        class_on: "pull-right videoButtonClass On",
+        html_on: "<i class='fa fa-hand-pointer-o fullscreen'></i>",
+        class_off: "pull-right videoButtonClass Off",
+        html_off: "<i class='fa fa-hand-pointer-o fullscreen'></i>"
+    }
+}
 ```
 
 ### 12. Inspector 
@@ -571,21 +608,26 @@ Allows a user to recoonect a session without refreshing a page . Will enable him
 {
     active: true,
     button:{
-        id:"ListenInButton",
+        id: "ListenInButton",
         textbox : "listenInLink"
     }
 }
 ```
 ### 13. Debug 
+
+To turn debug on
 ```
- debug   : false,
+{
+  debug: false
+} 
 ```
 
 ### 14. Help
 
+Actiavtes the help log 
 ```
 {
-  active : true , 
+  active: true, 
   helpContainer : "help-view-body",
   screenshotContainer: "help-screenshot-body",
   descriptionContainer: "help-description-body"
@@ -601,97 +643,52 @@ Allows a user to recoonect a session without refreshing a page . Will enable him
 }
 ```
 
+### 16. Draw 
+```
+{
+    active: true,
+    drawCanvasContainer: "drawBoardRow",
+    button: {
+        id: "draw-webrtc",
+        class_on: "icon-pencil On",
+        html_on: '',
+        class_off: "icon-pencil Off",
+        html_off: ''
+    }
+}
+```
 
 ### Assign individual widgets to a json object called widgets 
 
 ```
-	var widgets={
-        
-        chat : < add chat widget json >,
-
-        fileshare : < fieshare widget>,
-
-        debug   : false,
-            
-        reconnect   :{
-                            active: false,
-                            button:{
-                                id: "reconnectBtn",
-                                class:"btn btn-success glyphicon glyphicon-refresh topPanelButton",
-                                html:"Reconnect",
-                                resyncfiles:false
-                            }
-                        },
-            timer   :{
-                        active: true,
-                        type: "forward",
-                        counter:{
-                            hours: "countdownHours",
-                            minutes:"countdownMinutes",
-                            seconds :"countdownSeconds"
-                        },
-                        upperlimit: {
-                            hour:0 , 
-                            min: 3 , 
-                            sec: 60 
-                        },
-                        span:{
-                            currentTime_id:"currentTimeArea",
-                            currentTimeZone_id:"currentTimeZoneArea",
-                            remoteTime_id :"remoteTimeArea",
-                            remoteTimeZone_id:"remoteTimeZoneArea",
-                            class_on:""
-                        },
-                        container:{
-                            id:'collapseThree',
-                            minbutton_id:'timerBtn'
-                        },
-                        button :{
-                            id: 'timerBtn'
-                        }
-                    },
-            
-            chat    : < chat widget >
-
-            fileShare :< file share widget >
-
-            mute    : < mute unmute widget >
-
-            videoRecord : < video record widget >
-
-            snapshot : < snapshot widget >
-
-            cursor : < widget for cursor sharing >
-
-            minmax  : < widget to maximize or minimize the video >
-            
-            drawCanvas  : < draw widget >
-
-            screenrecord : < screen record widget >       
-            
-            screenshare : < screen share >
-
-            listenin : < listen in widget >
-            
-            help : {
-              active : true , 
-              helpContainer : "help-view-body",
-              screenshotContainer: "help-screenshot-body",
-              descriptionContainer: "help-description-body"
-            },
-            
-            statistics:{
-              active : true , 
-              statsConainer : "network-stats-body"
-            }
-	}
+{
+    debug: false,
+    reconnect: {
+        active: false
+    },
+    timer: timerwidget,
+    chat: chatwidget,
+    fileShare: filesharewidget,
+    mute: mutewidget,
+    videoRecord: videorecordwidget,
+    snapshot: snapshotwidget,
+    cursor: cusrsorwidget,
+    minmax: minmaxwidget,
+    drawCanvas: drawwidget,
+    screenrecord: screenrecordwidget,
+    screenshare: screensharewidget,
+    listenin: listeninwidget,
+    help: helpwidget,
+    statistics: {
+        active: false,
+        statsConainer: "network-stats-body"
+    }
+}
 ```
 
+## Event listeners 
 
-## Event listners 
-----
-
-Implemented event listners 
+Implemented event listeners 
 
 1. onLocalConnect
 
@@ -704,15 +701,19 @@ Implemented event listners
 5. onNoCameraCard
 
 
-##Keys and certs 
-----
+## Keys and certs 
+
+To generate a CSR for external Certificate Authority such as Go daddy
+```shell script
+
+```
 
 Add the Key and certs
+```shell script
 openssl req -x509 -newkey rsa:4096 -sha256 -nodes -keyout ssl_certs/server.key -out ssl_certs/server.crt -subj "/CN=webrtc.altanai.com" -days 3650
-
+```
 
 ## Demo
-----
 
 open tab on chrome or mozilla browser and add a link to the https server using nodejs script
 https://127.0.0.1:8086/multiparty_fullfeatures.html
@@ -725,7 +726,6 @@ webrtc_usecases - https://github.com/altanai/webrtc_usercases
 
 
 ## Extra 
-----
 
 Following are the additioanl libraries packed with the project 
 
@@ -733,7 +733,7 @@ Following are the additioanl libraries packed with the project
 Minify and concat the js and css files  into minscripts
 
 **Task Runner**
-you can run gulp alone to minify and concat the js and css files  into minscripts
+you can run gulp alone to minify and concat the js and css files  into min-scripts
 ```
 gulp
 ```
@@ -758,9 +758,287 @@ forever start webrtcserver.js
   open ./docs/index.html
 ```
 **PM2**
-To start the Server using PM2 ( a process manager for nodejs)
+
+To start the Server using PM2 ( a process manager for nodejs) , install pm2 globally 
+```shell script
+npm install pm2 -g
+```
+
+create a conf json 
+```shell script
+pm2 ecosystem
+```
+
+Add config to json 
+```json
+  apps : [{
+    script: 'webrtcserver.js',
+    watch: '.'
+  }]
+```
+start pm2 
+```shell script
+pm2 start ecosystem.config.js 
+```
+
+----------------------------------------------------------
+## Working steps 
+
+**1.create a new session**
+
+Navigate on browser https://localhost:8082/#2435937115056035
+which creates websocket over socket.io wss://localhost:8083/socket.io/?EIO=3&transport=websocket
+
+**2.check for channel presence**
+
+first client message 
+```shell script
+[ "presence", 
+  {
+    channel: "2435937115056035"
+    }
+ ]
+```
+
+on the server side 
+```
+ Presence Check index of  2435937115056035  is  false
+```
+websocket response from server ["presence", false]
+
+**3.If channel doesnt exist already create**
+
+client message to open channel 
+```shell script
+  [  "open-channel", 
+    {
+      channel: "2435937115056035", 
+      sender: "gxh0oi2jrs", 
+      maxAllowed: 6
+     }
+   ]
+```
+
+server response 
+```shell script
+ ------------open channel-------------  2435937115056035  by  gxh0oi2jrs
+registered new in channels  [ '2435937115056035' ]
+information added to channel { '2435937115056035':
+   { channel: '2435937115056035',
+     timestamp: '12/18/2018, 10:18:01 PM',
+     maxAllowed: 6,
+     users: [ 'gxh0oi2jrs' ],
+     status: 'waiting',
+     endtimestamp: 0,
+     log:
+      [ '12/18/2018, 10:18:01 PM:-channel created . User gxh0oi2jrs waiting ' ] } }
+     
+```
+
+websocket response from server
+```shell script
+  [  "open-channel-resp", 
+   { 
+    status: true, 
+    channel: "2435937115056035"
+    }
+  ]
+```
+    
+**4.Join a session and check for channel presence**
+  
+  navigate another browser client to same session url such as https://localhost:8084/#2435937115056035?name=aa&email=abc@gmail.com
+```shell script
+   check presence ["presence", {channel: "2435937115056035"}]
+   
+   ["presence", true]
+  
+   Presence Check index of  2435937115056035  is  true
+```  
+   
+**5.If channel is present join the channel**
+
+```shell script
+  ["join-channel", {channel: "2435937115056035", sender: "2ilwvn9qq39",…}]
+   
+------------join channel-------------  2435937115056035  by  2ilwvn9qq39  isallowed  true
+
+[ "join-channel-resp"
+ {
+ status: true, 
+ channel: "2435937115056035", 
+ users: ["gxh0oi2jrs", "2ilwvn9qq39"]
+}]
+```
+ 
+## Debugging help
+
+### getusermedia Exceptions
+
+Cases when user deosnt have ir isnt able to acces his audio/video devices due of any of reasons such as 
+- user has no webcam or microphone
+- intentioanlly/accidentally denied access to the webcam
+- plugs in the webcam/microphone after getUserMedia() code has initialized
+- device is already used by another app on Windows
+- user dismisses the privacy dialog
+
+Rejections of the returned promise are made by passing a DOMException error object to the promise's failure handler. 
+The DOMException interface represents an abnormal event 
+
+Possible errors are:
+```
+openrmc.webrtc.Errors = {
+    NOT_SUPPORTED : 'NOT_SUPPORTED',
+    CONSTRAINTS_REQUIRED : 'CONSTRAINTS_REQUIRED',
+    AUDIO_NOT_AVAILABLE : 'AUDIO_NOT_AVAILABLE',
+    VIDEO_NOT_AVAILABLE : 'VIDEO_NOT_AVAILABLE',
+    AV_NOT_AVAILABLE : 'AV_NOT_AVAILABLE'
+} ;
+```
+
+* AbortError - Although the user and operating system both granted access to the hardware device, and no hardware issues occurred that would cause a NotReadableError, some problem occurred which prevented the device from being used.
+
+* NotAllowedError - One or more of the requested source devices cannot be used at this time. This will happen if the browsing context is insecure (that is, the page was loaded using HTTP rather than HTTPS). It also happens if the user has specified that the current browsing instance is not permitted access to the device, the user has denied access for the current session, or the user has denied all access to user media devices globally. On browsers that support managing media permissions with Feature Policy, this error is returned if Feature Policy is not configured to allow access to the input source(s).
+Older versions of the specification used SecurityError for this instead; SecurityError has taken on a new meaning.
+
+* NotFoundError - No media tracks of the type specified were found that satisfy the given constraints.
+NotReadableError
+Although the user granted permission to use the matching devices, a hardware error occurred at the operating system, browser, or Web page level which prevented access to the device.
+
+* OverconstrainedError - The specified constraints resulted in no candidate devices which met the criteria requested. The error is an object of type OverconstrainedError, and has a constraint property whose string value is the name of a constraint which was impossible to meet, and a message property containing a human-readable string explaining the problem.
+Because this error can occur even when the user has not yet granted permission to use the underlying device, it can potentially be used as a fingerprinting surface.
+
+* SecurityError - User media support is disabled on the Document on which getUserMedia() was called. The mechanism by which user media support is enabled and disabled is left up to the individual user agent.
+
+* TypeError - The list of constraints specified is empty, or has all constraints set to false. This can also happen if you try to call getUserMedia() in an insecure context, since navigator.mediaDevices is undefined in an insecure context.
+
+ref : https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
+
+### Errors on gulp 
+**sourcemap related **
+USe gulp-babel@8.0.0
+
+**arrow functions realted**
+use tarnscompiler with preset env plugin for changes arrow function to normals ones before minifying
+
+### WSS errors
+
+**Issue1** net::ERR_CONTENT_LENGTH_MISMATCH 200 (OK) \
+**solution** This error is definite mismatch between the data that is advertised in the HTTP Headers and the data transferred over the wire.
+ It could come from the following:
+Server: If a server has a bug with certain modules that changes the content but don't update the content-length in the header or just doesn't work properly. It was the case for the Node HTTP Proxy at some point (see here)
+Proxy: Any proxy between you and your server could be modifying the request and not update the content-length header. 
+
+
+**Issue2**  wss error connecting to webrtcserver like 
+```json
+{"code":3,"message":"Bad request"} 
+```
+or
+```shell script
+Error: read ECONNRESET
+Emitted 'error' event on TLSSocket instance at:
+    at emitErrorNT (internal/streams/destroy.js:84:8)
+    at processTicksAndRejections (internal/process/task_queues.js:84:21) {
+  errno: -104,
+  code: 'ECONNRESET',
+  syscall: 'read'
+}
+``` 
+\
+**Solution** ECONNRESET error means that peer closed connection https://nodejs.org/api/errors.html .
+To overcome this example either set try catch and reconnect to prevent sever from crashing or client from disconnectinig 
+or if you are running the http and wss server on the sae port like i was doing . Put them on seprate ports . 
+I started seeing this problem a lot after I upgraded the http protocol version from https to http2 ( using native node module )  
+for example for http server 
+```javascript
+const app = http2.createSecureServer(options, (request, response) => {
+    request.addListener('end', function () {
+        file.serve(request, response);
+    }).resume();
+});
+app.listen(properties.http2Port);
+```
+the again declare it seprately for wss server 
+```javascript
+const server = require('http2').createSecureServer(options);
+const io = require('socket.io')(server, {
+    secure: true,
+    serveClient: false,
+    pingInterval: 10000,
+    pingTimeout: 5000,
+    cookie: false
+});
+io.origins('*:*');
+io.on('connect', onConnection);
+server.listen(properties.wss2Port);
+```
+
+**Issue 3** WSS errors on socket.io as, error in connection establishment: net::ERR_SSL_PROTOCOL_ERROR \
+or  WebSocket opening handshake was cancelled
+**solution** recheck the session connection to socket.io , especially the ports and whther or not they are already in use 
+
+**Issue 4** Error during WebSocket handshake: Unexpected response code: 403 \
+**solution** Related to ECONNRESET
+
+**Issue 5** {code: 0, message: "Transport unknown"}
+            code: 0
+            message: "Transport unknown"
+or 
+Status Code: 400 Bad Request
+**solution** Either specify same protocol on both client and servers ide or do not specify and transport protocol at all .
+For isntance this problem arises  when server specifies websocket transport but client tries connecting over polling 
+server specifying tarsnport websocket
+```javascript
+ioServer(httpApp,{
+    transports: ['websocket'],
+    secure: true
+})
+```
+But client tries polling connection
+```
+https://localhost:8086/socket.io/?userid=iu02bk1b77g&sessionid=httpslocalhost8082clientindexhtm&transport=polling&t=N7ToS63
+```
+
+### errors on SSL certs 
+    
+**Issue 6** CERT INVALID ERROR such as     
+```shell script
+NET::ERR_CERT_AUTHORITY_INVALID
+````
+**Solution** Since the certs are self signed , navigate to the wss port on http and allow permission under teh advanced button in scren below 
+![CERT_AUTHORITY](screenshots/cert_authority.png)
+
+**Issue 7** GoDaddy SSL ecrts key gives no start line     
+```shell script
+  library: 'PEM routines',
+  function: 'get_name',
+  reason: 'no start line',
+  code: 'ERR_OSSL_PEM_NO_START_LINE'
+````
+**Solution** first check whether the key file has valid certificate 
+```shell script
+openssl x509 -text -in file.key
+```
+Check if it prints an error including the text "unable to load certificate", then your file is not sufficient.
+See if the format is correct 
+```shell script
+openssl pkcs8 -in key.txt  -inform pem
+Error reading key
+140542854250944:error:0909006C:PEM routines:get_name:no start line:../crypto/pem/pem_lib.c:745:Expecting: ENCRYPTED PRIVATE KEY  
+```
+If not then resave the file with charectar encoding UTF-8 and Line ending Unix/Linux 
+           
+### Errors on git
+
+update registry to  "registry": "https://registry.npmjs.org " 
+shelved
+
+## Reporting a Vulnerability
+
+Create an issue
+https://github.com/altanai/webrtc/issues <https://github.com/altanai/webrtc/issues>
 
 ### License
-----
 
 MIT

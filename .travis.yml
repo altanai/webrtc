@@ -1,16 +1,38 @@
+dist: trusty
+addons:
+  apt:
+    sources:
+      - google-chrome
+    packages:
+      - google-chrome-stable
+
+os:
+  - linux
+  - osx
+  - windows
 language: node_js
 node_js:
-  - "5"
+  - "12"
 
 before_install:
-  - nvm use v5.0.0
+  - nvm use v12.0.0
 
 install:
   - npm install
 
 before_script:
   - npm install
-  - npm install -g gulp
+  - npm npm install -g gulp-cli
   - npm install forever -g
 
-script: gulp
+script:
+  - gulp production
+  - npm start
+
+deploy:
+  - provider: npm
+  - email: "tara181989@gmail.com"
+      - tag: next
+  - on:
+      - branch: all
+      - tags: true

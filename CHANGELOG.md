@@ -12,3 +12,7 @@
 2.0.1
 2.0.0
 2.0.0
+
+## 5.3.1 
+
+Fixed media stream trcak issues and deep update on json object webcall peers 

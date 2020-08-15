@@ -1,101 +1,64 @@
 /*-----------------------------------------------------------------------------------*/
 /*                    listen-in JS                                                   */
+
 /*-----------------------------------------------------------------------------------*/
 
-if(document.getElementById("ListenInButton")){
+/**
+ * creates a listen in link for the sessionid
+ * @method
+ * @name getlisteninlink
+ * @return {string}listeninlink
+ */
+this.getlisteninlink = function() {
+    if (!sessionid) console.error("cant generate listenin link , no session id found ")
+    try {
+        webrtcdev.log(" Current Session ", window.origin);
+        let listeninlink = window.origin + "/#" + sessionid + '?appname=webrtcwebcall&role=inspector&audio=0&video=0';
+        return listeninlink;
+    } catch (e) {
+        webrtcdev.error("ListenIn :", e);
+        return false;
+    }
+};
 
-	var listeninLink = window.location+'?appname=webrtcwebcall&role=inspector&audio=0&video=0';
-  	
-  	var modalBox=document.createElement("div");
-  	modalBox.className="modal fade";
-  	modalBox.setAttribute("role" , "dialog");
-  	modalBox.id="myModal";
-
-  	var modalinnerBox=document.createElement("div");
-  	modalinnerBox.className="modal-dialog";
-
-	var modal=document
-	.createElement("div");
-	modal.className = "modal-content";
-
-	var modalheader= document.createElement("div");
-	modalheader.className = "modal-header";
-
-	var closeButton= document.createElement("button");
-	closeButton.className="close";
-	closeButton.setAttribute("data-dismiss", "modal");
-	closeButton.innerHTML="&times;";
-
-	var title=document.createElement("h4");
-	title.className="modal-title";
-	title.innerHTML="Listen-In Link";	
-
-	modalheader.appendChild(title);
-	modalheader.appendChild(closeButton);
-
-
-	var modalbody = document.createElement("div");
-	modalbody.className="modal-body";
-
-	var link = document.createElement("div");
-	link.innerHTML = window.location+'?appname=webrtcwebcall&role=inspector&audio=1&video=0';
-
-	var mail = document.createElement("div");
-	mail.innerHTML ='<a href="mailto:?Subject=Hello%20again" target="_top">Send Mail</a>';
-
-	modalbody.appendChild(link);
-	modalbody.appendChild(mail);
-
-	modal.appendChild(modalheader);
-	modal.appendChild(modalbody);
-
-	modalinnerBox.appendChild(modal);
-	modalBox.appendChild(modalinnerBox);
-
-	var mainDiv = document.getElementById("mainDiv");
-	mainDiv.appendChild(modalBox);
-
-	webrtcdev.log(" -----------------sppenedd modal dialog ListenIn" , modalBox);
-	//document.body.appendChild(modalBox);
-
-	/*document.getElementById("ListenInButton").onclick=function(){
-		//alert(window.location+'?appname=webrtcwebcall&role=inspector&audio=0&video=0');
-	}*/
+function freezescreen() {
+    document.body.setAttribute("style", "pointer-events: none;");
 }
 
-if(document.getElementById('listenInLink')){
-	try{
-		var currSession =  window.location.href;
-		webrtcdev.log(" Current Session ", currSession);
-		var listeninSession = currSession+'?appname=webrtcwebcall&role=inspector&audio=1&video=0';
-		webrtcdev.log(" Inspector Link " , listeninSession);
+/**
+ * collect all webrtcStats and stream to Server to be stored in a file with session id as the file name
+ * @method
+ * @name sendwebrtcdevLogs
+ * @param {string} url
+ * @param {string} key
+ * @param {string} senderuseremail
+ * @param {string} receiveruseremail
+ * @return Http request
+ */
+this.sendlisteninlink = function (url, key, senderuseremail, receiveruseremail) {
 
-		document.getElementById("listenInLink").value = listeninSession;
-	}catch(e){
-		webrtcdev.error(" Listen In :". e);
-	}
-}
+    var dataArray = {
+        apikey: key,
+        senderuseremail: senderuseremail,
+        receiveruseremail: receiveruseremail,
+        webrtcsessionid: webrtcdevobj.sessionid,
+        connectiontype: 1
+    };
 
-function mailListenInLink(){
-	fetch(url, {
-	  method		: 'post',
-	  crossDomain	: true,
-	  ContentEncoding: 'base64',
-	  headers		: {
-	    'Accept': 'application/zip, text/plain, */*',
-	    'Content-Type': 'application/json',
-	    'Authorization' : key
-	  },
-	  body: { 
-            apikey 		: key ,
-            useremail	: selfemail, 
-            sessionid	: sessionid,
-            webrtcZip 	: content , //Zip file (Max File Size 2MB)
-            webrtcTxt 	: 'traceswebrtcdev'
-        }
-	})
-	.then(res => res.json())
-	.then(res => console.log(res));
-}
-
+    return fetch(url, {
+        method: 'post',
+        crossDomain: true,
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json',
+            'Authorization': key,
+            'Access-Control-Allow-Origin': window.location.origin,
+            'Access-Control-Allow-Credentials': 'true'
+        },
+        body: JSON.stringify(dataArray)
+    })
+        .then(apires => apires.json())
+        .then(apires => console.log("Listenin API response ", apires))
+        .catch(error => console.error("Listenin API response ", error));
+};
 /*-----------------------------------------------------------------------------------*/

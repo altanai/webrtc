@@ -11,8 +11,8 @@ addEvent(canvas, isTouch ? 'touchstart' : 'mousedown', function (e) {
 
     var cache = is;
 
-    console.log(" canvas coordinates x ->" , e.pageX , "||", canvas.offsetLeft);
-    console.log(" canvas coordinates y ->" , e.pageY ," ||", canvas.offsetTop);
+    // console.log(" canvas coordinates x ->" , e.pageX , "||", canvas.offsetLeft);
+    // console.log(" canvas coordinates y ->" , e.pageY ," ||", canvas.offsetTop);
 
     if (cache.isLine){
  lineHandler.mousedown(e);
@@ -88,8 +88,6 @@ addEvent(canvas, isTouch ? 'touchmove' : 'mousemove', function (e) {
 
 var keyCode;
 
-
-
 function onkeydown(e) {
     keyCode = e.keyCode;
 
@@ -118,9 +116,7 @@ function onkeyup(e) {
 
     if (isControlKeyPressed && keyCode === 65) {
         dragHelper.global.startingIndex = 0;
-
         endLastPath();
-        
         setSelection(find('drag-all-paths'), 'DragAllPaths');
     }
 
@@ -148,8 +144,6 @@ addEvent(document, 'keyup', onkeyup);
 var lastPoint = [];
 
 window.addEventListener('message', function(event) {
-
-    console.log(" window message" , event);
 
     if (!event.data || !event.data.canvasDesignerSyncData) return;
 
@@ -185,6 +179,6 @@ function syncData(data) {
 }
 
 
-// parent post message is wokring 
+// parent post message is working
 // test this by 
 // window.frames[0].parent.postMessage("hi", '*')

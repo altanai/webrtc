@@ -2,20 +2,19 @@
 Decorator
 *********************************************/
 
-function make_base(imgsrc , context)
-{
-  base_image = new Image();
-  //base_image.src = 'img/base.png';
-  
-  base_image.onload = function(){
-    alert(" make base decorator pencil ", imgsrc);
-    context.drawImage(base_image, 40, 40);
-  }
-  base_image.src=imgsrc;
+function make_base(imgsrc, context) {
+    base_image = new Image();
+    //base_image.src = 'img/base.png';
+
+    base_image.onload = function () {
+        alert(" make base decorator pencil ", imgsrc);
+        context.drawImage(base_image, 40, 40);
+    }
+    base_image.src = imgsrc;
 }
 
 // -------------------------------------------------------------
-(function() {
+(function () {
     var params = {},
         r = /([^&=]+)=?([^&]*)/g;
 
@@ -61,7 +60,7 @@ function setSelection(element, prop) {
 
 // -------------------------------------------------------------
 
-(function() {
+(function () {
 
     var cache = {};
 
@@ -83,16 +82,15 @@ function setSelection(element, prop) {
         }
 
         /* Default: setting default selected shape!! */
-        if(params.selectedIcon) {
+        if (params.selectedIcon) {
             params.selectedIcon = params.selectedIcon.split('')[0].toUpperCase() + params.selectedIcon.replace(params.selectedIcon.split('').shift(1), '');
-            if(params.selectedIcon === shape) {
+            if (params.selectedIcon === shape) {
                 is.set(params.selectedIcon);
             }
-        }
-        else is.set('Pencil');
+        } else is.set('Pencil');
 
-        addEvent(context.canvas, 'click', function() {
-            
+        addEvent(context.canvas, 'click', function () {
+
             dragHelper.global.startingIndex = 0;
 
             setSelection(this, shape);
@@ -133,8 +131,7 @@ function setSelection(element, prop) {
 
     var toolBox = find('tool-box');
     //toolBox.style.height = (innerHeight /* - toolBox.offsetTop - 77 */ ) + 'px';
-    toolBox.style.height="100%";
-
+    toolBox.style.height = "100%";
 
 
     function decorateDragLastPath() {
@@ -244,24 +241,24 @@ function setSelection(element, prop) {
         //console.log(document.getElementById('pencil-icon'));
         var context = document.getElementById('pencil-icon').getContext('2d');
         var imageObj = new Image();
-        imageObj.src = 'images/pencil.png';
-        imageObj.onload = function() {
-            context.drawImage(imageObj, 0, 0 , 35, 35);
+        imageObj.src = 'drawboardicons/pencil.png';
+        imageObj.onload = function () {
+            context.drawImage(imageObj, 0, 0, 35, 35);
         };
-        
 
-       /* var context = getContext('pencil-icon');
-        context.lineWidth = 5;
-        context.lineCap = 'round';
-        context.moveTo(35, 20);
-        context.lineTo(5, 35);
-        context.stroke();
 
-        context.fillStyle = 'Gray';
-        context.font = '9px Verdana';
-        context.fillText('Pencil', 6, 12);*/
+        /* var context = getContext('pencil-icon');
+         context.lineWidth = 5;
+         context.lineCap = 'round';
+         context.moveTo(35, 20);
+         context.lineTo(5, 35);
+         context.stroke();
 
-        //make_base('/images/pencil.png', context);
+         context.fillStyle = 'Gray';
+         context.font = '9px Verdana';
+         context.fillText('Pencil', 6, 12);*/
+
+        //make_base('/drawboardicons/pencil.png', context);
 
         bindEvent(context, 'Pencil');
     }
@@ -276,22 +273,22 @@ function setSelection(element, prop) {
 
         var context = document.getElementById('eraser-icon').getContext('2d');
         var imageObj = new Image();
-        imageObj.src = 'images/eraser.png';
-        imageObj.onload = function() {
-            context.drawImage(imageObj, 0, 0 , 35, 35);
+        imageObj.src = 'drawboardicons/eraser.png';
+        imageObj.onload = function () {
+            context.drawImage(imageObj, 0, 0, 35, 35);
         };
 
-/*        var context = getContext('eraser-icon');
+        /*        var context = getContext('eraser-icon');
 
-        context.lineWidth = 9;
-        context.lineCap = 'round';
-        context.moveTo(35, 20);
-        context.lineTo(5, 25);
-        context.stroke();
+                context.lineWidth = 9;
+                context.lineCap = 'round';
+                context.moveTo(35, 20);
+                context.lineTo(5, 25);
+                context.stroke();
 
-        context.fillStyle = 'Gray';
-        context.font = '9px Verdana';
-        context.fillText('Eraser', 6, 12);*/
+                context.fillStyle = 'Gray';
+                context.font = '9px Verdana';
+                context.fillText('Eraser', 6, 12);*/
 
         bindEvent(context, 'Eraser');
     }
@@ -407,22 +404,22 @@ function setSelection(element, prop) {
     }
 
     function decorateLineWidth() {
-/*        var context = getContext('line-width');
+        /*        var context = getContext('line-width');
 
-        tempStrokeTheLine(context, 2, 5, 15, 35, 15);
-        tempStrokeTheLine(context, 3, 5, 20, 35, 20);
-        tempStrokeTheLine(context, 4, 5, 26, 35, 26);
+                tempStrokeTheLine(context, 2, 5, 15, 35, 15);
+                tempStrokeTheLine(context, 3, 5, 20, 35, 20);
+                tempStrokeTheLine(context, 4, 5, 26, 35, 26);
 
-        context.fillStyle = 'Gray';
-        context.font = '9px Verdana';
-        context.fillText('Line', 8, 12);
-        context.fillText('Width', 6, 38);*/
+                context.fillStyle = 'Gray';
+                context.font = '9px Verdana';
+                context.fillText('Line', 8, 12);
+                context.fillText('Width', 6, 38);*/
 
         var context = document.getElementById('line-width').getContext('2d');
         var imageObj = new Image();
-        imageObj.src = 'images/linesize.png';
-        imageObj.onload = function() {
-            context.drawImage(imageObj, 0, 0 , 35, 35);
+        imageObj.src = 'drawboardicons/linesize.png';
+        imageObj.onload = function () {
+            context.drawImage(imageObj, 0, 0, 35, 35);
         };
 
         var lineWidthContainer = find('line-width-container'),
@@ -431,7 +428,7 @@ function setSelection(element, prop) {
             h1 = document.getElementsByTagName('h1')[0],
             canvas = context.canvas;
 
-        addEvent(canvas, 'click', function() {
+        addEvent(canvas, 'click', function () {
             hideContainers();
 
             lineWidthContainer.style.display = 'block';
@@ -441,7 +438,7 @@ function setSelection(element, prop) {
             lineWidthText.focus();
         });
 
-        addEvent(btnLineWidthDone, 'click', function() {
+        addEvent(btnLineWidthDone, 'click', function () {
             lineWidthContainer.style.display = 'none';
             lineWidth = lineWidthText.value;
         });
@@ -451,22 +448,22 @@ function setSelection(element, prop) {
 
     // -------------------------------------------------------------
     function decorateColors() {
-/*        var context = getContext('colors');
+        /*        var context = getContext('colors');
 
-        context.fillStyle = 'red';
-        context.fillRect(5, 3, 30, 10);
+                context.fillStyle = 'red';
+                context.fillRect(5, 3, 30, 10);
 
-        context.fillStyle = 'green';
-        context.fillRect(5, 15, 30, 10);
+                context.fillStyle = 'green';
+                context.fillRect(5, 15, 30, 10);
 
-        context.fillStyle = 'blue';
-        context.fillRect(5, 27, 30, 10);*/
+                context.fillStyle = 'blue';
+                context.fillRect(5, 27, 30, 10);*/
 
         var context = document.getElementById('colors').getContext('2d');
         var imageObj = new Image();
-        imageObj.src = 'images/color.png';
-        imageObj.onload = function() {
-            context.drawImage(imageObj, 0, 0 , 35, 35);
+        imageObj.src = 'drawboardicons/color.png';
+        imageObj.onload = function () {
+            context.drawImage(imageObj, 0, 0, 35, 35);
         };
 
         var colorsContainer = find('colors-container'),
@@ -476,7 +473,7 @@ function setSelection(element, prop) {
             h1 = document.getElementsByTagName('h1')[0],
             canvas = context.canvas;
 
-        addEvent(canvas, 'click', function() {
+        addEvent(canvas, 'click', function () {
             hideContainers();
 
             colorsContainer.style.display = 'block';
@@ -486,7 +483,7 @@ function setSelection(element, prop) {
             strokeStyleText.focus();
         });
 
-        addEvent(btnColorsDone, 'click', function() {
+        addEvent(btnColorsDone, 'click', function () {
             colorsContainer.style.display = 'none';
             strokeStyle = strokeStyleText.value;
             fillStyle = fillStyleText.value;
@@ -514,7 +511,7 @@ function setSelection(element, prop) {
             globalAlphaSelect = find('globalAlpha-select'),
             globalCompositeOperationSelect = find('globalCompositeOperation-select');
 
-        addEvent(canvas, 'click', function() {
+        addEvent(canvas, 'click', function () {
             hideContainers();
 
             additionalContainer.style.display = 'block';
@@ -522,7 +519,7 @@ function setSelection(element, prop) {
             additionalContainer.style.left = (canvas.offsetLeft + canvas.clientWidth) + 'px';
         });
 
-        addEvent(btnAdditionalClose, 'click', function() {
+        addEvent(btnAdditionalClose, 'click', function () {
             additionalContainer.style.display = 'none';
 
             globalAlpha = globalAlphaSelect.value;
@@ -543,7 +540,7 @@ function setSelection(element, prop) {
 
     // todo: use this function in share-drawings.js
     // to sync buttons' states
-    window.selectBtn = function(btn, isSkipWebRTCMessage) {
+    window.selectBtn = function (btn, isSkipWebRTCMessage) {
         codePreview.className = designPreview.className = '';
 
         if (btn == designPreview) designPreview.className = 'preview-selected';
@@ -562,7 +559,7 @@ function setSelection(element, prop) {
 
     // -------------------------------------------------------------
 
-    addEvent(designPreview, 'click', function() {
+    addEvent(designPreview, 'click', function () {
         selectBtn(designPreview);
         btnDesignerPreviewClicked();
     });
@@ -577,7 +574,7 @@ function setSelection(element, prop) {
 
     // -------------------------------------------------------------
 
-    addEvent(codePreview, 'click', function() {
+    addEvent(codePreview, 'click', function () {
         selectBtn(codePreview);
         btnCodePreviewClicked();
     });
@@ -620,7 +617,6 @@ function setSelection(element, prop) {
 
 
 })();
-
 
 
 function hideContainers() {

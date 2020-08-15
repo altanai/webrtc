@@ -77,4 +77,12 @@
     font-stretch: expanded;
     font-style: italic;
 }
+
+.msg-avatar img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    float: left;
+    width: 15%;
+}
 /*-----------------------------------------------------------------------------------*/

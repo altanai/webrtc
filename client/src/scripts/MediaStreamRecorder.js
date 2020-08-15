@@ -1,6 +1,3 @@
-// Muaz Khan     - www.MuazKhan.com
-// MIT License   - www.webrtc-experiment.com/licence
-// Documentation - github.com/streamproc/MediaStreamRecorder
 // ______________________
 // MediaStreamRecorder.js
 
@@ -66,10 +63,6 @@ function loadScript(src, onload) {
     document.documentElement.appendChild(script);
 }
 
-// Muaz Khan     - www.MuazKhan.com
-// MIT License   - www.webrtc-experiment.com/licence
-// Documentation - github.com/streamproc/MediaStreamRecorder
-
 // _____________________________
 // Cross-Browser-Declarations.js
 
@@ -92,7 +85,7 @@ navigator.getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMed
 
 if (window.webkitMediaStream) window.MediaStream = window.webkitMediaStream;
 
-IsChrome = !!navigator.webkitGetUserMedia;
+var IsChrome = !!navigator.webkitGetUserMedia;
 
 // Merge all other data-types except "function"
 
