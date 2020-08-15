@@ -1,7 +1,6 @@
-
 var gulp = require('gulp');
-var concat = require('gulp-concat'); 
-var cat = require('gulp-cat');  
+var concat = require('gulp-concat');
+var cat = require('gulp-cat');
 var addsrc = require('gulp-add-src');
 var uglify = require('gulp-uglify');
 let babel = require('gulp-babel');
@@ -10,7 +9,7 @@ var replace = require('gulp-replace');
 var less = require('gulp-less');
 var base64 = require('gulp-base64');
 var gulpSequence = require('gulp-sequence');
-var exec  =require('child_process').exec;
+var exec = require('child_process').exec;
 var remoteSrc = require('gulp-remote-src');
 var rev = require('gulp-rev-timestamp');
 var replace = require('gulp-replace');
@@ -19,25 +18,25 @@ var del = require('del');
 
 var fs = require('fs');
 var _properties = require('./env.js')(fs).readEnv();
-var properties= JSON.parse(_properties);
+var properties = JSON.parse(_properties);
 console.log(properties);
 
-var folderPath="", file="";
+var folderPath = "", file = "";
 
-if(properties.enviornment=="production"){
-  folderPath='client/prod/';
-}else if(properties.enviornment=="test"){
-  folderPath='client/tests/';
-}else{
-  folderPath='client/build/';
+if (properties.enviornment == "production") {
+    folderPath = 'client/prod/';
+} else if (properties.enviornment == "test") {
+    folderPath = 'client/tests/';
+} else {
+    folderPath = 'client/build/';
 }
 
 var header = require('gulp-header'),
     date = new Date(),
     pckg = require("./package.json"),
     version = pckg.version,
-    headerComment = '/* Generated on:' + date + 
-                    ' || version: '+ version+' - Altanai , License : MIT  */';
+    headerComment = '/* Generated on:' + date +
+        ' || version: ' + version + ' - Altanai , License : MIT  */';
 
 // gulp.task('clean', function(done) {
 //   return Promise.all([
@@ -47,23 +46,23 @@ var header = require('gulp-header'),
 // });
 
 gulp.task('clean', function (done) {
-  del.sync('dist');
-  cone();
-})
+    del.sync('dist');
+    // cone();
+});
 
-gulp.task('vendorjs',function(done) {
-    vendorJsList=[ 
-      "https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js",
-      "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
-      "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.0/socket.io.js",
-      "https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"
-    ]; 
-    remoteSrc(vendorJsList, {base: null })
+gulp.task('vendorjs', function (done) {
+    vendorJsList = [
+        "https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js",
+        "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.0/socket.io.js",
+        "https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"
+    ];
+    remoteSrc(vendorJsList, {base: null})
         // .pipe( rev({strict: true}) )
         .pipe(header(headerComment))
         .pipe(uglify())
-        .pipe(concat('webrtcdevelopment_header.js'))  
-        .pipe(gulp.dest(folderPath)); 
+        .pipe(concat('webrtcdevelopment_header.js'))
+        .pipe(gulp.dest(folderPath));
     done();
 });
 
@@ -93,25 +92,25 @@ gulp.task('vendorjs',function(done) {
         .pipe(gulp.dest(folderPath+'minScripts/')); 
 });*/
 
-gulp.task('webrtcdevelopmentServer',function(done) {
+gulp.task('webrtcdevelopmentServer', function (done) {
     console.log(" gulping admin script  ");
-    list=[ 
+    list = [
         "realtimecomm.js",
         "restapi.js"
-    ]; 
+    ];
     console.log(list);
     gulp.src(list)
-        .pipe( rev({strict: true}) )
+        .pipe(rev({strict: true}))
         .pipe(header(headerComment))
         .pipe(uglify())
-        .pipe(concat('webrtcdevelopmentServer.js'))  
-        .pipe(gulp.dest(folderPath)); 
+        .pipe(concat('webrtcdevelopmentServer.js'))
+        .pipe(gulp.dest(folderPath));
     done();
 });
 
-gulp.task('drawjs',function(done) {
+gulp.task('drawjs', function (done) {
     console.log(" gulping drawjs  ");
-    list=[ 
+    list = [
         "client/src/drawboard/common.js",
         "client/src/drawboard/decorator.js",
         "client/src/drawboard/draw-helper.js",
@@ -121,62 +120,62 @@ gulp.task('drawjs',function(done) {
         "client/src/drawboard/line-handler.js",
         "client/src/drawboard/rect-handler.js",
         "client/src/drawboard/events-handler.js"
-    ]; 
+    ];
     console.log(list);
     gulp.src(list)
         .pipe(uglify())
-        .pipe(concat('drawBoardScript.js'))  
-        .pipe(gulp.dest(folderPath)); 
+        .pipe(concat('drawBoardScript.js'))
+        .pipe(gulp.dest(folderPath));
     done();
 });
 
-gulp.task('drawcss',function(done) {
+gulp.task('drawcss', function (done) {
     console.log(" gulping main drawcss  ");
-    list=[ "client/src/css/Style.css",
+    list = ["client/src/css/Style.css",
         "client/src/drawboard/drawing.css"
-    ]; 
+    ];
     console.log(list);
     gulp.src(list)
         // .pipe(uglify())
-        .pipe(concat('drawBoardCss.css'))  
-        .pipe(gulp.dest(folderPath)); 
+        .pipe(concat('drawBoardCss.css'))
+        .pipe(gulp.dest(folderPath));
     done();
 
 });
 
-gulp.task('codejs',function(done) {
+gulp.task('codejs', function (done) {
     console.log(" gulping codejs  ");
-    list=[ 
+    list = [
         "client/src/codemirror/lib/codemirror.js",
         "client/src/codemirror/addon/selection/active-line.js",
         "client/src/codemirror/addon/mode/loadmode.js",
         "client/src/codemirror/mode/meta.js",
         "client/src/codemirror/mode/javascript/javascript.js",
         "client/src/codemirror/codeStyles.js"
-    ]; 
+    ];
     console.log(list);
     gulp.src(list)
         .pipe(uglify())
-        .pipe(concat('codeEditorScript.js'))  
+        .pipe(concat('codeEditorScript.js'))
         .pipe(gulp.dest(folderPath));
-    done(); 
-});
-
-gulp.task('codecss',function(done) {
-    console.log(" gulping main codecss  ");
-    list=[ 
-        "client/src/codemirror/theme/mdn-like.css",
-        "client/src/codemirror/lib/codemirror.css",
-        "client/src/codemirror/style.css"
-    ]; 
-    console.log(list);
-    gulp.src(list)
-        .pipe(concat('codeEditorCss.css'))  
-        .pipe(gulp.dest(folderPath)); 
     done();
 });
 
-var scriptList=[
+gulp.task('codecss', function (done) {
+    console.log(" gulping main codecss  ");
+    list = [
+        "client/src/codemirror/theme/mdn-like.css",
+        "client/src/codemirror/lib/codemirror.css",
+        "client/src/codemirror/style.css"
+    ];
+    console.log(list);
+    gulp.src(list)
+        .pipe(concat('codeEditorCss.css'))
+        .pipe(gulp.dest(folderPath));
+    done();
+});
+
+var scriptList = [
     "client/src/scripts/_init.js",
     "client/src/scripts/_notify.js",
     "client/src/scripts/DetectRTC.js",
@@ -210,25 +209,25 @@ var scriptList=[
     // "client/src/scripts/jszip.js"
 ];
 
-gulp.task('betawebrtcdevelopmentjs',function(done) {
+gulp.task('betawebrtcdevelopmentjs', function (done) {
     console.log(" gulping main webrtc development scripts into beta ");
     scriptList.push("client/src/scripts/start.js");
-    scriptList.push("client/src/scripts/admin.js");  
+    scriptList.push("client/src/scripts/admin.js");
     console.log(scriptList);
-    gulp.src(scriptList , {allowEmpty: true })
+    gulp.src(scriptList, {allowEmpty: true})
         // .pipe( rev({strict: true}) )
-        .pipe(concat('webrtcdevelopment.js'))  
+        .pipe(concat('webrtcdevelopment.js'))
         .pipe(replace(/"use strict"/g, ''))
         .pipe(gulp.dest(folderPath))
-    done(); 
+    done();
 
 });
 
 // .pipe( rev({strict: true}) )
-gulp.task('webrtcdevelopmentjs',function(done) {
+gulp.task('webrtcdevelopmentjs', function (done) {
     console.log(" gulping main webrtc development scripts ");
     scriptList.push("client/src/scripts/start.js");
-    scriptList.push("client/src/scripts/admin.js");    
+    scriptList.push("client/src/scripts/admin.js");
     console.log(scriptList);
     gulp.src(scriptList)
         .pipe(header(headerComment))
@@ -236,35 +235,35 @@ gulp.task('webrtcdevelopmentjs',function(done) {
             presets: ['es2015']
         }))
         .pipe(uglify())
-        .pipe(concat('webrtcdevelopment.js'))  
+        .pipe(concat('webrtcdevelopment.js'))
         .pipe(replace(/use strict/g, ''))
         .pipe(gulp.dest(folderPath));
-        //.pipe(uglify()); 
+    //.pipe(uglify());
     done();
 });
 
 
-gulp.task('mainstyle',function(done) {
+gulp.task('mainstyle', function (done) {
     console.log(" gulping main stylesheets css  ");
-    cssList=[ 
-      "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css",
-      "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css",
-      "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css",
-      "https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css",
-      "https://www.gstatic.com/firebasejs/4.2.0/firebase.js"
-    ]; 
+    cssList = [
+        "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css",
+        "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css",
+        "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css",
+        "https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css",
+        "https://www.gstatic.com/firebasejs/4.2.0/firebase.js"
+    ];
     console.log(cssList);
-    remoteSrc(cssList, {base: null })
-        .pipe( rev({strict: true}) )
+    remoteSrc(cssList, {base: null})
+        .pipe(rev({strict: true}))
         .pipe(header(headerComment))
-        .pipe(concat('webrtcdevelopment_header.css'))  
+        .pipe(concat('webrtcdevelopment_header.css'))
         .pipe(gulp.dest(folderPath));
-    done(); 
+    done();
 });
 
-gulp.task('webrtcdevelopmentcss',function(done) {
+gulp.task('webrtcdevelopmentcss', function (done) {
     console.log(" gulping custom stylesheets css  ");
-    cssList=[
+    cssList = [
         "client/src/css/Style.css",
         "client/src/css/styles.css",
         "client/src/css/media.css",
@@ -276,26 +275,28 @@ gulp.task('webrtcdevelopmentcss',function(done) {
     ];
     console.log(cssList);
     gulp.src(cssList)
-      //.pipe(uglify())
-        .pipe( rev({strict: true}) )
+        //.pipe(uglify())
+        .pipe(rev({strict: true}))
         .pipe(header(headerComment))
         .pipe(concat('webrtcdevelopment.css'))
-        .pipe(less().on('error', function(error) { console.error(error)}))
+        .pipe(less().on('error', function (error) {
+            console.error(error)
+        }))
         .pipe(gulp.dest(folderPath));
     done();
 
 });
 
-function execute(command, callback){
-    exec(command, function(error, stdout, stderr){ 
-        callback(stdout,stderr); 
+function execute(command, callback) {
+    exec(command, function (error, stdout, stderr) {
+        callback(stdout, stderr);
     });
-};
+}
 
-gulp.task('git_pull',function(cb){
-  execute('git pull',function(resp) {
-      cb();
-  });
+gulp.task('git_pull', function (cb) {
+    execute('git pull', function (resp) {
+        cb();
+    });
 });
 
 // gulp webrtc dev css and js along with server changes 
@@ -318,13 +319,13 @@ gulp.task('develop', gulp.series(
     // 'webrtcdevelopmentcss',
     // 'serverjs'
 
-)); 
+));
 
 //gulp aall components to make it production ready
 gulp.task('production', gulp.parallel(
     'clean',
     'vendorjs',
-    'drawjs' , 
+    'drawjs',
     'drawcss',
     'codejs',
     'codecss',
