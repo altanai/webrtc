@@ -117,7 +117,7 @@
                 // setMuteHandlers(connection, connection.streamEvents[stream.streamid]);catch(error){
                 connection.onstream(connection.streamEvents[stream.streamid]);
             } catch (error) {
-                webrtcdev.error("[RTC ] onGettingRemoteMedia ", error)
+                webrtcdev.error("[RTC ] onGettingRemoteMedia ", error);
             }
         }, connection);
     };
@@ -727,9 +727,9 @@
         video: 'vp9'
     };
 
-    if (typeof CodecsHandler !== 'undefined') {
-        connection.BandwidthHandler = connection.CodecsHandler = CodecsHandler;
-    }
+    // if (typeof CodecsHandler !== 'undefined') {
+    //     connection.BandwidthHandler = connection.CodecsHandler = CodecsHandler;
+    // }
 
     // connection.processMcuSdp = function(sdp, sdptype) {
     //     webrtcdev.log("[RtcConn ] processMcuSdp - sdptype " , sdptype );

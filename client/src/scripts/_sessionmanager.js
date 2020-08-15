@@ -216,8 +216,9 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
     socket.on('event', function (data) {
         console.log("event", data);
     });
+
     socket.on('disconnect', function () {
-        console.error("disconneted ");
+        console.error("disconnected ");
     });
 }
 
@@ -242,11 +243,11 @@ var setRtcConn = function (sessionid, sessionobj) {
 
         rtcConn.iceServers = sessionobj.turn.iceServers, // || rtcConn.getIceServers()
 
-        // rtcConn.iceTransportPolicy = "all" , // all , relay
-        // rtcConn.bundlePolicy = "balanced",
-        // rtcConn.rtcpMuxPolicy = "require",
-        // rtcConn.iceCandidatePoolSize = 0,
-        // rtcConn.sdpSemantics = "unified-plan",
+        rtcConn.iceTransportPolicy = "all" , // all , relay
+        rtcConn.bundlePolicy = "balanced",
+        rtcConn.rtcpMuxPolicy = "require",
+        rtcConn.iceCandidatePoolSize = 0,
+        rtcConn.sdpSemantics = "unified-plan",
 
         // rtcConn.optionalArgument = {
         //     optional: [{
@@ -272,27 +273,27 @@ var setRtcConn = function (sessionid, sessionobj) {
         // },
         // rtcConn.optionalArgument = {},
         //
-        // rtcConn.sdpConstraints = {
-        //     mandatory: {
-        //         OfferToReceiveAudio: incomingAudio || true,
-        //         OfferToReceiveVideo: incomingVideo || true
-        //     },
-        //     optional: [{
-        //         VoiceActivityDetection: false
-        //     }]
-        // },
-        //
-        // rtcConn.candidates = {
-        //     host: true,
-        //     stun: true,
-        //     turn: true
-        // },
-        //
-        // rtcConn.session = {
-        //     video: outgoingVideo || true,
-        //     audio: outgoingAudio || true,
-        //     data: outgoingData || true
-        // },
+        rtcConn.sdpConstraints = {
+            mandatory: {
+                OfferToReceiveAudio: incomingAudio || true,
+                OfferToReceiveVideo: incomingVideo || true
+            },
+            optional: [{
+                VoiceActivityDetection: false
+            }]
+        },
+
+        rtcConn.candidates = {
+            host: true,
+            stun: true,
+            turn: true
+        },
+
+        rtcConn.session = {
+            video: outgoingVideo || true,
+            audio: outgoingAudio || true,
+            data: outgoingData || true
+        },
 
         rtcConn.direction = 'many-to-many', // other options 'one-way'
 
@@ -466,7 +467,7 @@ var setRtcConn = function (sessionid, sessionobj) {
                 updateWebCallView(peerinfo);
 
             } else {
-                webrtcdev.error("[sessionmanager] onstream - PeerInfo updated with incoming stream and stream id ");
+                webrtcdev.log("[sessionmanager] onstream - update PeerInfo with incoming stream and streamId ");
                 appendToPeerValue(userid, "type", event.type);
                 appendToPeerValue(userid, "stream", event.stream);
                 appendToPeerValue(userid, "streamid", event.stream.streamid);
@@ -487,18 +488,22 @@ var setRtcConn = function (sessionid, sessionobj) {
 
         rtcConn.chunkSize = 50 * 1000,
 
-        rtcConn.onmessage = function (e) {
-            webrtcdev.log("[sessionmanager] onmessage ", e);
-            if (e.data.typing) {
-                updateWhotyping(e.extra.name + " is typing ...");
-            } else if (e.data.stoppedTyping) {
+        rtcConn.onmessage = function (msg) {
+            webrtcdev.log("[sessionmanager] onmessage ", msg);
+
+            // Typing Update
+            if (msg.data.typing) {
+                updateWhotyping(msg.extra.name + " is typing ...");
+            } else if (msg.data.stoppedTyping) {
                 updateWhotyping("");
+
             } else {
-                let msgpeerinfo = findPeerInfo(e.userid);
-                switch (e.data.type) {
+                let msgpeerinfo = findPeerInfo(msg.userid);
+                switch (msg.data.type) {
+
                     case "screenshare":
-                        if (e.data.message == "startscreenshare") {
-                            let scrroomid = e.data.screenid;
+                        if (msg.data.message == "startscreenshare") {
+                            let scrroomid = msg.data.screenid;
                             shownotification("Starting screen share ", scrroomid);
                             //createScreenViewButton();
                             let button = document.getElementById(screenshareobj.button.shareButton.id);
@@ -506,9 +511,9 @@ var setRtcConn = function (sessionid, sessionobj) {
                             button.innerHTML = screenshareobj.button.shareButton.html_busy;
                             button.disabled = true;
                             connectScrWebRTC("join", scrroomid);
-                        } else if (e.data.message == "screenshareStartedViewing") {
+                        } else if (msg.data.message == "screenshareStartedViewing") {
                             screenshareNotification("", "screenshareStartedViewing");
-                        } else if (e.data.message == "stoppedscreenshare") {
+                        } else if (msg.data.message == "stoppedscreenshare") {
                             shownotification("Screenshare has stopped : " + e.data.screenStreamid);
                             //createScreenViewButton();
                             let button = document.getElementById(screenshareobj.button.shareButton.id);
@@ -517,16 +522,17 @@ var setRtcConn = function (sessionid, sessionobj) {
                             button.disabled = false;
                             webrtcdevCleanShareScreen(e.data.screenStreamid);
                         } else {
-                            webrtcdev.warn("[sessionmanager] unrecognized screen-share message ", e.data.message);
+                            webrtcdev.warn("[sessionmanager] unrecognized screen-share message ", msg.data.message);
                         }
                         break;
+
                     case "chat":
-                        updateWhotyping(e.extra.name + " has send message");
+                        updateWhotyping(msg.extra.name + " has send chat ");
                         addNewMessage({
-                            header: e.extra.name,
-                            message: e.data.message,
-                            userinfo: e.data.userinfo,
-                            color: e.extra.color
+                            header: msg.extra.name,
+                            message: msg.data.message,
+                            userinfo: msg.data.userinfo,
+                            color: msg.extra.color
                         });
                         window.dispatchEvent(new CustomEvent('webrtcdev', {
                             detail: {
@@ -535,90 +541,101 @@ var setRtcConn = function (sessionid, sessionobj) {
                             }
                         }));
                         break;
+
                     case "imagesnapshot":
-                        displayList(null, msgpeerinfo, e.data.message, e.data.name, "imagesnapshot");
-                        displayFile(null, msgpeerinfo, e.data.message, e.data.name, "imagesnapshot");
+                        displayList(null, msgpeerinfo, msg.data.message, msg.data.name, "imagesnapshot");
+                        displayFile(null, msgpeerinfo, msg.data.message, msg.data.name, "imagesnapshot");
                         break;
+
                     case "videoRecording":
-                        displayList(null, msgpeerinfo, e.data.message, e.data.name, "videoRecording");
-                        displayFile(null, msgpeerinfo, e.data.message, e.data.name, "videoRecording");
+                        displayList(null, msgpeerinfo, msg.data.message, msg.data.name, "videoRecording");
+                        displayFile(null, msgpeerinfo, msg.data.message, msg.data.name, "videoRecording");
                         break;
+
                     case "videoScreenRecording":
-                        displayList(null, msgpeerinfo, e.data.message, e.data.name, "videoScreenRecording");
-                        displayFile(null, msgpeerinfo, e.data.message, e.data.name, "videoScreenRecording");
+                        displayList(null, msgpeerinfo, msg.data.message, msg.data.name, "videoScreenRecording");
+                        displayFile(null, msgpeerinfo, msg.data.message, msg.data.name, "videoScreenRecording");
                         break;
+
                     case "file":
                         addNewMessage({
-                            header: e.extra.name,
-                            message: e.data.message,
-                            userinfo: getUserinfo(rtcConn.blobURLs[e.userid], "chat-message.png"),
-                            color: e.extra.color
+                            header: msg.extra.name,
+                            message: msg.data.message,
+                            userinfo: getUserinfo(rtcConn.blobURLs[msg.userid], "chat-message.png"),
+                            color: msg.extra.color
                         });
                         break;
+
                     case "canvas":
-                        if (e.data.draw) {
-                            CanvasDesigner.syncData(e.data.draw);
-                        } else if (e.data.board) {
-                            webrtcdev.log("[sessionmanager] Canvas : ", e.data);
-                            if (e.data.board.from == "remote") {
-                                if (e.data.board.event == "open" && isDrawOpened != true)
-                                    syncDrawBoard(e.data.board);
+                        if (msg.data.draw) {
+                            CanvasDesigner.syncData(msg.data.draw);
+                        } else if (msg.data.board) {
+                            webrtcdev.log("[sessionmanager] Canvas : ", msg.data);
+                            if (msg.data.board.from == "remote") {
+                                if (msg.data.board.event == "open" && isDrawOpened != true)
+                                    syncDrawBoard(msg.data.board);
                                 // else if (e.data.board.event == "close" && isDrawOpened == true)
                                 // syncDrawBoard(e.data.board);
                             }
                         } else {
-                            webrtcdev.warn(" Board data mismatch", e.data);
+                            webrtcdev.warn(" Board data mismatch", msg.data);
                         }
                         break;
+
                     case "texteditor":
-                        receiveWebrtcdevTexteditorSync(e.data.data);
+                        receiveWebrtcdevTexteditorSync(msg.data.data);
                         break;
+
                     case "codeeditor":
-                        receiveWebrtcdevCodeeditorSync(e.data.data);
+                        receiveWebrtcdevCodeeditorSync(msg.data.data);
                         break;
+
                     case "pointer":
                         var elem = document.getElementById("cursor2");
                         if (elem) {
                             if (e.data.action == "startCursor") {
                                 elem.setAttribute("style", "display:block");
-                                placeCursor(elem, e.data.corX, e.data.corY);
-                            } else if (e.data.action == "stopCursor") {
+                                placeCursor(elem, msg.data.corX, msg.data.corY);
+                            } else if (msg.data.action == "stopCursor") {
                                 elem.setAttribute("style", "display:none");
                             }
                         } else {
                             alert(" Cursor for remote is not present ");
                         }
-
                         break;
+
                     case "timer":
                         if (msgpeerinfo) {
                             //check if the peer has stored zone and time info
                             if (!msgpeerinfo.time) {
-                                msgpeerinfo.time = e.data.time;
+                                msgpeerinfo.time = msg.data.time;
                             }
                             if (!msgpeerinfo.zone) {
-                                msgpeerinfo.zone = e.data.zone;
+                                msgpeerinfo.zone = msg.data.zone;
                             }
                             webrtcdev.log("[sessionmanager] webcallpeers appended with zone and datetime ", msgpeerinfo);
                         }
                         webrtcdev.log("[sessionmanager] peerTimerStarted, start peerTimeZone and startPeersTime");
-                        peerTimeZone(e.data.zone, e.userid);
-                        startPeersTime(e.data.time, e.data.zone, e.userid);
+                        peerTimeZone(msg.data.zone, msg.userid);
+                        startPeersTime(msg.data.time, msg.data.zone, msg.userid);
                         break;
+
                     case "buttonclick":
-                        var buttonElement = getElementById(e.data.buttonName);
+                        var buttonElement = getElementById(msg.data.buttonName);
                         if (buttonElement.getAttribute("lastClickedBy") != rtcConn.userid) {
-                            buttonElement.setAttribute("lastClickedBy", e.userid);
+                            buttonElement.setAttribute("lastClickedBy", msg.userid);
                             buttonElement.click();
                         }
                         break;
+
                     case "syncOldFiles":
                         sendOldFiles();
                         break;
+
                     case "shareFileRemove":
-                        webrtcdev.log(" [sessionmanager] shareFileRemove - remove file : ", e.data._filename);
-                        var progressdiv = e.data._element;
-                        var filename = e.data._filename;
+                        webrtcdev.log(" [sessionmanager] shareFileRemove - remove file : ", msg.data._filename);
+                        var progressdiv = msg.data._element;
+                        var filename = msg.data._filename;
                         let removeButton = "removeButton" + progressdiv;
 
                         if (document.getElementById("display" + filename))
@@ -638,9 +655,9 @@ var setRtcConn = function (sessionid, sessionobj) {
 
                         break;
                     case "shareFileStopUpload":
-                        var progressid = e.data._element;
+                        var progressid = msg.data._element;
                         webrtcdev.log(" [sessionmanager] shareFileStopUpload", progressid);
-                        // var filename = e.data._filename;
+                        // var filename = msg.data._filename;
 
                         for (x in webcallpeers) {
                             for (y in webcallpeers[x].filearray) {
@@ -660,10 +677,10 @@ var setRtcConn = function (sessionid, sessionobj) {
                         sendWebrtcdevStats();
                         break;
                     case "receivedstats":
-                        onreceivedWebrtcdevStats(e.userid, e.data.message);
+                        onreceivedWebrtcdevStats(msg.userid, msg.data.message);
                         break;
                     default:
-                        webrtcdev.warn("[sessionmanager] unrecognizable message from peer  ", e);
+                        webrtcdev.warn("[sessionmanager] unrecognizable message from peer  ", msg);
                         break;
                 }
             }

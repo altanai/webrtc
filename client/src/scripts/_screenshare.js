@@ -18,7 +18,7 @@ function webrtcdevPrepareScreenShare(screenRoomid, sessionobj) {
 
     localStorage.setItem("screenRoomid ", screenRoomid);
     webrtcdev.log("[screenshare JS] webrtcdevPrepareScreenShare - screenRoomid : ", screenRoomid);
-    webrtcdev.log("[screenshare JS] webrtcdevPrepareScreenShare  with sessionnobj : ", sessionobj);
+    webrtcdev.log("[screenshare JS] webrtcdevPrepareScreenShare  with sessionnobj : ", sessionobj, " config " , config );
 
     scrConn = new RTCMultiConnection(),
 
@@ -133,7 +133,7 @@ function webrtcdevPrepareScreenShare(screenRoomid, sessionobj) {
             } else {
                 // Local got screen share stream
                 shownotificationWarning("started streaming local screen");
-                webrtcdev.log("[screenshareJS] on stream local ");
+                webrtcdev.log("[screenshareJS] onstream local , send message to remote to connect to scr room");
                 rtcConn.send({
                     type: "screenshare",
                     screenid: screenRoomid,

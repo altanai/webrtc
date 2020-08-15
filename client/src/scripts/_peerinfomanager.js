@@ -95,7 +95,7 @@ var findPeerInfoSDP = function (userid) {
  * @name appendToPeerValue
  * @param {string} userid
  * @param {json} key
- * @param {json} value4970gww6eg9
+ * @param {json} value
  */
 function appendToPeerValue(userid, key, value) {
     try {
