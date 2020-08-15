@@ -128,8 +128,13 @@ function updateLocalWebCallView(selfpeerinfo) {
     webrtcdev.log("[webcallviewdevmanager] updateLocalWebCallView - local video reattachMediaStream / attachMediaStream");
 
     return new Promise(function (resolve, reject) {
-        // handling local video addition to session using reattach
-        if (localVideo && selfVideo) {
+
+        if(!outgoingVideo && !outgoingAudio){
+            // update local webcall view without Local Audio and Video in session
+            resolve();
+
+        }else if (localVideo && selfVideo) {
+            // handling local video addition to session using reattach
 
             // chk if local video is added to conf , else adding local video to index 0
             //localvid : Local video container before session
@@ -175,7 +180,8 @@ function updateLocalWebCallView(selfpeerinfo) {
 
         } else {
             webrtcdev.error("[webcallviewdevmanager] updateLocalWebCallView - Local video container not defined ");
-            alert(" Please Add a video container in config for video call ");
+            // alert(" Please Add a video container in config for video call ");
+            resolve();
         }
     });
 }
@@ -187,18 +193,26 @@ function updateLocalWebCallView(selfpeerinfo) {
  * @param {json} peerInfo
  */
 function updateRemoteWebCalView(peerinfo) {
-
+    webrtcdev.log("[webcallviewdevmanager] incomingVideo ", incomingVideo);
+    webrtcdev.log("[webcallviewdevmanager] remoteVideos ", remoteVideos);
     webrtcdev.log("[webcallviewdevmanager] updateRemoteWebCalView - remote video attachMediaStream");
 
     return new Promise(function (resolve, reject) {
 
-        // handling remote video addition
-        if (incomingVideo && remoteVideos) {
+        if (!incomingVideo && !incomingAudio) {
+            webrtcdev.log("[webcallviewdevmanager] updateRemoteWebCalView - session without incoming video ", incomingVideo);
+            resolve();
+
+        } else if (remoteVideos.length <= 0) {
+            webrtcdev.error("[webcallviewdevmanager] updateRemoteWebCalView - remote Video containers not defined  , lwngth - ", remoteVideos.length , remoteVideos);
+            resolve();
+
+        } else {
 
             let emptyvideoindex = findEmptyRemoteVideoIndex(peerinfo, remoteVideos);
-
+            // handling remote video addition
             updateRemoteVideos(peerinfo, remoteVideos, emptyvideoindex).then(remoteVideo => {
-                webrtcdev.log("[ webcallviewdevmanager ] updateRemoteWebCalView video -" , remoteVideo);
+                webrtcdev.log("[ webcallviewdevmanager ] updateRemoteWebCalView video -", remoteVideo);
                 attachMediaStream(remoteVideo, remoteVideo.stream);
 
             }).then(_ => {
@@ -220,11 +234,6 @@ function updateRemoteWebCalView(peerinfo) {
 
                 resolve();
             });
-
-        } else {
-            webrtcdev.error("[webcallviewdevmanager] updateRemoteWebCalView - remote Video containers not defined ", remoteVideos);
-            alert("remote Video containers not defined");
-            resolve();
         }
     });
 }

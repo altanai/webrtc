@@ -184,7 +184,7 @@ function webrtcdevPrepareScreenShare(screenRoomid, sessionobj) {
  * @name webrtcdevSharescreen
  */
 function webrtcdevSharescreen(scrroomid) {
-    webrtcdev.log("[screenshareJS] webrtcdevSharescreen, preparing screenshare by initiating ScrConn , scrroomid - ", scrroomid);
+    webrtcdev.log("[screenshareJS] webrtcdevSharescreen, preparing screen-share by initiating ScrConn , scrroomid - ", scrroomid);
 
     return new Promise((resolve, reject) => {
         scrConn = webrtcdevPrepareScreenShare(scrroomid);

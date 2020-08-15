@@ -1,4 +1,4 @@
-/* Generated on:Mon Jul 13 2020 00:06:39 GMT+0530 (India Standard Time) || version: 6.0.4 - Altanai (@altanai)  , License : MIT  */exports.redisscipts = function () {
+/* Generated on:Thu Aug 13 2020 21:15:37 GMT+0530 (India Standard Time) || version: 6.0.4 - Altanai (@altanai)  , License : MIT  */exports.redisscipts = function () {
 
     const redis = require("redis");
     const RedisServer = require('redis-server');
@@ -40,7 +40,7 @@
 };
 
 
-/* Generated on:Mon Jul 13 2020 00:06:39 GMT+0530 (India Standard Time) || version: 6.0.4 - Altanai (@altanai)  , License : MIT  */
+/* Generated on:Thu Aug 13 2020 21:15:37 GMT+0530 (India Standard Time) || version: 6.0.4 - Altanai (@altanai)  , License : MIT  */
 /**
  * handled on connection of socket for every new connection
  * @method
@@ -705,7 +705,7 @@ exports.realtimecomm = function (properties, options , cache, socketCallback) {
 //         logs[utcDateString] = arguments.toString();
 //     }
 // }
-/* Generated on:Mon Jul 13 2020 00:06:39 GMT+0530 (India Standard Time) || version: 6.0.4 - Altanai (@altanai)  , License : MIT  */exports.restapi = function(realtimecomm, options , app, properties) {
+/* Generated on:Thu Aug 13 2020 21:15:37 GMT+0530 (India Standard Time) || version: 6.0.4 - Altanai (@altanai)  , License : MIT  */exports.restapi = function(realtimecomm, options , app, properties) {
 
     var restify = require('restify');
     var server = restify.createServer(options);

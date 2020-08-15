@@ -101,14 +101,15 @@ function getCamMedia(rtcConn, outgoingVideo, outgoingAudio) {
         rtcConn.dontCaptureUserMedia = true;
         webrtcdev.error(" [_mediacontrol.js] getCamMedia - dont Capture outgoing video ", outgoingVideo, " and outgoung Audio ", outgoingAudio);
         webrtcdev.log("[startJS] getCamMedia - default mediaConstraints :", rtcConn.mediaConstraints);
+
         // call media error handler to attach null in video
-        rtcConn.onMediaError("onNoCameraCard", "");
-        window.dispatchEvent(new CustomEvent('webrtcdev', {
-            detail: {
-                servicetype: "session",
-                action: "onNoCameraCard"
-            }
-        }));
+        // rtcConn.onMediaError("onNoCameraCard", "");
+        // window.dispatchEvent(new CustomEvent('webrtcdev', {
+        //     detail: {
+        //         servicetype: "session",
+        //         action: "onNoCameraCard"
+        //     }
+        // }));
     }
 }
 
