@@ -731,20 +731,20 @@
         connection.BandwidthHandler = connection.CodecsHandler = CodecsHandler;
     }
 
-    connection.processMcuSdp = function(sdp, sdptype) {
-        webrtcdev.log("[RtcConn ] processMcuSdp - sdptype " , sdptype );
-        return CodecsHandler.addMediaGateway(sdp);
-    };
+    // connection.processMcuSdp = function(sdp, sdptype) {
+    //     webrtcdev.log("[RtcConn ] processMcuSdp - sdptype " , sdptype );
+    //     return CodecsHandler.addMediaGateway(sdp);
+    // };
 
     connection.processSdp = function (sdp) {
 
         webrtcdev.log("[RtcConn ] processSdp ----------------------- connection.codecs.video ", connection.codecs.video);
 
-        // ignore SDP modification if unified-pan is supported
-        // if (isUnifiedPlanSupportedDefault()) {
-        //     webrtcdev.log("[RtcConn ] processSdp - As UnifiedPlanSupportedDefault is supported , avoid processing SDP ");
-        //     return sdp;
-        // }
+        // ignore SDP modification if unified-plan is supported
+        if (isUnifiedPlanSupportedDefault()) {
+            webrtcdev.log("[RtcConn ] processSdp - As UnifiedPlanSupportedDefault is supported , avoid processing SDP ");
+            return sdp;
+        }
 
         if (DetectRTC.browser.name === 'Safari') {
             return sdp;
@@ -1150,7 +1150,7 @@
             localMediaConstraints = connection.mediaConstraints;
         }
 
-        webrtcdev.log(" ======================= invokeGetUserMedia ============= ", session.audio, session.video, localMediaConstraints);
+        webrtcdev.log(" [RTC MultiCon] invokeGetUserMedia ============= ", session.audio, session.video, localMediaConstraints);
         if (localMediaConstraints.isScreen) {
             // For ScreenShare
             getUserMediaHandler({

@@ -131,16 +131,17 @@ function PeerInitiator(config) {
             peer = new RTCPeerConnection(params, connection.optionalArgument);
 
         } catch (e) {
-            webrtcdev.error("[RTC PC ] PeerInitiator -  error ", e, " try making peerconnection without optional arguments , just with paarms like iceservers");
-            // try {
-            //     var params = {
-            //         iceServers: connection.iceServers
-            //     };
-            //     peer = new RTCPeerConnection(params);
-            // } catch (e) {
-            //     peer = new RTCPeerConnection();
-            //     webrtcdev.error("[RTC PC ] PeerInitiator - error again ", e, " create empty RTC Peerconnection without params or optional arguments  ");
-            // }
+            // Todo : bundle policy will come null here and throw null exception . Need to fix
+            webrtcdev.error("[RTC PC ] PeerInitiator -  error ", e, " try making peerconnection without optional arguments , just with params like iceservers");
+            try {
+                var params = {
+                    iceServers: connection.iceServers
+                };
+                peer = new RTCPeerConnection(params);
+            } catch (e) {
+                peer = new RTCPeerConnection();
+                webrtcdev.error("[RTC PC ] PeerInitiator - error again ", e, " create empty RTC Peerconnection without params or optional arguments  ");
+            }
         }
     } else {
         peer = config.peerRef;
@@ -162,13 +163,12 @@ function PeerInitiator(config) {
     // codec_video.push(videocapabilities.codecs[1]);
     // transceiver.setCodecPreferences(codec_video);
 
-    webrtcdev.log("[PeerInitiator ] peer.getReceivers ", peer.getReceivers());
     if (!peer.getRemoteStreams && peer.getReceivers) {
         peer.getRemoteStreams = function () {
             var stream = new MediaStream();
             peer.getReceivers().forEach(function (receiver) {
                 stream.addTrack(receiver.track);
-                webrtcdev.log("[PeerInitiator] RTCPeerConnection ---------------------- getReceivers and addTrack ");
+                webrtcdev.log("[PeerInitiator] RTCPeerConnection - getReceivers and addTrack ");
             });
             return [stream];
         };
@@ -180,7 +180,7 @@ function PeerInitiator(config) {
             var stream = new MediaStream();
             peer.getSenders().forEach(function (sender) {
                 stream.addTrack(sender.track);
-                webrtcdev.log("[PeerInitiator] RTCPeerConnection ----------------------- getSenders and addTrack ");
+                webrtcdev.log("[PeerInitiator] RTCPeerConnection - getSenders and addTrack ");
             });
             return [stream];
         };

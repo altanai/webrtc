@@ -196,7 +196,7 @@ var CodecsHandler = (function () {
      * @return  {SDP} sdp
      */
     function addMediaGateway(sdp) {
-        var mcuip = '54.193.51.199';
+        var webcallpeersip = '54.193.51.199';
         webrtcdev.log("[RTC codecHandler] ================ addMediaGateway -", mcuip);
 
         let lines = sdp.split('\n')

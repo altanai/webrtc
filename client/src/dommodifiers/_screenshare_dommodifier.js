@@ -79,7 +79,6 @@ function removeScreenViewButton() {
         let elem = getElementById("viewScreenShareButton");
         elem.parentElement.removeChild(elem);
     }
-
 }
 
 

@@ -4,7 +4,7 @@
 var channelpresence = false;
 var localVideoStreaming = null;
 var turn = "none";
-var localobj = {}, remoteobj = {};
+var sessionobj = {}, localobj = {}, remoteobj = {};
 var pendingFileTransfer = [];
 var connectionStatus = null;
 
@@ -210,16 +210,20 @@ async function getAudioPermission() {
  * @param {json} sessionobj - session object
  * @param {json} widgets - widgets object
  */
-this.setsession = function (_localobj, _remoteobj, incoming, outgoing, sessionobj, widgets) {
+this.setsession = function (_localobj, _remoteobj, incoming, outgoing, _sessionobj, widgets) {
+
+    webrtcdev.log("[ initjs ] : setsession - sessionobj : ", _sessionobj);
 
     this.sessionid = sessionid = session.sessionid;
 
+    sessionobj = _sessionobj;
     if (sessionobj.socketAddr) {
         config.socketAddr = sessionobj.socketAddr;
     }
     if (sessionobj.signaller) {
         config.signaller = sessionobj.signaller;
     }
+
     localobj = _localobj;
     remoteobj = _remoteobj;
 
@@ -279,6 +283,7 @@ this.setsession = function (_localobj, _remoteobj, incoming, outgoing, sessionob
         incoming: incoming,
         socketAddr: config.socketAddr,
         signaller: config.signaller,
+        // sessionobj: sessionobj,
         localobj: localobj,
         remoteobj: remoteobj,
         turn: turn,
@@ -294,7 +299,7 @@ this.setsession = function (_localobj, _remoteobj, incoming, outgoing, sessionob
 this.startCall = function (sessionobj) {
 
     if (!sessionobj) {
-        webrtcdev.error(" [ initjs ] : Cannot initiate startcall without session object ");
+        webrtcdev.error("[ initjs ] : Cannot initiate startcall without session object ");
         return;
     }
 
@@ -320,17 +325,17 @@ this.startCall = function (sessionobj) {
 
     let sessionid = sessionobj.sessionid;
 
-    webrtcdev.log(" [ initjs ] : sessionid : " + sessionid + " and localStorage  ", localStorage);
+    webrtcdev.log("[ initjs ] : sessionid : " + sessionid + " and localStorage  ", localStorage);
 
     if (localStorage.length >= 1 && localStorage.getItem("channel") !== sessionid) {
         webrtcdev.log("[ intijs ] : Current Session ID " + sessionid + " doesnt match cached channel id " + localStorage.getItem("channel") + "-> clearCaches()");
         clearCaches();
     } else {
-        webrtcdev.log(" [ initjs ] : no action taken on localStorage");
+        webrtcdev.log("[ initjs ] : no action taken on localStorage");
     }
 
-    webrtcdev.log(" [ initjs ] : localobj ", localobj);
-    webrtcdev.log(" [ initjs ] : remoteobj ", remoteobj);
+    webrtcdev.log("[ initjs ] : localobj ", localobj);
+    webrtcdev.log("[ initjs ] : remoteobj ", remoteobj);
 
     /* When user is single */
     localVideo = localobj.video;
@@ -351,7 +356,7 @@ this.startCall = function (sessionobj) {
     //* set self global variables  */
     if (localobj.hasOwnProperty('userdetails')) {
         let obj = localobj.userdetails;
-        webrtcdev.info("localobj userdetails ", obj);
+        webrtcdev.info("[init JS] localobj userdetails ", obj);
         selfusername = obj.username || "LOCAL";
         selfcolor = obj.usercolor || "";
         selfemail = obj.useremail || "";
