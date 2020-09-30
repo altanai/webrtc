@@ -76,7 +76,7 @@ function setSelection(element, prop) {
     }
 
 
-    function bindEvent(context, shape) {
+    function bindEvent(elem, shape) {
         if (shape === 'Pencil') {
             lineCap = lineJoin = 'round';
         }
@@ -89,7 +89,11 @@ function setSelection(element, prop) {
             }
         } else is.set('Pencil');
 
-        addEvent(context.canvas, 'click', function () {
+        if(elem.canvas){
+            elem = context.canvas;
+        }
+
+        addEvent(elem, 'click', function () {
 
             dragHelper.global.startingIndex = 0;
 
@@ -239,28 +243,33 @@ function setSelection(element, prop) {
 
     function decoratePencil() {
         //console.log(document.getElementById('pencil-icon'));
-        var context = document.getElementById('pencil-icon').getContext('2d');
-        var imageObj = new Image();
-        imageObj.src = 'drawboardicons/pencil.png';
-        imageObj.onload = function () {
-            context.drawImage(imageObj, 0, 0, 35, 35);
-        };
+        let elem = document.getElementById('pencil-icon');
+        if(elem.innerHTML){
+            bindEvent(elem, 'Pencil');
 
+        }else{
 
-        /* var context = getContext('pencil-icon');
-         context.lineWidth = 5;
-         context.lineCap = 'round';
-         context.moveTo(35, 20);
-         context.lineTo(5, 35);
-         context.stroke();
+            var context = elem.getContext('2d');
+            var imageObj = new Image();
+            imageObj.src = 'drawboardicons/pencil.png';
+            imageObj.onload = function () {
+                context.drawImage(imageObj, 0, 0, 35, 35);
+            };
 
-         context.fillStyle = 'Gray';
-         context.font = '9px Verdana';
-         context.fillText('Pencil', 6, 12);*/
+            /* var context = getContext('pencil-icon');
+             context.lineWidth = 5;
+             context.lineCap = 'round';
+             context.moveTo(35, 20);
+             context.lineTo(5, 35);
+             context.stroke();
 
-        //make_base('/drawboardicons/pencil.png', context);
+             context.fillStyle = 'Gray';
+             context.font = '9px Verdana';
+             context.fillText('Pencil', 6, 12);*/
 
-        bindEvent(context, 'Pencil');
+            //make_base('/drawboardicons/pencil.png', context);
+            bindEvent(context, 'Pencil');
+        }
     }
 
     if (tools.pencil === true) {
@@ -278,7 +287,7 @@ function setSelection(element, prop) {
             context.drawImage(imageObj, 0, 0, 35, 35);
         };
 
-        /*        var context = getContext('eraser-icon');
+        /*      var context = getContext('eraser-icon');
 
                 context.lineWidth = 9;
                 context.lineCap = 'round';

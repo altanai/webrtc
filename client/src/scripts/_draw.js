@@ -19,7 +19,7 @@ function openDrawBoard() {
         button: drawCanvasobj.button
     };
     rtcConn.send({type: "canvas", board: boarddata});
-    webrtcdev.log("[drawJS] send canvas data on rtc")
+    webrtcdev.log("[drawJS] send canvas data on rtc");
 
     webrtcdevCanvasDesigner(drawCanvasobj);
 

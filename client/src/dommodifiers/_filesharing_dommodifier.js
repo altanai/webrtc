@@ -332,11 +332,15 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     let downloadButton = document.createElement("li");
     downloadButton.id = "downloadButton" + filename + uuid;
     downloadButton.title = "Download";
-    if (fileshareobj.filelist.saveicon) {
-        let img = document.createElement("img");
-        img.src = fileshareobj.filelist.downloadicon;
-        downloadButton.appendChild(img);
-    } else {
+    if(fileshareobj.filelist.downloadicon) {
+        if (toElement(fileshareobj.filelist.downloadicon) instanceof HTMLElement) {
+            downloadButton.innerHTML = fileshareobj.filelist.downloadicon;
+        } else {
+            let img = document.createElement("img");
+            img.src = fileshareobj.filelist.downloadicon;
+            downloadButton.appendChild(img);
+        }
+    }else {
         downloadButton.innerHTML = '<i class="fa fa-download"></i>';
     }
     downloadButton.onclick = function () {
@@ -365,11 +369,15 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     let showButton = document.createElement("li");
     showButton.id = "showButton" + filename + uuid;
     showButton.title = "Show";
-    if (fileshareobj.filelist.saveicon) {
-        let img = document.createElement("img");
-        img.src = fileshareobj.filelist.showicon;
-        showButton.appendChild(img);
-    } else {
+    if(fileshareobj.filelist.showicon) {
+        if (toElement(fileshareobj.filelist.showicon) instanceof HTMLElement) {
+            showButton.innerHTML = fileshareobj.filelist.showicon;
+        } else {
+            let img = document.createElement("img");
+            img.src = fileshareobj.filelist.showicon;
+            showButton.appendChild(img);
+        }
+    }else {
         showButton.innerHTML = '<i class="fa fa-eye-slash"></i>';
     }
     let countClicks = 0;
@@ -407,11 +415,19 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     };
     */
 
-    //Remove Button
+    // Trash / Delete / Remove Button
     let removeButton = document.createElement("li");
     removeButton.id = "removeButton" + filename + uuid;
     removeButton.title = "Remove";
-    removeButton.innerHTML = '<i class="fa fa-trash-o"></i>';
+    if(fileshareobj.filelist.trashicon) {
+        if (toElement(fileshareobj.filelist.trashicon) instanceof HTMLElement) {
+            removeButton.innerHTML = fileshareobj.filelist.trashicon;
+        } else {
+            removeButton.appendChild(fileshareobj.filelist.trashicon);
+        }
+    }else {
+        removeButton.innerHTML = '<i class="fa fa-trash-o"></i>';
+    }
     removeButton.onclick = function (event) {
         if (repeatFlagRemoveButton != filename) {
             //var tobeHiddenElement = event.target.parentNode.id;
@@ -821,11 +837,15 @@ function createFileSharingBox(peerinfo, parent, type) {
             // Minimize the File viewer box
             minButton = document.createElement("span");
             if (fileshareobj.fileshare.minicon) {
-                let minicon = fileshareobj.fileshare.minicon;
-                webrtcdev.log(" [fileShare JS ] creating custom minicon", minicon);
-                let img = document.createElement("img");
-                img.src = minicon;
-                minButton.appendChild(img);
+                if (toElement(fileshareobj.fileshare.minicon) instanceof HTMLElement) {
+                    minButton.innerHTML = fileshareobj.fileshare.minicon;
+                } else {
+                    let minicon = fileshareobj.fileshare.minicon;
+                    webrtcdev.log(" [fileShare JS ] creating custom minicon", minicon);
+                    let img = document.createElement("img");
+                    img.src = minicon;
+                    minButton.appendChild(img);
+                }
             } else {
                 let minicon = '<i class="fa fa-minus-square"></i>';
                 minicon.innerHTML = minicon;
@@ -850,11 +870,15 @@ function createFileSharingBox(peerinfo, parent, type) {
             // Maximize the file viewer box
             maxButton = document.createElement("span");
             if (fileshareobj.fileshare.maxicon) {
-                let maxicon = fileshareobj.fileshare.maxicon;
-                webrtcdev.log(" [fileShare JS ] creating custom maxicon", maxicon);
-                let img = document.createElement("img");
-                img.src = maxicon;
-                maxButton.appendChild(img);
+                if (toElement(fileshareobj.fileshare.maxicon) instanceof HTMLElement) {
+                    maxButton.innerHTML = fileshareobj.fileshare.maxicon;
+                } else {
+                    let maxicon = fileshareobj.fileshare.maxicon;
+                    webrtcdev.log(" [fileShare JS ] creating custom maxicon", maxicon);
+                    let img = document.createElement("img");
+                    img.src = maxicon;
+                    maxButton.appendChild(img);
+                }
             } else {
                 let maxicon = '<i class="fa fa-external-link-square"></i>';
                 maxButton.innerHTML = maxicon;
@@ -883,9 +907,13 @@ function createFileSharingBox(peerinfo, parent, type) {
         // close the file viewer box
         let closeButton = document.createElement("span");
         if (fileshareobj.fileshare.closeicon) {
-            let img = document.createElement("img");
-            img.src = fileshareobj.fileshare.closeicon;
-            closeButton.appendChild(img);
+            if (toElement(fileshareobj.fileshare.closeicon) instanceof HTMLElement) {
+                closeButton.innerHTML = fileshareobj.fileshare.closeicon;
+            } else {
+                let img = document.createElement("img");
+                img.src = fileshareobj.fileshare.closeicon;
+                closeButton.appendChild(img);
+            }
         } else {
             closeButton.innerHTML = '<i class="fa fa-times-circle"></i>';
         }
@@ -902,9 +930,13 @@ function createFileSharingBox(peerinfo, parent, type) {
         const orientation = null;
         let rotateButton = document.createElement("span");
         if (fileshareobj.fileshare.rotateicon) {
-            let img = document.createElement("img");
-            img.src = fileshareobj.fileshare.rotateicon;
-            rotateButton.appendChild(img);
+            if (toElement(fileshareobj.fileshare.rotateicon) instanceof HTMLElement) {
+                rotateButton.innerHTML = fileshareobj.fileshare.rotateicon;
+            } else {
+                let img = document.createElement("img");
+                img.src = fileshareobj.fileshare.rotateicon;
+                rotateButton.appendChild(img);
+            }
         } else {
             rotateButton.innerHTML = '<i class="fa fa-mail-forward"></i>';
         }
@@ -1152,7 +1184,7 @@ function createFileSharingDiv(peerinfo) {
     // When the peerinfo role is inspctor but self role is not inspector only then exit
     if (peerinfo.role == "inspector" && role != "inspector") return;
 
-    // create file sharinga nd listing boxes
+    // create file sharing and listing boxes
     if (!getElementById(peerinfo.fileShare.outerbox)) {
         let parentFileShareContainer = getElementById(fileshareobj.fileShareContainer);
         createFileSharingBox(peerinfo, parentFileShareContainer, fileshareobj.props.fileShare);

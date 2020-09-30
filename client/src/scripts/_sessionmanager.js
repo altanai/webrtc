@@ -493,9 +493,9 @@ var setRtcConn = function (sessionid, sessionobj) {
 
             // Typing Update
             if (msg.data.typing) {
-                updateWhotyping(msg.extra.name + " is typing ...");
+                // updateWhotyping(msg.extra.name + " is typing ...");
             } else if (msg.data.stoppedTyping) {
-                updateWhotyping("");
+                // updateWhotyping("");
 
             } else {
                 let msgpeerinfo = findPeerInfo(msg.userid);
@@ -527,7 +527,7 @@ var setRtcConn = function (sessionid, sessionobj) {
                         break;
 
                     case "chat":
-                        updateWhotyping(msg.extra.name + " has send chat ");
+                        // updateWhotyping(msg.extra.name + " has send chat ");
                         addNewMessage({
                             header: msg.extra.name,
                             message: msg.data.message,
@@ -843,8 +843,10 @@ var setupCallView = function (type, channel, userid) {
         // Create File Sharing Div
         if (fileshareobj.props.fileShare == "single") {
             createFileSharingDiv(peerinfo);
+
             //max display the local / single fileshare
-            getElementById(peerinfo.fileShare.outerbox).style.width = "100%";
+            if( getElementById(peerinfo.fileShare.outerbox))
+                getElementById(peerinfo.fileShare.outerbox).style.width = "100%";
 
         } else if (fileshareobj.props.fileShare == "divided") {
 

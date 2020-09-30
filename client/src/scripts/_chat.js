@@ -51,8 +51,12 @@ function replaceURLWithHTMLLinks(text) {
  */
 function addNewMessagelocal(e) {
     if ("" != e.message && " " != e.message) {
-        // addMessageSnapshotFormat("localMessageClass", e.userinfo, e.message, chatobj.chatBox.id);
-        addMessageSnapshotFormat("chat-message self msg-avatar", e.userinfo, e.message, chatobj.chatBox.id);
+        if(chatobj.msgsnapshot) {
+            // addMessageSnapshotFormat("localMessageClass", e.userinfo, e.message, chatobj.chatBox.id);
+            addMessageSnapshotFormat("chat-message self msg-avatar", e.userinfo, e.message, chatobj.chatBox.id);
+        }else{
+            addMessageLineformat("msg-box fonts", e.userinfo, e.message, chatobj.chatBox.id);
+        }
     }
 }
 
@@ -64,8 +68,14 @@ function addNewMessagelocal(e) {
  */
 function addNewMessage(e) {
     if ("" != e.message && " " != e.message) {
-        // addMessageSnapshotFormat("remoteMessageClass", e.userinfo, e.message, chatobj.chatBox.id);
-        addMessageSnapshotFormat("chat-message user msg-avatar", e.userinfo, e.message, chatobj.chatBox.id);
+        if(chatobj.msgsnapshot){
+            // addMessageSnapshotFormat("remoteMessageClass", e.userinfo, e.message, chatobj.chatBox.id);
+            addMessageSnapshotFormat("chat-message user msg-avatar", e.userinfo, e.message, chatobj.chatBox.id);
+        }else{
+            addMessageLineformat("msg-box fonts", e.userinfo, e.message, chatobj.chatBox.id);
+
+            // or addMessageBlockFormat
+        }
     }
 }
 
@@ -79,13 +89,9 @@ function addNewMessage(e) {
  * @param {dom} parent
  */
 function addMessageSnapshotFormat(messageDivclass, userinfo, message, parent) {
-    var n = document.createElement("div");
+    let n = document.createElement("div");
     n.id = " chat-msg-" + chatcounter++;
-
-    webrtcdev.log(" userinfo  on chat ------------------- ", userinfo, selfuserid);
-
     n.className = messageDivclass + " chat-msg ";
-    webrtcdev.log("addNewMessagelocal", userinfo);
 
     takeSnapshot(userinfo, function (datasnapshot) {
 
@@ -119,12 +125,14 @@ function addMessageSnapshotFormat(messageDivclass, userinfo, message, parent) {
  * @param {dom} parent
  */
 function addMessageLineformat(messageDivclass, messageheader, message, parent) {
-    var n = document.createElement("div");
+    console.log(" addMessageLineformat ", messageheader);
+
+    let n = document.createElement("ul");
     n.className = messageDivclass;
-    if (messageheader) {
-        n.innerHTML = messageheader + " : " + replaceURLWithHTMLLinks(message);
+    if (messageheader.name) {
+        n.innerHTML = "<li><h5>"+ messageheader.name + " : " + replaceURLWithHTMLLinks(message) + "</h5></li>";
     } else {
-        n.innerHTML = replaceURLWithHTMLLinks(message);
+        n.innerHTML = "<li><h5>"+ replaceURLWithHTMLLinks(message) + "</h5></li>";
     }
 
     document.getElementById(parent).insertBefore(n, document.getElementById(parent).firstChild);

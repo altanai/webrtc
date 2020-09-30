@@ -128,6 +128,13 @@ function fireClickEvent(e) {
     e.dispatchEvent(t)
 }
 
+// convert string to HTML element
+function toElement(s = '', c, t = document.createElement('template'), l = 'length') {
+    t.innerHTML = s.trim();
+    c = [...t.content.childNodes];
+    return c[l] > 1 ? c : c[0] || '';
+}
+    
 function bytesToSize(e) {
     var t = ["Bytes", "KB", "MB", "GB", "TB"];
     if (0 == e) return "0 Bytes";
