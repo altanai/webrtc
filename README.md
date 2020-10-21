@@ -4,7 +4,8 @@ web real time communication platform
 
 ![alt webrtc development ](https://altanaitelecom.files.wordpress.com/2015/05/webrtc_development_logo.png?w=100&h=100)
 
-[![Gitter][GS image]][Gitter]
+![Node.js Package](https://github.com/altanai/webrtcdevelopment/workflows/Node.js%20Package/badge.svg?branch=5.4.0)
+
 [![Build Status][BS img]][Build Status]
 [![Dependency Status][DS img]][Dependency Status]
 [![NPM Status][NS img]][NPM Status]
