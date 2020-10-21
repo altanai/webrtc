@@ -4,7 +4,7 @@
  * @name updateWebCallView
  * @param {json} peerInfo
  */
-function updateWebCallView(peerinfo) {
+this.updateWebCallView = updateWebCallView = function (peerinfo) {
     let myrole = role;
     webrtcdev.log("[webcallviewmanager] - updateWebCallView with ", peerinfo.userid,
         " peerinfo", peerinfo, " peerinfo role ", peerinfo.role, " | myrole :", myrole);
@@ -88,7 +88,7 @@ function updateWebCallView(peerinfo) {
         default:
             webrtcdev.error("[webcallviewdevmanager] updateWebCallView- No role found to update webcall view ", myrole);
     }
-}
+};
 
 /**
  * Update local cache of user session based object called peerinfo
@@ -193,8 +193,6 @@ function updateLocalWebCallView(selfpeerinfo) {
  * @param {json} peerInfo
  */
 function updateRemoteWebCalView(peerinfo) {
-    webrtcdev.log("[webcallviewdevmanager] incomingVideo ", incomingVideo);
-    webrtcdev.log("[webcallviewdevmanager] remoteVideos ", remoteVideos);
     webrtcdev.log("[webcallviewdevmanager] updateRemoteWebCalView - remote video attachMediaStream");
 
     return new Promise(function (resolve, reject) {
