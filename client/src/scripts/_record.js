@@ -4,34 +4,6 @@
 
 var listOfRecorders = {};
 
-/**
- * Create Record Button to call start and stop recoriding functions
- * @method
- * @name createRecordButton
- * @param {json} videoRecordobj
- * @param {string} controlBarName
- * @param {json} peerinfo
- */
-function createRecordButton(videoRecordobj, controlBarName, peerinfo) {
-
-    let recordButton = document.createElement("div");
-    recordButton.id = controlBarName + "recordButton";
-    recordButton.setAttribute("title", "Record");
-    recordButton.className = videoRecordobj.button.class_off;
-    recordButton.innerHTML = videoRecordobj.button.html_off;
-    recordButton.onclick = function (e) {
-        if (recordButton.className == videoRecordobj.button.class_on) {
-            recordButton.className = videoRecordobj.button.class_off;
-            recordButton.innerHTML = videoRecordobj.button.html_off;
-            stopRecord(peerinfo);
-        } else if (recordButton.className == videoRecordobj.button.class_off) {
-            recordButton.className = videoRecordobj.button.class_on;
-            recordButton.innerHTML = videoRecordobj.button.html_on;
-            startRecord(peerinfo);
-        }
-    };
-    return recordButton;
-}
 
 /**
  * start Recording the stream using recordRTC
@@ -95,6 +67,7 @@ function stopRecord(peerinfo) {
         let numFile = document.createElement("div");
         numFile.value = _peerinfo.filearray.length;
         let fileurl = URL.createObjectURL(blob);
+
         if(fileshareobj.active) {
             displayList(_peerinfo.uuid, _peerinfo, fileurl, recordVideoname, "videoRecording");
             displayFile(_peerinfo.uuid, _peerinfo, fileurl, recordVideoname, "videoRecording");

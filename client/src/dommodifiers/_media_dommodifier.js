@@ -6,6 +6,8 @@
  * function to Create a video container and attach it to remote obj
  * @method
  * @name createVideoContainer
+ * @param {e} event
+ * @param {css} style
  */
 function appendVideo(e, style) {
 
@@ -34,6 +36,9 @@ function appendVideo(e, style) {
  * function to create empty container
  * @method
  * @name createVideoContainer
+ * @param {e} event
+ * @param {css} style
+ * @param {function} callback
  */
 function createVideoContainer(e, style, callback) {
     let div = document.createElement('div');
@@ -50,27 +55,27 @@ function createVideoContainer(e, style, callback) {
  * function to attach control bar to video for minmax , record  , snapshot , cursor , mute/unmute etc
  * @method
  * @name attachControlButtons
- * @param {dom} vid
+ * @param {dom} vid Video DOM element
  * @param {json} peerinfo
  */
-function attachControlButtons(vid, peerinfo) {
+this.attachControlButtons = attachControlButtons = function (vid, peerinfo) {
 
-    let stream = peerinfo.stream;
-    let streamid = peerinfo.streamid;
+    let stream = peerinfo.stream || vid.srcObject || null;
+    let streamid = peerinfo.streamid || vid.srcObject.id || null;
     let controlBarName = peerinfo.controlBarName;
     let snapshotViewer = peerinfo.fileSharingContainer;
 
     // Preventing multiple control bars
-    var p = vid.parentNode;
-    webrtcdev.log(" [media dom modifier] attachControlButtons to the parent Node of video  ", p);
-    if (p) {
-        let c = p.childNodes;
+    let parentNode = vid.parentNode;
+    webrtcdev.log(" [media dom modifier] attachControlButtons to the parent Node of video  ", parentNode);
+    if (parentNode) {
+        let c = parentNode.childNodes;
         for (i in c) {
             let cc = c[i];
             if (cc.nodeName == "DIV" && cc.id) {
                 if (cc.id.indexOf("control") > -1) {
-                    webrtcdev.warn("[media dom modifier] control bar exists already, delete the previous one , before adding new one", cc);
-                    p.removeChild(cc);
+                    webrtcdev.warn("[media dom modifier] control bar exists already, delete the previous one before adding new one", cc);
+                    parentNode.removeChild(cc);
                 }
             }
         }
@@ -127,8 +132,8 @@ function attachControlButtons(vid, peerinfo) {
         }
     }
 
-    p.appendChild(controlBar);
-}
+    parentNode.appendChild(controlBar);
+};
 
 /**
  * function to createFullScreenButton
@@ -147,7 +152,7 @@ function createFullScreenButton(minmaxobj, controlBarName, peerinfo) {
     button.onclick = function () {
         if (button.className == minmaxobj.max.button.class_off) {
             let vid = document.getElementById(peerinfo.videoContainer);
-            vid.webkitRequestFullScreen();
+            vid.webkitEnterFullScreen();
             button.className = minmaxobj.max.button.class_on;
             button.innerHTML = minmaxobj.max.button.html_on;
         } else {
@@ -207,15 +212,25 @@ function createAudioMuteButton(muteobj, controlBarName, peerinfo) {
     audioButton.innerHTML = muteobj.audio.button.html_on;
     audioButton.onclick = function () {
         if (audioButton.className == muteobj.audio.button.class_on) {
-            peerinfo.stream.mute({
-                audio: !0
-            });
+
+            try {
+                peerinfo.stream.mute({
+                    audio: !0
+                });
+            } catch (err) {
+                peerinfo.stream.getAudioTracks()[0].enabled = false;
+            }
+
             audioButton.className = muteobj.audio.button.class_off;
             audioButton.innerHTML = muteobj.audio.button.html_off;
         } else {
-            peerinfo.stream.unmute({
-                audio: !0
-            });
+            try {
+                peerinfo.stream.unmute({
+                    audio: !0
+                });
+            } catch (e) {
+                peerinfo.stream.getAudioTracks()[0].enabled = true;
+            }
             rtcConn.streamEvents.selectFirst('local').mediaElement.muted = true;
             audioButton.className = muteobj.audio.button.class_on;
             audioButton.innerHTML = muteobj.audio.button.html_on;
@@ -242,15 +257,23 @@ function createVideoMuteButton(muteobj, controlBarName, peerinfo) {
     videoButton.innerHTML = muteobj.video.button.html_on;
     videoButton.onclick = function (event) {
         if (videoButton.className == muteobj.video.button.class_on) {
-            peerinfo.stream.mute({
-                video: !0
-            });
+            try {
+                peerinfo.stream.mute({
+                    video: !0
+                });
+            } catch (err) {
+                peerinfo.stream.getVideoTracks()[0].enabled = false;
+            }
             videoButton.innerHTML = muteobj.video.button.html_off;
             videoButton.className = muteobj.video.button.class_off;
         } else {
-            peerinfo.stream.unmute({
-                video: !0
-            });
+            try {
+                peerinfo.stream.unmute({
+                    video: !0
+                });
+            } catch (err) {
+                peerinfo.stream.getVideoTracks()[0].enabled = true;
+            }
             videoButton.innerHTML = muteobj.video.button.html_on;
             videoButton.className = muteobj.video.button.class_on;
         }
@@ -309,3 +332,72 @@ function attachMetaUserDetails(vid, peerinfo) {
     vid.parentNode.insertBefore(detailsbox, vid.parentNode.firstChild);
 }
 
+
+/**
+ * Create Snapshot Button to take snpshot of video
+ * @method
+ * @name createSnapshotButton
+ * @param {string} controlBarName
+ * @param {json} peerinfo
+ */
+function createSnapshotButton(controlBarName, peerinfo) {
+    var snapshotButton = document.createElement("div");
+    snapshotButton.id = controlBarName + "snapshotButton";
+    snapshotButton.setAttribute("title", "Snapshot");
+    snapshotButton.className = snapshotobj.button.class_on;
+    snapshotButton.innerHTML = snapshotobj.button.html_on;
+    snapshotButton.onclick = function () {
+        /*rtcMultiConnection.streams[streamid].takeSnapshot(function(datasnapshot) {*/
+        takeSnapshot(peerinfo, function (datasnapshot) {
+            let snapshotname = "snapshot" + new Date().getTime();
+
+            var peerinfo;
+            if (selfuserid)
+                peerinfo = findPeerInfo(selfuserid);
+            else
+                peerinfo = findPeerInfo(rtcConn.userid);
+
+            peerinfo.filearray.push(snapshotname);
+            // var numFile = document.createElement("div");
+            // numFile.value = peerinfo.filearray.length;
+
+            if (fileshareobj.active) {
+                syncSnapshot(datasnapshot, "imagesnapshot", snapshotname);
+                displayList(peerinfo.uuid, peerinfo, datasnapshot, snapshotname, "imagesnapshot");
+                displayFile(peerinfo.uuid, peerinfo, datasnapshot, snapshotname, "imagesnapshot");
+            } else {
+                displayFile(peerinfo.uuid, peerinfo, datasnapshot, snapshotname, "imagesnapshot");
+            }
+        });
+    };
+    return snapshotButton;
+}
+
+/**
+ * Create Record Button to call start and stop recoriding functions
+ * @method
+ * @name createRecordButton
+ * @param {json} videoRecordobj
+ * @param {string} controlBarName
+ * @param {json} peerinfo
+ */
+function createRecordButton(videoRecordobj, controlBarName, peerinfo) {
+
+    let recordButton = document.createElement("div");
+    recordButton.id = controlBarName + "recordButton";
+    recordButton.setAttribute("title", "Record");
+    recordButton.className = videoRecordobj.button.class_off;
+    recordButton.innerHTML = videoRecordobj.button.html_off;
+    recordButton.onclick = function (e) {
+        if (recordButton.className == videoRecordobj.button.class_on) {
+            recordButton.className = videoRecordobj.button.class_off;
+            recordButton.innerHTML = videoRecordobj.button.html_off;
+            stopRecord(peerinfo);
+        } else if (recordButton.className == videoRecordobj.button.class_off) {
+            recordButton.className = videoRecordobj.button.class_on;
+            recordButton.innerHTML = videoRecordobj.button.html_on;
+            startRecord(peerinfo);
+        }
+    };
+    return recordButton;
+}

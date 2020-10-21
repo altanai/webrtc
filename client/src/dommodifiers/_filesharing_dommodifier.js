@@ -309,11 +309,11 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
         }
 
     } catch (err) {
-        webrtcdev.error(" [filesharing dommodifier js] Display list exception ", err);
+        webrtcdev.error("[filesharing dommodifier] displaylist exception ", err);
     }
 
     //append progress bar to parent dom
-    webrtcdev.log(" c displayList set up parent dom  ", parentdom);
+    webrtcdev.log("[filesharing dommodifier] displayList set up parent dom  ", parentdom);
 
     let filedom = document.createElement("ul");
     filedom.id = filename + uuid;
@@ -475,12 +475,6 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
         // parentDom2 = parentdom.parentNode;
         // parentDom2.insertBefore(filedom , parentDom2.firstChild);
         parentdom.appendChild(filedom);
-        window.dispatchEvent(new CustomEvent('webrtcdev', {
-            detail: {
-                servicetype: "file",
-                action: "onFileListed"
-            },
-        }));
     } else {
         webrtcdev.error("[filesharing dom modifier JS ] filedom's parent dom not found ");
     }
@@ -613,7 +607,7 @@ function getFileElementDisplayByType(filetype, fileurl, filename) {
  */
 function displayFile(uuid, peerinfo, fileurl, filename, filetype) {
 
-    webrtcdev.log(" [filehsaring dommodifier] displayFile  - uuid: ", uuid, " peerinfo :", peerinfo,
+    webrtcdev.log("[filehsaring dommodifier] displayFile  - uuid: ", uuid, " peerinfo :", peerinfo,
         " , file url : ", fileurl, " ,  file name : ", filename, " ,  file type :", filetype);
     try {
 
@@ -637,8 +631,16 @@ function displayFile(uuid, peerinfo, fileurl, filename, filetype) {
         } else {
             document.body.appendChild(filedom);
         }
+
+        window.dispatchEvent(new CustomEvent('webrtcdev', {
+            detail: {
+                servicetype: "file",
+                action: "onFileListed"
+            },
+        }));
+
     } catch (err) {
-        webrtcdev.error("[filehsaring dommodifier ] displayFile  has a problem ", err);
+        webrtcdev.error("[filehsaring dommodifier] displayFile has a problem ", err);
     }
 }
 
@@ -1212,13 +1214,13 @@ function resizeFV(userid, buttonId, selectedFileSharingBox) {
 
 function minFV(userid, buttonId, selectedFileSharingBox) {
     hideelem(selectedFileSharingBox);
-    document.getElementById(selectedFileSharingBox).className = "col-md-6 fileviewing-box";
+    // document.getElementById(selectedFileSharingBox).className = "col-md-6 fileviewing-box";
     /*syncButton(buttonId);  */
 }
 
 function maxFV(userid, buttonId, selectedFileSharingBox) {
     showelem(selectedFileSharingBox);
-    document.getElementById(selectedFileSharingBox).className = "col-md-12 fileviewing-box";
+    // document.getElementById(selectedFileSharingBox).className = "col-md-12 fileviewing-box";
     /*syncButton(buttonId);  */
 }
 

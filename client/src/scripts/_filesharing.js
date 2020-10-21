@@ -114,20 +114,14 @@ function fileSharingEnded(file) {
     displayFile(file.uuid, peerinfo, file.url, filename, file.type);
 
     webrtcdev.log("[flesharing JS] onFileEnd - Display List -", filename + file.uuid, document.getElementById(filename + file.uuid));
-    // if the file is from me ( orignal share ) then display listing in viewbox just one
+    // if the file is from me ( original share ) then display listing in viewbox just one
     if (selfuserid == file.userid && document.getElementById(filename + file.uuid)) {
         return;
     }
     displayList(file.uuid, peerinfo, file.url, filename, file.type);
-    window.dispatchEvent(new CustomEvent('webrtcdev', {
-        detail: {
-            servicetype: "file",
-            action: "onFileShareEnded"
-        }
-    }));
 
+    // start the pending transfer from pendingFileTransfer.push(file);
     // webrtcdev.log(" pendingFileTransfer ", pendingFileTransfer , pendingFileTransfer.length , pendingFileTransferlimit);
-    //start the pending transfer from pendingFileTransfer.push(file);
     // if (pendingFileTransfer.length >= pendingFileTransferlimit) {
     //     webrtcdev.log("[flesharing JS] resuming pending/paused file ", pendingFileTransfer[0]);
     //     hideelem(pendingFileTransfer[0].name);

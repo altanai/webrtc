@@ -36,9 +36,9 @@ var tools = {
     dragMultiple: true,
     eraser: true,
     rectangle: true,
-    arc: true,
-    bezier: true,
-    quadratic: true,
+    arc: false,
+    bezier: false,
+    quadratic: false,
     text: true
 };
 
@@ -219,38 +219,49 @@ function setSelection(element, prop) {
         decorateDragAllPaths();
     } else document.getElementById('drag-all-paths').style.display = 'none';
 
-    // -------------------------------------------------------------
-
+    /**
+     * Line draw widget
+     * @function
+     * #name decorateLine
+     */
     function decorateLine() {
-        var context = getContext('line');
+        let elem = document.getElementById('line');
+        if(elem.innerHTML){
+            bindEvent(elem, 'Line');
+        }else {
+            var context = getContext('line');
 
-        context.moveTo(0, 0);
-        context.lineTo(40, 40);
-        context.stroke();
+            context.moveTo(0, 0);
+            context.lineTo(40, 40);
+            context.stroke();
 
-        context.fillStyle = 'Gray';
-        context.font = '9px Verdana';
-        context.fillText('Line', 16, 12);
+            context.fillStyle = 'Gray';
+            context.font = '9px Verdana';
+            context.fillText('Line', 16, 12);
 
-        bindEvent(context, 'Line');
+            bindEvent(context, 'Line');
+        }
     }
 
     if (tools.line === true) {
         decorateLine();
-    } else document.getElementById('line').style.display = 'none';
+    } else {
+        document.getElementById('line').style.display = 'none';
+    }
 
-    // -------------------------------------------------------------
+    /**
+     * Pencil draw widget
+     * @function
+     * #name decoratePencil
+     */
 
     function decoratePencil() {
-        //console.log(document.getElementById('pencil-icon'));
         let elem = document.getElementById('pencil-icon');
         if(elem.innerHTML){
             bindEvent(elem, 'Pencil');
-
         }else{
-
-            var context = elem.getContext('2d');
-            var imageObj = new Image();
+            let context = elem.getContext('2d');
+            let imageObj = new Image();
             imageObj.src = 'drawboardicons/pencil.png';
             imageObj.onload = function () {
                 context.drawImage(imageObj, 0, 0, 35, 35);
@@ -274,37 +285,49 @@ function setSelection(element, prop) {
 
     if (tools.pencil === true) {
         decoratePencil();
-    } else document.getElementById('pencil-icon').style.display = 'none';
+    } else {
+        document.getElementById('pencil-icon').style.display = 'none';
+    }
 
-    // -------------------------------------------------------------
+    /**
+     * eraser in draw widget
+     * @function
+     * #name decorateEraser
+     */
 
     function decorateEraser() {
+        let elem = document.getElementById('eraser-icon');
+        if(elem.innerHTML){
+            bindEvent(elem, 'Eraser');
+        }else {
+            var context = document.getElementById('eraser-icon').getContext('2d');
+            var imageObj = new Image();
+            imageObj.src = 'drawboardicons/eraser.png';
+            imageObj.onload = function () {
+                context.drawImage(imageObj, 0, 0, 35, 35);
+            };
 
-        var context = document.getElementById('eraser-icon').getContext('2d');
-        var imageObj = new Image();
-        imageObj.src = 'drawboardicons/eraser.png';
-        imageObj.onload = function () {
-            context.drawImage(imageObj, 0, 0, 35, 35);
-        };
+            /*      var context = getContext('eraser-icon');
 
-        /*      var context = getContext('eraser-icon');
+                    context.lineWidth = 9;
+                    context.lineCap = 'round';
+                    context.moveTo(35, 20);
+                    context.lineTo(5, 25);
+                    context.stroke();
 
-                context.lineWidth = 9;
-                context.lineCap = 'round';
-                context.moveTo(35, 20);
-                context.lineTo(5, 25);
-                context.stroke();
+                    context.fillStyle = 'Gray';
+                    context.font = '9px Verdana';
+                    context.fillText('Eraser', 6, 12);*/
 
-                context.fillStyle = 'Gray';
-                context.font = '9px Verdana';
-                context.fillText('Eraser', 6, 12);*/
-
-        bindEvent(context, 'Eraser');
+            bindEvent(context, 'Eraser');
+        }
     }
 
     if (tools.eraser === true) {
         decorateEraser();
-    } else document.getElementById('eraser-icon').style.display = 'none';
+    } else{
+        document.getElementById('eraser-icon').style.display = 'none';
+    }
 
     // -------------------------------------------------------------
 
@@ -321,7 +344,11 @@ function setSelection(element, prop) {
         decorateText();
     } else document.getElementById('text-icon').style.display = 'none';
 
-    // -------------------------------------------------------------
+    /**
+     * arc in draw widget
+     * @function
+     * #name decorateArc
+     */
 
     function decorateArc() {
         var context = getContext('arc');
@@ -338,7 +365,9 @@ function setSelection(element, prop) {
 
     if (tools.arc === true) {
         decorateArc();
-    } else document.getElementById('arc').style.display = 'none';
+    } else{
+        document.getElementById('arc').style.display = 'none';
+    }
 
     // -------------------------------------------------------------
 
@@ -412,30 +441,43 @@ function setSelection(element, prop) {
         context.stroke();
     }
 
+    /**
+     * line-width in draw widget
+     * @function
+     * #name decorateLineWidth
+     */
+
     function decorateLineWidth() {
-        /*        var context = getContext('line-width');
+        var canvas;
+        let elem = document.getElementById('line-width');
+        if(elem.innerHTML){
+            canvas = elem;
+        }else {
 
-                tempStrokeTheLine(context, 2, 5, 15, 35, 15);
-                tempStrokeTheLine(context, 3, 5, 20, 35, 20);
-                tempStrokeTheLine(context, 4, 5, 26, 35, 26);
+            /*
+            var context = getContext('line-width');
 
-                context.fillStyle = 'Gray';
-                context.font = '9px Verdana';
-                context.fillText('Line', 8, 12);
-                context.fillText('Width', 6, 38);*/
+            tempStrokeTheLine(context, 2, 5, 15, 35, 15);
+            tempStrokeTheLine(context, 3, 5, 20, 35, 20);
+            tempStrokeTheLine(context, 4, 5, 26, 35, 26);
 
-        var context = document.getElementById('line-width').getContext('2d');
-        var imageObj = new Image();
-        imageObj.src = 'drawboardicons/linesize.png';
-        imageObj.onload = function () {
-            context.drawImage(imageObj, 0, 0, 35, 35);
-        };
+            context.fillStyle = 'Gray';
+            context.font = '9px Verdana';
+            context.fillText('Line', 8, 12);
+            context.fillText('Width', 6, 38);*/
 
+            var context = document.getElementById('line-width').getContext('2d');
+            var imageObj = new Image();
+            imageObj.src = 'drawboardicons/linesize.png';
+            imageObj.onload = function () {
+                context.drawImage(imageObj, 0, 0, 35, 35);
+            };
+            canvas = context.canvas;
+        }
         var lineWidthContainer = find('line-width-container'),
             lineWidthText = find('line-width-text'),
             btnLineWidthDone = find('line-width-done'),
-            h1 = document.getElementsByTagName('h1')[0],
-            canvas = context.canvas;
+            h1 = document.getElementsByTagName('h1')[0];
 
         addEvent(canvas, 'click', function () {
             hideContainers();
@@ -455,32 +497,44 @@ function setSelection(element, prop) {
 
     decorateLineWidth();
 
-    // -------------------------------------------------------------
+    /**
+     * colors in draw widget
+     * @function
+     * #name decorateColors
+     */
+
     function decorateColors() {
-        /*        var context = getContext('colors');
+        let elem = document.getElementById("colors");
+        var canvas;
+        if(elem.innerHTML){
+            canvas = elem;
+        }else {
+            /*
+            var context = getContext('colors');
 
-                context.fillStyle = 'red';
-                context.fillRect(5, 3, 30, 10);
+            context.fillStyle = 'red';
+            context.fillRect(5, 3, 30, 10);
 
-                context.fillStyle = 'green';
-                context.fillRect(5, 15, 30, 10);
+            context.fillStyle = 'green';
+            context.fillRect(5, 15, 30, 10);
 
-                context.fillStyle = 'blue';
-                context.fillRect(5, 27, 30, 10);*/
+            context.fillStyle = 'blue';
+            context.fillRect(5, 27, 30, 10);*/
 
-        var context = document.getElementById('colors').getContext('2d');
-        var imageObj = new Image();
-        imageObj.src = 'drawboardicons/color.png';
-        imageObj.onload = function () {
-            context.drawImage(imageObj, 0, 0, 35, 35);
-        };
+            var context = document.getElementById('colors').getContext('2d');
+            var imageObj = new Image();
+            imageObj.src = 'drawboardicons/color.png';
+            imageObj.onload = function () {
+                context.drawImage(imageObj, 0, 0, 35, 35);
+            };
+            canvas = context.canvas;
+        }
 
         var colorsContainer = find('colors-container'),
             strokeStyleText = find('stroke-style'),
             fillStyleText = find('fill-style'),
             btnColorsDone = find('colors-done'),
-            h1 = document.getElementsByTagName('h1')[0],
-            canvas = context.canvas;
+            h1 = document.getElementsByTagName('h1')[0];
 
         addEvent(canvas, 'click', function () {
             hideContainers();
