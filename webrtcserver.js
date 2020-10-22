@@ -71,7 +71,7 @@ rclient.set("session", "webrtcdevelopment");
 // -------------------- Session manager server   -----------------
 
 const realtimecomm = require('./build/webrtcdevelopmentServer.js').realtimecomm(properties, options, log);
-var socket = realtimecomm.getSocket();
+var socket = realtimecomm.socket;
 
 try {
     let params = socket.handshake.query;
@@ -98,7 +98,6 @@ try {
 
 // -------------------- REST Api Sever  -----------------
 
-var _restapi = require('./build/webrtcdevelopmentServer.js').restapi;
-var restapi = _restapi(realtimecomm, options, app, properties);
+var restapi = require('./build/webrtcdevelopmentServer.js').restapi(realtimecomm, options, app, properties);
 
 

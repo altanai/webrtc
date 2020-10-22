@@ -1,4 +1,4 @@
-# Chaneglog 
+# Chaneglog / Versions
 
 ## v 3.0.0  
 19/12/2018
@@ -15,4 +15,8 @@
 
 ## 5.3.1 
 
-Fixed media stream trcak issues and deep update on json object webcall peers 
+Fixed media stream track issues and deep update on json object webcall peers 
+
+### 6.0.0
+
+RealtiemComm server changes 

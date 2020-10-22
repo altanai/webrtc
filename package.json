@@ -84,7 +84,7 @@
     "build": "gulp production",
     "test": "NODE_ENV=test mocha --timeout 12000 test --exit",
     "run": "node webrtcserver.js",
-    "prestart": "apidoc -v -i . -e node_modules/  -o docs",
+    "prestart": "apidoc -v -i client/src -e node_modules/  -o docs",
     "start": "supervisor -i ./public/ webrtcserver.js"
   },
   "repository": {

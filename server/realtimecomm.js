@@ -564,6 +564,8 @@ exports.realtimecomm = function (properties, options , cache) {
 
             delete listOfUsers[socket.userid];
         });
+
+        module.socket = io;
     }
 
     module.getAll = function (format) {
@@ -639,12 +641,7 @@ exports.realtimecomm = function (properties, options , cache) {
         return output;
     };
 
-    module.getSocket = function(io){
-        console.log("[RealtimeComm] callback");
-        return io;
-    };
 
-    module.socket = io;
 
     return module;
 };
