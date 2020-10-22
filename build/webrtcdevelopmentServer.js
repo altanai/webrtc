@@ -1,4 +1,4 @@
-/* Generated on:Wed Oct 21 2020 14:00:48 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */exports.redisscipts = function () {
+/* Generated on:Thu Oct 22 2020 17:31:44 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */exports.redisscipts = function () {
 
     const redis = require("redis");
     const RedisServer = require('redis-server');
@@ -40,7 +40,7 @@
 };
 
 
-/* Generated on:Wed Oct 21 2020 14:00:48 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */
+/* Generated on:Thu Oct 22 2020 17:31:44 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */
 /**
  * handled on connection of socket for every new connection
  * @method
@@ -70,17 +70,17 @@ exports.realtimecomm = function (properties, options , cache, socketCallback) {
     //https 1.1
     const server = require('https').createServer(options);
 
-    // socketio
-    const io = require('socket.io')(server);
-    io.on('connection', onConnection);
-    io.on('disconnect', () => {
+    // socketio Server
+    const ioserver = require('socket.io')(server);
+    ioserver.on('connection', onConnection);
+    ioserver.on('disconnect', () => {
         console.error("disconnected ");
     });
 
-    server.listen(properties.wssPort);
-    console.log("[RealtimeComm] ----------------realtimecomm----------------------");
-    console.log("[RealtimeComm]  server state ", server.readyState); // WebSocket.OPEN
-    console.log("[RealtimeComm] Socket.io env => " + properties.enviornment + " running at " + properties.wssPort);
+    server.listen(properties.wssPort,()=>{
+        console.log("[RealtimeComm] ----------------realtimecomm----------------------");
+        console.log("[RealtimeComm] Socket.io env => " + properties.enviornment + " running at " + properties.wssPort);
+    });
 
     /**
      * append user to list of user
@@ -594,11 +594,6 @@ exports.realtimecomm = function (properties, options , cache, socketCallback) {
 
             delete listOfUsers[socket.userid];
         });
-
-        if (socketCallback) {
-            console.log("[RealtimeComm] callback");
-            socketCallback(socket);
-        }
     }
 
     module.getAll = function (format) {
@@ -674,6 +669,11 @@ exports.realtimecomm = function (properties, options , cache, socketCallback) {
         return output;
     };
 
+    if (socketCallback) {
+        console.log("[RealtimeComm] callback");
+        socketCallback(ioserver);
+    }
+
     return module;
 };
 
@@ -705,7 +705,7 @@ exports.realtimecomm = function (properties, options , cache, socketCallback) {
 //         logs[utcDateString] = arguments.toString();
 //     }
 // }
-/* Generated on:Wed Oct 21 2020 14:00:48 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */exports.restapi = function(realtimecomm, options , app, properties) {
+/* Generated on:Thu Oct 22 2020 17:31:44 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */exports.restapi = function(realtimecomm, options , app, properties) {
 
     var restify = require('restify');
     var server = restify.createServer(options);
