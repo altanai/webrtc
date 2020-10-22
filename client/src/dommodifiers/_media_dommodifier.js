@@ -317,7 +317,10 @@ this.attachUserDetails = attachUserDetails = function (vid, peerinfo) {
     nameBox.innerHTML = peerinfo.name ,
     nameBox.id = "videoheaders" + peerinfo.userid;
 
+    // add after video
     vid.parentNode.appendChild(nameBox);
+
+    // Add beforre video
     // vid.parentNode.insertBefore(nameBox, vid.parentNode.firstChild);
 };
 
