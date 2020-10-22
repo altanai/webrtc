@@ -45,7 +45,7 @@ var app = http2
     })
     .listen(properties.http2Port);
 console.log("< ------------------------ HTTPS Server -------------------> ");
-console.log(" WebRTC server env => " + properties.enviornment + " running at " + properties.http2Port );
+console.log(" WebRTC server env => " + properties.enviornment + " running at " + properties.http2Port);
 
 
 // steam handler  approach
@@ -70,32 +70,31 @@ rclient.set("session", "webrtcdevelopment");
 
 // -------------------- Session manager server   -----------------
 
-var _realtimecomm = require('./build/webrtcdevelopmentServer.js').realtimecomm;
-var realtimecomm = _realtimecomm( properties, options, log, null, function (socket) {
-    try {
-        var params = socket.handshake.query;
-        console.log("[Realtime conn] params", params);
+const realtimecomm = require('./build/webrtcdevelopmentServer.js').realtimecomm(properties, options, log);
+var socket = realtimecomm.getSocket();
 
-        if (rclient)
-            rclient.hmset(params.t, params, function (err) {
-                console.error(err);
-            });
+try {
+    let params = socket.handshake.query;
+    console.log("[Realtime conn] params", params);
 
-        if (!params.socketCustomEvent) {
-            params.socketCustomEvent = 'custom-message';
-        }
-
-        socket.on(params.socketCustomEvent, function (message) {
-            try {
-                socket.broadcast.emit(params.socketCustomEvent, message);
-            } catch (e) {
-                console.error(e);
-            }
+    if (rclient)
+        rclient.hmset(params.t, params, function (err) {
+            console.error(err);
         });
-    } catch (e) {
-        console.error(e);
-    }
-});
+
+    if (!params.socketCustomEvent)
+        params.socketCustomEvent = 'custom-message';
+
+    socket.on(params.socketCustomEvent, function (message) {
+        try {
+            socket.broadcast.emit(params.socketCustomEvent, message);
+        } catch (e) {
+            console.error(e);
+        }
+    });
+} catch (e) {
+    console.error(e);
+}
 
 // -------------------- REST Api Sever  -----------------
 

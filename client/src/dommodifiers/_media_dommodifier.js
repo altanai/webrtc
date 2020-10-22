@@ -294,10 +294,12 @@ function createVideoMuteButton(muteobj, controlBarName, peerinfo) {
  * @param {dom} vid
  * @param {json} peerinfo
  */
-function attachUserDetails(vid, peerinfo) {
+this.attachUserDetails = attachUserDetails = function (vid, peerinfo) {
     webrtcdev.log("[media_dommanager] attachUserDetails - ", peerinfo.userid, ":", peerinfo.type, " to video DOM ", vid);
+
+    // remove exising video header
     if (vid.parentNode.querySelectorAll('.videoHeaderClass').length > 0) {
-        webrtcdev.warn("[media_dommanager] attachUserDetails - video header already present ", vid.parentNode.querySelectorAll('.videoHeaderClass'));
+        webrtcdev.warn("[media_dommanager] attachUserDetails - video header already present ", vid.parentNode.querySelectorAll('.videoHeaderClass'), " remove it before re-setting");
         if ((vid.parentNode.querySelectorAll("videoheaders" + peerinfo.userid)).length > 0) {
             webrtcdev.warn("[media_dommanager] user's video header already present ", "videoheaders" + peerinfo.userid);
             return;
@@ -307,15 +309,20 @@ function attachUserDetails(vid, peerinfo) {
             vidheader.remove();
         }
     }
+
+    // create new video header
     let nameBox = document.createElement("div");
     // nameBox.setAttribute("style", "background-color:" + peerinfo.color),
     nameBox.className = "videoHeaderClass",
-        nameBox.innerHTML = peerinfo.name ,
-        nameBox.id = "videoheaders" + peerinfo.userid;
+    nameBox.innerHTML = peerinfo.name ,
+    nameBox.id = "videoheaders" + peerinfo.userid;
 
-    // vid.parentNode.appendChild(nameBox);
-    vid.parentNode.insertBefore(nameBox, vid.parentNode.firstChild);
-}
+    // add after video
+    vid.parentNode.appendChild(nameBox);
+
+    // Add beforre video
+    // vid.parentNode.insertBefore(nameBox, vid.parentNode.firstChild);
+};
 
 /**
  * function to attach user's meta details header on top of video
