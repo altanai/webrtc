@@ -9,7 +9,7 @@
  * @param {function} socketCallback
  */
 
-exports.realtimecomm = function (properties, options , cache, socketCallback) {
+exports.realtimecomm = function (properties, options , cache) {
 
     var listOfUsers = {};
     var shiftedModerationControls = {};
@@ -20,25 +20,40 @@ exports.realtimecomm = function (properties, options , cache, socketCallback) {
     var users = {};
     var sessions = {};
 
-    console.log("[RealtimeComm]  properties for webrtc server " , properties) ;
+    console.log("[RealtimeComm] ----------------realtimecomm----------------------");
+    console.log("[RealtimeComm] env => " + properties.enviornment + " running at " + properties.wssPort);
+
 
     // http2
     // const server = require('http2').createSecureServer(options);
 
     //https 1.1
-    const server = require('https').createServer(options);
+    const server = require('https').createServer(options,(req,res) => {
+        console.log('req');
+        res.writeHeader(200, { 'Content-Type': 'text/plain' });
+        res.write('test');
+        res.end();
+    });
 
     // socketio Server
-    const ioserver = require('socket.io')(server);
-    ioserver.on('connection', onConnection);
-    ioserver.on('disconnect', () => {
+    const io = require('socket.io')(server,{
+        path: '/',
+        serveClient: false,
+        // below are engine.IO options
+        pingInterval: 10000,
+        pingTimeout: 5000,
+        cookie: false
+    });
+
+    io.on('connection', onConnection);
+    io.on('error',(err)=>{
+        console.error(err);
+    });
+    io.on('disconnect', () => {
         console.error("disconnected ");
     });
 
-    server.listen(properties.wssPort,()=>{
-        console.log("[RealtimeComm] ----------------realtimecomm----------------------");
-        console.log("[RealtimeComm] Socket.io env => " + properties.enviornment + " running at " + properties.wssPort);
-    });
+    server.listen(properties.wssPort);
 
     /**
      * append user to list of user
@@ -81,15 +96,7 @@ exports.realtimecomm = function (properties, options , cache, socketCallback) {
     function onConnection(socket) {
 
         let params = socket.handshake.query;
-        console.log("[RealtimeComm] onConnection -  Querry : ", params);
         var socketMessageEvent = params.msgEvent || 'RTCMultiConnection-Message';
-
-        if (params.enableScalableBroadcast) {
-            if (!ScalableBroadcast) {
-                ScalableBroadcast = require('./Scalable-Broadcast.js');
-            }
-            ScalableBroadcast(socket, params.maxRelayLimitPerUser);
-        }
 
         // temporarily disabled
         if (false && !!listOfUsers[params.userid]) {
@@ -102,6 +109,11 @@ exports.realtimecomm = function (properties, options , cache, socketCallback) {
 
         socket.userid = params.userid;
         appendUser(socket);
+
+        socket.on('ping-webrtcdev', () => {
+            console.log(" sending pong for ping");
+            socket.emit("pong-webrtcdev");
+        });
 
         socket.on('extra-data-updated', function (extra) {
             try {
@@ -271,7 +283,7 @@ exports.realtimecomm = function (properties, options , cache, socketCallback) {
                 webrtcdevchannels[newchannel] = {
                     channel: newchannel,
                     timestamp: new Date().toLocaleString(),
-                    maxAllowed: data.maxAllowed,
+                    maxAllowed: data.maxAllowed|| 100,
                     users: [data.sender],
                     status: "waiting",
                     endtimestamp: 0,
@@ -627,10 +639,12 @@ exports.realtimecomm = function (properties, options , cache, socketCallback) {
         return output;
     };
 
-    if (socketCallback) {
+    module.getSocket = function(io){
         console.log("[RealtimeComm] callback");
-        socketCallback(ioserver);
-    }
+        return io;
+    };
+
+    module.socket = io;
 
     return module;
 };
