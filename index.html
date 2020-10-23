@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
+<head>
     <meta charset="UTF-8">
     <title>Webrtc by altanai</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,50 +8,412 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-  </head>
-  <body>
-    <section class="page-header">
-      <h1 class="project-name">Webrtc</h1>
-      <h2 class="project-tagline">web real time communication platform ( WebRTC )</h2>
-      <a href="https://github.com/altanai/webrtc" class="btn">View on GitHub</a>
-      <a href="https://github.com/altanai/webrtc/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/altanai/webrtc/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
 
-    <section class="main-content">
-      <h3>
-<a id="webrtc-project" class="anchor" href="#webrtc-project" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>WebRTC project</h3>
 
-<p>Web based realtime communication using nodejs platform over socketio signaling .</p>
+</head>
 
-<h3>
-<a id="solution-architecture" class="anchor" href="#solution-architecture" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Solution architecture</h3>
 
-<p><img src="https://altanaitelecom.files.wordpress.com/2016/04/webcall-stack-1.png" alt="architecture block diagram "></p>
+<body>
+<section class="page-header">
+    <h1 class="project-name">Webrtc</h1>
+    <h2 class="project-tagline">web real time communication platform ( WebRTC )</h2>
+    <a href="https://github.com/altanai/webrtc" class="btn">View on GitHub</a>
+    <a href="https://github.com/altanai/webrtc/zipball/master" class="btn">Download .zip</a>
+    <a href="https://github.com/altanai/webrtc/tarball/master" class="btn">Download .tar.gz</a>
+</section>
 
-<h3>
-<a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Creating pages manually</h3>
+<section class="main-content">
+    <h3>
+        <a id="webrtc-project" class="anchor" href="#webrtc-project" aria-hidden="true"><span aria-hidden="true"
+                                                                                              class="octicon octicon-link"></span></a>WebRTC
+        project</h3>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+    <p>Web based realtime communication using nodejs platform over socketio signaling .</p>
 
-<h3>
-<a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+    <h3>
+        <a id="solution-architecture" class="anchor" href="#solution-architecture" aria-hidden="true"><span
+                aria-hidden="true" class="octicon octicon-link"></span></a>Solution architecture</h3>
 
-<p>You can <a href="https://help.github.com/articles/basic-writing-and-formatting-syntax/#mentioning-users-and-teams" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor’s GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+    <p><img src="https://altanaitelecom.files.wordpress.com/2016/04/webcall-stack-1.png"
+            alt="architecture block diagram "></p>
 
-<h3>
-<a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h3>
+    <h3>
+        <a id="creating-pages-manually" class="anchor" href="#creating-pages-manually" aria-hidden="true"><span
+                aria-hidden="true" class="octicon octicon-link"></span></a>Demo</h3>
 
-<p>Having trouble with Pages? Check out our <a href="https://help.github.com/pages">documentation</a> or <a href="https://github.com/contact">contact support</a> and we’ll help you sort it out.</p>
 
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/altanai/webrtc">Webrtc</a> is maintained by <a href="https://github.com/altanai">altanai</a>.</span>
+    <!-- when no remote -->
+    <div id="singleVideoContainer" autoplay="autoplay" class="video-remote-section-webrtc">
+        <video class="video-class" name="myAloneVideo" muted="true"></video>
+    </div>
 
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-      </footer>
 
-    </section>
+    <!--  Video for Me -->
+    <div>
+        <video class="video-class" name="myConferenceVideo" hidden></video>
+    </div>
 
-  
-  </body>
+
+    <!--  Video for peer 1 -->
+    <div>
+        <video class="video-class" name="otherConferenceVideo1" hidden></video>
+    </div>
+
+
+    <!--  Video for peer 2 -->
+    <div>
+        <video class="video-class" name="otherConferenceVideo2" hidden></video>
+    </div>
+
+
+    <h3>
+        <a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span
+                aria-hidden="true" class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+
+    <p>You can <a
+            href="https://help.github.com/articles/basic-writing-and-formatting-syntax/#mentioning-users-and-teams"
+            class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting
+        <code>&lt;a&gt;</code> element will link to the contributor’s GitHub Profile. For example: In 2007, Chris
+        Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a
+                href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a
+                href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+
+    <h3>
+        <a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span aria-hidden="true"
+                                                                                                      class="octicon octicon-link"></span></a>Support
+        or Contact</h3>
+
+    <p>Having trouble with Pages? Check out our <a href="https://help.github.com/pages">documentation</a> or <a
+            href="https://github.com/contact">contact support</a> and we’ll help you sort it out.</p>
+
+    <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/altanai/webrtc">Webrtc</a> is maintained by <a
+                href="https://github.com/altanai">altanai</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a
+                href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a
+                href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+    </footer>
+
+</section>
+
+
+</body>
+
+
+<script rel="preload"
+        src=https://dev.brightchats.com:8084/node_modules/webrtcdevelopment/build/webrtcdevelopment_header.js></script>
+
+<script src=https://dev.brightchats.com:8084/node_modules/webrtcdevelopment/build/webrtcdevelopment.js></script>
+
+<script>
+    var local, remote, incoming, outgoing;
+    var webrtcdevobj = new webrtcdevcon();
+
+
+
+    // Widgets
+    let drawwidget = {
+        active: true,
+        drawCanvasContainer: "drawBoardRow",
+        button: {
+            id: "draw-webrtc",
+            class_on: "amplechat-icon-pencil On",
+            html_on: '',
+            class_off: "amplechat-icon-pencil Off",
+            html_off: ''
+        }
+    };
+
+    let filesharewidget = {
+        active: true,
+        fileShareContainer: "fileSharingRow",
+        fileshare: {
+            rotateicon: "assets/images/refresh-icon.png",
+            minicon: "",
+            maxicon: "",
+            closeicon: "assets/images/cross-icon.png"
+        },
+        fileListContainer: "fileListingRow",
+        filelist: {
+            minicon: "",
+            maxicon: "",
+            downloadicon: "",
+            trashicon: "",
+            saveicon: "",
+            showicon: "",
+            hideicon: "",
+            stopuploadicon: ""
+        },
+        button: {
+            id: "fileshareBtn",
+            class_on: "amplechat-icon-file-share",
+            html: "File"
+        },
+        props: {
+            fileShare: "single",   //Can be divided , chat preview  , single   , hidden
+            fileList: "single"     //Can be divided , single , hidden
+        },
+        sendOldFiles: false        // If new participant join conf , or listener join , then should he receive old files or not
+    };
+
+    let chatwidget = {
+        active: true,
+        container: {
+            id: "chatContainer"
+        },
+        inputBox: {
+            text_id: "chatInputText",
+            sendbutton_id: "chatSendButton",
+            minbutton_id: "minimizeChatButton"
+        },
+        chatBox: {
+            id: "chatBoard"
+        },
+        button: {
+            class_on: "btn btn-warning glyphicon glyphicon-font topPanelButton",
+            html_on: "Chat",
+            class_off: "btn btn-success glyphicon glyphicon-font topPanelButton",
+            html_off: "Chat"
+        }
+    };
+
+    let screensharewidget = {
+        active: webrtcdevobj.issafari ? false : true,
+        screenshareContainer: "screenShareRow",
+        button: {
+            shareButton: {
+                id: "scrShareButton",
+                class_on: "amplechat-icon-screen-sharing on blink_me",
+                html_on: '',
+                class_off: "amplechat-icon-screen-sharing off",
+                html_off: '',
+                class_busy: "amplechat-icon-screen-sharing on blink_me inactiveSpan",
+                html_busy: ''
+            },
+            viewButton: {
+                id: "scrViewButton",
+                class_on: "screeninstall-btn on",
+                html_on: "Stop Viewing",
+                class_off: "screeninstall-btn off",
+                html_off: "View Screen"
+            }
+        }
+    };
+
+    var widgets = {
+        debug: false,
+        reconnect: {
+            active: false
+        },
+        timer: {
+            active: false,
+            type: "forward",
+            counter: {
+                hours: "countdownHours",
+                minutes: "countdownMinutes",
+                seconds: "countdownSeconds"
+            },
+            upperlimit: {
+                hour: 0,
+                min: 3,
+                sec: 60
+            },
+            span: {
+                currentTime: "currentTimeArea",
+                currentTimeZone: "currentTimeZoneArea",
+                remoteTime: ["remoteTimeArea1", "remoteTimeArea2", "remoteTimeArea3", "remoteTimeArea4", "remoteTimeArea5"],
+                remoteTimeZone: ["remoteTimeZoneArea1", "remoteTimeZoneArea2", "remoteTimeZoneArea3", "remoteTimeZoneArea4", "remoteTimeZoneArea5"],
+                class_on: ""
+            },
+            container: {
+                id: '',
+                minbutton_id: 'timerBtn'
+            },
+            button: {
+                id: 'timerBtn'
+            }
+        },
+
+        chat: chatwidget,
+
+        fileShare: filesharewidget,
+
+        mute: {
+            active: true,
+            audio: {
+                active: true,
+                button: {
+                    class_on: "pull-right videoButtonClass on",
+                    html_on: "<i class='fa fa-microphone-slash'></i>",
+                    class_off: "pull-right videoButtonClass off",
+                    html_off: "<i class='fa fa-microphone'></i>"
+                }
+            },
+            video: {
+                active: false,
+                button: {
+                    class_on: "pull-right videoButtonClass on",
+                    html_on: "<i class='fa fa-video-camera'></i>",
+                    class_off: "pull-right videoButtonClass off",
+                    html_off: "<i class='fa fa-video-camera'></i>"
+                }
+            }
+        },
+        videoRecord: {
+            active: true,
+            videoRecordContainer: true,
+            button: {
+                class_on: "pull-right videoButtonClass on blink_me",
+                html_on: "<i class='fa fa-circle'></i>",
+                class_off: "pull-right videoButtonClass off",
+                html_off: "<i class='fa fa-circle'></i>"
+            }
+        },
+        snapshot: {
+            active: true,
+            snapshotContainer: true,
+            button: {
+                class_on: "pull-right videoButtonClass",
+                html_on: "<i class='fa fa-camera'></i>"
+            }
+        },
+        cursor: {
+            active: false,
+            pointer: {
+                class_on: "fa fa-hand-o-up fa-3x"
+            },
+            button: {
+                id: 'shareCursorButton',
+                class_on: "pull-right videoButtonClass On",
+                html_on: "<i class='fa fa-hand-pointer-o fullscreen'></i>",
+                class_off: "pull-right videoButtonClass Off",
+                html_off: "<i class='fa fa-hand-pointer-o fullscreen'></i>"
+            }
+        },
+        minmax: {
+            active: true,
+            max: {
+                button: {
+                    id: 'maxVideoButton',
+                    class_on: "pull-right videoButtonClass On",
+                    html_on: "<i class='fa fa-arrows-alt fullscreen' ></i>",
+                    class_off: "pull-right videoButtonClass Off",
+                    html_off: "<i class='fa fa-arrows-alt fullscreen'></i>"
+                }
+            },
+            min: {
+                button: {
+                    id: 'minVideoButton',
+                    class_on: "pull-right videoButtonClass On",
+                    html_on: "<i class='fa fa-minus'></i>",
+                    class_off: "pull-right videoButtonClass Off",
+                    html_off: "<i class='fa fa-minus'></i>"
+                }
+            }
+        },
+        drawCanvas: drawwidget,
+        screenrecord: {
+            // active: webrtcdevobj.issafari ? false : true,
+            active: false,
+            videoRecordContainer: true,
+            button: {
+                id: "scrRecordBtn",
+                class_on: "amplechat-icon-screen-record On",
+                html_on: '<i class="fa fa-stop-circle-o" aria-hidden="true"></i>',
+                class_off: "amplechat-icon-screen-record Off blink_me",
+                html_off: '<i class="fa fa-stop-circle-o" aria-hidden="true"></i>'
+            }
+        },
+        screenshare: screensharewidget,
+        listenin: {
+            active: false
+        },
+        help: {
+            active: true,
+            helpContainer: "help-view-body",
+            screenshotContainer: "help-screenshot-body",
+            descriptionContainer: "help-description-body"
+        },
+        statistics: {
+            active: false,
+            statsConainer: "network-stats-body"
+        }
+    };
+
+
+    // Videos
+    var selfvideo = "myAloneVideo";
+    var remotevideosarr = ["myConferenceVideo", "otherConferenceVideo1", "otherConferenceVideo2",
+        "otherConferenceVideo3", "otherConferenceVideo4", "otherConferenceVideo5"];
+    local = {
+        video: selfvideo,
+        videoClass: "video-class",
+        videoContainer: "singleVideoContainer",
+        userDisplay: true,
+        userMetaDisplay: false,
+        userdetails: {
+            username: "altanai",
+            usercolor: '#B5B9E7',
+            useremail: "tara181989@gmail.oom",
+            role: "participant"
+        }
+    };
+
+    remote = {
+        videoarr: remotevideosarr,
+        videoClass: "video-class",
+        maxAllowed: 100,
+        videoContainer: "remote_sidebar_right",
+        userDisplay: true,
+        userMetaDisplay: false,
+        dynamicVideos: false,
+        userdetails: {
+            username: 'REMOTE',
+            usercolor: '#5c66bf',
+            useremail: 'unknown'
+        }
+    };
+
+    incoming = {
+        audio: true,
+        video: true,
+        data: true,
+        screen: true
+    };
+
+    outgoing = {
+        audio: true,
+        video: true,
+        data: true,
+        screen: true
+    };
+
+
+    // Session
+    sessionid = webrtcdevobj.makesessionid("noreload");
+
+    //Signaller
+    var webrtcserver = "https://dev.brightchats.com:8083/";
+    var signallerserver = "https://dev.brightchats.com:8085/";
+
+    // TURN / STUN
+    var iceservers_array = [{
+        urls: ["STUN stun.l.google.com:19302"]
+    }
+    ];
+
+
+    session = {
+        sessionid: sessionid,
+        socketAddr: webrtcserver,
+        signaller: signallerserver,
+        turn: {
+            active: true,
+            iceServers: iceservers_array
+        }
+    };
+    webrtcdevsessionobj = webrtcdevobj.setsession(local, remote, incoming, outgoing, session, widgets);
+</script>
+
 </html>
