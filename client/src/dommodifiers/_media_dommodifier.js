@@ -151,7 +151,7 @@ function createFullScreenButton(minmaxobj, controlBarName, peerinfo) {
     button.innerHTML = minmaxobj.max.button.html_off;
     button.onclick = function () {
         if (button.className == minmaxobj.max.button.class_off) {
-            let vid = document.getElementById(peerinfo.videoContainer);
+            let vid = peerinfo.videoContainer;
             vid.webkitEnterFullScreen();
             button.className = minmaxobj.max.button.class_on;
             button.innerHTML = minmaxobj.max.button.html_on;
@@ -314,8 +314,8 @@ this.attachUserDetails = attachUserDetails = function (vid, peerinfo) {
     let nameBox = document.createElement("div");
     // nameBox.setAttribute("style", "background-color:" + peerinfo.color),
     nameBox.className = "videoHeaderClass",
-    nameBox.innerHTML = peerinfo.name ,
-    nameBox.id = "videoheaders" + peerinfo.userid;
+        nameBox.innerHTML = peerinfo.name ,
+        nameBox.id = "videoheaders" + peerinfo.userid;
 
     // add after video
     vid.parentNode.appendChild(nameBox);
