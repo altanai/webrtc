@@ -70,7 +70,7 @@ this.attachControlButtons = attachControlButtons = function (vid, peerinfo) {
     webrtcdev.log(" [media dom modifier] attachControlButtons to the parent Node of video  ", parentNode);
     if (parentNode) {
         let c = parentNode.childNodes;
-        for (i in c) {
+        for (let i in c) {
             let cc = c[i];
             if (cc.nodeName == "DIV" && cc.id) {
                 if (cc.id.indexOf("control") > -1) {
@@ -125,7 +125,7 @@ this.attachControlButtons = attachControlButtons = function (vid, peerinfo) {
         // attach minimize button to header instead of widgets in footer
         nameBoxid = "#videoheaders" + peerinfo.userid;
         let nameBox = document.querySelectorAll(nameBoxid);
-        for (n in nameBox) {
+        for (let n in nameBox) {
             // webrtcdev.log("[_media_dommodifier ] attachControlButtons - nameBox " , nameBox[n]);
             if (nameBox[n].appendChild)
                 nameBox[n].appendChild(createMinimizeVideoButton(minmaxobj, controlBarName, peerinfo, streamid, stream));
@@ -220,7 +220,7 @@ function createAudioMuteButton(muteobj, controlBarName, peerinfo) {
             } catch (err) {
                 peerinfo.stream.getAudioTracks()[0].enabled = false;
             }
-
+            syncMute("audiomute", "mute" );
             audioButton.className = muteobj.audio.button.class_off;
             audioButton.innerHTML = muteobj.audio.button.html_off;
         } else {
@@ -231,7 +231,8 @@ function createAudioMuteButton(muteobj, controlBarName, peerinfo) {
             } catch (e) {
                 peerinfo.stream.getAudioTracks()[0].enabled = true;
             }
-            rtcConn.streamEvents.selectFirst('local').mediaElement.muted = true;
+            // rtcConn.streamEvents.selectFirst('local').mediaElement.muted = true;
+            syncMute("audiounmute", "mute" );
             audioButton.className = muteobj.audio.button.class_on;
             audioButton.innerHTML = muteobj.audio.button.html_on;
         }
@@ -264,6 +265,7 @@ function createVideoMuteButton(muteobj, controlBarName, peerinfo) {
             } catch (err) {
                 peerinfo.stream.getVideoTracks()[0].enabled = false;
             }
+            syncMute("videomute", "mute" );
             videoButton.innerHTML = muteobj.video.button.html_off;
             videoButton.className = muteobj.video.button.class_off;
         } else {
@@ -274,6 +276,7 @@ function createVideoMuteButton(muteobj, controlBarName, peerinfo) {
             } catch (err) {
                 peerinfo.stream.getVideoTracks()[0].enabled = true;
             }
+            syncMute("videounmute", "mute" );
             videoButton.innerHTML = muteobj.video.button.html_on;
             videoButton.className = muteobj.video.button.class_on;
         }

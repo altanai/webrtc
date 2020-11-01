@@ -165,7 +165,7 @@ function stopSendFile(progressid, filename, file, fileto, filefrom) {
     for (y in peerinfo.filearray) {
         if (peerinfo.filearray[y].pid == progressid) {
             peerinfo.filearray[y].status = "stop";
-            webrtcdev.log("[filesharing js ] stopSendFile - filename ", peerinfo.filearray[y].name, " | status ", peerinfo.filearray[y].status);
+            webrtcdev.log("[filesharing js] stopSendFile - filename ", peerinfo.filearray[y].name, " | status ", peerinfo.filearray[y].status);
             //peerinfo.filearray.splice(y,1);
         }
     }

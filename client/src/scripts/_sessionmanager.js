@@ -498,7 +498,7 @@ var setRtcConn = function (sessionid, sessionobj) {
                 // updateWhotyping("");
 
             } else {
-                let msgpeerinfo = findPeerInfo(msg.userid);
+                var msgpeerinfo = findPeerInfo(msg.userid);
                 switch (msg.data.type) {
 
                     case "screenshare":
@@ -540,6 +540,44 @@ var setRtcConn = function (sessionid, sessionobj) {
                                 action: "onchat"
                             }
                         }));
+                        break;
+
+                    case "mute":
+                        // let mutearr=["videomute","videounmute","audiomute","audiounmute"];
+                        // if(mutearr.includes(message.data.message) ){
+                        //     window.dispatchEvent(new CustomEvent('webrtcdev', {
+                        //         detail: {
+                        //             servicetype: "mute",
+                        //             action: message.data.message
+                        //         }
+                        //     }));
+                        // }
+                        let videoButton = document.getElementById(msgpeerinfo.controlBarName+"videoButton");
+                        let audioButton = document.getElementById(msgpeerinfo.controlBarName+"audioButton");
+
+                        switch (msg.data.message) {
+                            case "videomute":
+                                videoButton.innerHTML = muteobj.video.button.html_off;
+                                videoButton.className = muteobj.video.button.class_off;
+                                console.log("video mute");
+                                break;
+                            case "videounmute":
+                                videoButton.innerHTML = muteobj.video.button.html_on;
+                                videoButton.className = muteobj.video.button.class_on;
+                                break;
+                            case "audiomute":
+                                audioButton.className = muteobj.audio.button.class_off;
+                                audioButton.innerHTML = muteobj.audio.button.html_off;
+                                console.log("audio mute");
+                                break;
+                            case "audiounmute":
+                                audioButton.className = muteobj.audio.button.class_on;
+                                audioButton.innerHTML = muteobj.audio.button.html_on;
+                                break;
+                            default:
+                                webrtcdev.error("unmatched mut case transmitted by peer");
+                                break;
+                        }
                         break;
 
                     case "imagesnapshot":
@@ -845,7 +883,7 @@ var setupCallView = function (type, channel, userid) {
             createFileSharingDiv(peerinfo);
 
             //max display the local / single fileshare
-            if( getElementById(peerinfo.fileShare.outerbox))
+            if (getElementById(peerinfo.fileShare.outerbox))
                 getElementById(peerinfo.fileShare.outerbox).style.width = "100%";
 
         } else if (fileshareobj.props.fileShare == "divided") {
