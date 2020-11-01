@@ -1,4 +1,4 @@
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*********************************************************
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*********************************************************
  webdev Logger
  *******************************************************/
 var webrtcdevlogs = [];
@@ -132,7 +132,7 @@ var webrtcdevlogger = {
 };
 
 var webrtcdev = webrtcdevlogger;
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */// '';
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */// '';
 
 var RTCMultiConnection = function (roomid, forceOptions) {
 
@@ -1057,7 +1057,7 @@ var RTCMultiConnection = function (roomid, forceOptions) {
         };
     }
 
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */'';
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */'';
 // ________________
 // DetectRTC v1.3.9
 
@@ -2204,7 +2204,7 @@ var RTCMultiConnection = function (roomid, forceOptions) {
         });
     }
 })();
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */if (typeof cordova !== 'undefined') {
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */if (typeof cordova !== 'undefined') {
     DetectRTC.isMobileDevice = true;
     DetectRTC.browser.name = 'Chrome';
 }
@@ -2577,7 +2577,7 @@ function isUnifiedPlanSuppored() {
 
     return isUnifiedPlanSupported;
 }
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */// RTCPeerConnection.js
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */// RTCPeerConnection.js
 
 var defaults = {};
 
@@ -3252,7 +3252,7 @@ function PeerInitiator(config) {
 
     this.peer = peer;
 }
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */// CodecsHandler.js
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */// CodecsHandler.js
 
 var CodecsHandler = (function () {
 
@@ -3709,7 +3709,7 @@ var CodecsHandler = (function () {
 
 // backward compatibility
 window.BandwidthHandler = CodecsHandler;
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */// OnIceCandidateHandler.js
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */// OnIceCandidateHandler.js
 
 var OnIceCandidateHandler = (function () {
     function processCandidates(connection, icePair) {
@@ -3762,7 +3762,7 @@ var OnIceCandidateHandler = (function () {
         processCandidates: processCandidates
     };
 })();
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */// IceServersHandler.js
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */// IceServersHandler.js
 
 var IceServersHandler = (function () {
     function getIceServers(connection) {
@@ -3781,7 +3781,7 @@ var IceServersHandler = (function () {
         getIceServers: getIceServers
     };
 })();
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */// getUserMediaHandler.js
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */// getUserMediaHandler.js
 
 function setStreamType(constraints, stream) {
     if (constraints.mandatory && constraints.mandatory.chromeMediaSource) {
@@ -3984,7 +3984,7 @@ function getUserMediaHandler(options) {
         }
     }
 }
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */// StreamsHandler.js
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */// StreamsHandler.js
 
 var StreamsHandler = (function () {
     function handleType(type) {
@@ -4137,7 +4137,7 @@ var StreamsHandler = (function () {
         }
     };
 })();
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */// TextReceiver.js & TextSender.js
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */// TextReceiver.js & TextSender.js
 
 function TextReceiver(connection) {
     var content = {};
@@ -4242,7 +4242,7 @@ var TextSender = {
         }
     }
 };
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------
                         FileProgressBarHandler
  Handles events like - onFileStart , onFileProgress and onFileEnd
  Also updates progress bar innerhtml and updates the label
@@ -4343,7 +4343,7 @@ var FileProgressBarHandler = (function () {
         handle: handle
     };
 })();
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */// _____________________
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */// _____________________
 // RTCMultiConnection.js
 
 (function (connection) {
@@ -6320,7 +6320,7 @@ var FileProgressBarHandler = (function () {
         INVALID_ADMIN_CREDENTIAL: 'Invalid username or password attempted'
     };
 })(this);
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */
 
 };
 
@@ -6334,7 +6334,7 @@ if (typeof define === 'function' && define.amd) {
     });
 }
 
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*!
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*!
  * html2canvas 1.0.0-alpha.12 <https://html2canvas.hertzen.com>
  * Copyright (c) 2018 Niklas von Hertzen <https://hertzen.com>
  * Released under MIT License
@@ -13595,10 +13595,10 @@ var formatCounterValue = function formatCounterValue(counter, glue, format) {
 /***/ })
 /******/ ]);
 });
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */var webrtcdevcon = function () {
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */var webrtcdevcon = function () {
 
 
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*********** global Params ****************/
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*********** global Params ****************/
 
 var rtcConn = null;
 var selfuserid = null, remoteUserId = null;
@@ -13687,7 +13687,7 @@ var screen_roomid, screen_userid;
 var role = "participant";
 
 
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
 /*                    Global Init JS                                                 */
 /*-----------------------------------------------------------------------------------*/
 var channelpresence = false;
@@ -14141,7 +14141,7 @@ this.stopCall = stopCall = function () {
 
     this.connectionStatus = "closed";
 };
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */function getElement(e) {
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */function getElement(e) {
     return document.querySelector(e)
 }
 
@@ -14258,7 +14258,7 @@ function hideelem(elem) {
 function existselem(elem) {
     return getElementById(elem) ? true : false;
 }
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//**
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//**
  * Update local cache of user sesssion based object called peerinfo
  * @method
  * @name updateWebCallView
@@ -14725,7 +14725,7 @@ function findEmptyRemoteVideoIndex(peerinfo, remoteVideos) {
 }
 
 
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//**
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//**
  * Create File share button
  * @method
  * @name createFileShareButton
@@ -15059,7 +15059,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     let downloadButton = document.createElement("li");
     downloadButton.id = "downloadButton" + filename + uuid;
     downloadButton.title = "Download";
-    if(fileshareobj.filelist.downloadicon) {
+    if (fileshareobj.filelist.downloadicon) {
         if (toElement(fileshareobj.filelist.downloadicon) instanceof HTMLElement) {
             downloadButton.innerHTML = fileshareobj.filelist.downloadicon;
         } else {
@@ -15067,7 +15067,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
             img.src = fileshareobj.filelist.downloadicon;
             downloadButton.appendChild(img);
         }
-    }else {
+    } else {
         downloadButton.innerHTML = '<i class="fa fa-download"></i>';
     }
     downloadButton.onclick = function () {
@@ -15082,9 +15082,13 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     saveButton.setAttribute("data-toggle", "modal");
     saveButton.setAttribute("data-target", "#saveModal");
     if (fileshareobj.filelist.saveicon) {
-        let img = document.createElement("img");
-        img.src = fileshareobj.filelist.saveicon;
-        saveButton.appendChild(img);
+        if (toElement(fileshareobj.filelist.saveicon) instanceof HTMLElement) {
+            saveButton.innerHTML = fileshareobj.filelist.saveicon;
+        } else {
+            let img = document.createElement("img");
+            img.src = fileshareobj.filelist.saveicon;
+            saveButton.appendChild(img);
+        }
     } else {
         saveButton.innerHTML = '<i class="fa fa-floppy-o"></i>';
     }
@@ -15096,7 +15100,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     let showButton = document.createElement("li");
     showButton.id = "showButton" + filename + uuid;
     showButton.title = "Show";
-    if(fileshareobj.filelist.showicon) {
+    if (fileshareobj.filelist.showicon) {
         if (toElement(fileshareobj.filelist.showicon) instanceof HTMLElement) {
             showButton.innerHTML = fileshareobj.filelist.showicon;
         } else {
@@ -15104,7 +15108,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
             img.src = fileshareobj.filelist.showicon;
             showButton.appendChild(img);
         }
-    }else {
+    } else {
         showButton.innerHTML = '<i class="fa fa-eye-slash"></i>';
     }
     let countClicks = 0;
@@ -15146,13 +15150,13 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     let removeButton = document.createElement("li");
     removeButton.id = "removeButton" + filename + uuid;
     removeButton.title = "Remove";
-    if(fileshareobj.filelist.trashicon) {
+    if (fileshareobj.filelist.trashicon) {
         if (toElement(fileshareobj.filelist.trashicon) instanceof HTMLElement) {
             removeButton.innerHTML = fileshareobj.filelist.trashicon;
         } else {
             removeButton.appendChild(fileshareobj.filelist.trashicon);
         }
-    }else {
+    } else {
         removeButton.innerHTML = '<i class="fa fa-trash-o"></i>';
     }
     removeButton.onclick = function (event) {
@@ -15421,7 +15425,7 @@ function showHideFile(uuid, elementDisplay, fileurl, filename, filetype, showHid
             _filename : filename,
             _filetype : filetype
         }); */
-        showHideButton.innerHTML = '<i class="fa fa-eye-slash"></i>';
+        showHideButton.innerHTML = fileshareobj.filelist.hideicon ||'<i class="fa fa-eye-slash"></i>';
         webrtcdev.log(" [filehsaring js]  Executed script to show the file");
     } else if (countClicks % 2 == 0) {
         hideFile(elementDisplay, filename);
@@ -15433,7 +15437,7 @@ function showHideFile(uuid, elementDisplay, fileurl, filename, filetype, showHid
             _filename: filename,
             _filetype: filetype
         });*/
-        showHideButton.innerHTML = '<i class="fa fa-eye"></i>';
+        showHideButton.innerHTML = fileshareobj.filelist.showicon ||'<i class="fa fa-eye"></i>';
         webrtcdev.log(" [filehsaring js]  Executed script to hide the file ");
     }
 }
@@ -16065,7 +16069,7 @@ function createModalPopup(filetype) {
 
     mainDiv.appendChild(modalBox);
 }
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//***************************************************
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//***************************************************
  video handling
  *********************************************************/
 
@@ -16478,7 +16482,7 @@ function createRecordButton(videoRecordobj, controlBarName, peerinfo) {
     };
     return recordButton;
 }
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
 /*                    Notify JS                                                     */
 /*-----------------------------------------------------------------------------------*/
 
@@ -16617,7 +16621,7 @@ function spawnNotification(theBody, theIcon, theTitle) {
 /*-----------------------------------------------------------------------------------*/
 
 
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */var screenShareButton;
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */var screenShareButton;
 
 /**
  * find if view button is provided or need to be created
@@ -16838,7 +16842,7 @@ function screenshareNotification(message, type) {
         alert(message);
     }
 }
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*
  * Assign Screen Record Button based on screenrecordobj widget
  * @method
  * @name assignScreenRecordButton
@@ -17078,7 +17082,7 @@ function createScreenRecordButton(){
 }
 
 
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*
  * creates chat button DOM
  * @method
  * @name createChatButton
@@ -17225,7 +17229,7 @@ function updateWhotyping(data) {
     if(document.getElementById("whoTyping"))
         document.getElementById("whoTyping").innerHTML = data;
 }
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//**
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//**
  * Sync draw boads opening between all peers
  * @method
  * @name syncDrawBoard
@@ -17327,7 +17331,7 @@ saveButtonCanvas.onclick = function () {
 };
 document.body.appendChild(saveButtonCanvas);
 
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//**
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//**
  * function to activate Timer Buttons
  * @name activateButtons
  */
@@ -17544,7 +17548,7 @@ function showRemoteTimer(peerinfo) {
         remotetimecontainer.appendChild(timerspanpeer);
     }
 }
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
 /*                        stats JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 
@@ -18067,7 +18071,7 @@ function getMediaDevicesConstraints() {
 }
 
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//**************************************************************
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//**************************************************************
  Screenshare
  ****************************************************************/
 var scrConn = null;
@@ -18433,7 +18437,7 @@ function resetAlertBox() {
     getElementById("alertBox").hidden = false;
     getElementById("alertBox").innerHTML = "";
 }
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */// Last time updated: 2016-11-04 7:11:11 AM UTC
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */// Last time updated: 2016-11-04 7:11:11 AM UTC
 
 // ________________
 // FileBufferReader
@@ -19601,7 +19605,7 @@ function resetAlertBox() {
     window.FileBufferReader = FileBufferReader;
 })();
 
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */// ______________________
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */// ______________________
 // MediaStreamRecorder.js
 
 function MediaStreamRecorder(mediaStream) {
@@ -20998,7 +21002,7 @@ function SaveToDisk(blobOrFile, fileName) {
 
     (window.URL || window.webkitURL).revokeObjectURL(hyperlink.href);
 }
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */'';
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */'';
 
 //__________
 // RecordRTC.js
@@ -24942,7 +24946,7 @@ if (typeof RecordRTC !== 'undefined') {
     RecordRTC.GifRecorder = GifRecorder;
 }
 
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//* *************************************
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//* *************************************
 Snapshot
 ************************************************/
 function takeSnapshot(peerinfo, callback) {
@@ -24984,7 +24988,7 @@ function syncSnapshot(datasnapshot, datatype, dataname) {
 }
 
 
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
 /*                    Geo JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 
@@ -25042,7 +25046,7 @@ function showError(error) {
 }
 
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
 /*.                        Chat JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 
@@ -25209,7 +25213,7 @@ function addMessageBlockFormat(messageheaderDivclass, messageheader, messageDivc
 
 
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//**----------------------------------
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//**----------------------------------
  webrtc get media
  ------------------------------------*/
 
@@ -25574,7 +25578,7 @@ function syncMute(msg, datatype="mute") {
 }
 
 
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
 /*                       Record JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 
@@ -25719,7 +25723,7 @@ function stopRecord(){
 }*/
 
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//************************************************************************
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//************************************************************************
  Canvas Record
  *************************************************************************/
 var scrrecordStream = null, scrrecordStreamid = null;
@@ -26091,7 +26095,7 @@ function PostBlob(resource) {
     displayList(peerinfo.uuid, peerinfo, fileurl, recordVideoname, "videoScreenRecording");
     displayFile(peerinfo.uuid, peerinfo, fileurl, recordVideoname, "videoScreenRecording");
 }
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
 /*                    File JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 
@@ -26344,7 +26348,7 @@ function addNewFileRemote(e) {
 }
 
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
 /*                         Draw JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 var CanvasDesigner;
@@ -26433,7 +26437,7 @@ function webrtcdevCanvasDesigner(drawCanvasobj) {
 }
 
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
 /*                    Reconnect JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 
@@ -26484,7 +26488,7 @@ function assignButtonRedial(id,reconnectobj){
     };
 }
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
 /*                    listen-in JS                                                   */
 
 /*-----------------------------------------------------------------------------------*/
@@ -26549,7 +26553,7 @@ this.sendlisteninlink = function (url, key, senderuseremail, receiveruseremail) 
 };
 /*-----------------------------------------------------------------------------------*/
 
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
 /*                       cursor JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 
@@ -26643,7 +26647,7 @@ function createCursorButton(controlBarName, peerinfo, streamid, stream) {
 /*
     <div id="cursor1" class="fa fa-hand-o-up" style="width:0"></div>
     <div id="cursor2" class="fa fa-hand-o-up" style="width:0"></div>*/
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
 /*                    Code Editor  JS                                                */
 /*-----------------------------------------------------------------------------------*/
 
@@ -26748,7 +26752,7 @@ function stopWebrtcdevcodeeditorSync(){
 
 /*-----------------------------------------------------------------------------------*/
 
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */function createTextEditorButton(texteditorobj) {
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */function createTextEditorButton(texteditorobj) {
     var texteditorButton = document.createElement("span");
     texteditorButton.className = texteditorobj.button.class_off;
     texteditorButton.innerHTML = texteditorobj.button.html_off;
@@ -26807,7 +26811,7 @@ function stopWebrtcdevTexteditorSync() {
     document.getElementById(texteditorobj.texteditorContainer).removeEventListener("keyup", sendWebrtcdevTexteditorSync, false);
 }
 
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*********************************************
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*********************************************
  ICE
  **************************************************/
 /**
@@ -26859,7 +26863,7 @@ function getICEServer() {
     xhr.setRequestHeader("Authorization", "Basic " + btoa("farookafsari:e35af4d2-dbd5-11e7-b927-0c3f27cba33f"));
     xhr.send();
 }
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
 /*                        timer JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 /**
@@ -27035,7 +27039,7 @@ function checkTime(i) {
 }
 
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
 /*                        Tracing JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 
@@ -27147,7 +27151,7 @@ function getScreenshotOfElement(element, posX, posY, width, height, callback) {
 }
 
 /*-----------------------------------------------------------------------------------*/
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//**
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//**
  * find information about a peer form array of peers based on userid
  * @method
  * @name findPeerInfo
@@ -27404,7 +27408,7 @@ this.getwebcallpeers = function () {
     return webcallpeers;
 };
 
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//*-----------------------------------------------------------------------------------*/
 /*                    Widgets JS                                                   */
 /*-----------------------------------------------------------------------------------*/
 var setWidgets = function (rtcConn, widgetsobj) {
@@ -27674,7 +27678,7 @@ var setWidgets = function (rtcConn, widgetsobj) {
     });
 };
 
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */// function handleError(error) {
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */// function handleError(error) {
 //   if (error.name === 'ConstraintNotSatisfiedError') {
 //     let v = constraints.video;
 //     webrtcdev.error(`The resolution ${v.width.exact}x${v.height.exact} px is not supported by your device.`);
@@ -28620,7 +28624,7 @@ var setupCallView = function (type, channel, userid) {
     // appendToPeerValue(selfuserid, "setup", "done");
 };
 
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//**
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  *//**
  * function to leave a webrtc socket channel
  * @method
  * @name leaveWebRTC
@@ -28652,7 +28656,7 @@ function refreshSession(){
     clearCaches();
     location.reload();
 }
-/* Generated on:Sun Nov 01 2020 12:05:00 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */};
+/* Generated on:Sun Nov 01 2020 12:20:09 GMT+0530 (India Standard Time) || version: 6.6.0 - Altanai (@altanai)  , License : MIT  */};
 if (typeof module !== 'undefined' /* && !!module.exports*/ ) {
     module.exports = exports = webrtcdevcon;
 }

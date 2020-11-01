@@ -332,7 +332,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     let downloadButton = document.createElement("li");
     downloadButton.id = "downloadButton" + filename + uuid;
     downloadButton.title = "Download";
-    if(fileshareobj.filelist.downloadicon) {
+    if (fileshareobj.filelist.downloadicon) {
         if (toElement(fileshareobj.filelist.downloadicon) instanceof HTMLElement) {
             downloadButton.innerHTML = fileshareobj.filelist.downloadicon;
         } else {
@@ -340,7 +340,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
             img.src = fileshareobj.filelist.downloadicon;
             downloadButton.appendChild(img);
         }
-    }else {
+    } else {
         downloadButton.innerHTML = '<i class="fa fa-download"></i>';
     }
     downloadButton.onclick = function () {
@@ -355,9 +355,13 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     saveButton.setAttribute("data-toggle", "modal");
     saveButton.setAttribute("data-target", "#saveModal");
     if (fileshareobj.filelist.saveicon) {
-        let img = document.createElement("img");
-        img.src = fileshareobj.filelist.saveicon;
-        saveButton.appendChild(img);
+        if (toElement(fileshareobj.filelist.saveicon) instanceof HTMLElement) {
+            saveButton.innerHTML = fileshareobj.filelist.saveicon;
+        } else {
+            let img = document.createElement("img");
+            img.src = fileshareobj.filelist.saveicon;
+            saveButton.appendChild(img);
+        }
     } else {
         saveButton.innerHTML = '<i class="fa fa-floppy-o"></i>';
     }
@@ -369,7 +373,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     let showButton = document.createElement("li");
     showButton.id = "showButton" + filename + uuid;
     showButton.title = "Show";
-    if(fileshareobj.filelist.showicon) {
+    if (fileshareobj.filelist.showicon) {
         if (toElement(fileshareobj.filelist.showicon) instanceof HTMLElement) {
             showButton.innerHTML = fileshareobj.filelist.showicon;
         } else {
@@ -377,7 +381,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
             img.src = fileshareobj.filelist.showicon;
             showButton.appendChild(img);
         }
-    }else {
+    } else {
         showButton.innerHTML = '<i class="fa fa-eye-slash"></i>';
     }
     let countClicks = 0;
@@ -419,13 +423,13 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     let removeButton = document.createElement("li");
     removeButton.id = "removeButton" + filename + uuid;
     removeButton.title = "Remove";
-    if(fileshareobj.filelist.trashicon) {
+    if (fileshareobj.filelist.trashicon) {
         if (toElement(fileshareobj.filelist.trashicon) instanceof HTMLElement) {
             removeButton.innerHTML = fileshareobj.filelist.trashicon;
         } else {
             removeButton.appendChild(fileshareobj.filelist.trashicon);
         }
-    }else {
+    } else {
         removeButton.innerHTML = '<i class="fa fa-trash-o"></i>';
     }
     removeButton.onclick = function (event) {
@@ -694,7 +698,7 @@ function showHideFile(uuid, elementDisplay, fileurl, filename, filetype, showHid
             _filename : filename,
             _filetype : filetype
         }); */
-        showHideButton.innerHTML = '<i class="fa fa-eye-slash"></i>';
+        showHideButton.innerHTML = fileshareobj.filelist.hideicon ||'<i class="fa fa-eye-slash"></i>';
         webrtcdev.log(" [filehsaring js]  Executed script to show the file");
     } else if (countClicks % 2 == 0) {
         hideFile(elementDisplay, filename);
@@ -706,7 +710,7 @@ function showHideFile(uuid, elementDisplay, fileurl, filename, filetype, showHid
             _filename: filename,
             _filetype: filetype
         });*/
-        showHideButton.innerHTML = '<i class="fa fa-eye"></i>';
+        showHideButton.innerHTML = fileshareobj.filelist.showicon ||'<i class="fa fa-eye"></i>';
         webrtcdev.log(" [filehsaring js]  Executed script to hide the file ");
     }
 }
