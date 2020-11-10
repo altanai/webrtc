@@ -28,23 +28,13 @@ function createdrawButton(drawCanvasobj) {
             drawButton.className = drawCanvasobj.button.class_on;
             drawButton.innerHTML = drawCanvasobj.button.html_on;
 
-            showelem(drawCanvasobj.drawCanvasContainer);
-
-            let bdata = {
-                event: "open",
-                from: "remote",
-                board: drawCanvasobj.drawCanvasContainer,
-                button: drawCanvasobj.button
-            };
-            rtcConn.send({type: "canvas", board: bdata});
-
-            webrtcdevCanvasDesigner(drawCanvasobj);
+            openDrawBoard();
 
         } else if (drawButton.className == drawCanvasobj.button.class_on) {
             drawButton.className = drawCanvasobj.button.class_off;
             drawButton.innerHTML = drawCanvasobj.button.html_off;
 
-            hideelem(drawCanvasobj.drawCanvasContainer);
+            closeDrawBoard();
         }
     };
     var li = document.createElement("li");

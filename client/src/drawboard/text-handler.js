@@ -1,4 +1,4 @@
-// -------------------------------------------------------------
+// ------------------------textHandler-------------------------------------
 var textInput = document.getElementById('text-input');
 textInput.onkeyup = function(e) {
     if (e.keyCode != 13) return;

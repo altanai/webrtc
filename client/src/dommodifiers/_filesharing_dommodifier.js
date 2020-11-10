@@ -348,26 +348,26 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
         downloadFile(uuid, elementDisplay, fileurl, filename, filetype);
     };
 
-    //Save Button
-    let saveButton = document.createElement("li");
-    saveButton.id = "saveButton" + filename + uuid;
-    saveButton.title = "Save";
-    saveButton.setAttribute("data-toggle", "modal");
-    saveButton.setAttribute("data-target", "#saveModal");
-    if (fileshareobj.filelist.saveicon) {
-        if (toElement(fileshareobj.filelist.saveicon) instanceof HTMLElement) {
-            saveButton.innerHTML = fileshareobj.filelist.saveicon;
-        } else {
-            let img = document.createElement("img");
-            img.src = fileshareobj.filelist.saveicon;
-            saveButton.appendChild(img);
-        }
-    } else {
-        saveButton.innerHTML = '<i class="fa fa-floppy-o"></i>';
-    }
-    saveButton.onclick = function () {
-        createModalPopup(filetype);
-    };
+    // //Save Button
+    // let saveButton = document.createElement("li");
+    // saveButton.id = "saveButton" + filename + uuid;
+    // saveButton.title = "Save";
+    // saveButton.setAttribute("data-toggle", "modal");
+    // saveButton.setAttribute("data-target", "#saveModal");
+    // if (fileshareobj.filelist.saveicon) {
+    //     if (toElement(fileshareobj.filelist.saveicon) instanceof HTMLElement) {
+    //         saveButton.innerHTML = fileshareobj.filelist.saveicon;
+    //     } else {
+    //         let img = document.createElement("img");
+    //         img.src = fileshareobj.filelist.saveicon;
+    //         saveButton.appendChild(img);
+    //     }
+    // } else {
+    //     saveButton.innerHTML = '<i class="fa fa-floppy-o"></i>';
+    // }
+    // saveButton.onclick = function () {
+    //     createModalPopup(filetype);
+    // };
 
     // Show Button
     let showButton = document.createElement("li");
@@ -458,7 +458,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     if (role == "inspector") {
         showdownbtn.hidden = true;
         showButton.hidden = true;
-        saveButton.hidden = true;
+        // saveButton.hidden = true;
         filedom.appendChild(name);
         removeButton.hidden = true;
     }
@@ -468,7 +468,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     if (showdownbtn)
         filedom.appendChild(downloadButton);
     filedom.appendChild(showButton);
-    filedom.appendChild(saveButton);
+    // filedom.appendChild(saveButton);
     //filedom.appendChild(hideButton);
     if (showdelbtn)
         filedom.appendChild(removeButton);

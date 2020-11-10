@@ -45,10 +45,10 @@ var app = http2
     })
     .listen(properties.http2Port);
 console.log("< ------------------------ HTTPS Server -------------------> ");
-console.log(" WebRTC server env => " + properties.enviornment + " running at " + properties.http2Port);
+console.log(" Web server env => " + properties.enviornment + " running at " + properties.http2Port);
+console.log(" Web server Landing page - https://localhost:"+ properties.http2Port+"/"+ properties.landingpage);
 
-
-// steam handler  approach
+// stream handler approach
 // const server = http2.createSecureServer(options);
 // server.on('stream', (stream, requestHeaders) => {
 //     // stream.respond();

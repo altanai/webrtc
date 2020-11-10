@@ -612,10 +612,11 @@ var setRtcConn = function (sessionid, sessionobj) {
                             if (msg.data.board.from == "remote") {
                                 if (msg.data.board.event == "open" && isDrawOpened != true)
                                     syncDrawBoard(msg.data.board);
-                                // else if (e.data.board.event == "close" && isDrawOpened == true)
-                                // syncDrawBoard(e.data.board);
+                                else if (msg.data.board.event == "close" && isDrawOpened == true)
+                                    syncDrawBoard(msg.data.board);
                             }
                         } else {
+                            //empty canvas data
                             webrtcdev.warn(" Board data mismatch", msg.data);
                         }
                         break;

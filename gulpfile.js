@@ -99,7 +99,7 @@ gulp.task('server', function (done) {
 
 gulp.task('drawjs', function (done) {
     console.log(" gulping drawjs  ");
-    let list = [
+    let scriptList = [
         "client/src/drawboard/common.js",
         "client/src/drawboard/decorator.js",
         "client/src/drawboard/draw-helper.js",
@@ -108,13 +108,30 @@ gulp.task('drawjs', function (done) {
         "client/src/drawboard/eraser-handler.js",
         "client/src/drawboard/line-handler.js",
         "client/src/drawboard/rect-handler.js",
+        "client/src/drawboard/text-handler.js",
         "client/src/drawboard/events-handler.js"
     ];
-    console.log(list);
-    gulp.src(list)
-        // .pipe(uglify())
-        .pipe(concat('drawBoardScript.js'))
-        .pipe(gulp.dest(folderPath));
+    console.log(scriptList);
+    // gulp.src(list)
+    //     // .pipe(uglify())
+    //     .pipe(concat('drawBoardScript.js'))
+    //     .pipe(gulp.dest(folderPath));
+    pipeline(gulp.src(scriptList, {allowEmpty: true}),
+        replace(/use strict/g, ''),
+        replace(/@@version/g, version),
+        header(headerComment),
+        concat('drawBoardScript.js'),
+        gulp.dest(folderPath),
+        uglify({
+            mangle: {
+                keepClassName: true
+            }
+        }),
+        rev(),
+        header(headerComment),
+        concat('drawBoardScript_min.js'),
+        gulp.dest(folderPath)
+    );
     done();
 });
 

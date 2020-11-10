@@ -134,7 +134,7 @@ function toElement(s = '', c, t = document.createElement('template'), l = 'lengt
     c = [...t.content.childNodes];
     return c[l] > 1 ? c : c[0] || '';
 }
-    
+
 function bytesToSize(e) {
     var t = ["Bytes", "KB", "MB", "GB", "TB"];
     if (0 == e) return "0 Bytes";
