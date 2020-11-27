@@ -18,7 +18,7 @@ function webrtcdevPrepareScreenShare(screenRoomid, sessionobj) {
 
     localStorage.setItem("screenRoomid ", screenRoomid);
     webrtcdev.log("[screenshare JS] webrtcdevPrepareScreenShare - screenRoomid : ", screenRoomid);
-    webrtcdev.log("[screenshare JS] webrtcdevPrepareScreenShare  with sessionnobj : ", sessionobj, " config " , config );
+    webrtcdev.log("[screenshare JS] webrtcdevPrepareScreenShare  with sessionnobj : ", sessionobj, " config ", config);
 
     scrConn = new RTCMultiConnection(),
 
@@ -130,6 +130,15 @@ function webrtcdevPrepareScreenShare(screenRoomid, sessionobj) {
                     message: "screenshareStartedViewing"
                 });
 
+                // Event Listener for Screen share stream started
+                window.dispatchEvent(new CustomEvent('webrtcdev', {
+                    detail: {
+                        servicetype: "screenshare",
+                        action: "onScreenShareStarted",
+                        type: "remote"
+                    }
+                }));
+
             } else {
                 // Local got screen share stream
                 shownotificationWarning("started streaming local screen");
@@ -140,17 +149,19 @@ function webrtcdevPrepareScreenShare(screenRoomid, sessionobj) {
                     screenStreamid: screenStreamId,
                     message: "startscreenshare"
                 });
+
+                // Event Listener for Screen share stream started
+                window.dispatchEvent(new CustomEvent('webrtcdev', {
+                    detail: {
+                        servicetype: "screenshare",
+                        action: "onScreenShareStarted",
+                        type: "local"
+                    }
+                }));
+
             }
 
             //createScreenViewButton();
-
-            // Event Listener for Screen share stream started
-            window.dispatchEvent(new CustomEvent('webrtcdev', {
-                detail: {
-                    servicetype: "screenshare",
-                    action: "onScreenShareStarted"
-                }
-            }));
         },
 
         scrConn.onstreamended = function (event) {

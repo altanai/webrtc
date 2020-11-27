@@ -104,21 +104,24 @@ function fileSharingEnded(file) {
                 //update filearray status to finished
                 peerinfo.filearray[x].status = "finished";
 
+                peerinfo.filearray[x] = filename;
+                
                 // Hide the stop upload button for this file
                 hideelem("stopuploadButton" + progressid);
             }
     }
 
-    // Display on File Viewer and List
-    webrtcdev.log("[flesharing JS] onFileEnd - Display on File Viewer and List -", file.url, filename, file.type);
-    displayFile(file.uuid, peerinfo, file.url, filename, file.type);
-
-    webrtcdev.log("[flesharing JS] onFileEnd - Display List -", filename + file.uuid, document.getElementById(filename + file.uuid));
+    webrtcdev.log("[flesharing JS] onFileEnd - Display List -", filename );
     // if the file is from me ( original share ) then display listing in viewbox just one
-    if (selfuserid == file.userid && document.getElementById(filename + file.uuid)) {
+    if (selfuserid == file.userid && document.getElementById(filename)) {
         return;
     }
     displayList(file.uuid, peerinfo, file.url, filename, file.type);
+
+
+    // Display on File Viewer and List
+    webrtcdev.log("[flesharing JS] onFileEnd - Display on File Viewer -", file.url, filename, file.type);
+    displayFile(file.uuid, peerinfo, file.url, filename, file.type);
 
     // start the pending transfer from pendingFileTransfer.push(file);
     // webrtcdev.log(" pendingFileTransfer ", pendingFileTransfer , pendingFileTransfer.length , pendingFileTransferlimit);
@@ -207,7 +210,7 @@ function sendOldFiles() {
                 for (o in oldfilesList) {
                     if (oldfilesList[o].name == user.filearray[y].name) break;
                 }
-                webrtcdev.log("[filehsraing js] user.filearray[y]", user.filearray[y])
+                webrtcdev.log("[filehsraing js] user.filearray[y]", user.filearray[y]);
                 oldfilesList.push(user.filearray[y]);
             }
         }

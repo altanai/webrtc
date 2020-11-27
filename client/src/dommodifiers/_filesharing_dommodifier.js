@@ -161,13 +161,15 @@ function addProgressHelper(uuid, peerinfo, filename, fileSize, file, progressHel
 
         let progressul = document.createElement("ul");
         progressul.id = progressid,
-            progressul.title = filename + " size - " + file.size + " type - " + file.type + " last modified on -" + file.lastModifiedDate,
+            progressul.title = filename + " size - " + file.size +
+                " type - " + file.type + " last modified on -" + file.lastModifiedDate,
             progressul.setAttribute("type", "progressbar"),
             progressul.setAttribute("class", "row");
         if (debug) {
             const progressDebug = document.createElement("li");
-            progressDebug.innerHTML = filename + "size - " + file.size + " type - " + file.type + " last modified on -" + file.lastModifiedDate
-                + " from :" + filefrom + " --> to :" + fileto + "</br>";
+            progressDebug.innerHTML = filename + "size - " + file.size +
+                " type - " + file.type + " last modified on -" + file.lastModifiedDate +
+                " from :" + filefrom + " --> to :" + fileto + "</br>";
             progressul.appendChild(progressDebug);
         }
 
@@ -269,6 +271,9 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     let showdownbtn = true;
     let showdelbtn = true;
 
+    if(!uuid){
+        uuid="000";
+    }
     try {
         if (!fileshareobj.active) return;
 
@@ -316,7 +321,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     webrtcdev.log("[filesharing dommodifier] displayList set up parent dom  ", parentdom);
 
     let filedom = document.createElement("ul");
-    filedom.id = filename + uuid;
+    filedom.id = filename ; // + uuid
     filedom.type = peerinfo.type;  // local or remote
     filedom.innerHTML = "";
     filedom.className = "row";
@@ -330,7 +335,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
 
     // Download Button
     let downloadButton = document.createElement("li");
-    downloadButton.id = "downloadButton" + filename + uuid;
+    downloadButton.id = "downloadButton" + filename ; // + uuid;
     downloadButton.title = "Download";
     if (fileshareobj.filelist.downloadicon) {
         if (toElement(fileshareobj.filelist.downloadicon) instanceof HTMLElement) {
@@ -371,7 +376,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
 
     // Show Button
     let showButton = document.createElement("li");
-    showButton.id = "showButton" + filename + uuid;
+    showButton.id = "showButton" + filename ; // + uuid;
     showButton.title = "Show";
     if (fileshareobj.filelist.showicon) {
         if (toElement(fileshareobj.filelist.showicon) instanceof HTMLElement) {
@@ -387,6 +392,22 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     let countClicks = 0;
     repeatFlagHideButton = filename;
     repeatFlagShowButton = "";
+
+    // hide others
+    for ( x in webrtcdevobj.getwebcallpeers()[0].filearray) {
+        let _filename = webrtcdevobj.getwebcallpeers()[0].filearray[x];
+        if(_filename != filename  && !_filename.name) {
+            let _showButton = document.getElementById("showButton" + _filename);
+            if (_showButton) {
+                //     _showbutton.click();
+                showHideFile('', elementDisplay, '', _filename, '', _showButton, 2);
+            }
+        }else{
+
+        }
+    }
+
+    // show the selected one
     showButton.onclick = function () {
         countClicks++;
         showHideFile(uuid, elementDisplay, fileurl, filename, filetype, showButton, countClicks);
@@ -435,7 +456,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     removeButton.onclick = function (event) {
         if (repeatFlagRemoveButton != filename) {
             //var tobeHiddenElement = event.target.parentNode.id;
-            const tobeHiddenElement = filename + uuid;
+            const tobeHiddenElement = filename ; // + uuid;
             hideFile(elementDisplay, filename);
             rtcConn.send({
                 type: "shareFileRemove",
@@ -469,7 +490,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
         filedom.appendChild(downloadButton);
     filedom.appendChild(showButton);
     // filedom.appendChild(saveButton);
-    //filedom.appendChild(hideButton);
+    // filedom.appendChild(hideButton);
     if (showdelbtn)
         filedom.appendChild(removeButton);
 
@@ -689,6 +710,15 @@ function showHideFile(uuid, elementDisplay, fileurl, filename, filetype, showHid
     webrtcdev.log(" [filehsaring js]  - show/hide elementDisplay ", elementDisplay);
     webrtcdev.log(" [filehsaring js]  - show/hide button ", filename, " || ", countClicks);
     if (countClicks % 2 == 1) {
+        // Event Listener for onFileShow
+        window.dispatchEvent(new CustomEvent('webrtcdev', {
+            detail: {
+                servicetype: "file",
+                action: "onFileShow",
+                type: "local"
+            }
+        }));
+
         showFile(elementDisplay, fileurl, filename, filetype);
         /*rtcConn.send({
             type:"shareFileShow",
@@ -698,7 +728,8 @@ function showHideFile(uuid, elementDisplay, fileurl, filename, filetype, showHid
             _filename : filename,
             _filetype : filetype
         }); */
-        showHideButton.innerHTML = fileshareobj.filelist.hideicon ||'<i class="fa fa-eye-slash"></i>';
+
+        showHideButton.innerHTML = fileshareobj.filelist.showicon ||'<i class="fa fa-eye"></i>';
         webrtcdev.log(" [filehsaring js]  Executed script to show the file");
     } else if (countClicks % 2 == 0) {
         hideFile(elementDisplay, filename);
@@ -710,7 +741,7 @@ function showHideFile(uuid, elementDisplay, fileurl, filename, filetype, showHid
             _filename: filename,
             _filetype: filetype
         });*/
-        showHideButton.innerHTML = fileshareobj.filelist.showicon ||'<i class="fa fa-eye"></i>';
+        showHideButton.innerHTML = fileshareobj.filelist.hideicon ||'<i class="fa fa-eye-slash"></i>';
         webrtcdev.log(" [filehsaring js]  Executed script to hide the file ");
     }
 }
