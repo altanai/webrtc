@@ -491,7 +491,7 @@ function setSelection(element, prop) {
 
         addEvent(btnLineWidthDone, 'click', function () {
             lineWidthContainer.style.display = 'none';
-            lineWidth = lineWidthText.value;
+            lineWidth = lineWidthText.value | lineWidthText.innerHTML;
         });
     }
 

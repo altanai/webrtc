@@ -609,7 +609,6 @@ function getFileElementDisplayByType(filetype, fileurl, filename) {
     } else {
         webrtcdev.log("[filehsaring domodifier] getFileElementDisplayByType - iframe ", fileurl);
         let iframe = document.createElement("iframe");
-        iframe.style.width = "100%";
         iframe.src = fileurl;
         iframe.className = "viewerIframeClass";
         iframe.title = filename;
@@ -710,7 +709,7 @@ function showHideFile(uuid, elementDisplay, fileurl, filename, filetype, showHid
     webrtcdev.log(" [filehsaring js]  - show/hide elementDisplay ", elementDisplay);
     webrtcdev.log(" [filehsaring js]  - show/hide button ", filename, " || ", countClicks);
     if (countClicks % 2 == 1) {
-        // Event Listener for onFileShow
+        // Disptach Event for onFileShow
         window.dispatchEvent(new CustomEvent('webrtcdev', {
             detail: {
                 servicetype: "file",

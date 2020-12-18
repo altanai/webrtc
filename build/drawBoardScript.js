@@ -1,4 +1,4 @@
-/* Generated on:Fri Nov 27 2020 18:09:30 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Fri Dec 18 2020 23:12:40 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 common 
 *********************************************/
 
@@ -23,7 +23,7 @@ function setContext(canv) {
         ctx.font = font;
     } catch (e) {
         // webrtcdev.error(" canvas context not set ", canv);
-        // webrtcdev.error(e);
+        webrtcdev.error(e);
     }
     return ctx;
 }
@@ -530,7 +530,7 @@ function paste() {
 // -------------------------------------------------------------
 
 
-/* Generated on:Fri Nov 27 2020 18:09:30 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Fri Dec 18 2020 23:12:40 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 Decorator
 *********************************************/
 
@@ -1023,7 +1023,7 @@ function setSelection(element, prop) {
 
         addEvent(btnLineWidthDone, 'click', function () {
             lineWidthContainer.style.display = 'none';
-            lineWidth = lineWidthText.value;
+            lineWidth = lineWidthText.value | lineWidthText.innerHTML;
         });
     }
 
@@ -1213,7 +1213,7 @@ function hideContainers() {
 
 
 
-/* Generated on:Fri Nov 27 2020 18:09:30 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Fri Dec 18 2020 23:12:40 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 Draw helper
 *********************************************/
 var drawHelper = {
@@ -1306,7 +1306,7 @@ var drawHelper = {
 
 };
 
-/* Generated on:Fri Nov 27 2020 18:09:30 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Fri Dec 18 2020 23:12:40 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 Drag helper
 *********************************************/
 var dragHelper = {
@@ -1708,7 +1708,7 @@ var dragHelper = {
     }
 };
 
-/* Generated on:Fri Nov 27 2020 18:09:30 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Fri Dec 18 2020 23:12:40 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 pencil Handler 
 *********************************************/
 var pencilHandler = {
@@ -1763,7 +1763,7 @@ var pencilHandler = {
 };
 
 
-/* Generated on:Fri Nov 27 2020 18:09:30 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Fri Dec 18 2020 23:12:40 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 Eraser Handler 
 *********************************************/
 
@@ -1821,7 +1821,7 @@ var eraserHandler = {
 
 
 };
-/* Generated on:Fri Nov 27 2020 18:09:30 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Fri Dec 18 2020 23:12:40 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 Line Handler 
 *********************************************/
 
@@ -1870,7 +1870,7 @@ var lineHandler = {
 
 };
 
-/* Generated on:Fri Nov 27 2020 18:09:30 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Fri Dec 18 2020 23:12:40 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 rect Handler 
 *********************************************/
 var rectHandler = {
@@ -1925,7 +1925,7 @@ var rectHandler = {
 
 };
 
-/* Generated on:Fri Nov 27 2020 18:09:30 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  */// ------------------------textHandler-------------------------------------
+/* Generated on:Fri Dec 18 2020 23:12:40 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  */// ------------------------textHandler-------------------------------------
 var textInput = document.getElementById('text-input');
 textInput.onkeyup = function(e) {
     if (e.keyCode != 13) return;
@@ -2004,7 +2004,7 @@ var textHandler = {
 };
 // -------------------------------------------------------------
 
-/* Generated on:Fri Nov 27 2020 18:09:30 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Fri Dec 18 2020 23:12:40 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 Events handler 
 *********************************************/
 

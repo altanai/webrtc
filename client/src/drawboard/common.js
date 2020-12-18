@@ -23,7 +23,7 @@ function setContext(canv) {
         ctx.font = font;
     } catch (e) {
         // webrtcdev.error(" canvas context not set ", canv);
-        // webrtcdev.error(e);
+        webrtcdev.error(e);
     }
     return ctx;
 }
