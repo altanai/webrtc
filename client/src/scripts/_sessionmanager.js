@@ -257,8 +257,8 @@ var setRtcConn = function (sessionid, sessionobj) {
 
         rtcConn.sdpConstraints = {
             mandatory: {
-                OfferToReceiveAudio: incomingAudio || true,
-                OfferToReceiveVideo: incomingVideo || true
+                OfferToReceiveAudio: incomingAudio ,
+                OfferToReceiveVideo: incomingVideo
             },
             optional: [{
                 VoiceActivityDetection: false
@@ -424,15 +424,19 @@ var setRtcConn = function (sessionid, sessionobj) {
             webrtcdev.error("[sessionmanager] onMediaError - ", error, " constraints ", constraints);
 
             // Join without stream
-            webrtcdev.warn("[sessionmanager] onMediaError - Joining without camera Stream");
+            webrtcdev.warn("[sessionmanager] onMediaError - Joining without camera Stream for userid : ", selfuserid);
             shownotification(error.name + " Joining without camera Stream ", "warning");
             localVideoStreaming = false;
             // For local Peer , if camera is not allowed or not connected then put null in video containers
-            let peerinfo = findPeerInfo(selfuserid);
-            peerinfo.type = "Local";
-            peerinfo.stream = "";
-            peerinfo.streamid = "";
-            updateWebCallView(peerinfo);
+            // if (!selfuserid) {
+            //     webrtcdev.warn("selfuserid undefiend , seeting iut t webcallpeers index 0", webcallpeers[0]);
+            //     selfuserid = webcallpeers[0].user;
+            // }
+            // let peerinfo = findPeerInfo(selfuserid);
+            // peerinfo.type = "Local";
+            // peerinfo.stream = "";
+            // peerinfo.streamid = "";
+            // updateWebCallView(peerinfo);
         },
 
         rtcConn.onstream = function (event) {
@@ -487,6 +491,7 @@ var setRtcConn = function (sessionid, sessionobj) {
             } else if (e.data.stoppedTyping) {
                 updateWhotyping("");
             } else {
+
                 let msgpeerinfo = findPeerInfo(e.userid);
                 switch (e.data.type) {
                     case "screenshare":
@@ -513,6 +518,7 @@ var setRtcConn = function (sessionid, sessionobj) {
                             webrtcdev.warn("[sessionmanager] unrecognized screen-share message ", e.data.message);
                         }
                         break;
+
                     case "chat":
                         updateWhotyping(e.extra.name + " has send message");
                         addNewMessage({
@@ -528,18 +534,22 @@ var setRtcConn = function (sessionid, sessionobj) {
                             }
                         }));
                         break;
+
                     case "imagesnapshot":
                         displayList(null, msgpeerinfo, e.data.message, e.data.name, "imagesnapshot");
                         displayFile(null, msgpeerinfo, e.data.message, e.data.name, "imagesnapshot");
                         break;
+
                     case "videoRecording":
                         displayList(null, msgpeerinfo, e.data.message, e.data.name, "videoRecording");
                         displayFile(null, msgpeerinfo, e.data.message, e.data.name, "videoRecording");
                         break;
+
                     case "videoScreenRecording":
                         displayList(null, msgpeerinfo, e.data.message, e.data.name, "videoScreenRecording");
                         displayFile(null, msgpeerinfo, e.data.message, e.data.name, "videoScreenRecording");
                         break;
+
                     case "file":
                         addNewMessage({
                             header: e.extra.name,
@@ -548,6 +558,7 @@ var setRtcConn = function (sessionid, sessionobj) {
                             color: e.extra.color
                         });
                         break;
+
                     case "canvas":
                         if (e.data.draw) {
                             CanvasDesigner.syncData(e.data.draw);
@@ -563,12 +574,15 @@ var setRtcConn = function (sessionid, sessionobj) {
                             webrtcdev.warn(" Board data mismatch", e.data);
                         }
                         break;
+
                     case "texteditor":
                         receiveWebrtcdevTexteditorSync(e.data.data);
                         break;
+
                     case "codeeditor":
                         receiveWebrtcdevCodeeditorSync(e.data.data);
                         break;
+
                     case "pointer":
                         var elem = document.getElementById("cursor2");
                         if (elem) {
@@ -583,6 +597,7 @@ var setRtcConn = function (sessionid, sessionobj) {
                         }
 
                         break;
+
                     case "timer":
                         if (msgpeerinfo) {
                             //check if the peer has stored zone and time info
@@ -598,6 +613,7 @@ var setRtcConn = function (sessionid, sessionobj) {
                         peerTimeZone(e.data.zone, e.userid);
                         startPeersTime(e.data.time, e.data.zone, e.userid);
                         break;
+
                     case "buttonclick":
                         var buttonElement = getElementById(e.data.buttonName);
                         if (buttonElement.getAttribute("lastClickedBy") != rtcConn.userid) {
@@ -605,9 +621,11 @@ var setRtcConn = function (sessionid, sessionobj) {
                             buttonElement.click();
                         }
                         break;
+
                     case "syncOldFiles":
                         sendOldFiles();
                         break;
+
                     case "shareFileRemove":
                         webrtcdev.log(" [sessionmanager] shareFileRemove - remove file : ", e.data._filename);
                         var progressdiv = e.data._element;
@@ -628,8 +646,8 @@ var setRtcConn = function (sessionid, sessionobj) {
                         }
                         document.getElementById(removeButton).click();
                         hideelem(removeButton);
-
                         break;
+
                     case "shareFileStopUpload":
                         var progressid = e.data._element;
                         webrtcdev.log(" [sessionmanager] shareFileStopUpload", progressid);
@@ -649,12 +667,15 @@ var setRtcConn = function (sessionid, sessionobj) {
                         // let stopuploadButton = "stopuploadButton"+filename;
                         // document.getElementById(stopuploadButton).hidden = true;
                         break;
+
                     case "sendstats":
                         sendWebrtcdevStats();
                         break;
+
                     case "receivedstats":
                         onreceivedWebrtcdevStats(e.userid, e.data.message);
                         break;
+
                     default:
                         webrtcdev.warn("[sessionmanager] unrecognizable message from peer  ", e);
                         break;

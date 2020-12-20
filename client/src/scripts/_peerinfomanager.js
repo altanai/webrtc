@@ -49,7 +49,7 @@ function getAllActivePeers() {
  * @name findPeerInfo
  * @param {string} userid
  */
-var findPeerInfoSDP = function (userid) {
+this.findPeerInfoSDP = findPeerInfoSDP = function (userid) {
     webrtcdev.log("peerinfomanager] find perinfo SDP ", userid);
     for (x in rtcConn.peers) {
         if (rtcConn.peers[x].userid == userid) {
@@ -97,7 +97,7 @@ var findPeerInfoSDP = function (userid) {
  * @param {json} key
  * @param {json} value4970gww6eg9
  */
-function appendToPeerValue(userid, key, value) {
+this.appendToPeerValue = appendToPeerValue = function (userid, key, value) {
     try {
         webrtcdev.log("[peerinfomanager] appendToPeerValue - update peer - " + userid + " by key - " + key + " with value ", value);
         if (!key || !value) return;

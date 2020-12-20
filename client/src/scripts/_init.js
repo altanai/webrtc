@@ -305,14 +305,14 @@ this.startCall = function (sessionobj) {
     webrtcdev.log("[ initjs ] : outgoing ", sessionobj.outgoing);
 
     if (sessionobj.incoming) {
-        incomingAudio = sessionobj.incoming.audio;
-        incomingVideo = sessionobj.incoming.video;
-        incomingData = sessionobj.incoming.data;
+        incomingAudio = sessionobj.incoming.audio | true;
+        incomingVideo = sessionobj.incoming.video | true;
+        incomingData = sessionobj.incoming.data | true;
     }
     if (sessionobj.outgoing) {
-        outgoingAudio = sessionobj.outgoing.audio;
-        outgoingVideo = sessionobj.outgoing.video;
-        outgoingData = sessionobj.outgoing.data;
+        outgoingAudio = sessionobj.outgoing.audio | true;
+        outgoingVideo = sessionobj.outgoing.video | true;
+        outgoingData = sessionobj.outgoing.data | true;
     }
 
     webrtcdev.log(" [ initjs  ] : role ", role);

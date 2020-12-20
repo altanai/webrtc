@@ -97,8 +97,8 @@ function updateWebCallView(peerinfo) {
  * @param {json} peerInfo
  */
 function updateWaitingWebCallView(peerinfo) {
-    if (localVideo && document.getElementsByName(localVideo)[0]) {
-        let vid = document.getElementsByName(localVideo)[0];
+    let vid = document.getElementsByName(localVideo)[0];
+    if (localVideo && vid) {
         attachMediaStream(vid, peerinfo.stream).then(_ => {
             webrtcdev.log('[webcallviewdevmanager] updateWaitingWebCallView - Done attaching local stream to element', vid);
             vid.muted = true;
@@ -112,7 +112,7 @@ function updateWaitingWebCallView(peerinfo) {
         });
 
     } else {
-        alert(" Please Add a video container in config for single video");
+        alert(" Please Add a video container in config for Waiting video");
         webrtcdev.error("[webcallviewdevmanager] updateWaitingWebCallView - No local video container in localobj -> ", localobj);
     }
 }
@@ -222,8 +222,9 @@ function updateRemoteWebCalView(peerinfo) {
             });
 
         } else {
-            webrtcdev.error("[webcallviewdevmanager] updateRemoteWebCalView - remote Video containers not defined ", remoteVideos);
-            alert("remote Video containers not defined");
+            webrtcdev.error("[webcallviewdevmanager] updateRemoteWebCalView - incomingVideo:", incomingVideo ,
+                " remoteVideos:", remoteVideos);
+            alert("Remote Video containers not defined or incoming video is turned off ");
             resolve();
         }
     });

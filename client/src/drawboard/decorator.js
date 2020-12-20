@@ -432,8 +432,8 @@ function setSelection(element, prop) {
             hideContainers();
 
             lineWidthContainer.style.display = 'block';
-            lineWidthContainer.style.top = (canvas.offsetTop + 1) + 'px';
-            lineWidthContainer.style.left = (canvas.offsetLeft + canvas.clientWidth) + 'px';
+            // lineWidthContainer.style.top = (canvas.offsetTop + 1) + 'px';
+            // lineWidthContainer.style.left = (canvas.offsetLeft + canvas.clientWidth) + 'px';
 
             lineWidthText.focus();
         });

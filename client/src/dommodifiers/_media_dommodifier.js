@@ -271,7 +271,7 @@ function createVideoMuteButton(muteobj, controlBarName, peerinfo) {
  * @param {dom} vid
  * @param {json} peerinfo
  */
-function attachUserDetails(vid, peerinfo) {
+this.attachUserDetails = attachUserDetails = function (vid, peerinfo) {
     webrtcdev.log("[media_dommanager] attachUserDetails - ", peerinfo.userid, ":", peerinfo.type, " to video DOM ", vid);
     if (vid.parentNode.querySelectorAll('.videoHeaderClass').length > 0) {
         webrtcdev.warn("[media_dommanager] attachUserDetails - video header already present ", vid.parentNode.querySelectorAll('.videoHeaderClass'));
@@ -301,7 +301,7 @@ function attachUserDetails(vid, peerinfo) {
  * @param {dom} vid
  * @param {json} peerinfo
  */
-function attachMetaUserDetails(vid, peerinfo) {
+this.attachMetaUserDetails = attachMetaUserDetails = function (vid, peerinfo) {
     webrtcdev.log("[media_dommanager] attachMetaUserDetails - ", peerinfo.userid, ":", peerinfo.type);
     let detailsbox = document.createElement("span");
     detailsbox.setAttribute("style", "background-color:" + peerinfo.color);

@@ -236,22 +236,22 @@ var scriptList = [
 
     "client/src/scripts/tail.js"
 ];
-
-gulp.task('betawebrtcdevelopmentjs', function (done) {
-    console.log(" gulping main webrtc development scripts into beta ");
-    scriptList.push("client/src/scripts/admin.js");
-    console.log(scriptList);
-    gulp.src(scriptList, {allowEmpty: true})
-        // .pipe( rev({strict: true}) )
-        .pipe(concat('webrtcdevelopment.js'))
-        .pipe(replace(/"use strict"/g, ''))
-        .pipe(gulp.dest(folderPath));
-    done();
-});
+//
+// gulp.task('betawebrtcdevelopmentjs', function (done) {
+//     console.log("gulping main webrtc development scripts into beta ");
+//     scriptList.push("client/src/scripts/admin.js");
+//     console.log(scriptList);
+//     gulp.src(scriptList, {allowEmpty: true})
+//         // .pipe( rev({strict: true}) )
+//         .pipe(concat('webrtcdevelopment.js'))
+//         .pipe(replace(/"use strict"/g, ''))
+//         .pipe(gulp.dest(folderPath));
+//     done();
+// });
 
 // .pipe( rev({strict: true}) )
 gulp.task('webrtcdevelopmentjs', function (done) {
-    console.log(" gulping main webrtc development scripts ");
+    console.log("gulping main webrtc development scripts ");
     // scriptList.push("client/src/scripts/admin.js");
     console.log(scriptList);
     pipeline(gulp.src(scriptList, {allowEmpty: true}),
@@ -355,9 +355,9 @@ gulp.task('default', gulp.series(
 ));
 
 // only gulp webrtcdev js changes
-gulp.task('develop', gulp.series(
-    'betawebrtcdevelopmentjs'
-));
+// gulp.task('develop', gulp.series(
+//     'betawebrtcdevelopmentjs'
+// ));
 
 // only gulp vendor js
 gulp.task('vendorjs', gulp.series(

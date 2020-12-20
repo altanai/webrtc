@@ -78,6 +78,7 @@ function getCamMedia(rtcConn, outgoingVideo, outgoingAudio) {
         webrtcdev.log("[startJS] getCamMedia - default mediaConstraints :", rtcConn.mediaConstraints);
         webrtcdev.log("[mediacontrol.js] getCamMedia  - Capture Full Media ");
         rtcConn.getUserMedia();  // not wait for the rtc conn on media stream or on error
+
     } else if (!outgoingVideo && outgoingAudio) {
         mediaConstraints.video = false;
         rtcConn.mediaConstraints = mediaConstraints;
@@ -99,7 +100,7 @@ function getCamMedia(rtcConn, outgoingVideo, outgoingAudio) {
         mediaConstraints.audio = false;
         rtcConn.mediaConstraints = mediaConstraints;
         rtcConn.dontCaptureUserMedia = true;
-        webrtcdev.error(" [_mediacontrol.js] getCamMedia - dont Capture outgoing video ", outgoingVideo, " and outgoung Audio ", outgoingAudio);
+        webrtcdev.warn(" [_mediacontrol.js] getCamMedia - dont Capture outgoing video ", outgoingVideo, " and outgoing Audio ", outgoingAudio);
         webrtcdev.log("[startJS] getCamMedia - default mediaConstraints :", rtcConn.mediaConstraints);
         // call media error handler to attach null in video
         rtcConn.onMediaError("onNoCameraCard", "");
