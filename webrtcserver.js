@@ -45,10 +45,10 @@ var app = http2
     })
     .listen(properties.http2Port);
 console.log("< ------------------------ HTTPS Server -------------------> ");
-console.log(" WebRTC server env => " + properties.enviornment + " running at " + properties.http2Port );
+console.log(" Web server env => " + properties.enviornment + " running at " + properties.http2Port);
+console.log(" Web server Landing page - https://localhost:"+ properties.http2Port+"/"+ properties.landingpage);
 
-
-// steam handler  approach
+// stream handler approach
 // const server = http2.createSecureServer(options);
 // server.on('stream', (stream, requestHeaders) => {
 //     // stream.respond();
@@ -70,36 +70,34 @@ rclient.set("session", "webrtcdevelopment");
 
 // -------------------- Session manager server   -----------------
 
-var _realtimecomm = require('./build/webrtcdevelopmentServer.js').realtimecomm;
-var realtimecomm = _realtimecomm( properties, options, log, null, function (socket) {
-    try {
-        var params = socket.handshake.query;
-        console.log("[Realtime conn] params", params);
+const realtimecomm = require('./build/webrtcdevelopmentServer.js').realtimecomm(properties, options, log);
+var socket = realtimecomm.socket;
 
-        if (rclient)
-            rclient.hmset(params.t, params, function (err) {
-                console.error(err);
-            });
+try {
+    let params = socket.handshake.query;
+    console.log("[Realtime conn] params", params);
 
-        if (!params.socketCustomEvent) {
-            params.socketCustomEvent = 'custom-message';
-        }
-
-        socket.on(params.socketCustomEvent, function (message) {
-            try {
-                socket.broadcast.emit(params.socketCustomEvent, message);
-            } catch (e) {
-                console.error(e);
-            }
+    if (rclient)
+        rclient.hmset(params.t, params, function (err) {
+            console.error(err);
         });
-    } catch (e) {
-        console.error(e);
-    }
-});
+
+    if (!params.socketCustomEvent)
+        params.socketCustomEvent = 'custom-message';
+
+    socket.on(params.socketCustomEvent, function (message) {
+        try {
+            socket.broadcast.emit(params.socketCustomEvent, message);
+        } catch (e) {
+            console.error(e);
+        }
+    });
+} catch (e) {
+    console.error(e);
+}
 
 // -------------------- REST Api Sever  -----------------
 
-var _restapi = require('./build/webrtcdevelopmentServer.js').restapi;
-var restapi = _restapi(realtimecomm, options, app, properties);
+var restapi = require('./build/webrtcdevelopmentServer.js').restapi(realtimecomm, options, app, properties);
 
 

@@ -11,6 +11,54 @@
 //   outgoingVideo = false;
 // }
 
+// -------------------------------------------- Communication with Web Sever -----------------------------------
+/**
+ * Open a WebRTC socket channel
+ * @method
+ * @name opneWebRTC
+ * @param {string} channel
+ * @param {string} userid
+ */
+var openWebRTC = function (channel, userid, maxallowed) {
+    webrtcdev.info("[sessionmanager] - openWebRTC channel: ", channel);
+
+    socket.emit("open-channel", {
+        channel: channel,
+        sender: userid,
+        maxAllowed: maxallowed
+    });
+
+    shownotification(" Making a new session ");
+};
+
+
+/**
+ * function to join a webrtc socket channel
+ * @method
+ * @name joinWebRTC
+ * @param {string} channel
+ * @param {string} userid
+ */
+var joinWebRTC = function (channel, userid) {
+    shownotification("Joining an existing session " + channel);
+    webrtcdev.info(" [sessionmanager] joinWebRTC channel: ", channel);
+
+    if (debug) showUserStats();
+
+    socket.emit("join-channel", {
+        channel: channel,
+        sender: userid,
+        extra: {
+            userid: userid,
+            name: selfusername || "",
+            color: selfcolor || "",
+            email: selfemail || "",
+            role: role || "participant"
+        }
+    });
+};
+
+
 /**
  * function to start session with socket
  * @method
@@ -56,38 +104,6 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
                 socket.connect();
             }
         });
-
-        // socket.on('connect_error', (error) => {
-        //     webrtcdev.error("[sessionmanager] connect_error from signaller ", error );
-        // });
-        //
-        // socket.on('connect_timeout', (timeout) => {
-        //     webrtcdev.error("[sessionmanager] connect_timeout from signaller ", timeout);
-        // });
-        //
-        // socket.on('error', (error) => {
-        //     webrtcdev.error("[sessionmanager] error from signaller  ", error);
-        // });
-        //
-        // socket.on('reconnect', (attemptNumber) => {
-        //     webrtcdev.log("[sessionmanager] Reconnect ", attemptNumber, " from signaller  ");
-        // });
-        //
-        // socket.on('reconnect_attempt', (attemptNumber) => {
-        //     webrtcdev.log("[sessionmanager] Reconnect attempt ", attemptNumber, " from signaller  ");
-        // });
-        //
-        // socket.on('reconnecting', (attemptNumber) => {
-        //     webrtcdev.log("[sessionmanager] Reconnecting from signaller  ");
-        // });
-        //
-        // socket.on('reconnect_error', (error) => {
-        //     webrtcdev.error("[sessionmanager] reconnect_error from signaller  ", error);
-        // });
-        //
-        // socket.on('reconnect_failed', () => {
-        //     webrtcdev.error("[sessionmanager] Reconnect failed from signaller  ");
-        // });
 
     });
 
@@ -176,7 +192,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
                 //     updatePeerInfo(selfuserid, selfusername, selfcolor, selfemail, role, "local");
                 // });
             }).catch((reason) => {
-                webrtcdev.error('[sessionmanager] join-channel-resp -  Handle rejected promise (' + reason + ')');
+                webrtcdev.error('[sessionmanager] join-channel-resp - Handle rejected promise (' + reason + ')');
             });
 
             if (event.message)
@@ -189,7 +205,7 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
     });
 
     socket.on("channel-event", function (event) {
-        webrtcdev.log("[sessionmanager] --------------channel-event---------------------  ", event);
+        webrtcdev.log("[sessionmanager] channel-event---------------------  ", event);
         if (event.type == "new-join" && event.msgtype != "error") {
             webrtcdev.log("[session manager] - new-join-channel ");
         } else {
@@ -200,10 +216,13 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
     socket.on('event', function (data) {
         console.log("event", data);
     });
+
     socket.on('disconnect', function () {
-        console.error("disconneted ");
+        console.error("disconnected ");
     });
 }
+
+// -------------------------------------------- End of Communication with Web Sever -----------------------------------
 
 
 /*
@@ -219,12 +238,11 @@ var setRtcConn = function (sessionid, sessionobj) {
     rtcConn = new RTCMultiConnection(),
 
         rtcConn.channel = this.sessionid,
+
         rtcConn.socketURL = sessionobj.signaller, // location for the SDP offer/answer signaller
 
         rtcConn.iceServers = sessionobj.turn.iceServers, // || rtcConn.getIceServers()
 
-        // ---------------------start - for MCU POC ----------------------
-        //rtcConn.iceServers = [],
         rtcConn.iceTransportPolicy = "all" , // all , relay
         rtcConn.bundlePolicy = "balanced",
         rtcConn.rtcpMuxPolicy = "require",
@@ -253,8 +271,8 @@ var setRtcConn = function (sessionid, sessionobj) {
         //     }],
         //     mandatory: {}
         // },
-        rtcConn.optionalArgument = {},
-
+        // rtcConn.optionalArgument = {},
+        //
         rtcConn.sdpConstraints = {
             mandatory: {
                 OfferToReceiveAudio: incomingAudio ,
@@ -271,27 +289,17 @@ var setRtcConn = function (sessionid, sessionobj) {
             turn: true
         },
 
-        // rtcConn.session = {
-        //     video: outgoingVideo || true,
-        //     audio: outgoingAudio || true,
-        //     data: outgoingData || true
-        // },
         rtcConn.session = {
-            video: true,
-            audio: true,
-            data: false
+            video: outgoingVideo || true,
+            audio: outgoingAudio || true,
+            data: outgoingData || true
         },
-
-        // ---------------- end - MCU POC changes ----------------------------
 
         rtcConn.direction = 'many-to-many', // other options 'one-way'
 
-        // rtcConn.dontCaptureUserMedia = !outgoingVideo || false,
-        // rtcConn.dontGetRemoteStream = !outgoingVideo || false,
-        // rtcConn.dontAttachStream = !outgoingVideo || false,
-        rtcConn.dontCaptureUserMedia = false,
-        rtcConn.dontGetRemoteStream = false,
-        rtcConn.dontAttachStream = false,
+        rtcConn.dontCaptureUserMedia = !outgoingVideo || false,
+        rtcConn.dontGetRemoteStream = !outgoingVideo || false,
+        rtcConn.dontAttachStream = !outgoingVideo || false,
 
         // Bandwidth Optimization
         rtcConn.isLowBandwidth = navigator.connection.downlink < 1,
@@ -321,7 +329,6 @@ var setRtcConn = function (sessionid, sessionobj) {
             webrtcdev.log("[sessionmanager] onopen - event ", event);
 
             try {
-
                 shownotification(event.extra.name + " joined session ", "info");
                 showdesktopnotification(document.title, event.extra.name + " joined session ");
 
@@ -341,8 +348,8 @@ var setRtcConn = function (sessionid, sessionobj) {
                     // Add remote peer userid to remoteUsers
                     // remoteUsers = rtcConn.peers.getAllParticipants();
                     // webrtcdev.log(" [sessionmanager] onopen by remote suers - Collecting remote peers", remoteUsers);
-                    //
-                    // // add new peers
+
+                    //  add new peers
                     // for (x in remoteUsers) {
                     //     webrtcdev.log(" [sessionmanager] join-channel. Adding remote peer ", remoteUsers[x]);
                     //     if (remoteUsers[x] == event.userid) {
@@ -381,8 +388,8 @@ var setRtcConn = function (sessionid, sessionobj) {
                             updatePeerInfo(event.userid, name, color, email, role, "remote");
                             shownotification(event.extra.role + " " + event.type);
                         }
-                        // peerinfo.stream = "";
-                        // peerinfo.streamid = "";
+                        peerinfo.stream = "";
+                        peerinfo.streamid = "";
                         updateWebCallView(peerinfo);
 
                     } else {
@@ -401,7 +408,7 @@ var setRtcConn = function (sessionid, sessionobj) {
                 }
 
                 // In debug mode let the users create multiple user session in same browser ,
-                // do not use localstoarge values to get old userid for resuse
+                // do not use localstorage values to get old userid for resuse
                 // setting local caches
                 if (!debug) {
                     if (!localStorage.getItem("userid"))
@@ -463,7 +470,7 @@ var setRtcConn = function (sessionid, sessionobj) {
                 updateWebCallView(peerinfo);
 
             } else {
-                webrtcdev.error("[sessionmanager] onstream - PeerInfo updated with incoming stream and stream id ");
+                webrtcdev.log("[sessionmanager] onstream - update PeerInfo with incoming stream and streamId ");
                 appendToPeerValue(userid, "type", event.type);
                 appendToPeerValue(userid, "stream", event.stream);
                 appendToPeerValue(userid, "streamid", event.stream.streamid);
@@ -484,19 +491,21 @@ var setRtcConn = function (sessionid, sessionobj) {
 
         rtcConn.chunkSize = 50 * 1000,
 
-        rtcConn.onmessage = function (e) {
-            webrtcdev.log("[sessionmanager] on message ", e);
-            if (e.data.typing) {
-                updateWhotyping(e.extra.name + " is typing ...");
-            } else if (e.data.stoppedTyping) {
-                updateWhotyping("");
-            } else {
+        rtcConn.onmessage = function (msg) {
+            webrtcdev.log("[sessionmanager] onmessage ", msg);
 
-                let msgpeerinfo = findPeerInfo(e.userid);
-                switch (e.data.type) {
+            // Typing Update
+            if (msg.data.typing) {
+                // updateWhotyping(msg.extra.name + " is typing ...");
+            } else if (msg.data.stoppedTyping) {
+                // updateWhotyping("");
+
+            } else {
+                var msgpeerinfo = findPeerInfo(msg.userid);
+                switch (msg.data.type) {
                     case "screenshare":
-                        if (e.data.message == "startscreenshare") {
-                            let scrroomid = e.data.screenid;
+                        if (msg.data.message == "startscreenshare") {
+                            let scrroomid = msg.data.screenid;
                             shownotification("Starting screen share ", scrroomid);
                             //createScreenViewButton();
                             let button = document.getElementById(screenshareobj.button.shareButton.id);
@@ -504,9 +513,9 @@ var setRtcConn = function (sessionid, sessionobj) {
                             button.innerHTML = screenshareobj.button.shareButton.html_busy;
                             button.disabled = true;
                             connectScrWebRTC("join", scrroomid);
-                        } else if (e.data.message == "screenshareStartedViewing") {
+                        } else if (msg.data.message == "screenshareStartedViewing") {
                             screenshareNotification("", "screenshareStartedViewing");
-                        } else if (e.data.message == "stoppedscreenshare") {
+                        } else if (msg.data.message == "stoppedscreenshare") {
                             shownotification("Screenshare has stopped : " + e.data.screenStreamid);
                             //createScreenViewButton();
                             let button = document.getElementById(screenshareobj.button.shareButton.id);
@@ -515,17 +524,17 @@ var setRtcConn = function (sessionid, sessionobj) {
                             button.disabled = false;
                             webrtcdevCleanShareScreen(e.data.screenStreamid);
                         } else {
-                            webrtcdev.warn("[sessionmanager] unrecognized screen-share message ", e.data.message);
+                            webrtcdev.warn("[sessionmanager] unrecognized screen-share message ", msg.data.message);
                         }
                         break;
 
                     case "chat":
-                        updateWhotyping(e.extra.name + " has send message");
+                        // updateWhotyping(msg.extra.name + " has send chat ");
                         addNewMessage({
-                            header: e.extra.name,
-                            message: e.data.message,
-                            userinfo: e.data.userinfo,
-                            color: e.extra.color
+                            header: msg.extra.name,
+                            message: msg.data.message,
+                            userinfo: msg.data.userinfo,
+                            color: msg.extra.color
                         });
                         window.dispatchEvent(new CustomEvent('webrtcdev', {
                             detail: {
@@ -535,52 +544,91 @@ var setRtcConn = function (sessionid, sessionobj) {
                         }));
                         break;
 
+                    case "mute":
+                        // let mutearr=["videomute","videounmute","audiomute","audiounmute"];
+                        // if(mutearr.includes(message.data.message) ){
+                        //     window.dispatchEvent(new CustomEvent('webrtcdev', {
+                        //         detail: {
+                        //             servicetype: "mute",
+                        //             action: message.data.message
+                        //         }
+                        //     }));
+                        // }
+                        let videoButton = document.getElementById(msgpeerinfo.controlBarName+"videoButton");
+                        let audioButton = document.getElementById(msgpeerinfo.controlBarName+"audioButton");
+
+                        switch (msg.data.message) {
+                            case "videomute":
+                                videoButton.innerHTML = muteobj.video.button.html_off;
+                                videoButton.className = muteobj.video.button.class_off;
+                                console.log("video mute");
+                                break;
+                            case "videounmute":
+                                videoButton.innerHTML = muteobj.video.button.html_on;
+                                videoButton.className = muteobj.video.button.class_on;
+                                break;
+                            case "audiomute":
+                                audioButton.className = muteobj.audio.button.class_off;
+                                audioButton.innerHTML = muteobj.audio.button.html_off;
+                                console.log("audio mute");
+                                break;
+                            case "audiounmute":
+                                audioButton.className = muteobj.audio.button.class_on;
+                                audioButton.innerHTML = muteobj.audio.button.html_on;
+                                break;
+                            default:
+                                webrtcdev.error("unmatched mut case transmitted by peer");
+                                break;
+                        }
+                        break;
+
                     case "imagesnapshot":
-                        displayList(null, msgpeerinfo, e.data.message, e.data.name, "imagesnapshot");
-                        displayFile(null, msgpeerinfo, e.data.message, e.data.name, "imagesnapshot");
+                        displayList(null, msgpeerinfo, msg.data.message, msg.data.name, "imagesnapshot");
+                        displayFile(null, msgpeerinfo, msg.data.message, msg.data.name, "imagesnapshot");
                         break;
 
                     case "videoRecording":
-                        displayList(null, msgpeerinfo, e.data.message, e.data.name, "videoRecording");
-                        displayFile(null, msgpeerinfo, e.data.message, e.data.name, "videoRecording");
+                        displayList(null, msgpeerinfo, msg.data.message, msg.data.name, "videoRecording");
+                        displayFile(null, msgpeerinfo, msg.data.message, msg.data.name, "videoRecording");
                         break;
 
                     case "videoScreenRecording":
-                        displayList(null, msgpeerinfo, e.data.message, e.data.name, "videoScreenRecording");
-                        displayFile(null, msgpeerinfo, e.data.message, e.data.name, "videoScreenRecording");
+                        displayList(null, msgpeerinfo, msg.data.message, msg.data.name, "videoScreenRecording");
+                        displayFile(null, msgpeerinfo, msg.data.message, msg.data.name, "videoScreenRecording");
                         break;
 
                     case "file":
                         addNewMessage({
-                            header: e.extra.name,
-                            message: e.data.message,
-                            userinfo: getUserinfo(rtcConn.blobURLs[e.userid], "chat-message.png"),
-                            color: e.extra.color
+                            header: msg.extra.name,
+                            message: msg.data.message,
+                            userinfo: getUserinfo(rtcConn.blobURLs[msg.userid], "chat-message.png"),
+                            color: msg.extra.color
                         });
                         break;
 
                     case "canvas":
-                        if (e.data.draw) {
-                            CanvasDesigner.syncData(e.data.draw);
-                        } else if (e.data.board) {
-                            webrtcdev.log("[sessionmanager] Canvas : ", e.data);
-                            if (e.data.board.from == "remote") {
-                                if (e.data.board.event == "open" && isDrawOpened != true)
-                                    syncDrawBoard(e.data.board);
-                                // else if (e.data.board.event == "close" && isDrawOpened == true)
-                                // syncDrawBoard(e.data.board);
+                        if (msg.data.draw) {
+                            CanvasDesigner.syncData(msg.data.draw);
+                        } else if (msg.data.board) {
+                            webrtcdev.log("[sessionmanager] Canvas : ", msg.data);
+                            if (msg.data.board.from == "remote") {
+                                if (msg.data.board.event == "open" && isDrawOpened != true)
+                                    syncDrawBoard(msg.data.board);
+                                else if (msg.data.board.event == "close" && isDrawOpened == true)
+                                    syncDrawBoard(msg.data.board);
                             }
                         } else {
-                            webrtcdev.warn(" Board data mismatch", e.data);
+                            //empty canvas data
+                            webrtcdev.warn(" Board data mismatch", msg.data);
                         }
                         break;
 
                     case "texteditor":
-                        receiveWebrtcdevTexteditorSync(e.data.data);
+                        receiveWebrtcdevTexteditorSync(msg.data.data);
                         break;
 
                     case "codeeditor":
-                        receiveWebrtcdevCodeeditorSync(e.data.data);
+                        receiveWebrtcdevCodeeditorSync(msg.data.data);
                         break;
 
                     case "pointer":
@@ -588,36 +636,35 @@ var setRtcConn = function (sessionid, sessionobj) {
                         if (elem) {
                             if (e.data.action == "startCursor") {
                                 elem.setAttribute("style", "display:block");
-                                placeCursor(elem, e.data.corX, e.data.corY);
-                            } else if (e.data.action == "stopCursor") {
+                                placeCursor(elem, msg.data.corX, msg.data.corY);
+                            } else if (msg.data.action == "stopCursor") {
                                 elem.setAttribute("style", "display:none");
                             }
                         } else {
                             alert(" Cursor for remote is not present ");
                         }
-
                         break;
 
                     case "timer":
                         if (msgpeerinfo) {
                             //check if the peer has stored zone and time info
                             if (!msgpeerinfo.time) {
-                                msgpeerinfo.time = e.data.time;
+                                msgpeerinfo.time = msg.data.time;
                             }
                             if (!msgpeerinfo.zone) {
-                                msgpeerinfo.zone = e.data.zone;
+                                msgpeerinfo.zone = msg.data.zone;
                             }
                             webrtcdev.log("[sessionmanager] webcallpeers appended with zone and datetime ", msgpeerinfo);
                         }
                         webrtcdev.log("[sessionmanager] peerTimerStarted, start peerTimeZone and startPeersTime");
-                        peerTimeZone(e.data.zone, e.userid);
-                        startPeersTime(e.data.time, e.data.zone, e.userid);
+                        peerTimeZone(msg.data.zone, msg.userid);
+                        startPeersTime(msg.data.time, msg.data.zone, msg.userid);
                         break;
 
                     case "buttonclick":
-                        var buttonElement = getElementById(e.data.buttonName);
+                        var buttonElement = getElementById(msg.data.buttonName);
                         if (buttonElement.getAttribute("lastClickedBy") != rtcConn.userid) {
-                            buttonElement.setAttribute("lastClickedBy", e.userid);
+                            buttonElement.setAttribute("lastClickedBy", msg.userid);
                             buttonElement.click();
                         }
                         break;
@@ -627,9 +674,9 @@ var setRtcConn = function (sessionid, sessionobj) {
                         break;
 
                     case "shareFileRemove":
-                        webrtcdev.log(" [sessionmanager] shareFileRemove - remove file : ", e.data._filename);
-                        var progressdiv = e.data._element;
-                        var filename = e.data._filename;
+                        webrtcdev.log(" [sessionmanager] shareFileRemove - remove file : ", msg.data._filename);
+                        var progressdiv = msg.data._element;
+                        var filename = msg.data._filename;
                         let removeButton = "removeButton" + progressdiv;
 
                         if (document.getElementById("display" + filename))
@@ -649,9 +696,9 @@ var setRtcConn = function (sessionid, sessionobj) {
                         break;
 
                     case "shareFileStopUpload":
-                        var progressid = e.data._element;
+                        var progressid = msg.data._element;
                         webrtcdev.log(" [sessionmanager] shareFileStopUpload", progressid);
-                        // var filename = e.data._filename;
+                        // var filename = msg.data._filename;
 
                         for (x in webcallpeers) {
                             for (y in webcallpeers[x].filearray) {
@@ -673,11 +720,11 @@ var setRtcConn = function (sessionid, sessionobj) {
                         break;
 
                     case "receivedstats":
-                        onreceivedWebrtcdevStats(e.userid, e.data.message);
+                        onreceivedWebrtcdevStats(msg.userid, msg.data.message);
                         break;
 
                     default:
-                        webrtcdev.warn("[sessionmanager] unrecognizable message from peer  ", e);
+                        webrtcdev.warn("[sessionmanager] unrecognizable message from peer  ", msg);
                         break;
                 }
             }
@@ -808,53 +855,6 @@ function supportSessionRefresh() {
 }
 
 /**
- * Open a WebRTC socket channel
- * @method
- * @name opneWebRTC
- * @param {string} channel
- * @param {string} userid
- */
-var openWebRTC = function (channel, userid, maxallowed) {
-    webrtcdev.info("[sessionmanager] - openWebRTC channel: ", channel);
-
-    socket.emit("open-channel", {
-        channel: channel,
-        sender: userid,
-        maxAllowed: maxallowed
-    });
-
-    shownotification(" Making a new session ");
-};
-
-
-/**
- * function to join a webrtc socket channel
- * @method
- * @name joinWebRTC
- * @param {string} channel
- * @param {string} userid
- */
-var joinWebRTC = function (channel, userid) {
-    shownotification("Joining an existing session " + channel);
-    webrtcdev.info(" [sessionmanager] joinWebRTC channel: ", channel);
-
-    if (debug) showUserStats();
-
-    socket.emit("join-channel", {
-        channel: channel,
-        sender: userid,
-        extra: {
-            userid: userid,
-            name: selfusername || "",
-            color: selfcolor || "",
-            email: selfemail || "",
-            role: role || "participant"
-        }
-    });
-};
-
-
-/**
  * connect to a webrtc socket channel
  * @method
  * @name setupCallView
@@ -887,8 +887,10 @@ var setupCallView = function (type, channel, userid) {
         // Create File Sharing Div
         if (fileshareobj.props.fileShare == "single") {
             createFileSharingDiv(peerinfo);
+
             //max display the local / single fileshare
-            getElementById(peerinfo.fileShare.outerbox).style.width = "100%";
+            if (getElementById(peerinfo.fileShare.outerbox))
+                getElementById(peerinfo.fileShare.outerbox).style.width = "100%";
 
         } else if (fileshareobj.props.fileShare == "divided") {
 

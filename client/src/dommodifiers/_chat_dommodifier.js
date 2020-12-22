@@ -98,17 +98,16 @@ function createChatBox(chatobj) {
  * @param {json} chat widget object
  */
 function assignChatBox(chatobj) {
+    webrtcdev.warn("[chatdommodifier ]  assignChatBox ");
 
     var chatInput = document.getElementById(chatobj.inputBox.text_id);
-    webrtcdev.log(" chchatInputat ", chatInput);
     if (!chatInput || chatInput == null) {
-        webrtcdev.warn("[chatdom modifier ] chatinput not defiend - ", chatobj.inputBox.text_id);
+        webrtcdev.warn("[chatdommodifier ]  chatobj.inputBox.text_id not defined - ", chatobj.inputBox.text_id);
         return;
     }
     chatInput.onkeypress = function (e) {
         if (e.keyCode == 13) {
             var peerinfo = findPeerInfo(selfuserid);
-            webrtcdev.log(" chat ", selfuserid, peerinfo);
             sendChatMessage(chatInput.value, peerinfo);
             chatInput.value = "";
         }
@@ -121,7 +120,7 @@ function assignChatBox(chatobj) {
             var chatInput = document.getElementById(chatobj.inputBox.text_id);
             sendChatMessage(chatInput.value, peerinfo);
             chatInput.value = "";
-        }
+        };
     }
 
     if (document.getElementById(chatobj.inputBox.minbutton_id)) {
@@ -131,7 +130,7 @@ function assignChatBox(chatobj) {
                 showelem(chatobj.container.id);
             else
                 hideelem(chatobj.container.id);
-        }
+        };
     }
 }
 
@@ -143,5 +142,6 @@ function assignChatBox(chatobj) {
  * @param {string} data
  */
 function updateWhotyping(data) {
-    document.getElementById("whoTyping").innerHTML = data;
+    if(document.getElementById("whoTyping"))
+        document.getElementById("whoTyping").innerHTML = data;
 }

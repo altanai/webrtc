@@ -1,4 +1,4 @@
-// -------------------------------------------------------------
+// ------------------------textHandler-------------------------------------
 var textInput = document.getElementById('text-input');
 textInput.onkeyup = function(e) {
     if (e.keyCode != 13) return;
@@ -25,9 +25,9 @@ textInput.onblur = function(e) {
         fillText();
         return;
     }
-    //textInput.style.top = '-100000px';
-    //textInput.style.left = '-100000px';
-    //textHandler.isTextPending = false;
+    textInput.style.top = '-100000px';
+    textInput.style.left = '-100000px';
+    textHandler.isTextPending = false;
 };
 
 function fillText() {

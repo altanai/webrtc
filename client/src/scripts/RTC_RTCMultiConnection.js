@@ -37,7 +37,7 @@
         try {
             stream.type = 'local';
         } catch (e) {
-            webrtcdev.errro("[RTC] onGettingLocalMedia- eeror in setting Remote stream type ", e)
+            webrtcdev.errro("[RTC] onGettingLocalMedia- eeror in setting Remote stream type ", e);
         }
 
         connection.setStreamEndHandler(stream);
@@ -117,7 +117,7 @@
                 // setMuteHandlers(connection, connection.streamEvents[stream.streamid]);catch(error){
                 connection.onstream(connection.streamEvents[stream.streamid]);
             } catch (error) {
-                webrtcdev.error("[RTC ] onGettingRemoteMedia ", error)
+                webrtcdev.error("[RTC ] onGettingRemoteMedia ", error);
             }
         }, connection);
     };
@@ -575,29 +575,29 @@
 
         if (session.audio || session.video || session.screen) {
             if (session.screen) {
-                // if (DetectRTC.browser.name === 'Edge') {
-                //     navigator.getDisplayMedia({
-                //         video: true,
-                //         audio: isAudioPlusTab(connection)
-                //     }).then(function (screen) {
-                //         screen.isScreen = true;
-                //         mPeer.onGettingLocalMedia(screen);
-                //
-                //         if ((session.audio || session.video) && !isAudioPlusTab(connection)) {
-                //             connection.invokeGetUserMedia(null, callback);
-                //         } else {
-                //             callback(screen);
-                //         }
-                //     }, function (error) {
-                //         webrtcdev.error('Unable to capture screen on Edge. HTTPs and version 17+ is required.');
-                //     });
-                // } else {
-                connection.invokeGetUserMedia({
-                    audio: isAudioPlusTab(connection),
-                    video: true,
-                    isScreen: true
-                }, (session.audio || session.video) && !isAudioPlusTab(connection) ? connection.invokeGetUserMedia(null, callback) : callback);
-                // }
+                if (DetectRTC.browser.name === 'Edge') {
+                    navigator.getDisplayMedia({
+                        video: true,
+                        audio: isAudioPlusTab(connection)
+                    }).then(function (screen) {
+                        screen.isScreen = true;
+                        mPeer.onGettingLocalMedia(screen);
+
+                        if ((session.audio || session.video) && !isAudioPlusTab(connection)) {
+                            connection.invokeGetUserMedia(null, callback);
+                        } else {
+                            callback(screen);
+                        }
+                    }, function (error) {
+                        webrtcdev.error('Unable to capture screen on Edge. HTTPs and version 17+ is required.');
+                    });
+                } else {
+                    connection.invokeGetUserMedia({
+                        audio: isAudioPlusTab(connection),
+                        video: true,
+                        isScreen: true
+                    }, (session.audio || session.video) && !isAudioPlusTab(connection) ? connection.invokeGetUserMedia(null, callback) : callback);
+                }
             } else if (session.audio || session.video) {
                 // connection.invokeGetUserMedia(null, callback, session);
                 callback();
@@ -618,47 +618,47 @@
 
         if (session.audio || session.video || session.screen) {
             if (session.screen) {
-                // if (DetectRTC.browser.name === 'Edge') {
-                //     navigator.getDisplayMedia({
-                //         video: true,
-                //         audio: isAudioPlusTab(connection)
-                //     }).then(function (screen) {
-                //         screen.isScreen = true;
-                //         mPeer.onGettingLocalMedia(screen);
-                //
-                //         if ((session.audio || session.video) && !isAudioPlusTab(connection)) {
-                //             var nonScreenSession = {};
-                //             for (var s in session) {
-                //                 if (s !== 'screen') {
-                //                     nonScreenSession[s] = session[s];
-                //                 }
-                //             }
-                //             connection.invokeGetUserMedia(sessionForced, callback, nonScreenSession);
-                //             return;
-                //         }
-                //         callback(screen);
-                //     }, function (error) {
-                //         webrtcdev.error('Unable to capture screen on Edge. HTTPs and version 17+ is required.');
-                //     });
-                // } else {
-                connection.invokeGetUserMedia({
-                    audio: isAudioPlusTab(connection),
-                    video: true,
-                    isScreen: true
-                }, function (stream) {
-                    if ((session.audio || session.video) && !isAudioPlusTab(connection)) {
-                        var nonScreenSession = {};
-                        for (var s in session) {
-                            if (s !== 'screen') {
-                                nonScreenSession[s] = session[s];
+                if (DetectRTC.browser.name === 'Edge') {
+                    navigator.getDisplayMedia({
+                        video: true,
+                        audio: isAudioPlusTab(connection)
+                    }).then(function (screen) {
+                        screen.isScreen = true;
+                        mPeer.onGettingLocalMedia(screen);
+
+                        if ((session.audio || session.video) && !isAudioPlusTab(connection)) {
+                            var nonScreenSession = {};
+                            for (var s in session) {
+                                if (s !== 'screen') {
+                                    nonScreenSession[s] = session[s];
+                                }
                             }
+                            connection.invokeGetUserMedia(sessionForced, callback, nonScreenSession);
+                            return;
                         }
-                        connection.invokeGetUserMedia(sessionForced, callback, nonScreenSession);
-                        return;
-                    }
-                    callback(stream);
-                });
-                // }
+                        callback(screen);
+                    }, function (error) {
+                        webrtcdev.error('Unable to capture screen on Edge. HTTPs and version 17+ is required.');
+                    });
+                } else {
+                    connection.invokeGetUserMedia({
+                        audio: isAudioPlusTab(connection),
+                        video: true,
+                        isScreen: true
+                    }, function (stream) {
+                        if ((session.audio || session.video) && !isAudioPlusTab(connection)) {
+                            var nonScreenSession = {};
+                            for (var s in session) {
+                                if (s !== 'screen') {
+                                    nonScreenSession[s] = session[s];
+                                }
+                            }
+                            connection.invokeGetUserMedia(sessionForced, callback, nonScreenSession);
+                            return;
+                        }
+                        callback(stream);
+                    });
+                }
             } else if (session.audio || session.video) {
                 connection.invokeGetUserMedia(sessionForced, callback, session);
             }
@@ -727,24 +727,24 @@
         video: 'vp9'
     };
 
-    if (typeof CodecsHandler !== 'undefined') {
-        connection.BandwidthHandler = connection.CodecsHandler = CodecsHandler;
-    }
+    // if (typeof CodecsHandler !== 'undefined') {
+    //     connection.BandwidthHandler = connection.CodecsHandler = CodecsHandler;
+    // }
 
-    connection.processMcuSdp = function(sdp, sdptype) {
-        webrtcdev.log("[RtcConn ] processMcuSdp - sdptype " , sdptype );
-        return CodecsHandler.addMediaGateway(sdp);
-    };
+    // connection.processMcuSdp = function(sdp, sdptype) {
+    //     webrtcdev.log("[RtcConn ] processMcuSdp - sdptype " , sdptype );
+    //     return CodecsHandler.addMediaGateway(sdp);
+    // };
 
     connection.processSdp = function (sdp) {
 
-        webrtcdev.log("[RtcConn ] processSdp ----------------------- connection.codecs.video ", connection.codecs.video);
+        webrtcdev.log("[RtcConn ] processSdp - connection.codecs.video ", connection.codecs.video);
 
-        // ignore SDP modification if unified-pan is supported
-        // if (isUnifiedPlanSupportedDefault()) {
-        //     webrtcdev.log("[RtcConn ] processSdp - As UnifiedPlanSupportedDefault is supported , avoid processing SDP ");
-        //     return sdp;
-        // }
+        // ignore SDP modification if unified-plan is supported
+        if (isUnifiedPlanSupportedDefault()) {
+            webrtcdev.log("[RtcConn ] processSdp - As UnifiedPlanSupportedDefault is supported , avoid processing SDP ");
+            return sdp;
+        }
 
         if (DetectRTC.browser.name === 'Safari') {
             return sdp;
@@ -799,6 +799,10 @@
         webrtcdev.log("[RtcConn ] processSdp final - ", sdp);
         return sdp;
     };
+
+    if (typeof CodecsHandler !== 'undefined') {
+        connection.BandwidthHandler = connection.CodecsHandler = CodecsHandler;
+    }
 
     connection.mediaConstraints = {
         audio: {
@@ -1037,11 +1041,9 @@
         // if (!e.mediaElement) {
         //     e.mediaElement = document.getElementById(e.streamid);
         // }
-        //
         // if (!e.mediaElement || !e.mediaElement.parentNode) {
         //     return;
         // }
-        //
         // e.mediaElement.parentNode.removeChild(e.mediaElement);
     };
 
@@ -1152,7 +1154,7 @@
             localMediaConstraints = connection.mediaConstraints;
         }
 
-        webrtcdev.log(" ======================= invokeGetUserMedia ============= ", session.audio, session.video, localMediaConstraints);
+        webrtcdev.log(" [RTC MultiCon] invokeGetUserMedia ============= ", session.audio, session.video, localMediaConstraints);
         if (localMediaConstraints.isScreen) {
             // For ScreenShare
             getUserMediaHandler({

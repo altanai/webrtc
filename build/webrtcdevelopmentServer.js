@@ -1,4 +1,4 @@
-/* Generated on:Sun Dec 20 2020 12:41:06 GMT+0530 (India Standard Time) || version: 6.0.4 - Altanai (@altanai)  , License : MIT  */exports.redisscipts = function () {
+/* Generated on:Tue Dec 22 2020 22:11:59 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  */exports.redisscipts = function () {
 
     const redis = require("redis");
     const RedisServer = require('redis-server');
@@ -40,7 +40,7 @@
 };
 
 
-/* Generated on:Sun Dec 20 2020 12:41:06 GMT+0530 (India Standard Time) || version: 6.0.4 - Altanai (@altanai)  , License : MIT  */
+/* Generated on:Tue Dec 22 2020 22:11:59 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  */
 /**
  * handled on connection of socket for every new connection
  * @method
@@ -51,7 +51,7 @@
  * @param {function} socketCallback
  */
 
-exports.realtimecomm = function (properties, options , cache, socketCallback) {
+exports.realtimecomm = function (properties, options , cache) {
 
     var listOfUsers = {};
     var shiftedModerationControls = {};
@@ -62,25 +62,40 @@ exports.realtimecomm = function (properties, options , cache, socketCallback) {
     var users = {};
     var sessions = {};
 
-    console.log("[RealtimeComm]  properties for webrtc server " , properties) ;
+    console.log("[RealtimeComm] ----------------realtimecomm----------------------");
+    console.log("[RealtimeComm] env => " + properties.enviornment + " running at " + properties.wssPort);
+
 
     // http2
     // const server = require('http2').createSecureServer(options);
 
     //https 1.1
-    const server = require('https').createServer(options);
+    const server = require('https').createServer(options,(req,res) => {
+        console.log('req');
+        res.writeHeader(200, { 'Content-Type': 'text/plain' });
+        res.write('test');
+        res.end();
+    });
 
-    // socketio
-    const io = require('socket.io')(server);
+    // socketio Server
+    const io = require('socket.io')(server,{
+        path: '/',
+        serveClient: false,
+        // below are engine.IO options
+        pingInterval: 10000,
+        pingTimeout: 5000,
+        cookie: false
+    });
+
     io.on('connection', onConnection);
+    io.on('error',(err)=>{
+        console.error(err);
+    });
     io.on('disconnect', () => {
         console.error("disconnected ");
     });
 
     server.listen(properties.wssPort);
-    console.log("[RealtimeComm] ----------------realtimecomm----------------------");
-    console.log("[RealtimeComm]  server state ", server.readyState); // WebSocket.OPEN
-    console.log("[RealtimeComm] Socket.io env => " + properties.enviornment + " running at " + properties.wssPort);
 
     /**
      * append user to list of user
@@ -123,15 +138,7 @@ exports.realtimecomm = function (properties, options , cache, socketCallback) {
     function onConnection(socket) {
 
         let params = socket.handshake.query;
-        console.log("[RealtimeComm] onConnection -  Querry : ", params);
         var socketMessageEvent = params.msgEvent || 'RTCMultiConnection-Message';
-
-        if (params.enableScalableBroadcast) {
-            if (!ScalableBroadcast) {
-                ScalableBroadcast = require('./Scalable-Broadcast.js');
-            }
-            ScalableBroadcast(socket, params.maxRelayLimitPerUser);
-        }
 
         // temporarily disabled
         if (false && !!listOfUsers[params.userid]) {
@@ -144,6 +151,11 @@ exports.realtimecomm = function (properties, options , cache, socketCallback) {
 
         socket.userid = params.userid;
         appendUser(socket);
+
+        socket.on('ping-webrtcdev', () => {
+            console.log(" sending pong for ping");
+            socket.emit("pong-webrtcdev");
+        });
 
         socket.on('extra-data-updated', function (extra) {
             try {
@@ -313,7 +325,7 @@ exports.realtimecomm = function (properties, options , cache, socketCallback) {
                 webrtcdevchannels[newchannel] = {
                     channel: newchannel,
                     timestamp: new Date().toLocaleString(),
-                    maxAllowed: data.maxAllowed,
+                    maxAllowed: data.maxAllowed|| 100,
                     users: [data.sender],
                     status: "waiting",
                     endtimestamp: 0,
@@ -595,10 +607,7 @@ exports.realtimecomm = function (properties, options , cache, socketCallback) {
             delete listOfUsers[socket.userid];
         });
 
-        if (socketCallback) {
-            console.log("[RealtimeComm] callback");
-            socketCallback(socket);
-        }
+        module.socket = io;
     }
 
     module.getAll = function (format) {
@@ -674,6 +683,8 @@ exports.realtimecomm = function (properties, options , cache, socketCallback) {
         return output;
     };
 
+
+
     return module;
 };
 
@@ -705,141 +716,140 @@ exports.realtimecomm = function (properties, options , cache, socketCallback) {
 //         logs[utcDateString] = arguments.toString();
 //     }
 // }
-/* Generated on:Sun Dec 20 2020 12:41:06 GMT+0530 (India Standard Time) || version: 6.0.4 - Altanai (@altanai)  , License : MIT  */exports.restapi = function(realtimecomm, options , app, properties) {
+/* Generated on:Tue Dec 22 2020 22:11:59 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  */exports.restapi = function (realtimecomm, options, app, properties) {
 
     var restify = require('restify');
     var server = restify.createServer(options);
 
     server.use(
-      function crossOrigin(req,res,next){
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Headers", "X-Requested-With");
-        return next();
-      }
+        function crossOrigin(req, res, next) {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "X-Requested-With");
+            return next();
+        }
     );
 
-    function extracter(mixObj){
+    function extracter(mixObj) {
         console.log(mixObj);
 
         var keys = [];
-        for(var k in mixObj) {
+        for (var k in mixObj) {
             keys.push(k);
         }
         return JSON.parse(keys);
     }
 
     /**
-     * @api {get} /webrtc/details Get the session details 
+     * @api {get} /webrtc/details Get the session details
      *
      * @apiName webrtc details
      * @apiGroup WebRTC
      *
-     * @apiParam {String} version This is for getting the version of project 
+     * @apiParam {String} version This is for getting the version of project
      *
      * @apiSampleRequest https://localhost:8087/webrtc/details
      */
-    function getWebRTCdetails(req, res, callback){
-        console.log("params----------" , req.params);
-        res.json({ type:true , data : req.params.version });
+    function getWebRTCdetails(req, res, callback) {
+        console.log("params----------", req.params);
+        res.json({type: true, data: req.params.version});
     }
 
 
     /**
-      * @api {get} /session/all-sessions All Sessions  
-      *
-      * @apiName Get All sessions 
-      * @apiGroup Session
-      * @apiDescription 
-      * get all session details 
-      *
-      * @apiSampleRequest https://localhost:8087/session/all-sessions
-      *
+     * @api {get} /session/all-sessions All Sessions
+     *
+     * @apiName Get All sessions
+     * @apiGroup Session
+     * @apiDescription
+     * get all session details
+     *
+     * @apiSampleRequest https://localhost:8087/session/all-sessions
+     *
      */
     function getAllSessions(req, res, callback) {
         var result = realtimecomm.getAllChannels('json');
-        res.json({ type:true , data : result });
+        res.json({type: true, data: result});
     }
 
     /**
-     * @api {get} /session/getsession Get the session details 
+     * @api {get} /session/getsession Get the session details
      *
      * @apiName GetSession
      * @apiGroup Session
      *
-     * @apiParam {String} channelid This is for getting the unique channel 
+     * @apiParam {String} channelid This is for getting the unique channel
      *
      * @apiSampleRequest https://localhost:8087/session/getsession
      * example : https://localhost:8087/session/getsession
      */
-    function getSession(req, res, callback) { 
+    function getSession(req, res, callback) {
 
-        console.log(" [ Rest api - getSession ]  logs for " , req.params.channelid  );
+        console.log(" [ Rest api - getSession ]  logs for ", req.params.channelid);
 
-        if(!req.params.channelid){
-            res.json({ 
-                type: true, 
-                data: "channelid is required" 
-            });
-            return ;
-        }
-
-        var result = realtimecomm.getChannel(req.params.channelid, 'json');
-        res.json({ 
-            type : true , 
-            data : result 
-        });
-    }
-
-    /**
-      * @api {get} /user/all-users All users details  
-      *
-      * @apiName Get user
-      * @apiGroup User
-      * @apiDescription 
-      * get all users details 
-      *
-      * @apiSampleRequest https://localhost:8087/user/all-users
-      *
-     */
-    function getAllUsers(req, res, callback) {
-        var result =realtimecomm.getAllActiveUsers('json');
-        res.json({ type:true , data : result });
-    }
-
-
-    /**
-     * @api {get} /user/getuser Get user details 
-     *
-     * @apiName Get User
-     * @apiGroup User
-     * @apiDescription 
-     * get user details based on userid
-     * @apiParam {String} userid  The id of user 
-     *
-     * @apiSampleRequest https://localhost:8087/user/getuser
-     *
-     */
-    function getUser(req, res, callback) { 
-
-        console.log(" [ Rest api - getUser ]  logs for " , req.params.userid  );
-
-        if(!req.params.userid){
-            res.json({ 
-                type: true, 
-                data: "userid is required" 
+        if (!req.params.channelid) {
+            res.json({
+                type: true,
+                data: "channelid is required"
             });
             return;
         }
 
-        var result =realtimecomm.getUser(req.params.userid, 'json');
-        res.json({ type:true , data : result });
+        var result = realtimecomm.getChannel(req.params.channelid, 'json');
+        res.json({
+            type: true,
+            data: result
+        });
     }
 
+    /**
+     * @api {get} /user/all-users All users details
+     *
+     * @apiName Get user
+     * @apiGroup User
+     * @apiDescription
+     * get all users details
+     *
+     * @apiSampleRequest https://localhost:8087/user/all-users
+     *
+     */
+    function getAllUsers(req, res, callback) {
+        var result = realtimecomm.getAllActiveUsers('json');
+        res.json({type: true, data: result});
+    }
+
+
+    /**
+     * @api {get} /user/getuser Get user details
+     *
+     * @apiName Get User
+     * @apiGroup User
+     * @apiDescription
+     * get user details based on userid
+     * @apiParam {String} userid  The id of user
+     *
+     * @apiSampleRequest https://localhost:8087/user/getuser
+     *
+     */
+    function getUser(req, res, callback) {
+
+        console.log(" [ Rest api - getUser ]  logs for ", req.params.userid);
+
+        if (!req.params.userid) {
+            res.json({
+                type: true,
+                data: "userid is required"
+            });
+            return;
+        }
+
+        var result = realtimecomm.getUser(req.params.userid, 'json');
+        res.json({type: true, data: result});
+    }
 
 
     function getSessionClients(req, res, callback) {
         var result = realtimecomm.getChannelClients('json');
-        res.json({ type:true , data : result });
+        res.json({type: true, data: result});
     }
 
 
@@ -848,47 +858,46 @@ exports.realtimecomm = function (properties, options , cache, socketCallback) {
     server.use(restify.plugins.dateParser());
     server.use(restify.plugins.queryParser());
     /*server.use(restify.jsonp());*/
-  /*  server.use(restify.plugins.CORS());*/
+    /*  server.use(restify.plugins.CORS());*/
     /*server.use(restify.fullResponse());*/
-    server.use(restify.plugins.bodyParser({ mapParams: true }));
+    server.use(restify.plugins.bodyParser({mapParams: true}));
     /*server.use(restify.bodyParser());*/
     /*server.use(restify.bodyParser({ mapParams: false }));*/
 
-    server.get('/webrtc/details',getWebRTCdetails);
+    server.get('/webrtc/details', getWebRTCdetails);
 
-    server.get('/session/all-sessions',getAllSessions);
-    server.get('/session/getsession/:channelid',getSession);
-    server.get('/session/clients',getSessionClients);
+    server.get('/session/all-sessions', getAllSessions);
+    server.get('/session/getsession/:channelid', getSession);
+    server.get('/session/clients', getSessionClients);
 
-    server.get('/user/all-users',getAllUsers);
-    server.get('/user/getuser/:userid',getUser);
+    server.get('/user/all-users', getAllUsers);
+    server.get('/user/getuser/:userid', getUser);
 
     function unknownMethodHandler(req, res) {
-      if (req.method.toLowerCase() === 'options') {
+        if (req.method.toLowerCase() === 'options') {
 
-        var allowHeaders = ['Accept', 'Accept-Version', 'Content-Type', 'Api-Version', 'Origin', 'X-Requested-With']; // added Origin & X-Requested-With
+            var allowHeaders = ['Accept', 'Accept-Version', 'Content-Type', 'Api-Version', 'Origin', 'X-Requested-With']; // added Origin & X-Requested-With
 
-        if (res.methods.indexOf('OPTIONS') === -1) res.methods.push('OPTIONS');
+            if (res.methods.indexOf('OPTIONS') === -1) res.methods.push('OPTIONS');
 
-        res.header('Access-Control-Allow-Credentials', true);
-        res.header('Access-Control-Allow-Headers', allowHeaders.join(', '));
-        res.header('Access-Control-Allow-Methods', res.methods.join(', '));
-        res.header('Access-Control-Allow-Origin', req.headers.origin);
+            res.header('Access-Control-Allow-Credentials', true);
+            res.header('Access-Control-Allow-Headers', allowHeaders.join(', '));
+            res.header('Access-Control-Allow-Methods', res.methods.join(', '));
+            res.header('Access-Control-Allow-Origin', req.headers.origin);
 
-        return res.send(204);
-      }
-      else
-        return res.send(new restify.MethodNotAllowedError());
+            return res.send(204);
+        } else
+            return res.send(new restify.MethodNotAllowedError());
     }
 
     server.on('MethodNotAllowed', unknownMethodHandler);
 
-    server.listen(properties.restPort, function() {
-      console.log('%s listening at %s', server.name, server.url);
+    server.listen(properties.restPort, function () {
+        console.log('%s listening at %s', server.name, server.url);
     });
 
     console.log("----------------------REST APIs ----------------");
-    console.log(" REST server env => "+ properties.enviornment+ " running at\n "+properties.restPort);
+    console.log(" REST server env => " + properties.enviornment + " running at\n " + properties.restPort);
 
     return module;
 };

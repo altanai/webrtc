@@ -171,7 +171,8 @@
 
 .viewerIframeClass {
     width: 100%;
-    height: 98%;
+    /*height: 98%;*/
+    height: -webkit-fill-available;
     position: relative;
 }
 

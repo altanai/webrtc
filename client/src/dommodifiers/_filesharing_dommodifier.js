@@ -161,13 +161,15 @@ function addProgressHelper(uuid, peerinfo, filename, fileSize, file, progressHel
 
         let progressul = document.createElement("ul");
         progressul.id = progressid,
-            progressul.title = filename + " size - " + file.size + " type - " + file.type + " last modified on -" + file.lastModifiedDate,
+            progressul.title = filename + " size - " + file.size +
+                " type - " + file.type + " last modified on -" + file.lastModifiedDate,
             progressul.setAttribute("type", "progressbar"),
             progressul.setAttribute("class", "row");
         if (debug) {
             const progressDebug = document.createElement("li");
-            progressDebug.innerHTML = filename + "size - " + file.size + " type - " + file.type + " last modified on -" + file.lastModifiedDate
-                + " from :" + filefrom + " --> to :" + fileto + "</br>";
+            progressDebug.innerHTML = filename + "size - " + file.size +
+                " type - " + file.type + " last modified on -" + file.lastModifiedDate +
+                " from :" + filefrom + " --> to :" + fileto + "</br>";
             progressul.appendChild(progressDebug);
         }
 
@@ -269,6 +271,9 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     let showdownbtn = true;
     let showdelbtn = true;
 
+    if(!uuid){
+        uuid="000";
+    }
     try {
         if (!fileshareobj.active) return;
 
@@ -309,14 +314,14 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
         }
 
     } catch (err) {
-        webrtcdev.error(" [filesharing dommodifier js] Display list exception ", err);
+        webrtcdev.error("[filesharing dommodifier] displaylist exception ", err);
     }
 
     //append progress bar to parent dom
-    webrtcdev.log(" c displayList set up parent dom  ", parentdom);
+    webrtcdev.log("[filesharing dommodifier] displayList set up parent dom  ", parentdom);
 
     let filedom = document.createElement("ul");
-    filedom.id = filename + uuid;
+    filedom.id = filename ; // + uuid
     filedom.type = peerinfo.type;  // local or remote
     filedom.innerHTML = "";
     filedom.className = "row";
@@ -330,12 +335,16 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
 
     // Download Button
     let downloadButton = document.createElement("li");
-    downloadButton.id = "downloadButton" + filename + uuid;
+    downloadButton.id = "downloadButton" + filename ; // + uuid;
     downloadButton.title = "Download";
-    if (fileshareobj.filelist.saveicon) {
-        let img = document.createElement("img");
-        img.src = fileshareobj.filelist.downloadicon;
-        downloadButton.appendChild(img);
+    if (fileshareobj.filelist.downloadicon) {
+        if (toElement(fileshareobj.filelist.downloadicon) instanceof HTMLElement) {
+            downloadButton.innerHTML = fileshareobj.filelist.downloadicon;
+        } else {
+            let img = document.createElement("img");
+            img.src = fileshareobj.filelist.downloadicon;
+            downloadButton.appendChild(img);
+        }
     } else {
         downloadButton.innerHTML = '<i class="fa fa-download"></i>';
     }
@@ -344,37 +353,61 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
         downloadFile(uuid, elementDisplay, fileurl, filename, filetype);
     };
 
-    //Save Button
-    let saveButton = document.createElement("li");
-    saveButton.id = "saveButton" + filename + uuid;
-    saveButton.title = "Save";
-    saveButton.setAttribute("data-toggle", "modal");
-    saveButton.setAttribute("data-target", "#saveModal");
-    if (fileshareobj.filelist.saveicon) {
-        let img = document.createElement("img");
-        img.src = fileshareobj.filelist.saveicon;
-        saveButton.appendChild(img);
-    } else {
-        saveButton.innerHTML = '<i class="fa fa-floppy-o"></i>';
-    }
-    saveButton.onclick = function () {
-        createModalPopup(filetype);
-    };
+    // //Save Button
+    // let saveButton = document.createElement("li");
+    // saveButton.id = "saveButton" + filename + uuid;
+    // saveButton.title = "Save";
+    // saveButton.setAttribute("data-toggle", "modal");
+    // saveButton.setAttribute("data-target", "#saveModal");
+    // if (fileshareobj.filelist.saveicon) {
+    //     if (toElement(fileshareobj.filelist.saveicon) instanceof HTMLElement) {
+    //         saveButton.innerHTML = fileshareobj.filelist.saveicon;
+    //     } else {
+    //         let img = document.createElement("img");
+    //         img.src = fileshareobj.filelist.saveicon;
+    //         saveButton.appendChild(img);
+    //     }
+    // } else {
+    //     saveButton.innerHTML = '<i class="fa fa-floppy-o"></i>';
+    // }
+    // saveButton.onclick = function () {
+    //     createModalPopup(filetype);
+    // };
 
     // Show Button
     let showButton = document.createElement("li");
-    showButton.id = "showButton" + filename + uuid;
+    showButton.id = "showButton" + filename ; // + uuid;
     showButton.title = "Show";
-    if (fileshareobj.filelist.saveicon) {
-        let img = document.createElement("img");
-        img.src = fileshareobj.filelist.showicon;
-        showButton.appendChild(img);
+    if (fileshareobj.filelist.showicon) {
+        if (toElement(fileshareobj.filelist.showicon) instanceof HTMLElement) {
+            showButton.innerHTML = fileshareobj.filelist.showicon;
+        } else {
+            let img = document.createElement("img");
+            img.src = fileshareobj.filelist.showicon;
+            showButton.appendChild(img);
+        }
     } else {
         showButton.innerHTML = '<i class="fa fa-eye-slash"></i>';
     }
     let countClicks = 0;
     repeatFlagHideButton = filename;
     repeatFlagShowButton = "";
+
+    // hide others
+    for ( x in webrtcdevobj.getwebcallpeers()[0].filearray) {
+        let _filename = webrtcdevobj.getwebcallpeers()[0].filearray[x];
+        if(_filename != filename  && !_filename.name) {
+            let _showButton = document.getElementById("showButton" + _filename);
+            if (_showButton) {
+                //     _showbutton.click();
+                showHideFile('', elementDisplay, '', _filename, '', _showButton, 2);
+            }
+        }else{
+
+        }
+    }
+
+    // show the selected one
     showButton.onclick = function () {
         countClicks++;
         showHideFile(uuid, elementDisplay, fileurl, filename, filetype, showButton, countClicks);
@@ -407,15 +440,23 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     };
     */
 
-    //Remove Button
+    // Trash / Delete / Remove Button
     let removeButton = document.createElement("li");
     removeButton.id = "removeButton" + filename + uuid;
     removeButton.title = "Remove";
-    removeButton.innerHTML = '<i class="fa fa-trash-o"></i>';
+    if (fileshareobj.filelist.trashicon) {
+        if (toElement(fileshareobj.filelist.trashicon) instanceof HTMLElement) {
+            removeButton.innerHTML = fileshareobj.filelist.trashicon;
+        } else {
+            removeButton.appendChild(fileshareobj.filelist.trashicon);
+        }
+    } else {
+        removeButton.innerHTML = '<i class="fa fa-trash-o"></i>';
+    }
     removeButton.onclick = function (event) {
         if (repeatFlagRemoveButton != filename) {
             //var tobeHiddenElement = event.target.parentNode.id;
-            const tobeHiddenElement = filename + uuid;
+            const tobeHiddenElement = filename ; // + uuid;
             hideFile(elementDisplay, filename);
             rtcConn.send({
                 type: "shareFileRemove",
@@ -438,7 +479,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     if (role == "inspector") {
         showdownbtn.hidden = true;
         showButton.hidden = true;
-        saveButton.hidden = true;
+        // saveButton.hidden = true;
         filedom.appendChild(name);
         removeButton.hidden = true;
     }
@@ -448,8 +489,8 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     if (showdownbtn)
         filedom.appendChild(downloadButton);
     filedom.appendChild(showButton);
-    filedom.appendChild(saveButton);
-    //filedom.appendChild(hideButton);
+    // filedom.appendChild(saveButton);
+    // filedom.appendChild(hideButton);
     if (showdelbtn)
         filedom.appendChild(removeButton);
 
@@ -459,12 +500,6 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
         // parentDom2 = parentdom.parentNode;
         // parentDom2.insertBefore(filedom , parentDom2.firstChild);
         parentdom.appendChild(filedom);
-        window.dispatchEvent(new CustomEvent('webrtcdev', {
-            detail: {
-                servicetype: "file",
-                action: "onFileListed"
-            },
-        }));
     } else {
         webrtcdev.error("[filesharing dom modifier JS ] filedom's parent dom not found ");
     }
@@ -574,7 +609,6 @@ function getFileElementDisplayByType(filetype, fileurl, filename) {
     } else {
         webrtcdev.log("[filehsaring domodifier] getFileElementDisplayByType - iframe ", fileurl);
         let iframe = document.createElement("iframe");
-        iframe.style.width = "100%";
         iframe.src = fileurl;
         iframe.className = "viewerIframeClass";
         iframe.title = filename;
@@ -597,7 +631,7 @@ function getFileElementDisplayByType(filetype, fileurl, filename) {
  */
 function displayFile(uuid, peerinfo, fileurl, filename, filetype) {
 
-    webrtcdev.log(" [filehsaring dommodifier] displayFile  - uuid: ", uuid, " peerinfo :", peerinfo,
+    webrtcdev.log("[filehsaring dommodifier] displayFile  - uuid: ", uuid, " peerinfo :", peerinfo,
         " , file url : ", fileurl, " ,  file name : ", filename, " ,  file type :", filetype);
     try {
 
@@ -621,8 +655,16 @@ function displayFile(uuid, peerinfo, fileurl, filename, filetype) {
         } else {
             document.body.appendChild(filedom);
         }
+
+        window.dispatchEvent(new CustomEvent('webrtcdev', {
+            detail: {
+                servicetype: "file",
+                action: "onFileListed"
+            },
+        }));
+
     } catch (err) {
-        webrtcdev.error("[filehsaring dommodifier ] displayFile  has a problem ", err);
+        webrtcdev.error("[filehsaring dommodifier] displayFile has a problem ", err);
     }
 }
 
@@ -667,6 +709,15 @@ function showHideFile(uuid, elementDisplay, fileurl, filename, filetype, showHid
     webrtcdev.log(" [filehsaring js]  - show/hide elementDisplay ", elementDisplay);
     webrtcdev.log(" [filehsaring js]  - show/hide button ", filename, " || ", countClicks);
     if (countClicks % 2 == 1) {
+        // Disptach Event for onFileShow
+        window.dispatchEvent(new CustomEvent('webrtcdev', {
+            detail: {
+                servicetype: "file",
+                action: "onFileShow",
+                type: "local"
+            }
+        }));
+
         showFile(elementDisplay, fileurl, filename, filetype);
         /*rtcConn.send({
             type:"shareFileShow",
@@ -676,7 +727,8 @@ function showHideFile(uuid, elementDisplay, fileurl, filename, filetype, showHid
             _filename : filename,
             _filetype : filetype
         }); */
-        showHideButton.innerHTML = '<i class="fa fa-eye-slash"></i>';
+
+        showHideButton.innerHTML = fileshareobj.filelist.showicon ||'<i class="fa fa-eye"></i>';
         webrtcdev.log(" [filehsaring js]  Executed script to show the file");
     } else if (countClicks % 2 == 0) {
         hideFile(elementDisplay, filename);
@@ -688,7 +740,7 @@ function showHideFile(uuid, elementDisplay, fileurl, filename, filetype, showHid
             _filename: filename,
             _filetype: filetype
         });*/
-        showHideButton.innerHTML = '<i class="fa fa-eye"></i>';
+        showHideButton.innerHTML = fileshareobj.filelist.hideicon ||'<i class="fa fa-eye-slash"></i>';
         webrtcdev.log(" [filehsaring js]  Executed script to hide the file ");
     }
 }
@@ -821,18 +873,22 @@ function createFileSharingBox(peerinfo, parent, type) {
             // Minimize the File viewer box
             minButton = document.createElement("span");
             if (fileshareobj.fileshare.minicon) {
-                let minicon = fileshareobj.fileshare.minicon;
-                webrtcdev.log(" [fileShare JS ] creating custom minicon", minicon);
-                let img = document.createElement("img");
-                img.src = minicon;
-                minButton.appendChild(img);
+                if (toElement(fileshareobj.fileshare.minicon) instanceof HTMLElement) {
+                    minButton.innerHTML = fileshareobj.fileshare.minicon;
+                } else {
+                    let minicon = fileshareobj.fileshare.minicon;
+                    webrtcdev.log(" [fileShare JS ] creating custom minicon", minicon);
+                    let img = document.createElement("img");
+                    img.src = minicon;
+                    minButton.appendChild(img);
+                }
             } else {
                 let minicon = '<i class="fa fa-minus-square"></i>';
                 minicon.innerHTML = minicon;
                 webrtcdev.log(" [fileShare JS ] creating default minicon ", minicon);
             }
             minButton.id = peerinfo.fileShare.minButton;
-            minButton.title = "Minimize";
+            minButton.title = "Minimize/Maximize";
             minButton.style.display = "none";
             minButton.setAttribute("lastClickedBy", '');
             minButton.onclick = function () {
@@ -850,11 +906,15 @@ function createFileSharingBox(peerinfo, parent, type) {
             // Maximize the file viewer box
             maxButton = document.createElement("span");
             if (fileshareobj.fileshare.maxicon) {
-                let maxicon = fileshareobj.fileshare.maxicon;
-                webrtcdev.log(" [fileShare JS ] creating custom maxicon", maxicon);
-                let img = document.createElement("img");
-                img.src = maxicon;
-                maxButton.appendChild(img);
+                if (toElement(fileshareobj.fileshare.maxicon) instanceof HTMLElement) {
+                    maxButton.innerHTML = fileshareobj.fileshare.maxicon;
+                } else {
+                    let maxicon = fileshareobj.fileshare.maxicon;
+                    webrtcdev.log(" [fileShare JS ] creating custom maxicon", maxicon);
+                    let img = document.createElement("img");
+                    img.src = maxicon;
+                    maxButton.appendChild(img);
+                }
             } else {
                 let maxicon = '<i class="fa fa-external-link-square"></i>';
                 maxButton.innerHTML = maxicon;
@@ -883,9 +943,13 @@ function createFileSharingBox(peerinfo, parent, type) {
         // close the file viewer box
         let closeButton = document.createElement("span");
         if (fileshareobj.fileshare.closeicon) {
-            let img = document.createElement("img");
-            img.src = fileshareobj.fileshare.closeicon;
-            closeButton.appendChild(img);
+            if (toElement(fileshareobj.fileshare.closeicon) instanceof HTMLElement) {
+                closeButton.innerHTML = fileshareobj.fileshare.closeicon;
+            } else {
+                let img = document.createElement("img");
+                img.src = fileshareobj.fileshare.closeicon;
+                closeButton.appendChild(img);
+            }
         } else {
             closeButton.innerHTML = '<i class="fa fa-times-circle"></i>';
         }
@@ -902,9 +966,13 @@ function createFileSharingBox(peerinfo, parent, type) {
         const orientation = null;
         let rotateButton = document.createElement("span");
         if (fileshareobj.fileshare.rotateicon) {
-            let img = document.createElement("img");
-            img.src = fileshareobj.fileshare.rotateicon;
-            rotateButton.appendChild(img);
+            if (toElement(fileshareobj.fileshare.rotateicon) instanceof HTMLElement) {
+                rotateButton.innerHTML = fileshareobj.fileshare.rotateicon;
+            } else {
+                let img = document.createElement("img");
+                img.src = fileshareobj.fileshare.rotateicon;
+                rotateButton.appendChild(img);
+            }
         } else {
             rotateButton.innerHTML = '<i class="fa fa-mail-forward"></i>';
         }
@@ -1152,7 +1220,7 @@ function createFileSharingDiv(peerinfo) {
     // When the peerinfo role is inspctor but self role is not inspector only then exit
     if (peerinfo.role == "inspector" && role != "inspector") return;
 
-    // create file sharinga nd listing boxes
+    // create file sharing and listing boxes
     if (!getElementById(peerinfo.fileShare.outerbox)) {
         let parentFileShareContainer = getElementById(fileshareobj.fileShareContainer);
         createFileSharingBox(peerinfo, parentFileShareContainer, fileshareobj.props.fileShare);
@@ -1180,13 +1248,13 @@ function resizeFV(userid, buttonId, selectedFileSharingBox) {
 
 function minFV(userid, buttonId, selectedFileSharingBox) {
     hideelem(selectedFileSharingBox);
-    document.getElementById(selectedFileSharingBox).className = "col-md-6 fileviewing-box";
+    // document.getElementById(selectedFileSharingBox).className = "col-md-6 fileviewing-box";
     /*syncButton(buttonId);  */
 }
 
 function maxFV(userid, buttonId, selectedFileSharingBox) {
     showelem(selectedFileSharingBox);
-    document.getElementById(selectedFileSharingBox).className = "col-md-12 fileviewing-box";
+    // document.getElementById(selectedFileSharingBox).className = "col-md-12 fileviewing-box";
     /*syncButton(buttonId);  */
 }
 

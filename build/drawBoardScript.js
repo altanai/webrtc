@@ -1,4 +1,4 @@
-/* ***********************************************
+/* Generated on:Tue Dec 22 2020 22:11:59 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 common 
 *********************************************/
 
@@ -23,7 +23,7 @@ function setContext(canv) {
         ctx.font = font;
     } catch (e) {
         // webrtcdev.error(" canvas context not set ", canv);
-        // webrtcdev.error(e);
+        webrtcdev.error(e);
     }
     return ctx;
 }
@@ -530,7 +530,7 @@ function paste() {
 // -------------------------------------------------------------
 
 
-/* ***********************************************
+/* Generated on:Tue Dec 22 2020 22:11:59 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 Decorator
 *********************************************/
 
@@ -539,7 +539,7 @@ function make_base(imgsrc, context) {
     //base_image.src = 'img/base.png';
 
     base_image.onload = function () {
-        alert(" make base decorator pencil ", imgsrc);
+        alert("Make base decorator pencil ", imgsrc);
         context.drawImage(base_image, 40, 40);
     }
     base_image.src = imgsrc;
@@ -561,6 +561,7 @@ function make_base(imgsrc, context) {
     window.params = params;
 })();
 
+// initialised tools
 var tools = {
     line: true,
     pencil: true,
@@ -569,8 +570,8 @@ var tools = {
     eraser: true,
     rectangle: true,
     arc: true,
-    bezier: true,
-    quadratic: true,
+    bezier: false,
+    quadratic: false,
     text: true
 };
 
@@ -608,7 +609,7 @@ function setSelection(element, prop) {
     }
 
 
-    function bindEvent(context, shape) {
+    function bindEvent(elem, shape) {
         if (shape === 'Pencil') {
             lineCap = lineJoin = 'round';
         }
@@ -621,7 +622,11 @@ function setSelection(element, prop) {
             }
         } else is.set('Pencil');
 
-        addEvent(context.canvas, 'click', function () {
+        if(elem.canvas){
+            elem = context.canvas;
+        }
+
+        addEvent(elem, 'click', function () {
 
             dragHelper.global.startingIndex = 0;
 
@@ -638,7 +643,6 @@ function setSelection(element, prop) {
             if (this.id === 'pencil-icon' || this.id === 'eraser-icon') {
                 cache.lineCap = lineCap;
                 cache.lineJoin = lineJoin;
-
                 lineCap = lineJoin = 'round';
             } else if (cache.lineCap && cache.lineJoin) {
                 lineCap = cache.lineCap;
@@ -649,7 +653,6 @@ function setSelection(element, prop) {
                 cache.strokeStyle = strokeStyle;
                 cache.fillStyle = fillStyle;
                 cache.lineWidth = lineWidth;
-
                 strokeStyle = 'White';
                 fillStyle = 'White';
                 lineWidth = 10;
@@ -747,104 +750,128 @@ function setSelection(element, prop) {
         decorateDragAllPaths();
     } else document.getElementById('drag-all-paths').style.display = 'none';
 
-    // -------------------------------------------------------------
+    // ---------------------------- Line ---------------------------------
 
+    /**
+     * Line draw widget
+     * @function
+     * #name decorateLine
+     */
     function decorateLine() {
-        var context = getContext('line');
+        let elem = document.getElementById('line');
+        if(elem.innerHTML){
+            bindEvent(elem, 'Line');
+        }else {
+            // var context = getContext('line');
+            //
+            // context.moveTo(0, 0);
+            // context.lineTo(40, 40);
+            // context.stroke();
+            //
+            // context.fillStyle = 'Gray';
+            // context.font = '9px Verdana';
+            // context.fillText('Line', 16, 12);
 
-        context.moveTo(0, 0);
-        context.lineTo(40, 40);
-        context.stroke();
-
-        context.fillStyle = 'Gray';
-        context.font = '9px Verdana';
-        context.fillText('Line', 16, 12);
-
-        bindEvent(context, 'Line');
+            let context = elem.getContext('2d');
+            let imageObj = new Image();
+            imageObj.src = 'drawboardicons/line.png';
+            imageObj.onload = function () {
+                context.drawImage(imageObj, 0, 0, 35, 35);
+            };
+            bindEvent(context, 'Line');
+        }
     }
 
     if (tools.line === true) {
         decorateLine();
-    } else document.getElementById('line').style.display = 'none';
+    } else {
+        document.getElementById('line').style.display = 'none';
+    }
 
-    // -------------------------------------------------------------
+    // ---------------------------- pencil ---------------------------------
+    /**
+     * Pencil draw widget
+     * @function
+     * #name decoratePencil
+     */
 
     function decoratePencil() {
-        //console.log(document.getElementById('pencil-icon'));
-        var context = document.getElementById('pencil-icon').getContext('2d');
-        var imageObj = new Image();
-        imageObj.src = 'drawboardicons/pencil.png';
-        imageObj.onload = function () {
-            context.drawImage(imageObj, 0, 0, 35, 35);
-        };
-
-
-        /* var context = getContext('pencil-icon');
-         context.lineWidth = 5;
-         context.lineCap = 'round';
-         context.moveTo(35, 20);
-         context.lineTo(5, 35);
-         context.stroke();
-
-         context.fillStyle = 'Gray';
-         context.font = '9px Verdana';
-         context.fillText('Pencil', 6, 12);*/
-
-        //make_base('/drawboardicons/pencil.png', context);
-
-        bindEvent(context, 'Pencil');
+        let elem = document.getElementById('pencil-icon');
+        if(elem.innerHTML){
+            bindEvent(elem, 'Pencil');
+        }else{
+            let context = elem.getContext('2d');
+            let imageObj = new Image();
+            imageObj.src = 'drawboardicons/pencil.png';
+            imageObj.onload = function () {
+                context.drawImage(imageObj, 0, 0, 35, 35);
+            };
+            bindEvent(context, 'Pencil');
+        }
     }
 
     if (tools.pencil === true) {
         decoratePencil();
-    } else document.getElementById('pencil-icon').style.display = 'none';
+    } else {
+        document.getElementById('pencil-icon').style.display = 'none';
+    }
 
-    // -------------------------------------------------------------
+    // ---------------------------- Eraser ---------------------------------
+    /**
+     * eraser in draw widget
+     * @function
+     * #name decorateEraser
+     */
 
     function decorateEraser() {
-
-        var context = document.getElementById('eraser-icon').getContext('2d');
-        var imageObj = new Image();
-        imageObj.src = 'drawboardicons/eraser.png';
-        imageObj.onload = function () {
-            context.drawImage(imageObj, 0, 0, 35, 35);
-        };
-
-        /*        var context = getContext('eraser-icon');
-
-                context.lineWidth = 9;
-                context.lineCap = 'round';
-                context.moveTo(35, 20);
-                context.lineTo(5, 25);
-                context.stroke();
-
-                context.fillStyle = 'Gray';
-                context.font = '9px Verdana';
-                context.fillText('Eraser', 6, 12);*/
-
-        bindEvent(context, 'Eraser');
+        let elem = document.getElementById('eraser-icon');
+        if(elem.innerHTML){
+            bindEvent(elem, 'Eraser');
+        }else {
+            var context = elem.getContext('2d');
+            var imageObj = new Image();
+            imageObj.src = 'drawboardicons/eraser.png';
+            imageObj.onload = function () {
+                context.drawImage(imageObj, 0, 0, 35, 35);
+            };
+            bindEvent(context, 'Eraser');
+        }
     }
 
     if (tools.eraser === true) {
         decorateEraser();
-    } else document.getElementById('eraser-icon').style.display = 'none';
+    } else{
+        document.getElementById('eraser-icon').style.display = 'none';
+    }
 
-    // -------------------------------------------------------------
+    // ---------------------------- Text ---------------------------------
 
     function decorateText() {
-        var context = getContext('text-icon');
+        let elem = document.getElementById('text-icon');
+        if (elem.innerHTML) {
+            bindEvent(elem, 'Text');
+        } else {
+            var context = elem.getContext('2d');
 
-        context.font = '22px Verdana';
-        context.strokeText('T', 15, 30);
+            context.font = '22px Verdana';
+            context.strokeText('T', 15, 30);
 
-        bindEvent(context, 'Text');
+            bindEvent(context, 'Text');
+        }
     }
 
     if (tools.text === true) {
         decorateText();
-    } else document.getElementById('text-icon').style.display = 'none';
+    } else {
+        document.getElementById('text-icon').style.display = 'none';
+    }
 
-    // -------------------------------------------------------------
+    // -------------------------Arc ------------------------------------
+    /**
+     * arc in draw widget
+     * @function
+     * #name decorateArc
+     */
 
     function decorateArc() {
         var context = getContext('arc');
@@ -861,25 +888,38 @@ function setSelection(element, prop) {
 
     if (tools.arc === true) {
         decorateArc();
-    } else document.getElementById('arc').style.display = 'none';
+    } else{
+        document.getElementById('arc').style.display = 'none';
+    }
 
-    // -------------------------------------------------------------
+    // -------------------------Rectangle ------------------------------------
 
     function decorateRect() {
-        var context = getContext('rectangle');
-
-        context.strokeRect(5, 5, 30, 30);
-
-        context.fillStyle = 'Gray';
-        context.font = '9px Verdana';
-        context.fillText('Rect', 8, 24);
-
-        bindEvent(context, 'Rectangle');
+        let elem = document.getElementById('rectangle');
+        if (elem.innerHTML) {
+            bindEvent(elem, 'Rectangle');
+        } else {
+            var context = elem.getContext('2d');
+            var imageObj = new Image();
+            imageObj.src = 'drawboardicons/rectangle.png';
+            imageObj.onload = function () {
+                context.drawImage(imageObj, 0, 0, 35, 35);
+            };
+            bindEvent(context, 'Rectangle');
+        }
+        // var context = getContext('rectangle');
+        // context.strokeRect(5, 5, 30, 30);
+        // context.fillStyle = 'Gray';
+        // context.font = '9px Verdana';
+        // context.fillText('Rect', 8, 24);
+        // bindEvent(context, 'Rectangle');
     }
 
     if (tools.rectangle === true) {
         decorateRect();
-    } else document.getElementById('rectangle').style.display = 'none';
+    } else {
+        document.getElementById('rectangle').style.display = 'none';
+    }
 
     // -------------------------------------------------------------
 
@@ -935,83 +975,94 @@ function setSelection(element, prop) {
         context.stroke();
     }
 
+    /**
+     * line-width in draw widget
+     * @function
+     * #name decorateLineWidth
+     */
+
     function decorateLineWidth() {
-        /*        var context = getContext('line-width');
+        var canvas;
+        let elem = document.getElementById('line-width');
+        if(elem.innerHTML){
+            canvas = elem;
+        }else {
 
-                tempStrokeTheLine(context, 2, 5, 15, 35, 15);
-                tempStrokeTheLine(context, 3, 5, 20, 35, 20);
-                tempStrokeTheLine(context, 4, 5, 26, 35, 26);
+            /*
+            var context = getContext('line-width');
 
-                context.fillStyle = 'Gray';
-                context.font = '9px Verdana';
-                context.fillText('Line', 8, 12);
-                context.fillText('Width', 6, 38);*/
+            tempStrokeTheLine(context, 2, 5, 15, 35, 15);
+            tempStrokeTheLine(context, 3, 5, 20, 35, 20);
+            tempStrokeTheLine(context, 4, 5, 26, 35, 26);
 
-        var context = document.getElementById('line-width').getContext('2d');
-        var imageObj = new Image();
-        imageObj.src = 'drawboardicons/linesize.png';
-        imageObj.onload = function () {
-            context.drawImage(imageObj, 0, 0, 35, 35);
-        };
+            context.fillStyle = 'Gray';
+            context.font = '9px Verdana';
+            context.fillText('Line', 8, 12);
+            context.fillText('Width', 6, 38);*/
 
+            var context = document.getElementById('line-width').getContext('2d');
+            var imageObj = new Image();
+            imageObj.src = 'drawboardicons/linesize.png';
+            imageObj.onload = function () {
+                context.drawImage(imageObj, 0, 0, 35, 35);
+            };
+            canvas = context.canvas;
+        }
         var lineWidthContainer = find('line-width-container'),
             lineWidthText = find('line-width-text'),
             btnLineWidthDone = find('line-width-done'),
-            h1 = document.getElementsByTagName('h1')[0],
-            canvas = context.canvas;
+            h1 = document.getElementsByTagName('h1')[0];
 
         addEvent(canvas, 'click', function () {
             hideContainers();
 
             lineWidthContainer.style.display = 'block';
-            // lineWidthContainer.style.top = (canvas.offsetTop + 1) + 'px';
-            // lineWidthContainer.style.left = (canvas.offsetLeft + canvas.clientWidth) + 'px';
+            lineWidthContainer.style.top = (canvas.offsetTop + 1) + 'px';
+            lineWidthContainer.style.left = (canvas.offsetLeft + canvas.clientWidth) + 'px';
 
             lineWidthText.focus();
         });
 
         addEvent(btnLineWidthDone, 'click', function () {
             lineWidthContainer.style.display = 'none';
-            lineWidth = lineWidthText.value;
+            lineWidth = lineWidthText.value | lineWidthText.innerHTML;
         });
     }
 
     decorateLineWidth();
 
-    // -------------------------------------------------------------
+    /**
+     * colors in draw widget
+     * @function
+     * #name decorateColors
+     */
+
     function decorateColors() {
-        /*        var context = getContext('colors');
-
-                context.fillStyle = 'red';
-                context.fillRect(5, 3, 30, 10);
-
-                context.fillStyle = 'green';
-                context.fillRect(5, 15, 30, 10);
-
-                context.fillStyle = 'blue';
-                context.fillRect(5, 27, 30, 10);*/
-
-        var context = document.getElementById('colors').getContext('2d');
-        var imageObj = new Image();
-        imageObj.src = 'drawboardicons/color.png';
-        imageObj.onload = function () {
-            context.drawImage(imageObj, 0, 0, 35, 35);
-        };
+        let elem = document.getElementById("colors");
+        var canvas;
+        if(elem.innerHTML){
+            canvas = elem;
+        }else {
+            var context = elem.getContext('2d');
+            var imageObj = new Image();
+            imageObj.src = 'drawboardicons/color.png';
+            imageObj.onload = function () {
+                context.drawImage(imageObj, 0, 0, 35, 35);
+            };
+            canvas = context.canvas;
+        }
 
         var colorsContainer = find('colors-container'),
             strokeStyleText = find('stroke-style'),
             fillStyleText = find('fill-style'),
             btnColorsDone = find('colors-done'),
-            h1 = document.getElementsByTagName('h1')[0],
-            canvas = context.canvas;
+            h1 = document.getElementsByTagName('h1')[0];
 
         addEvent(canvas, 'click', function () {
             hideContainers();
-
             colorsContainer.style.display = 'block';
             colorsContainer.style.top = (canvas.offsetTop + 1) + 'px';
             colorsContainer.style.left = (canvas.offsetLeft + canvas.clientWidth) + 'px';
-
             strokeStyleText.focus();
         });
 
@@ -1164,7 +1215,7 @@ function hideContainers() {
 
 
 
-/* ***********************************************
+/* Generated on:Tue Dec 22 2020 22:11:59 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 Draw helper
 *********************************************/
 var drawHelper = {
@@ -1255,10 +1306,9 @@ var drawHelper = {
         this.handleOptions(context, options);
     }
 
-
 };
 
-/* ***********************************************
+/* Generated on:Tue Dec 22 2020 22:11:59 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 Drag helper
 *********************************************/
 var dragHelper = {
@@ -1660,7 +1710,7 @@ var dragHelper = {
     }
 };
 
-/* ***********************************************
+/* Generated on:Tue Dec 22 2020 22:11:59 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 pencil Handler 
 *********************************************/
 var pencilHandler = {
@@ -1715,7 +1765,7 @@ var pencilHandler = {
 };
 
 
-/* ***********************************************
+/* Generated on:Tue Dec 22 2020 22:11:59 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 Eraser Handler 
 *********************************************/
 
@@ -1773,7 +1823,7 @@ var eraserHandler = {
 
 
 };
-/* ***********************************************
+/* Generated on:Tue Dec 22 2020 22:11:59 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 Line Handler 
 *********************************************/
 
@@ -1822,7 +1872,7 @@ var lineHandler = {
 
 };
 
-/* ***********************************************
+/* Generated on:Tue Dec 22 2020 22:11:59 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 rect Handler 
 *********************************************/
 var rectHandler = {
@@ -1877,7 +1927,86 @@ var rectHandler = {
 
 };
 
-/* ***********************************************
+/* Generated on:Tue Dec 22 2020 22:11:59 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  */// ------------------------textHandler-------------------------------------
+var textInput = document.getElementById('text-input');
+textInput.onkeyup = function(e) {
+    if (e.keyCode != 13) return;
+
+    // ENTER key goes to new line
+    fillText();
+
+    textHandler.isTextPending = true;
+
+    textHandler.y += 20;
+    textHandler.pageY += 20;
+
+    textInput.style.top = (textHandler.pageY - 10) + 'px';
+    textInput.style.left = (textHandler.pageX - 10) + 'px';
+    textInput.style.color = fillStyle == 'transparent' ? 'Black' : fillStyle;
+
+    setTimeout(function() {
+        textInput.focus();
+    }, 200);
+};
+
+textInput.onblur = function(e) {
+    if (textInput.value.length) {
+        fillText();
+        return;
+    }
+    textInput.style.top = '-100000px';
+    textInput.style.left = '-100000px';
+    textHandler.isTextPending = false;
+};
+
+function fillText() {
+    if (!textHandler.isTextPending) return;
+    textHandler.isTextPending = false;
+
+    var oldFillStyle = fillStyle;
+    var oldFont = font;
+
+    fillStyle = 'Black';
+    font = '15px Verdana';
+
+    points[points.length] = ['text', ['"' + textInput.value + '"', textHandler.x, textHandler.y], drawHelper.getOptions()];
+
+    fillStyle = oldFillStyle;
+    font = oldFont;
+
+    textInput.style.top = '-100000px';
+    textInput.style.left = '-100000px';
+    textInput.value = '';
+
+    drawHelper.redraw();
+}
+
+var textHandler = {
+    isTextPending: false,
+    mousedown: function(e) {
+        if (textHandler.isTextPending) fillText();
+        textHandler.isTextPending = true;
+
+        textHandler.pageX = e.pageX;
+        textHandler.pageY = e.pageY;
+
+        textHandler.x = e.pageX - canvas.offsetLeft - 10;
+        textHandler.y = e.pageY - canvas.offsetTop + 5;
+
+        textInput.style.top = (e.pageY - 10) + 'px';
+        textInput.style.left = (e.pageX - 10) + 'px';
+        textInput.style.color = fillStyle == 'transparent' ? 'Black' : fillStyle;
+
+        setTimeout(function() {
+            textInput.focus();
+        }, 200);
+    },
+    mouseup: function(e) {},
+    mousemove: function(e) {}
+};
+// -------------------------------------------------------------
+
+/* Generated on:Tue Dec 22 2020 22:11:59 GMT+0530 (India Standard Time) || version: 6.6.2 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 Events handler 
 *********************************************/
 

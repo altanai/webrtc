@@ -89,5 +89,4 @@ var drawHelper = {
         this.handleOptions(context, options);
     }
 
-
 };

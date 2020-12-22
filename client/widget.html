@@ -1,155 +1,260 @@
-﻿<!DOCTYPE html>
+﻿<!--/**-->
+<!--* Created by IntelliJ IDEA.-->
+<!--* User: Altanai ( @altanai)-->
+<!--* Date: 2020-->
+<!--* Time: 12:54 PM-->
+<!--* Ample Chats ( www.amplechat.com)-->
+<!--*/-->
+<!DOCTYPE html>
 <html itemscope itemtype="http://schema.org/WebPage">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="UTF-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0, user-scalable=no">
-  	<link href="minScripts/drawBoardCss.css" rel="stylesheet">
+	<meta name="viewport"
+		  content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0, user-scalable=no">
+	<link rel="icon" href="./assets/images/favicon/favicon.png" type="image/x-icon">
+	<link rel="shortcut icon" href="./assets/images/favicon/favicon.png" type="image/x-icon">
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700,800&amp;display=swap"
+		  rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:400,500,600&amp;display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Rubik:300,300i,400,400i,500,500i,700,700i,900,900i&amp;display=swap"
+		  rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="./assets/css/date-picker.css">
+	<link rel="stylesheet" type="text/css" href="./assets/css/magnific-popup.css">
+	<link rel="stylesheet" type="text/css" href="./assets/css/style.css" media="screen" id="color">
+	<link rel="stylesheet" type="text/css" href="./assets/js/ckeditor/skins/moono-lisa/editor.css?t=HBDD">
+	<link rel="stylesheet" type="text/css" href="./assets/js/ckeditor/plugins/scayt/skins/moono-lisa/scayt.css">
+	<link rel="stylesheet" type="text/css" href="./assets/js/ckeditor/plugins/scayt/dialogs/dialog.css">
+	<link rel="stylesheet" type="text/css" href="./assets/js/ckeditor/plugins/tableselection/styles/tableselection.css">
+	<link rel="stylesheet" type="text/css" href="./assets/js/ckeditor/plugins/wsc/skins/moono-lisa/wsc.css">
+	<link rel="stylesheet" type="text/css" href="./assets/js/ckeditor/plugins/copyformatting/styles/copyformatting.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+	<link href="node_modules/webrtcdevelopment/build/drawBoardCss.css" rel="stylesheet">
 </head>
 <body>
-	<section id="drawBox" class="design-surface" >
-		<canvas id="temp-canvas"></canvas>
-		<canvas id="main-canvas"></canvas>
-	</section>
 
-	<section id="tool-box" class="tool-box" style="height: 250px">
-        <canvas id="pencil-icon" width="40" height="40"></canvas>
-        <canvas id="eraser-icon" width="40" height="40"></canvas>
-        <canvas id="text-icon" width="40" height="40"></canvas>
-		<canvas id="drag-last-path" width="40" height="40"></canvas>
-		<canvas id="drag-all-paths" width="40" height="40"></canvas>
+<section id="drawBox" class="design-surface" height="100%">
+	<canvas id="temp-canvas" style="background:transparent;" ></canvas>
+	<canvas id="main-canvas"></canvas>
+</section>
 
-		<canvas id="line" class="selected-shape" width="40" height="40"></canvas>
-		<canvas id="arc" width="40" height="40"></canvas>
-		<canvas id="rectangle" width="40" height="40"></canvas>
-		<canvas id="quadratic-curve" width="40" height="40"></canvas>
-		<canvas id="bezier-curve" width="40" height="40"></canvas>
+<!--Draw widgets -->
+<section id="tool-box" class="tool-box" style="height: 250px">
 
-		<canvas id="line-width" width="40" height="40"></canvas>
-		<canvas id="colors" width="40" height="40"></canvas>
-		<canvas id="additional" width="40" height="40" style="display:none"></canvas>
-	</section>
+	<!--    <canvas id="pencil-icon" width="40" height="40" title="pencil"> </canvas>-->
+	<div>
+		<a id="pencil-icon" class="fixed-download icon-btn btn-outline-success button-effect" data-toggle="tooltip"
+		   data-placement="right" title="pencil"> <i class="ti-pencil"></i> </a>
+	</div>
 
-	<section id="arc-range-container" class="arc-range-container" style="display:none" >
-		<input id="arc-range" class="arc-range" type="text" value="2">
-		<input type="checkbox" id="is-clockwise" checked="" class="allow-select">
-		<label for="is-clockwise">Clockwise?</label>
-		<div class="arc-range-container-guide">Use arrow keys ↑↓</div>
-	</section>
-	
-	<section class="code-container">
-		<textarea id="code-text" class="code-text allow-select"></textarea>
-	</section>
-	
-	<section class="preview-panel">
-		<div id="design-preview" class="preview-selected" style="display:none">Preview</div>
-		<div id="code-preview" style="display:none">Code</div>
-	</section>
-		
-	<section id="options-container" class="options-container">
-		<div>
-			<input type="checkbox" id="is-absolute-points" checked="">
-			<label for="is-absolute-points">Absolute Points</label>
-		</div>
-		<div>
-			<input type="checkbox" id="is-shorten-code" checked="">
-			<label for="is-shorten-code">Shorten Code</label>
-		</div>
-	</section>
-	
-	<section id="line-width-container" class="context-popup">
-		<label for="line-width-text">Line Width:</label>
-		<input id="line-width-text" class="line-width-text" type="text" value="2">
-		
-		<div id="line-width-done" class="done">Done</div>
-	</section>
-		
-	<section id="colors-container" class="context-popup colors-container">
-		<div class="input-div">
-			<label for="stroke-style">Stroke Style:</label>
-			<input id="stroke-style" type="color" value="#6c96c8">
-		</div>
-		
-		<div class="input-div">
-			<label for="fill-style">Fill Style:</label>
-			<input id="fill-style" type="color" value="transparent">
-		</div>
-		
-		<div id="colors-done" class="done">Done</div>
-	</section>
+	<!--    <canvas id="eraser-icon" width="40" height="40" title="eraser"></canvas>-->
+	<div>
+		<a id="eraser-icon" class="fixed-download icon-btn btn-outline-success button-effect" data-toggle="tooltip"
+		   data-placement="right" title="Eraser"> <i class="ti-eraser"></i> </a>
+	</div>
 
-	<section id="copy-container" class="context-popup">
-		<div>
-			<input type="checkbox" id="copy-last" checked=""/>
-			<label for="copy-last">Copy last path</label>
-		</div>
-		<div style="margin-top: 5px;">
-			<input type="checkbox" id="copy-all"/>
-			<label for="copy-all">Copy all paths</label>
-		</div>
-	</section>
-	
-	<section id="additional-container" class="context-popup additional-container">
-		<div>
-			<label for="lineCap-select">Line Cap:</label>
-			<select id="lineCap-select">
-				<option>butt</option>
-				<option>round</option>
-				<option>square</option>
-			</select>
-		</div>
-		
-		<div>
-			<label for="lineJoin-select">Line Join:</label>
-			<select id="lineJoin-select">
-				<option>bevel</option>
-				<option>round</option>
-				<option>miter</option>
-			</select>
-		</div>
-		
-		<div>
-			<label for="globalAlpha-select">globalAlpha:</label>
-			<select id="globalAlpha-select">
-				<option>1.0</option>
-				<option>0.9</option>
-				<option>0.8</option>
-				<option>0.7</option>
-				<option>0.6</option>
-				<option>0.5</option>
-				<option>0.4</option>
-				<option>0.3</option>
-				<option>0.2</option>
-				<option>0.1</option>
-				<option>0.0</option>
-			</select>
-		</div>
-		
-		<div>
-			<label for="globalCompositeOperation-select">globalCompositeOperation:</label>
-			<select id="globalCompositeOperation-select">
-				<option>source-atop</option>
-				<option>source-in</option>
-				<option>source-out</option>
-				<option selected="">source-over</option>
-				<option>destination-atop</option>
-				<option>destination-in</option>
-				<option>destination-out</option>
-				<option>destination-over</option>
-				<option>lighter</option>
-				<option>copy</option>
-				<option>xor</option>
-			</select>
-		</div>
-		
-		<div id="additional-close" class="done">Done</div>
-	</section>
- 
-    <input type="text" id="text-input" style="position: absolute; top: -100000px; left: -100000px; z-index: 1000000;border:0;outline:none; font-size: 15px;padding:0;margin:0; background: transparent; width: 100%;">
-	
-	<script src="minScripts/drawBoardScript.js"></script>
-    
-    <div id="fade"></div>
+	<!--    <canvas id="line" class="selected-shape" width="40" height="40" title="line"></canvas>-->
+	<div>
+		<a id="line" class="fixed-download icon-btn btn-outline-success button-effect" data-toggle="tooltip"
+		   data-placement="right" title="Line"> <i class="ti-layout-line-solid"></i> </a>
+	</div>
+
+	<!--    <canvas id="colors" width="40" height="40" title="colors"></canvas>-->
+	<div>
+		<a id="colors" class="fixed-download icon-btn btn-outline-success button-effect" data-toggle="tooltip"
+		   data-placement="right" title="Color Pallete"> <i class="ti-palette"></i> </a>
+	</div>
+
+	<!--    <canvas id="text-icon" width="40" height="40"></canvas>-->
+	<div>
+		<a id="text-icon" class="fixed-download icon-btn btn-outline-success button-effect" data-toggle="tooltip"
+		   data-placement="right" title="Text"> <i class="ti-text"></i> </a>
+	</div>
+
+	<canvas id="drag-last-path" width="40" height="40"></canvas>
+	<canvas id="drag-all-paths" width="40" height="40"></canvas>
+
+<!--	<canvas id="arc" width="40" height="40"></canvas>-->
+	<div>
+		<a id="arc" class="fixed-download icon-btn btn-outline-success button-effect" data-toggle="tooltip"
+		   data-placement="right" title="Text"> <i class="ti-text"></i> </a>
+	</div>
+
+<!--	<canvas id="rectangle" width="40" height="40"></canvas>-->
+	<div>
+		<a id="rectangle" class="fixed-download icon-btn btn-outline-success button-effect" data-toggle="tooltip"
+		   data-placement="right" title="Text"> <i class="ti-text"></i> </a>
+	</div>
+
+	<canvas id="quadratic-curve" width="40" height="40"></canvas>
+	<canvas id="bezier-curve" width="40" height="40"></canvas>
+
+	<!--    <canvas id="line-width" width="40" height="40"></canvas>-->
+	<div>
+		<a id="line-width" class="fixed-download icon-btn btn-outline-success button-effect" data-toggle="tooltip"
+		   data-placement="right" title="Rectangle"> <i class="ti-layout-accordion-separated"></i> </a>
+	</div>
+
+	<canvas id="additional" width="40" height="40" style="display:none"></canvas>
+
+	<!--    <div id="trashBtn" class="btn btn-info">-->
+	<!--        <img src="drawboardicons/trash.png" width="40" height="40" title="trash"/>-->
+	<!--    </div>-->
+	<div>
+		<a id="trashBtn" class="fixed-download icon-btn btn-outline-success button-effect" data-toggle="tooltip"
+		   data-placement="right" title="Save"> <i class="ti-trash"></i> </a>
+	</div>
+
+	<!--    <div id="saveBtn" class="btn btn-info" href="#">-->
+	<!--        <img src="drawboardicons/save.png" width="40" height="40" title="save"/>-->
+	<!--    </div>-->
+	<div>
+		<a id="saveBtn" class="fixed-download icon-btn btn-outline-success button-effect" data-toggle="tooltip"
+		   data-placement="right" title="Trash"> <i class="ti-save"></i> </a>
+	</div>
+</section>
+
+<section id="arc-range-container" class="arc-range-container" style="display:none">
+	<input id="arc-range" class="arc-range" type="text" value="2">
+	<input type="checkbox" id="is-clockwise" checked="" class="allow-select">
+	<label for="is-clockwise">Clockwise?</label>
+	<div class="arc-range-container-guide">Use arrow keys ↑↓</div>
+</section>
+
+<section class="code-container">
+	<textarea id="code-text" class="code-text allow-select"></textarea>
+</section>
+
+<section class="preview-panel">
+	<div id="design-preview" class="preview-selected" style="display:none">Preview</div>
+	<div id="code-preview" style="display:none">Code</div>
+</section>
+
+<section id="options-container" class="options-container">
+	<div>
+		<input type="checkbox" id="is-absolute-points" checked="">
+		<label for="is-absolute-points">Absolute Points</label>
+	</div>
+	<div>
+		<input type="checkbox" id="is-shorten-code" checked="">
+		<label for="is-shorten-code">Shorten Code</label>
+	</div>
+</section>
+
+<section id="line-width-container" class="context-popup" title="line width">
+	<label for="line-width-text">Line Width:</label>
+	<input id="line-width-text" class="line-width-text" type="text" value="2">
+
+	<button id="line-width-done" class="done">Done</button>
+</section>
+
+<section id="colors-container" class="context-popup colors-container" title="stroke">
+	<div class="input-div">
+		<label for="stroke-style">Stroke Style:</label>
+		<input id="stroke-style" type="color" value="#6c96c8">
+	</div>
+
+	<div class="input-div">
+		<label for="fill-style">Fill Style:</label>
+		<input id="fill-style" type="color" value="transparent">
+	</div>
+
+	<button id="colors-done" class="done">Done</button>
+</section>
+
+<section id="copy-container" class="context-popup">
+	<div>
+		<input type="checkbox" id="copy-last" checked=""/>
+		<label for="copy-last">Copy last path</label>
+	</div>
+	<div style="margin-top: 5px;">
+		<input type="checkbox" id="copy-all"/>
+		<label for="copy-all">Copy all paths</label>
+	</div>
+</section>
+
+<section id="additional-container" class="context-popup additional-container">
+	<div>
+		<label for="lineCap-select">Line Cap:</label>
+		<select id="lineCap-select">
+			<option>butt</option>
+			<option>round</option>
+			<option>square</option>
+		</select>
+	</div>
+
+	<div>
+		<label for="lineJoin-select">Line Join:</label>
+		<select id="lineJoin-select">
+			<option>bevel</option>
+			<option>round</option>
+			<option>miter</option>
+		</select>
+	</div>
+
+	<div>
+		<label for="globalAlpha-select">globalAlpha:</label>
+		<select id="globalAlpha-select">
+			<option>1.0</option>
+			<option>0.9</option>
+			<option>0.8</option>
+			<option>0.7</option>
+			<option>0.6</option>
+			<option>0.5</option>
+			<option>0.4</option>
+			<option>0.3</option>
+			<option>0.2</option>
+			<option>0.1</option>
+			<option>0.0</option>
+		</select>
+	</div>
+
+	<div>
+		<label for="globalCompositeOperation-select">globalCompositeOperation:</label>
+		<select id="globalCompositeOperation-select">
+			<option>source-atop</option>
+			<option>source-in</option>
+			<option>source-out</option>
+			<option selected="">source-over</option>
+			<option>destination-atop</option>
+			<option>destination-in</option>
+			<option>destination-out</option>
+			<option>destination-over</option>
+			<option>lighter</option>
+			<option>copy</option>
+			<option>xor</option>
+		</select>
+	</div>
+
+	<button id="additional-close" class="done">Done</button>
+</section>
+
+<input type="text" id="text-input"
+	   style="position: absolute; top: -100000px; left: -100000px; z-index: 1000000;border:0;outline:none; font-size: 15px;padding:0;margin:0; background: transparent; width: 100%;">
+
+<div id="fade"></div>
+
+
+<script src="./assets/js/jquery-3.3.1.min.js"></script>
+<script src="./assets/js/owl.carousel.js"></script>
+<script src="./assets/js/popper.min.js"></script>
+<script src="./assets/js/tippy-bundle.iife.min.js"></script>
+<script src="./assets/js/bootstrap.js"></script>
+<script src="./assets/js/easytimer.min.js"></script>
+<script src="./assets/js/feather-icon/feather.min.js"></script>
+<script src="./assets/js/feather-icon/feather-icon.js"></script>
+<script src="./assets/js/date-picker/datepicker.js"></script>
+<script src="./assets/js/date-picker/datepicker.en.js"></script>
+<script src="./assets/js/date-picker/datepicker.custom.js"></script>
+<script src="./assets/js/tour/intro.js"></script>
+<script src="./assets/js/tour/intro-init.js"></script>
+<script src="./assets/js/jquery.magnific-popup.js"></script>
+<script src="./assets/js/zoom-gallery.js"></script>
+<script src="./assets/js/jquery.draggable.js"></script>
+<script src="./assets/js/script.js"></script>
 
 </body>
+
+<script src="node_modules/webrtcdevelopment/build/drawBoardScript.js"></script>
 </html>

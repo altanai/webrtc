@@ -90,52 +90,44 @@ this.findPeerInfoSDP = findPeerInfoSDP = function (userid) {
 };
 
 /**
- * update already existing webcallpeers obj by appending a value , mostly used for timer zone
+ * update already existing webcallpeers obj by appending a value
  * @method
  * @name appendToPeerValue
  * @param {string} userid
  * @param {json} key
- * @param {json} value4970gww6eg9
+ * @param {json} value
  */
+
 this.appendToPeerValue = appendToPeerValue = function (userid, key, value) {
     try {
-        webrtcdev.log("[peerinfomanager] appendToPeerValue - update peer - " + userid + " by key - " + key + " with value ", value);
         if (!key || !value) return;
-        let peerInfo = findPeerInfo(userid);
-        webrtcdev.log("[peerinfomanager] appendToPeerValue peerInfo before  updating ", peerInfo, peerInfo[key]);
 
-        // for (k in peerInfo) {
-        //     webrtcdev.log( k , peerInfo[k] );
-        //     if (peerInfo.hasOwnProperty(k) && k==key) {
-        //         removefromPeerValue(userid, key);
-        //     }
-        // }
+        let peerInfo = findPeerInfo(userid);
         if(peerInfo[key] || peerInfo.hasOwnProperty(key) ) {
-            webrtcdev.log("[peerinfomanager] appendToPeerValue - key "+ key +" already exists in peerinfo with value  " + peerInfo[key] );
             removefromPeerValue(userid, key);
         }
 
         peerInfo[key] = value;
-        // for (x in webcallpeers) {
-        //     if (webcallpeers[x].userid == pid) {
-        //         webcallpeers[x][key] = value;
-        //         return;
-        //     }
-        // }
         let pindex = findPeerInfoIndex(peerInfo.userid);
         webcallpeers[pindex] = peerInfo;
         webrtcdev.log("[peerinfomanager] appendToPeerValue - update webcallpeers index " + pindex, webcallpeers[pindex]);
-    } catch (e) {
-        webrtcdev.error("[peerinfomanager] appendToPeerValue errorr - ", e);
+    } catch (err) {
+        webrtcdev.error("[peerinfomanager] appendToPeerValue errorr - ", err);
     }
-}
+};
 
-
-function removefromPeerValue(userid, key) {
+/**
+ * remove from already existing webcallpeers obj by key
+ * @method
+ * @name removefromPeerValue
+ * @param {string} userid
+ * @param {json} key
+ */
+this.removefromPeerValue = removefromPeerValue = function(userid, key) {
     webrtcdev.log("[peerinfomanager] removefromPeerValue " + userid + " key " + key);
     let peerInfo = findPeerInfo(userid);
     return delete peerInfo[key];
-}
+};
 
 
 /**
@@ -153,8 +145,8 @@ function removePeerInfo(userid) {
                 return;
             }
         }
-    } catch (e) {
-        webrtcdev.error("[peerinfomanager] appendToPeerValue errorr - ", e);
+    } catch (err) {
+        webrtcdev.error("[peerinfomanager] removePeerInfo errorr - ", err);
     }
 
 }

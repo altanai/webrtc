@@ -19,7 +19,7 @@ function openDrawBoard() {
         button: drawCanvasobj.button
     };
     rtcConn.send({type: "canvas", board: boarddata});
-    webrtcdev.log("[drawJS] send canvas data on rtc")
+    webrtcdev.log("[drawJS] send canvas data on rtc");
 
     webrtcdevCanvasDesigner(drawCanvasobj);
 
@@ -72,13 +72,17 @@ function webrtcdevCanvasDesigner(drawCanvasobj) {
             CanvasDesigner.setSelected('pencil');
 
             CanvasDesigner.setTools({
-                pencil: true,
-                eraser: true
+                pencil: drawCanvasobj.tools.pencil || false ,
+                eraser: drawCanvasobj.tools.eraser || false ,
+                text: drawCanvasobj.tools.text || false ,
+                line: drawCanvasobj.tools.line || false,
+                rectangle : drawCanvasobj.tools.rectangle || false,
+                circle : drawCanvasobj.tools.arc || false
             });
 
             CanvasDesigner.appendTo(document.getElementById(drawCanvasobj.drawCanvasContainer));
         } catch (e) {
-            webrtcdev.error(" Canvas drawing not supported ", e);
+            webrtcdev.error("[drawjs] Canvas drawing not supported ", e);
         }
     } else {
         webrtcdev.log("[drawjs] CanvasDesigner already started iframe is attached ");

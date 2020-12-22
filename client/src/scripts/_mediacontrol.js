@@ -71,9 +71,9 @@ function getCamMedia(rtcConn, outgoingVideo, outgoingAudio) {
     };
 
     if (role == "inspector") {
-
         rtcConn.dontCaptureUserMedia = true;
         webrtcdev.warn("[_mediacontrol.js] getCamMedia  - Joining as inspector without camera Video");
+
     } else if (outgoingVideo && outgoingAudio) {
         webrtcdev.log("[startJS] getCamMedia - default mediaConstraints :", rtcConn.mediaConstraints);
         webrtcdev.log("[mediacontrol.js] getCamMedia  - Capture Full Media ");
@@ -102,14 +102,15 @@ function getCamMedia(rtcConn, outgoingVideo, outgoingAudio) {
         rtcConn.dontCaptureUserMedia = true;
         webrtcdev.warn(" [_mediacontrol.js] getCamMedia - dont Capture outgoing video ", outgoingVideo, " and outgoing Audio ", outgoingAudio);
         webrtcdev.log("[startJS] getCamMedia - default mediaConstraints :", rtcConn.mediaConstraints);
+
         // call media error handler to attach null in video
-        rtcConn.onMediaError("onNoCameraCard", "");
-        window.dispatchEvent(new CustomEvent('webrtcdev', {
-            detail: {
-                servicetype: "session",
-                action: "onNoCameraCard"
-            }
-        }));
+        // rtcConn.onMediaError("onNoCameraCard", "");
+        // window.dispatchEvent(new CustomEvent('webrtcdev', {
+        //     detail: {
+        //         servicetype: "session",
+        //         action: "onNoCameraCard"
+        //     }
+        // }));
     }
 }
 
@@ -350,4 +351,14 @@ Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
     get: function () {
         return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
     }
-})
+});
+
+
+
+function syncMute(msg, datatype="mute") {
+    rtcConn.send({
+        type: datatype,
+        message: msg
+    });
+}
+

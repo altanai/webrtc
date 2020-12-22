@@ -1,10 +1,10 @@
 # webrtc
-
-web real time communication platform 
+Web realtime communication SDK 
 
 ![alt webrtc development ](https://altanaitelecom.files.wordpress.com/2015/05/webrtc_development_logo.png?w=100&h=100)
 
-[![Gitter][GS image]][Gitter]
+![Node.js Package](https://github.com/altanai/webrtcdevelopment/workflows/Node.js%20Package/badge.svg?branch=5.4.0)
+
 [![Build Status][BS img]][Build Status]
 [![Dependency Status][DS img]][Dependency Status]
 [![NPM Status][NS img]][NPM Status]
@@ -26,7 +26,7 @@ This is a ready to deploy webrtc SDK and SaaS for a customized and flexible comm
 ----
 
 The Solution primarily contains nodejs frameworks for hosting the project and webbsockets over socket.io to perform offer - answer handshake and share SDP (Session description protocol ).
-![alt webrtc development architecture ](https://s32.postimg.org/uamq0uq9h/webrtcdevelopment_SDK.png)
+![alt webrtc development architecture ](https://altanaitelecom.files.wordpress.com/2016/04/webcall-stack-1.png)
 
 ### Technologies used 
 
@@ -80,8 +80,7 @@ Outputs webrtcdevelopment.js , webrtcdevelopment_header.js , webrtcdevelopment.c
 gulp production
 ```
 
-
-## Get Started
+## Steps 
 ----
 
 To run this project following steps need to be followed in that order :
@@ -122,21 +121,20 @@ To change the ports for running the https server and rest server, goto env.json
 ```
 
 To run the tests
-```
+```shell script
 npm test
 ```
 
 **5. Start up the Server**
 
 To start the Server in dev mode  and stop the server as soon as Ctrl+ C is hit or the terminal widnow is closed . 
-```
+```shell script
 node webrtcserver.js
 ```
 read more about [node](https://nodejs.org/en/about/ )
 
 To start the Server using npm start ( using package.json) , behaves same as earlier run using node. We use supervisor to restart the server incase of exceptions or new code .
-
-```
+```shell script
 npm start
 ```
 
@@ -923,7 +921,8 @@ use tarnscompiler with preset env plugin for changes arrow function to normals o
 
 ### WSS errors
 
-**Issue1** net::ERR_CONTENT_LENGTH_MISMATCH 200 (OK) \
+**Issue1** net::ERR_CONTENT_LENGTH_MISMATCH 200 (OK) 
+\
 **solution** This error is definite mismatch between the data that is advertised in the HTTP Headers and the data transferred over the wire.
  It could come from the following:
 Server: If a server has a bug with certain modules that changes the content but don't update the content-length in the header or just doesn't work properly. It was the case for the Node HTTP Proxy at some point (see here)
@@ -976,16 +975,21 @@ server.listen(properties.wss2Port);
 
 **Issue 3** WSS errors on socket.io as, error in connection establishment: net::ERR_SSL_PROTOCOL_ERROR \
 or  WebSocket opening handshake was cancelled
+\
 **solution** recheck the session connection to socket.io , especially the ports and whther or not they are already in use 
 
-**Issue 4** Error during WebSocket handshake: Unexpected response code: 403 \
+
+**Issue 4** Error during WebSocket handshake: Unexpected response code: 403 
+\
 **solution** Related to ECONNRESET
+
 
 **Issue 5** {code: 0, message: "Transport unknown"}
             code: 0
             message: "Transport unknown"
 or 
 Status Code: 400 Bad Request
+\
 **solution** Either specify same protocol on both client and servers ide or do not specify and transport protocol at all .
 For isntance this problem arises  when server specifies websocket transport but client tries connecting over polling 
 server specifying tarsnport websocket
@@ -1006,8 +1010,10 @@ https://localhost:8086/socket.io/?userid=iu02bk1b77g&sessionid=httpslocalhost808
 ```shell script
 NET::ERR_CERT_AUTHORITY_INVALID
 ````
+\
 **Solution** Since the certs are self signed , navigate to the wss port on http and allow permission under teh advanced button in scren below 
 ![CERT_AUTHORITY](screenshots/cert_authority.png)
+
 
 **Issue 7** GoDaddy SSL ecrts key gives no start line     
 ```shell script
@@ -1016,6 +1022,7 @@ NET::ERR_CERT_AUTHORITY_INVALID
   reason: 'no start line',
   code: 'ERR_OSSL_PEM_NO_START_LINE'
 ````
+\
 **Solution** first check whether the key file has valid certificate 
 ```shell script
 openssl x509 -text -in file.key
@@ -1042,3 +1049,6 @@ https://github.com/altanai/webrtc/issues <https://github.com/altanai/webrtc/issu
 ### License
 
 MIT
+
+Todo:
+remove topIconHolder_ul

@@ -104,30 +104,27 @@ function fileSharingEnded(file) {
                 //update filearray status to finished
                 peerinfo.filearray[x].status = "finished";
 
+                peerinfo.filearray[x] = filename;
+                
                 // Hide the stop upload button for this file
                 hideelem("stopuploadButton" + progressid);
             }
     }
 
-    // Display on File Viewer and List
-    webrtcdev.log("[flesharing JS] onFileEnd - Display on File Viewer and List -", file.url, filename, file.type);
-    displayFile(file.uuid, peerinfo, file.url, filename, file.type);
-
-    webrtcdev.log("[flesharing JS] onFileEnd - Display List -", filename + file.uuid, document.getElementById(filename + file.uuid));
-    // if the file is from me ( orignal share ) then diaply listing in viewbox just one
-    if (selfuserid == file.userid && document.getElementById(filename + file.uuid)) {
+    webrtcdev.log("[flesharing JS] onFileEnd - Display List -", filename );
+    // if the file is from me ( original share ) then display listing in viewbox just one
+    if (selfuserid == file.userid && document.getElementById(filename)) {
         return;
     }
     displayList(file.uuid, peerinfo, file.url, filename, file.type);
-    window.dispatchEvent(new CustomEvent('webrtcdev', {
-        detail: {
-            servicetype: "file",
-            action: "onFileShareEnded"
-        }
-    }));
 
+
+    // Display on File Viewer and List
+    webrtcdev.log("[flesharing JS] onFileEnd - Display on File Viewer -", file.url, filename, file.type);
+    displayFile(file.uuid, peerinfo, file.url, filename, file.type);
+
+    // start the pending transfer from pendingFileTransfer.push(file);
     // webrtcdev.log(" pendingFileTransfer ", pendingFileTransfer , pendingFileTransfer.length , pendingFileTransferlimit);
-    //start the pending transfer from pendingFileTransfer.push(file);
     // if (pendingFileTransfer.length >= pendingFileTransferlimit) {
     //     webrtcdev.log("[flesharing JS] resuming pending/paused file ", pendingFileTransfer[0]);
     //     hideelem(pendingFileTransfer[0].name);
@@ -171,7 +168,7 @@ function stopSendFile(progressid, filename, file, fileto, filefrom) {
     for (y in peerinfo.filearray) {
         if (peerinfo.filearray[y].pid == progressid) {
             peerinfo.filearray[y].status = "stop";
-            webrtcdev.log(" [filesharing js ] stopSendFile - filename ", peerinfo.filearray[y].name, " | status ", peerinfo.filearray[y].status);
+            webrtcdev.log("[filesharing js] stopSendFile - filename ", peerinfo.filearray[y].name, " | status ", peerinfo.filearray[y].status);
             //peerinfo.filearray.splice(y,1);
         }
     }
@@ -209,11 +206,11 @@ function sendOldFiles() {
         var user = webcallpeers[x];
         if (user.filearray && user.filearray.length > 0) {
             for (y in user.filearray) {
-                // chking is file is already present in old file list 
+                // checking is file is already present in old file list
                 for (o in oldfilesList) {
                     if (oldfilesList[o].name == user.filearray[y].name) break;
                 }
-                webrtcdev.log("[filehsraing js] user.filearray[y]", user.filearray[y])
+                webrtcdev.log("[filehsraing js] user.filearray[y]", user.filearray[y]);
                 oldfilesList.push(user.filearray[y]);
             }
         }
