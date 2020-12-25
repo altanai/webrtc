@@ -61,73 +61,73 @@ function getArgsJson(arg) {
  * store the logs in array for debugging if required
  * @constructor
  * @name getArgsJson
- * @return {arduments } args
+ * @return {arguments } args
  */
 var webrtcdevlogger = {
 
     log: function () {
-        // let arg = "";
-        // var d = Date(Date.now()).toString();
-        // if (isJSON(arguments)) {
-        //     arg = JSON.stringify(arguments, undefined, 2);
-        //     webrtcdevlogs.push(d + "<pre style='color:grey'>[LOG]" + arg + "</pre>");
-        // } else {
-        //     arg = getArgsJson(arguments);
-        //     webrtcdevlogs.push(d + "<p style='color:grey'>[LOG]" + arg + "</p>");
-        // }
-        console.log(arguments);
+        let arg = "";
+        var d = Date(Date.now()).toString();
+        if (isJSON(arguments)) {
+            arg = JSON.stringify(arguments, undefined, 2);
+            webrtcdevlogs.push(d + "<pre style='color:grey'>[LOG]" + arg + "</pre>");
+        } else {
+            arg = getArgsJson(arguments);
+            webrtcdevlogs.push(d + "<p style='color:grey'>[LOG]" + arg + "</p>");
+        }
+        // console.log(arguments);
     },
 
     info: function () {
-        // let arg = "";
-        // var d = Date(Date.now()).toString();
-        // if (isJSON(arguments)) {
-        //     arg = JSON.stringify(arguments, undefined, 2);
-        //     webrtcdevlogs.push(d + "<pre style='color:blue'>[INFO]" + arg + "</pre>");
-        // } else {
-        //     arg = getArgsJson(arguments);
-        //     webrtcdevlogs.push(d + "<p style='color:blue'>[INFO]" + arg + "</p>");
-        // }
-        console.info(arguments);
+        let arg = "";
+        var d = Date(Date.now()).toString();
+        if (isJSON(arguments)) {
+            arg = JSON.stringify(arguments, undefined, 2);
+            webrtcdevlogs.push(d + "<pre style='color:blue'>[INFO]" + arg + "</pre>");
+        } else {
+            arg = getArgsJson(arguments);
+            webrtcdevlogs.push(d + "<p style='color:blue'>[INFO]" + arg + "</p>");
+        }
+        // console.info(arguments);
     },
 
     debug: function () {
-        // let arg = "";
-        // var d = Date(Date.now()).toString();
-        // if (isJSON(arguments)) {
-        //     arg = JSON.stringify(arguments, undefined, 2);
-        //     webrtcdevlogs.push(d + "<pre style='color:green'>[DEBUG]" + arg + "</pre>");
-        // } else {
-        //     arg = getArgsJson(arguments);
-        //     webrtcdevlogs.push(d + "<p style='color:green'>[DEBUG]" + arg + "</p>");
-        // }
-        console.debug(arguments);
+        let arg = "";
+        var d = Date(Date.now()).toString();
+        if (isJSON(arguments)) {
+            arg = JSON.stringify(arguments, undefined, 2);
+            webrtcdevlogs.push(d + "<pre style='color:green'>[DEBUG]" + arg + "</pre>");
+        } else {
+            arg = getArgsJson(arguments);
+            webrtcdevlogs.push(d + "<p style='color:green'>[DEBUG]" + arg + "</p>");
+        }
+        // console.debug(arguments);
     },
 
     warn: function () {
-        // let arg = "";
-        // var d = Date(Date.now()).toString();
-        // if (isJSON(arguments)) {
-        //     arg = JSON.stringify(arguments, undefined, 2);
-        //     webrtcdevlogs.push(d + "<pre style='color:orange'>[WARN]" + arg + "</pre>");
-        // } else {
-        //     arg = getArgsJson(arguments);
-        //     webrtcdevlogs.push(d + "<p style='color:orange'>[WARN]" + arg + "</p>");
-        // }
-        console.warn(arguments);
+        let arg = "";
+        var d = Date(Date.now()).toString();
+        if (isJSON(arguments)) {
+            arg = JSON.stringify(arguments, undefined, 2);
+            webrtcdevlogs.push(d + "<pre style='color:orange'>[WARN]" + arg + "</pre>");
+        } else {
+            arg = getArgsJson(arguments);
+            webrtcdevlogs.push(d + "<p style='color:orange'>[WARN]" + arg + "</p>");
+        }
+        // console.warn(arguments);
     },
 
     error: function () {
-        // let arg = "";
-        // var d = Date(Date.now()).toString();
-        // if (isJSON(arguments)) {
-        //     arg = JSON.stringify(arguments, undefined, 2);
-        //     webrtcdevlogs.push(d + "<pre style='color:red'>[ERROR]" + arg + "</pre>");
-        // } else {
-        //     arg = getArgsJson(arguments);
-        //     webrtcdevlogs.push(d + "<p style='color:red'>[ERROR]" + arg + "</p>");
-        // }
-        console.error(arguments);
+        let arg = "";
+        var d = Date(Date.now()).toString();
+        if (isJSON(arguments)) {
+            arg = JSON.stringify(arguments, undefined, 2);
+            webrtcdevlogs.push(d + "<pre style='color:red'>[ERROR]" + arg + "</pre>");
+        } else {
+            arg = getArgsJson(arguments);
+            webrtcdevlogs.push(d + "<p style='color:red'>[ERROR]" + arg + "</p>");
+        }
+        // console.error(arguments);
     }
 };
 
