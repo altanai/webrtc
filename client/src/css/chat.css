@@ -48,6 +48,7 @@
 .chatMessagesClass{
     overflow-y: scroll;
     width: 76%;
+    word-wrap: break-word;
 }
 
 .mainInputBox{

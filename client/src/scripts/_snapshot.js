@@ -1,6 +1,14 @@
 /* *************************************
 Snapshot
 ************************************************/
+
+/*
+ * Take snapshot from peerinfo video container
+ * @method
+ * @name takeSnapshot
+ * @param {int} peerinfo
+ * @param {callback} callback
+*/
 function takeSnapshot(peerinfo, callback) {
     try {
 
@@ -21,11 +29,13 @@ function takeSnapshot(peerinfo, callback) {
 
         }
 
-        if (peerinfo.videoContainer)
-            return _takeSnapshot(peerinfo.videoContainer);
-        else
+        if (peerinfo.videoContainer) {
+            let video = document.getElementById(peerinfo.videoContainer);
+            return _takeSnapshot(video);
+        }else {
             webrtcdev.error("[snapshot] videocontainer missing in peerinfo", peerinfo);
             return "empty";
+        }
     } catch (err) {
         webrtcdev.error("[Snapshot] ", err);
     }
