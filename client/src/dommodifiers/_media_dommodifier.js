@@ -151,8 +151,15 @@ function createFullScreenButton(minmaxobj, controlBarName, peerinfo) {
     button.innerHTML = minmaxobj.max.button.html_off;
     button.onclick = function () {
         if (button.className == minmaxobj.max.button.class_off) {
-            let vid = document.getElementById(peerinfo.videoContainer);
-            vid.webkitEnterFullScreen();
+            if (peerinfo.videoContainer.nodeName =="VIDEO") {
+                let vid = peerinfo.videoContainer;
+                vid.webkitEnterFullScreen();
+            }else if(document.getElementById(peerinfo.videoContainer).nodeName =="VIDEO"){
+                let vid = document.getElementById(peerinfo.videoContainer);
+                vid.webkitEnterFullScreen();
+            }else{
+                webrtcdev.error("[media dommodifier] createFullScreenButton videoContainer missing in peerinfo", peerinfo.videoContainer);
+            }
             button.className = minmaxobj.max.button.class_on;
             button.innerHTML = minmaxobj.max.button.html_on;
         } else {

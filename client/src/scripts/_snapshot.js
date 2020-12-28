@@ -27,13 +27,16 @@ function takeSnapshot(peerinfo, callback) {
                 callback("");
             }
 
-        }
+        };
 
-        if (peerinfo.videoContainer) {
+        if (peerinfo.videoContainer.nodeName =="VIDEO") {
+            let video = peerinfo.videoContainer;
+            return _takeSnapshot(video);
+        }else if(document.getElementById(peerinfo.videoContainer).nodeName =="VIDEO"){
             let video = document.getElementById(peerinfo.videoContainer);
             return _takeSnapshot(video);
-        }else {
-            webrtcdev.error("[snapshot] videocontainer missing in peerinfo", peerinfo);
+        }else{
+            webrtcdev.error("[snapshot] videocontainer missing in peerinfo", peerinfo.videoContainer);
             return "empty";
         }
     } catch (err) {

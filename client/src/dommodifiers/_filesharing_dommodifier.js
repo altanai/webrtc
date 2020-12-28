@@ -271,8 +271,8 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     let showdownbtn = true;
     let showdelbtn = true;
 
-    if(!uuid){
-        uuid="000";
+    if (!uuid) {
+        uuid = "000";
     }
     try {
         if (!fileshareobj.active) return;
@@ -322,7 +322,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     webrtcdev.log("[filesharing dommodifier] displayList set up parent dom  ", parentdom);
 
     let filedom = document.createElement("ul");
-    filedom.id = filename ; // + uuid
+    filedom.id = filename; // + uuid
     filedom.type = peerinfo.type;  // local or remote
     filedom.innerHTML = "";
     filedom.className = "row";
@@ -336,7 +336,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
 
     // Download Button
     let downloadButton = document.createElement("li");
-    downloadButton.id = "downloadButton" + filename ; // + uuid;
+    downloadButton.id = "downloadButton" + filename; // + uuid;
     downloadButton.title = "Download";
     if (fileshareobj.filelist.downloadicon) {
         if (toElement(fileshareobj.filelist.downloadicon) instanceof HTMLElement) {
@@ -377,7 +377,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
 
     // Show Button
     let showButton = document.createElement("li");
-    showButton.id = "showButton" + filename ; // + uuid;
+    showButton.id = "showButton" + filename; // + uuid;
     showButton.title = "Show";
     if (fileshareobj.filelist.showicon) {
         if (toElement(fileshareobj.filelist.showicon) instanceof HTMLElement) {
@@ -395,15 +395,15 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     repeatFlagShowButton = "";
 
     // hide others
-    for ( x in webrtcdevobj.getwebcallpeers()[0].filearray) {
+    for (x in webrtcdevobj.getwebcallpeers()[0].filearray) {
         let _filename = webrtcdevobj.getwebcallpeers()[0].filearray[x];
-        if(_filename != filename  && !_filename.name) {
+        if (_filename != filename && !_filename.name) {
             let _showButton = document.getElementById("showButton" + _filename);
             if (_showButton) {
                 //     _showbutton.click();
                 showHideFile('', elementDisplay, '', _filename, '', _showButton, 2);
             }
-        }else{
+        } else {
 
         }
     }
@@ -457,7 +457,7 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
     removeButton.onclick = function (event) {
         if (repeatFlagRemoveButton != filename) {
             //var tobeHiddenElement = event.target.parentNode.id;
-            const tobeHiddenElement = filename ; // + uuid;
+            const tobeHiddenElement = filename; // + uuid;
             hideFile(elementDisplay, filename);
             rtcConn.send({
                 type: "shareFileRemove",
@@ -632,8 +632,8 @@ function getFileElementDisplayByType(filetype, fileurl, filename) {
  */
 function displayFile(uuid, peerinfo, fileurl, filename, filetype) {
 
-    webrtcdev.log("[filehsaring dommodifier] displayFile  - uuid: ", uuid, " peerinfo :", peerinfo,
-        " , file url : ", fileurl, " ,  file name : ", filename, " ,  file type :", filetype);
+    webrtcdev.log("[filehsaring dommodifier] displayFile  - uuid :", uuid, "peerinfo :", peerinfo,
+        " file url : ", fileurl, " file name : ", filename, "  file type :", filetype);
     try {
 
         if (!peerinfo || !peerinfo.fileShare) return;
@@ -729,7 +729,7 @@ function showHideFile(uuid, elementDisplay, fileurl, filename, filetype, showHid
             _filetype : filetype
         }); */
 
-        showHideButton.innerHTML = fileshareobj.filelist.showicon ||'<i class="fa fa-eye"></i>';
+        showHideButton.innerHTML = fileshareobj.filelist.showicon || '<i class="fa fa-eye"></i>';
         webrtcdev.log(" [filehsaring js]  Executed script to show the file");
     } else if (countClicks % 2 == 0) {
         hideFile(elementDisplay, filename);
@@ -741,7 +741,7 @@ function showHideFile(uuid, elementDisplay, fileurl, filename, filetype, showHid
             _filename: filename,
             _filetype: filetype
         });*/
-        showHideButton.innerHTML = fileshareobj.filelist.hideicon ||'<i class="fa fa-eye-slash"></i>';
+        showHideButton.innerHTML = fileshareobj.filelist.hideicon || '<i class="fa fa-eye-slash"></i>';
         webrtcdev.log(" [filehsaring js]  Executed script to hide the file ");
     }
 }
