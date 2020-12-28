@@ -3,7 +3,7 @@
 var rtcConn = null;
 var selfuserid = null, remoteUserId = null;
 
-var webcallpeers = [];
+var webcallpeers = this.webcallpeers = [];
 
 var repeatFlagShowButton = null, repeatFlagHideButton = null, repeatFlagRemoveButton = null,
     repeatFlagStopuploadButton = null;
@@ -19,8 +19,8 @@ var latitude = "", longitude = "", operatingsystem = "";
 
 /* webrtc session intialization */
 var autoload = true;
-var sessionid = null, webrtcdevIceServers = [];
-this.sessionid = "";
+var sessionid = this.sessionid=  "";
+var webrtcdevIceServers = [];
 
 var localStream, localStreamId, remoteStream, remoteStreamId;
 var config = {

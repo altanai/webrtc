@@ -428,7 +428,7 @@ function createSnapshotButton(controlBarName, peerinfo) {
 }
 
 /**
- * Create Record Button to call start and stop recoriding functions
+ * Create Record Button to call start and stop recording functions
  * @method
  * @name createRecordButton
  * @param {json} videoRecordobj

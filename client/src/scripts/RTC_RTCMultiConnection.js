@@ -87,12 +87,12 @@
      */
     mPeer.onGettingRemoteMedia = function (stream, remoteUserId) {
 
-        webrtcdev.log("[RTC ] onGettingRemoteMedia");
+        webrtcdev.log("[RTC] onGettingRemoteMedia");
 
         try {
             stream.type = 'remote';
         } catch (e) {
-            webrtcdev.error("[RTC ] onGettingRemoteMedia error in setting Remote stream type ", e);
+            webrtcdev.error("[RTC] onGettingRemoteMedia error in setting Remote stream type ", e);
         }
 
         connection.setStreamEndHandler(stream, 'remote-stream');
@@ -117,7 +117,7 @@
                 // setMuteHandlers(connection, connection.streamEvents[stream.streamid]);catch(error){
                 connection.onstream(connection.streamEvents[stream.streamid]);
             } catch (error) {
-                webrtcdev.error("[RTC ] onGettingRemoteMedia ", error);
+                webrtcdev.error("[RTC] onGettingRemoteMedia ", error);
             }
         }, connection);
     };

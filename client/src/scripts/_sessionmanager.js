@@ -388,8 +388,8 @@ var setRtcConn = function (sessionid, sessionobj) {
                             updatePeerInfo(event.userid, name, color, email, role, "remote");
                             shownotification(event.extra.role + " " + event.type);
                         }
-                        peerinfo.stream = "";
-                        peerinfo.streamid = "";
+                        // peerinfo.stream = "";
+                        // peerinfo.streamid = "";
                         updateWebCallView(peerinfo);
 
                     } else {
@@ -452,12 +452,16 @@ var setRtcConn = function (sessionid, sessionobj) {
 
             var peerinfo = findPeerInfo(event.userid);
             if (!peerinfo) {
-                webrtcdev.error("[sessionmanager] onstream - PeerInfo not present in webcallpeers " + event.userid + " creating it now ");
+                webrtcdev.warn("[sessionmanager] onstream - PeerInfo not present in webcallpeers " + event.userid + " creating it now ");
                 let userid = event.userid;
                 //create peerinfo with userid, username, usecolor, useremail, userrole, type
-                updatePeerInfo(userid, event.extra.name, event.extra.color, event.extra.email, event.extra.role, event.type);
-                appendToPeerValue(userid, "stream", event.stream);
-                appendToPeerValue(userid, "streamid", event.stream.streamid);
+
+                var p1 = new Promise((resolve, reject) => {
+                    updatePeerInfo(userid, event.extra.name, event.extra.color, event.extra.email, event.extra.role, event.type);
+                    resolve('Success!');
+                });
+                p1.then( appendToPeerValue(userid, "stream", event.stream))
+                    .then( appendToPeerValue(userid, "streamid", event.stream.streamid));
 
                 // update webcallview with newly created peerinfo
                 peerinfo = findPeerInfo(userid);
@@ -471,9 +475,12 @@ var setRtcConn = function (sessionid, sessionobj) {
 
             } else {
                 webrtcdev.log("[sessionmanager] onstream - update PeerInfo with incoming stream and streamId ");
-                appendToPeerValue(userid, "type", event.type);
-                appendToPeerValue(userid, "stream", event.stream);
-                appendToPeerValue(userid, "streamid", event.stream.streamid);
+                var p2 = new Promise((resolve, reject) => {
+                    appendToPeerValue(userid, "type", event.type);
+                    resolve('Success!');
+                });
+                p2.then( appendToPeerValue(userid, "stream", event.stream))
+                    .then( appendToPeerValue(userid, "streamid", event.stream.streamid));
 
                 peerinfo = findPeerInfo(userid);
                 updateWebCallView(peerinfo);

@@ -310,7 +310,8 @@ function displayList(uuid, peerinfo, fileurl, filename, filetype) {
         } else {
             // if the progress bar area does not exist
             parentdom = document.getElementById(elementList) || document.body;
-            webrtcdev.warn("[ filesharing dommodifier js] displayList , progress bar area doesnt exist, set parent dom to ", elementList, document.getElementById(elementList), " or to document body")
+            webrtcdev.warn("[filesharing dommodifier js] displayList , progress bar area doesnt exist, " +
+                "set parent dom to ", elementList, document.getElementById(elementList), " or to document body");
         }
 
     } catch (err) {
