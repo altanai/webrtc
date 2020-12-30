@@ -1249,13 +1249,17 @@ function resizeFV(userid, buttonId, selectedFileSharingBox) {
 
 function minFV(userid, buttonId, selectedFileSharingBox) {
     hideelem(selectedFileSharingBox);
-    // document.getElementById(selectedFileSharingBox).className = "col-md-6 fileviewing-box";
+    if(document.getElementById(selectedFileSharingBox).className == "col-md-12 fileviewing-box"){
+        document.getElementById(selectedFileSharingBox).className = "col-md-6 fileviewing-box";
+    }
     /*syncButton(buttonId);  */
 }
 
 function maxFV(userid, buttonId, selectedFileSharingBox) {
     showelem(selectedFileSharingBox);
-    // document.getElementById(selectedFileSharingBox).className = "col-md-12 fileviewing-box";
+    if(document.getElementById(selectedFileSharingBox).className == "col-md-6 fileviewing-box"){
+        document.getElementById(selectedFileSharingBox).className = "col-md-12 fileviewing-box";
+    }
     /*syncButton(buttonId);  */
 }
 
