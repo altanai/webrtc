@@ -450,12 +450,15 @@ var setRtcConn = function (sessionid, sessionobj) {
             webrtcdev.log("[sessionmanager] onstream - event ", event);
             if (event.type == "local") localVideoStreaming = true;
 
-            var peerinfo = findPeerInfo(event.userid);
-            if (!peerinfo) {
-                webrtcdev.warn("[sessionmanager] onstream - PeerInfo not present in webcallpeers " + event.userid + " creating it now ");
-                let userid = event.userid;
-                //create peerinfo with userid, username, usecolor, useremail, userrole, type
+            var userid = event.userid;
+            if(!userid){
+                console.error("no userid found onstream ");
+            }
 
+            var peerinfo = findPeerInfo(userid);
+            if (!peerinfo) {
+                webrtcdev.warn("[sessionmanager] onstream - PeerInfo not present in webcallpeers " + userid + " creating it now ");
+                //create peerinfo with userid, username, usecolor, useremail, userrole, type
                 var p1 = new Promise((resolve, reject) => {
                     updatePeerInfo(userid, event.extra.name, event.extra.color, event.extra.email, event.extra.role, event.type);
                     resolve('Success!');
@@ -523,7 +526,7 @@ var setRtcConn = function (sessionid, sessionobj) {
                         } else if (msg.data.message == "screenshareStartedViewing") {
                             screenshareNotification("", "screenshareStartedViewing");
                         } else if (msg.data.message == "stoppedscreenshare") {
-                            shownotification("Screenshare has stopped : " + e.data.screenStreamid);
+                            shownotification("Screenshare has stopped : " + msg.data.screenStreamid);
                             //createScreenViewButton();
                             let button = document.getElementById(screenshareobj.button.shareButton.id);
                             button.className = screenshareobj.button.shareButton.class_off;

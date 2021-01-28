@@ -1,4 +1,4 @@
-/* Generated on:Wed Dec 30 2020 11:19:38 GMT+0530 (India Standard Time) || version: 6.7.3 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Thu Jan 28 2021 10:05:18 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 common 
 *********************************************/
 
@@ -530,7 +530,7 @@ function paste() {
 // -------------------------------------------------------------
 
 
-/* Generated on:Wed Dec 30 2020 11:19:38 GMT+0530 (India Standard Time) || version: 6.7.3 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Thu Jan 28 2021 10:05:18 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 Decorator
 *********************************************/
 
@@ -1215,7 +1215,7 @@ function hideContainers() {
 
 
 
-/* Generated on:Wed Dec 30 2020 11:19:38 GMT+0530 (India Standard Time) || version: 6.7.3 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Thu Jan 28 2021 10:05:18 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 Draw helper
 *********************************************/
 var drawHelper = {
@@ -1308,7 +1308,7 @@ var drawHelper = {
 
 };
 
-/* Generated on:Wed Dec 30 2020 11:19:38 GMT+0530 (India Standard Time) || version: 6.7.3 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Thu Jan 28 2021 10:05:18 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 Drag helper
 *********************************************/
 var dragHelper = {
@@ -1710,7 +1710,7 @@ var dragHelper = {
     }
 };
 
-/* Generated on:Wed Dec 30 2020 11:19:38 GMT+0530 (India Standard Time) || version: 6.7.3 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Thu Jan 28 2021 10:05:18 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 pencil Handler 
 *********************************************/
 var pencilHandler = {
@@ -1765,7 +1765,7 @@ var pencilHandler = {
 };
 
 
-/* Generated on:Wed Dec 30 2020 11:19:38 GMT+0530 (India Standard Time) || version: 6.7.3 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Thu Jan 28 2021 10:05:18 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 Eraser Handler 
 *********************************************/
 
@@ -1823,7 +1823,7 @@ var eraserHandler = {
 
 
 };
-/* Generated on:Wed Dec 30 2020 11:19:38 GMT+0530 (India Standard Time) || version: 6.7.3 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Thu Jan 28 2021 10:05:18 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 Line Handler 
 *********************************************/
 
@@ -1872,7 +1872,7 @@ var lineHandler = {
 
 };
 
-/* Generated on:Wed Dec 30 2020 11:19:38 GMT+0530 (India Standard Time) || version: 6.7.3 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Thu Jan 28 2021 10:05:18 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 rect Handler 
 *********************************************/
 var rectHandler = {
@@ -1927,7 +1927,7 @@ var rectHandler = {
 
 };
 
-/* Generated on:Wed Dec 30 2020 11:19:38 GMT+0530 (India Standard Time) || version: 6.7.3 - Altanai (@altanai)  , License : MIT  */// ------------------------textHandler-------------------------------------
+/* Generated on:Thu Jan 28 2021 10:05:18 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  */// ------------------------textHandler-------------------------------------
 var textInput = document.getElementById('text-input');
 textInput.onkeyup = function(e) {
     if (e.keyCode != 13) return;
@@ -2006,7 +2006,7 @@ var textHandler = {
 };
 // -------------------------------------------------------------
 
-/* Generated on:Wed Dec 30 2020 11:19:38 GMT+0530 (India Standard Time) || version: 6.7.3 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Thu Jan 28 2021 10:05:18 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
 Events handler 
 *********************************************/
 
