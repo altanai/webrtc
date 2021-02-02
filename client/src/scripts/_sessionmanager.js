@@ -75,7 +75,6 @@ function startSocketSession(rtcConn, socketAddr, sessionid) {
     try {
         webrtcdev.log("[sessionmanager] StartSession" + sessionid, " on address ", socketAddr);
         socket = io.connect(socketAddr);
-        console.log(" socket ", socket);
     } catch (err) {
         webrtcdev.error(" problem in socket connection", err);
         throw (" problem in socket connection");

@@ -32,7 +32,7 @@ var header = require('gulp-header'),
     pckg = require("./package.json"),
     version = pckg.version,
     headerComment = '/* Generated on:' + date +
-        ' || version: ' + version + ' - Altanai (@altanai)  , License : MIT  */';
+        ' || version: ' + version + ' - Altanai (@altanai)  , License : MIT  */ \n';
 
 // gulp.task('clean', function(done) {
 //   return Promise.all([

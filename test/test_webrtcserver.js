@@ -1,3 +1,6 @@
+
+console.log("Test WebRTC Server");
+
 var fs = require('fs');
 var _static = require('node-static');
 // var http = require('http');
@@ -5,7 +8,6 @@ var _static = require('node-static');
 var http2 = require('http2');
 var Log = require('log')
     , log = new Log('info');
-
 
 // -------------------- Read properties -----------------
 var _properties = require('./env.js')(fs).readEnv();
@@ -24,7 +26,7 @@ var file = new _static.Server(folderPath, {
 });
 
 // ------------------- set secure options-----------------
-var options;
+var options, app;
 if (properties.secure) {
     options = {
         key: fs.readFileSync(properties.serverkey),
@@ -32,21 +34,27 @@ if (properties.secure) {
         requestCert: true,
         rejectUnauthorized: false
     };
-}
+    // -------------------- Http2 Sever start -----------------
 
-// -------------------- Http2 Sever start -----------------
-
-// compatibility layer approach
-var app = http2
-    .createSecureServer(options, (req, res) => {
-        req.addListener('end', function () {
-            file.serve(req, res);
+    // compatibility layer approach
+    app = http2.createSecureServer(options, (req, res) => {
+            req.addListener('end', function () {
+                file.serve(req, res);
+            }).resume();
+        });
+} else {
+    app = https.createServer(options, (request, response) => {
+        request.addListener('end', function () {
+            file.serve(request, response);
         }).resume();
-    })
-    .listen(properties.http2Port);
+    });
+}
+app.listen(properties.http2Port);
+
+
 console.log("< ------------------------ HTTPS Server -------------------> ");
 console.log(" Web server env => " + properties.enviornment + " running at " + properties.http2Port);
-console.log(" Web server Landing page - https://localhost:"+ properties.http2Port+"/"+ properties.landingpage);
+console.log(" Web server Landing page - https://localhost:" + properties.http2Port + "/" + properties.landingpage);
 
 // stream handler approach
 // const server = http2.createSecureServer(options);

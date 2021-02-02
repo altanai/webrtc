@@ -1,4 +1,5 @@
-/* Generated on:Thu Jan 28 2021 10:05:18 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Tue Feb 02 2021 12:49:00 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  */ 
+/* ***********************************************
 common 
 *********************************************/
 
@@ -530,7 +531,8 @@ function paste() {
 // -------------------------------------------------------------
 
 
-/* Generated on:Thu Jan 28 2021 10:05:18 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Tue Feb 02 2021 12:49:00 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  */ 
+/* ***********************************************
 Decorator
 *********************************************/
 
@@ -1215,7 +1217,8 @@ function hideContainers() {
 
 
 
-/* Generated on:Thu Jan 28 2021 10:05:18 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Tue Feb 02 2021 12:49:00 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  */ 
+/* ***********************************************
 Draw helper
 *********************************************/
 var drawHelper = {
@@ -1308,7 +1311,8 @@ var drawHelper = {
 
 };
 
-/* Generated on:Thu Jan 28 2021 10:05:18 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Tue Feb 02 2021 12:49:00 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  */ 
+/* ***********************************************
 Drag helper
 *********************************************/
 var dragHelper = {
@@ -1710,7 +1714,8 @@ var dragHelper = {
     }
 };
 
-/* Generated on:Thu Jan 28 2021 10:05:18 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Tue Feb 02 2021 12:49:00 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  */ 
+/* ***********************************************
 pencil Handler 
 *********************************************/
 var pencilHandler = {
@@ -1765,7 +1770,8 @@ var pencilHandler = {
 };
 
 
-/* Generated on:Thu Jan 28 2021 10:05:18 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Tue Feb 02 2021 12:49:00 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  */ 
+/* ***********************************************
 Eraser Handler 
 *********************************************/
 
@@ -1823,7 +1829,8 @@ var eraserHandler = {
 
 
 };
-/* Generated on:Thu Jan 28 2021 10:05:18 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Tue Feb 02 2021 12:49:00 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  */ 
+/* ***********************************************
 Line Handler 
 *********************************************/
 
@@ -1872,7 +1879,8 @@ var lineHandler = {
 
 };
 
-/* Generated on:Thu Jan 28 2021 10:05:18 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Tue Feb 02 2021 12:49:00 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  */ 
+/* ***********************************************
 rect Handler 
 *********************************************/
 var rectHandler = {
@@ -1927,7 +1935,8 @@ var rectHandler = {
 
 };
 
-/* Generated on:Thu Jan 28 2021 10:05:18 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  */// ------------------------textHandler-------------------------------------
+/* Generated on:Tue Feb 02 2021 12:49:00 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  */ 
+// ------------------------textHandler-------------------------------------
 var textInput = document.getElementById('text-input');
 textInput.onkeyup = function(e) {
     if (e.keyCode != 13) return;
@@ -2006,7 +2015,8 @@ var textHandler = {
 };
 // -------------------------------------------------------------
 
-/* Generated on:Thu Jan 28 2021 10:05:18 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  *//* ***********************************************
+/* Generated on:Tue Feb 02 2021 12:49:00 GMT-0800 (Pacific Standard Time) || version: 6.7.4 - Altanai (@altanai)  , License : MIT  */ 
+/* ***********************************************
 Events handler 
 *********************************************/
 

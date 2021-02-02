@@ -80,12 +80,17 @@
       "webrtcdev": true
     }
   },
+  "main": "./build/webrtcdevelopmentServer.js",
   "scripts": {
     "build": "gulp production",
     "test": "NODE_ENV=test mocha --timeout 12000 test --exit",
-    "run": "node webrtcserver.js",
+    "run": "node test/webrtcserver.js",
     "prestart": "apidoc -v -i client/src -e node_modules/  -o docs",
-    "start": "supervisor -i ./public/ webrtcserver.js"
+    "start": "supervisor -i ./public/ test/webrtcserver.js"
+  },
+  "directories": {
+    "build": "build",
+    "test": "test"
   },
   "repository": {
     "type": "git",
