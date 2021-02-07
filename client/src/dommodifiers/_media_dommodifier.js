@@ -61,7 +61,12 @@ function createVideoContainer(e, style, callback) {
 this.attachControlButtons = attachControlButtons = function (vid, peerinfo) {
 
     let stream = peerinfo.stream || vid.srcObject || null;
-    let streamid = peerinfo.streamid || vid.srcObject.id || null;
+    let streamid = null;
+    if (vid.srcObject && vid.srcObject.id) {
+        streamid = vid.srcObject.id;
+    } else if (peerinfo.stream) {
+        streamid = peerinfo.streamid;
+    }
     let controlBarName = peerinfo.controlBarName;
     let snapshotViewer = peerinfo.fileSharingContainer;
 
@@ -151,13 +156,13 @@ function createFullScreenButton(minmaxobj, controlBarName, peerinfo) {
     button.innerHTML = minmaxobj.max.button.html_off;
     button.onclick = function () {
         if (button.className == minmaxobj.max.button.class_off) {
-            if (peerinfo.videoContainer.nodeName =="VIDEO") {
+            if (peerinfo.videoContainer.nodeName == "VIDEO") {
                 let vid = peerinfo.videoContainer;
                 vid.webkitEnterFullScreen();
-            }else if(document.getElementById(peerinfo.videoContainer).nodeName =="VIDEO"){
+            } else if (document.getElementById(peerinfo.videoContainer).nodeName == "VIDEO") {
                 let vid = document.getElementById(peerinfo.videoContainer);
                 vid.webkitEnterFullScreen();
-            }else{
+            } else {
                 webrtcdev.error("[media dommodifier] createFullScreenButton videoContainer missing in peerinfo", peerinfo.videoContainer);
             }
             button.className = minmaxobj.max.button.class_on;
@@ -227,7 +232,7 @@ function createAudioMuteButton(muteobj, controlBarName, peerinfo) {
             } catch (err) {
                 webrtcdev.log("[media_dommanager] audio mute error ", err);
                 peerinfo.stream.getAudioTracks()[0].enabled = false;
-            }finally{
+            } finally {
                 webrtcdev.log("[media_dommanager] audio mute ");
                 // Dispatch Event for muteaudio
                 window.dispatchEvent(new CustomEvent('webrtcdev', {
@@ -238,7 +243,7 @@ function createAudioMuteButton(muteobj, controlBarName, peerinfo) {
                     }
                 }));
             }
-            syncMute("audiomute", "mute" );
+            syncMute("audiomute", "mute");
             audioButton.className = muteobj.audio.button.class_off;
             audioButton.innerHTML = muteobj.audio.button.html_off;
         } else {
@@ -249,7 +254,7 @@ function createAudioMuteButton(muteobj, controlBarName, peerinfo) {
             } catch (err) {
                 webrtcdev.log("[media_dommanager] audio ummute error ", err);
                 peerinfo.stream.getAudioTracks()[0].enabled = true;
-            }finally{
+            } finally {
                 webrtcdev.log("[media_dommanager] audio un mute ");
                 // Dispatch Event for muteaudio
                 window.dispatchEvent(new CustomEvent('webrtcdev', {
@@ -261,7 +266,7 @@ function createAudioMuteButton(muteobj, controlBarName, peerinfo) {
                 }));
             }
             // rtcConn.streamEvents.selectFirst('local').mediaElement.muted = true;
-            syncMute("audiounmute", "mute" );
+            syncMute("audiounmute", "mute");
             audioButton.className = muteobj.audio.button.class_on;
             audioButton.innerHTML = muteobj.audio.button.html_on;
         }
@@ -294,7 +299,7 @@ function createVideoMuteButton(muteobj, controlBarName, peerinfo) {
             } catch (err) {
                 webrtcdev.log("[media_dommanager] video mute error ", err);
                 peerinfo.stream.getVideoTracks()[0].enabled = false;
-            }finally{
+            } finally {
                 webrtcdev.log("[media_dommanager] video mute on ", peerinfo.stream);
                 // Dispatch Event for mutevideo
                 window.dispatchEvent(new CustomEvent('webrtcdev', {
@@ -305,7 +310,7 @@ function createVideoMuteButton(muteobj, controlBarName, peerinfo) {
                     }
                 }));
             }
-            syncMute("videomute", "mute" );
+            syncMute("videomute", "mute");
             videoButton.innerHTML = muteobj.video.button.html_off;
             videoButton.className = muteobj.video.button.class_off;
         } else {
@@ -316,7 +321,7 @@ function createVideoMuteButton(muteobj, controlBarName, peerinfo) {
             } catch (err) {
                 webrtcdev.log("[media_dommanager] video unmute error ", err);
                 peerinfo.stream.getVideoTracks()[0].enabled = true;
-            }finally{
+            } finally {
                 webrtcdev.log("[media_dommanager] video unmute on ", peerinfo.stream);
                 // Dispatch Event for unmutevideo
                 window.dispatchEvent(new CustomEvent('webrtcdev', {
@@ -327,7 +332,7 @@ function createVideoMuteButton(muteobj, controlBarName, peerinfo) {
                     }
                 }));
             }
-            syncMute("videounmute", "mute" );
+            syncMute("videounmute", "mute");
             videoButton.innerHTML = muteobj.video.button.html_on;
             videoButton.className = muteobj.video.button.class_on;
         }

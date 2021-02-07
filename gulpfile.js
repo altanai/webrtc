@@ -51,13 +51,7 @@ gulp.task('vendorjs', function (done) {
         "node_modules/jquery/dist/jquery.min.js",
         "node_modules/bootstrap/dist/js/bootstrap.bundle.js",
         "node_modules/socket.io-client/dist/socket.io.js"
-        // "https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js",
-        // "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
-        // "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js",
-        // "https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js",
-        // "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
     ];
-
     console.log(list);
     gulp.src(list)
         .pipe(rev({strict: true}))
@@ -142,7 +136,6 @@ gulp.task('drawcss', function (done) {
     ];
     console.log(list);
     gulp.src(list)
-        // .pipe(uglify())
         .pipe(concat('drawBoardCss.css'))
         .pipe(gulp.dest(folderPath));
     done();
@@ -254,18 +247,6 @@ var scriptList = [
 
     "client/src/scripts/tail.js"
 ];
-//
-// gulp.task('betawebrtcdevelopmentjs', function (done) {
-//     console.log("gulping main webrtc development scripts into beta ");
-//     scriptList.push("client/src/scripts/admin.js");
-//     console.log(scriptList);
-//     gulp.src(scriptList, {allowEmpty: true})
-//         // .pipe( rev({strict: true}) )
-//         .pipe(concat('webrtcdevelopment.js'))
-//         .pipe(replace(/"use strict"/g, ''))
-//         .pipe(gulp.dest(folderPath));
-//     done();
-// });
 
 // .pipe( rev({strict: true}) )
 gulp.task('webrtcdevelopmentjs', function (done) {
@@ -298,11 +279,6 @@ gulp.task('mainstyle', function (done) {
         "node_modules/remodal/dist/remodal.css",
         "node_modules/remodal/dist/remodal-default-theme.css",
         "node_modules/bootstrap/dist/css/bootstrap.min.css"
-        // "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css",
-        // "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css",
-        // "https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css",
-        // "https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css"
-        // "https://www.gstatic.com/firebasejs/4.2.0/firebase.js"
     ];
     console.log(cssList);
     // remoteSrc(cssList, {base: null})
@@ -365,23 +341,14 @@ gulp.task('fonts', function (cb) {
     });
 });
 
+
+
+
 // gulp webrtc dev css and js along with server changes
 gulp.task('default', gulp.series(
     'webrtcdevelopmentjs',
     'webrtcdevelopmentcss',
     'server'
-));
-
-// only gulp webrtcdev js changes
-// gulp.task('develop', gulp.series(
-//     'betawebrtcdevelopmentjs'
-// ));
-
-// only gulp vendor js
-gulp.task('vendorjs', gulp.series(
-    'vendorjs',
-    'mainstyle',
-    'fonts'
 ));
 
 //gulp all components to make it production ready
