@@ -101,7 +101,7 @@ nvm use v12.0.0
 **3. install npm and update the dependencies**
 It will read the package.json and update the dependencies in node_modules folder on project location
 
-```
+```shell
 sudo apt-get install npm
 npm install 
 ```
@@ -288,7 +288,7 @@ User RTCDataConnection api from webRTC to send peer to peer nessages within a se
 
 When the chat widget is active  , if the dom specified by the container id is present then webSDK uses as it is,  else it creates one default box 
 
-```
+```json
 {
     active: true,
     container: {
@@ -314,12 +314,12 @@ Upcoming : Adding emoticons to Chat
 
 ### 2. File-share 
 
-Uses the RTCDataConnection API from WebRTC to excahnge files peer to peer. Progress bar is displayed for the chunks of file transferrred out of total number of chunks. Many different kindes of file transfer have been tested such as media files ( mp3 , mp4 ) , text or pdf files , microsoft pr libra office dicuments , images ( jpg , png etc ) etc .
+Uses the RTCDataConnection API from WebRTC to exchange files peer to peer. Progress bar is displayed for the chunks of file transferrred out of total number of chunks. Many different kindes of file transfer have been tested such as media files ( mp3 , mp4 ) , text or pdf files , microsoft pr libra office dicuments , images ( jpg , png etc ) etc .
 
-File share widgets creates uses 2 conatiners - File Share and File List . If the dom ids of the container are not present on the page , the SDK crestes default conainers and appends them to page 
+File share widgets creates uses 2 containers - File Share and File List . If the dom ids of the container are not present on the page , the SDK crestes default conainers and appends them to page 
 
 The list of files with buttons to view , hide or remove them from file viewers are in file Viewer container .
-Displaying or playing the text or media files happens in file share conainer , which also has button to maximize , minimize the viewer window or in case of images to rotate them. 
+Displaying or playing the text or media files happens in file share container , which also has button to maximize , minimize the viewer window or in case of images to rotate them. 
 
 For divided file share container 
 ```
@@ -352,7 +352,7 @@ For divided file share container
 }
 ```
 or for single file share container for all peers 
-```
+```json
     let filesharewidget = {
         active: true,
         fileShareContainer: "fileSharingRow",
@@ -391,7 +391,7 @@ or for single file share container for all peers
 Creates or assigns a timer for teh ongoing sesssion . Also displays the geolocation and timezone of the peers if perssion if provided . Timer can start upwards or downwards. 
 Can be used for billing and policy control .
 
-```
+```json
 {
     active: true,
     type: "forward",                                        // Forwards timer starts from 0:0:00 goes thereafter, backward timer ticks backword from prespecified time limit
@@ -424,18 +424,18 @@ Can be used for billing and policy control .
 
 ### 4. Screen Record
 
-Records everything pesent on the tab selected along with audio and displays recording as mp4 file. Use an extension and pre-declared safe-site  to facilitate captuing the tab.
+Records everything present on the tab selected along with audio and displays recording as mp4 file. Use an extension and pre-declared safe-site  to facilitate captuing the tab.
 
-```
+```json
 {
     active : true,
-    videoRecordContainer: true,                                 // container for storing or displaying recorded video
-    button:{                                                    // button to control screen control wisget and its on / off states
+    videoRecordContainer: true,        // container for storing or displaying recorded video
+    button:{                           // button to control screen control widget and its on / off states
         id: "scrRecordBtn",
         class_on:"btn btn-lg screenRecordBtnClass On",
-        html_on:'<img title="Session Record" src="assets/images/icon_5.png"/>',
+        html_on:'',
         class_off:"btn btn-lg screenRecordBtnClass Off",
-        html_off: '<img title="Session Record" src="assets/images/icon_5.png"/>'
+        html_off: ''
     }
 }
 ```
@@ -447,12 +447,12 @@ Button for screen share has 3 states -
 - share screen button and 
 - view button for incoming screen by peer .
 
-```
+```json
 {
     active : true,
-    screenshareContainer: "screenShareRow",                 // container to display screen being shared
+    screenshareContainer: "screenShareRow",      // container to display screen being shared
     button:{
-        installButton:{                                     // widget button to start inline installation of extension
+        installButton:{                          // widget button to start inline installation of extension
             id:"scrInstallButton",
             class_on:"screeninstall-btn on",
             html_on:"Stop Install",
@@ -481,7 +481,7 @@ Button for screen share has 3 states -
 
 ### 6. Video Record 
 
-Records video stream . Created for each peer video .
+Records video-stream. Created for each peer video .
 
 ```
 {
@@ -621,9 +621,9 @@ To turn debug on
 ```
 
 ### 14. Help
-
-Actiavtes the help log 
-```
+Activates the help log by start captures console logs , info , messages , warning in a retreivabe array.
+Can also send the logs tto pre-specified URL as paylaod and/or display the logs in dom as specified 
+```json
 {
   active: true, 
   helpContainer : "help-view-body",
@@ -634,15 +634,16 @@ Actiavtes the help log
 
 ### 15. Stats 
 
-```
+Collects network and webrtc stats. Captures them in logs and displays on dom as specified
+```json
 {
-  active : true , 
+  active : true, 
   statsConainer : "network-stats-body"
 }
 ```
 
 ### 16. Draw 
-```
+```json
 {
     active: true,
     drawCanvasContainer: "drawBoardRow",
@@ -658,7 +659,7 @@ Actiavtes the help log
 
 ### Assign individual widgets to a json object called widgets 
 
-```
+```json
 {
     debug: false,
     reconnect: {
@@ -684,9 +685,70 @@ Actiavtes the help log
 }
 ```
 
+## NAT traversal 
+
+From variety of options you can choose
+
+### 1. Only free STUN from google 
+```js
+var iceservers_array = [{urls: ["STUN stun.l.google.com:19302"]}];
+```
+
+ref : https://stackoverflow.com/questions/20067739/what-is-stun-stun-l-google-com19302-used-for
+
+### 2. Xirsys free account for TURN
+
+### 3. self-hosted COTURN
+
+Goto https://coturn.net/turnserver/ to choose the version you want to download , at the time of writing this 4.5.2 was the latest 
+```shell
+wget https://coturn.net/turnserver/v4.5.2/turnserver-4.5.2.tar.gz
+```
+goto https://packages.qa.debian.org/c/coturn.html
+the debian coturn package is documented at https://packages.debian.org/jessie/coturn
+
+Install dependencies 
+```shell
+sudo apt-get install libssl-dev
+sudo apt-get install libsqlite3 (or sqlite3)
+sudo apt-get install libsqlite3-dev (or sqlite3-dev)
+sudo apt-get install libevent-dev
+sudo apt-get install libpq-dev
+sudo apt-get install mysql-client
+sudo apt-get install libmysqlclient-dev
+sudo apt-get install libhiredis-dev
+```
+https://quickref.common-lisp.net/cl-libevent2.html
+
+build
+```shell
+./configure 
+make 
+sudo make install
+```
+After the build, the following binary images will be available:
+
+1.	turnserver
+2.	turnadmin
+3.	turnutils_uclient
+4.	turnutils_peer
+5.	turnutils_stunclient.
+6.	turnutils_rfc5769check
+
+Adding to signalling server 
+```js
+var iceservers_array = [{urls: ["STUN stun.l.google.com:19302"]},
+    {url: 'turn:user@media.brightchats.com:3478', credential: 'root'}];
+```
+
+supported RFC
+* RFC 5766 - base TURN specs;
+* RFC 6062 - TCP relaying TURN extension;
+* RFC 6156 - IPv6 extension for TURN;
+
 ## Event listeners 
 
-Implemented event listeners 
+Implemented event listeners :
 
 1. onLocalConnect
 
@@ -701,12 +763,7 @@ Implemented event listeners
 
 ## Keys and certs 
 
-To generate a CSR for external Certificate Authority such as Go daddy
-```shell script
-
-```
-
-Add the Key and certs
+To generate a CSR for external Certificate Authority such as Godaddy
 ```shell script
 openssl req -x509 -newkey rsa:4096 -sha256 -nodes -keyout ssl_certs/server.key -out ssl_certs/server.crt -subj "/CN=webrtc.altanai.com" -days 3650
 ```
@@ -725,10 +782,10 @@ webrtc_usecases - https://github.com/altanai/webrtc_usercases
 
 ## Extra 
 
-Following are the additioanl libraries packed with the project 
+Following are the additional libraries packed with the project 
 
 **Gulp**
-Minify and concat the js and css files  into minscripts
+Minify and concat the js and css files  into minified scripts
 
 **Task Runner**
 you can run gulp alone to minify and concat the js and css files  into min-scripts
@@ -755,7 +812,9 @@ forever start webrtcserver.js
  ./node_modules/.bin/esdoc
   open ./docs/index.html
 ```
-**PM2**
+
+### start with process manager pm2 
+
 
 To start the Server using PM2 ( a process manager for nodejs) , install pm2 globally 
 ```shell script
@@ -775,8 +834,12 @@ Add config to json
   }]
 ```
 start pm2 
-```shell script
+```shell
 pm2 start ecosystem.config.js 
+```
+**with env**
+```shell
+pm2 start ecosystem.config.js --env production
 ```
 
 ----------------------------------------------------------
@@ -1000,9 +1063,8 @@ ioServer(httpApp,{
 })
 ```
 But client tries polling connection
-```
 https://localhost:8086/socket.io/?userid=iu02bk1b77g&sessionid=httpslocalhost8082clientindexhtm&transport=polling&t=N7ToS63
-```
+
 
 ### errors on SSL certs 
     
@@ -1034,8 +1096,45 @@ openssl pkcs8 -in key.txt  -inform pem
 Error reading key
 140542854250944:error:0909006C:PEM routines:get_name:no start line:../crypto/pem/pem_lib.c:745:Expecting: ENCRYPTED PRIVATE KEY  
 ```
-If not then resave the file with charectar encoding UTF-8 and Line ending Unix/Linux 
-           
+If not then re-save the file with charectar encoding UTF-8 and Line ending Unix/Linux 
+       
+### Errors on TURN 
+
+**Issue 1** Pass issues on starting coturn
+```
+CONFIG ERROR: Empty cli-password, and so telnet cli interface is disabled! Please set a non empty cli-password!
+0: : WARNING: cannot find certificate file: turn_server_cert.pem (1)
+0: : WARNING: cannot start TLS and DTLS listeners because certificate file is not set properly
+0: : WARNING: cannot find private key file: turn_server_pkey.pem (1)
+0: : WARNING: cannot start TLS and DTLS listeners because private key file is not set properly
+```
+**solution** use no-auth in config or cli 
+
+
+**Issue 2**
+```
+0: : NO EXPLICIT LISTENER ADDRESS(ES) ARE CONFIGURED
+0: : ===========Discovering listener addresses: =========
+0: : Listener address to use: 127.0.0.1
+0: : Listener address to use: 172.31.13.206
+0: : Listener address to use: ::1
+```
+**Solution** Happens on ec2 container. Map the exteral initernal specifically in conf ot cli
+```shell
+turnserver -X EXT_IP/INT_IP 
+```
+or in config `external-ip=EXT_IP/INT_IP`
+
+
+**Issue 3** Assigning address 
+**solution**
+```
+errno=99
+Cannot bind local socket to addr: Cannot assign requested address
+```
+ref : https://github.com/coturn/coturn/issues/311
+
+    
 ### Errors on git
 
 update registry to  "registry": "https://registry.npmjs.org " 

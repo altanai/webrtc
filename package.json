@@ -1,6 +1,6 @@
 {
   "name": "webrtcdevelopment",
-  "version": "6.7.5",
+  "version": "6.7.7",
   "description": "webrtc based communication and collaboration client. Contains lot of experiments modules",
   "engines": {
     "node": "12.*"
@@ -88,8 +88,7 @@
     "start": "supervisor -i ./public/ test/webrtcserver.js"
   },
   "directories": {
-    "build": "build",
-    "test": "test"
+    "test": "tests"
   },
   "repository": {
     "type": "git",
@@ -123,8 +122,5 @@
   "homepage": "https://github.com/altanai/webrtc#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org "
-  },
-  "directories": {
-    "test": "tests"
   }
 }

@@ -19,9 +19,7 @@ var latitude = "", longitude = "", operatingsystem = "";
 
 /* webrtc session intialization */
 var autoload = true;
-var sessionid = this.sessionid=  "";
-var webrtcdevIceServers = [];
-
+var sessionid = this.sessionid = "";
 var localStream, localStreamId, remoteStream, remoteStreamId;
 var config = {
     socketAddr: location.hostname + ":8083/",
@@ -37,9 +35,9 @@ var incomingAudio = true, incomingVideo = true, incomingData = true;
 var outgoingAudio = true, outgoingVideo = true, outgoingData = true;
 
 /* DOM objects for single user video , user in conf and all other users*/
-var localVideo = null, selfVideo = null , remoteVideos;
+var localVideo = null, selfVideo = null, remoteVideos;
 
-// global remoteVideos to be access from devwebfrtcobject on client
+// global remoteVideos to be access from client
 this.remoteVideos = remoteVideos = [];
 
 /* widget objects */

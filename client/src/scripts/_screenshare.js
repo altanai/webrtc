@@ -200,13 +200,6 @@ function webrtcdevPrepareScreenShare(screenRoomid, sessionobj) {
         scrConn.socketCustomEvent = 'scrRTCMultiConnection-Custom-Message',
 
         scrConn.enableFileSharing = false;
-    // if (turn && turn != 'none') {
-    //     if (!webrtcdevIceServers) {
-    //         webrtcdev.error("[screensharejs] ICE server not found yet in screenshare session");
-    //         alert("ICE server not found yet in screenshare session ");
-    //     }
-    //     scrConn.iceServers = webrtcdevIceServers;
-    // }
 
     return scrConn;
 }

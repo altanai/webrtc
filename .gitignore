@@ -5,3 +5,4 @@ env.json
 conference
 elearn
 client/build/doc
+client_secret.json

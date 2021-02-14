@@ -3,8 +3,7 @@
 /*-----------------------------------------------------------------------------------*/
 var channelpresence = false;
 var localVideoStreaming = null;
-var turn = "none";
-var sessionobj = {}, localobj = {}, remoteobj = {};
+var sessionobj = {}, localobj = {}, remoteobj = {}, turn = null;
 var pendingFileTransfer = [];
 var connectionStatus = null;
 
@@ -235,15 +234,8 @@ this.setsession = function (_localobj, _remoteobj, incoming, outgoing, _sessiono
     remoteobj = _remoteobj;
 
     turn = session.turn;
-    // if (turn && turn != "none") {
-    //     if (turn.active && turn.iceServers) {
-    //         webrtcdevIceServers = turn.iceServers;
-    //     } else {
-    //         getICEServer();
-    //         // getICEServer( turn.username ,turn.secretkey , turn.domain,
-    //         //                 turn.application , turn.room , turn.secure);
-    //     }
-    // }
+    // getICEServer( turn.username ,turn.secretkey , turn.domain,
+    //                 turn.application , turn.room , turn.secure);
 
     if (widgets) {
 
@@ -317,23 +309,20 @@ this.startCall = function (sessionobj) {
     webrtcdev.log("[ initjs ] : outgoing ", sessionobj.outgoing);
 
     if (sessionobj.incoming) {
-        incomingAudio = sessionobj.incoming.audio ;
-        incomingVideo = sessionobj.incoming.video ;
-        incomingData = sessionobj.incoming.data ;
+        incomingAudio = sessionobj.incoming.audio;
+        incomingVideo = sessionobj.incoming.video;
+        incomingData = sessionobj.incoming.data;
     }
     if (sessionobj.outgoing) {
-        outgoingAudio = sessionobj.outgoing.audio ;
-        outgoingVideo = sessionobj.outgoing.video ;
-        outgoingData = sessionobj.outgoing.data ;
+        outgoingAudio = sessionobj.outgoing.audio;
+        outgoingVideo = sessionobj.outgoing.video;
+        outgoingData = sessionobj.outgoing.data;
     }
 
     webrtcdev.log(" [ initjs  ] : role ", role);
 
-
     let sessionid = sessionobj.sessionid;
-
     webrtcdev.log("[ initjs ] : sessionid : " + sessionid + " and localStorage  ", localStorage);
-
     if (localStorage.length >= 1 && localStorage.getItem("channel") !== sessionid) {
         webrtcdev.log("[ intijs ] : Current Session ID " + sessionid + " doesnt match cached channel id " + localStorage.getItem("channel") + "-> clearCaches()");
         clearCaches();

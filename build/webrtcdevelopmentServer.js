@@ -1,4 +1,4 @@
-/* Generated on:Sat Feb 06 2021 14:49:57 GMT-0800 (Pacific Standard Time) || version: 6.7.5 - Altanai (@altanai)  , License : MIT  */ 
+/* Generated on:Sun Feb 14 2021 14:51:18 GMT-0800 (Pacific Standard Time) || version: 6.7.6 - Altanai (@altanai)  , License : MIT  */ 
 exports.redisscipts = function () {
 
     const redis = require("redis");
@@ -41,7 +41,7 @@ exports.redisscipts = function () {
 };
 
 
-/* Generated on:Sat Feb 06 2021 14:49:57 GMT-0800 (Pacific Standard Time) || version: 6.7.5 - Altanai (@altanai)  , License : MIT  */ 
+/* Generated on:Sun Feb 14 2021 14:51:18 GMT-0800 (Pacific Standard Time) || version: 6.7.6 - Altanai (@altanai)  , License : MIT  */ 
 
 /**
  * handled on connection of socket for every new connection
@@ -718,7 +718,7 @@ exports.realtimecomm = function (properties, options , cache) {
 //         logs[utcDateString] = arguments.toString();
 //     }
 // }
-/* Generated on:Sat Feb 06 2021 14:49:57 GMT-0800 (Pacific Standard Time) || version: 6.7.5 - Altanai (@altanai)  , License : MIT  */ 
+/* Generated on:Sun Feb 14 2021 14:51:18 GMT-0800 (Pacific Standard Time) || version: 6.7.6 - Altanai (@altanai)  , License : MIT  */ 
 exports.restapi = function (realtimecomm, options, app, properties) {
 
     var restify = require('restify');
