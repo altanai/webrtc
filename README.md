@@ -897,7 +897,7 @@ information added to channel { '2435937115056035':
 ```
 
 websocket response from server
-```shell script
+```shell
   [  "open-channel-resp", 
    { 
     status: true, 
@@ -909,7 +909,7 @@ websocket response from server
 **4.Join a session and check for channel presence**
   
   navigate another browser client to same session url such as https://localhost:8084/#2435937115056035?name=aa&email=abc@gmail.com
-```shell script
+```shell 
    check presence ["presence", {channel: "2435937115056035"}]
    
    ["presence", true]
@@ -947,7 +947,7 @@ Rejections of the returned promise are made by passing a DOMException error obje
 The DOMException interface represents an abnormal event 
 
 Possible errors are:
-```
+```json
 openrmc.webrtc.Errors = {
     NOT_SUPPORTED : 'NOT_SUPPORTED',
     CONSTRAINTS_REQUIRED : 'CONSTRAINTS_REQUIRED',
@@ -976,7 +976,8 @@ Because this error can occur even when the user has not yet granted permission t
 ref : https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
 
 ### Errors on gulp 
-**sourcemap related **
+
+**sourcemap related**
 USe gulp-babel@8.0.0
 
 **arrow functions realted**
@@ -1127,13 +1128,26 @@ or in config `external-ip=EXT_IP/INT_IP`
 
 
 **Issue 3** Assigning address 
-**solution**
-```
+```shell
 errno=99
 Cannot bind local socket to addr: Cannot assign requested address
 ```
+**solution** Check if the ports are open 
+```shell
+ps -ef | grep 3478
+```
+and kil any processes that may be found running 
 ref : https://github.com/coturn/coturn/issues/311
 
+**Issue 4** Both username and credential are required when the URL scheme is "turn" or "turns". at new WrappedRTCPeerConnection
+```json
+var iceservers_array = [{urls: 'stun:stun.l.google.com:19302'},
+    {url: 'turn:user@media.brightchats.com:3478', credential: 'root'}];
+```
+**Solution**
+```json
+
+```
     
 ### Errors on git
 
