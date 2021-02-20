@@ -1,4 +1,4 @@
-/* Generated on:Thu Feb 18 2021 10:35:47 GMT-0800 (Pacific Standard Time) || version: 6.7.7 - Altanai (@altanai)  , License : MIT  */ 
+/* Generated on:Fri Feb 19 2021 18:57:28 GMT-0800 (Pacific Standard Time) || version: 6.7.9 - Altanai (@altanai)  , License : MIT  */ 
 /* ***********************************************
 common 
 *********************************************/
@@ -53,24 +53,25 @@ if (document.getElementById("saveBtn")) {
 
     document.getElementById("saveBtn").onclick = function () {
 
-        /*        
-        var aref = document.createElement("a");
-        aref.href = mainCanvas.toDataURL("image/png") ;
-        aref.download = "drawBox.png";
-        aref.click();*/
+        // causes blonking
+        // var aref = document.createElement("a");
+        // aref.href = mainCanvas.toDataURL("image/png") ;
+        // aref.download = "drawBox.png";
+        // aref.click();
 
-        parent.postMessage({
-            modalpopup: {
-                filetype: "blobcanvas",
-            },
-            sender: selfId
-        }, '*');
+        // caises a popup
+        // parent.postMessage({
+        //     modalpopup: {
+        //         filetype: "blobcanvas",
+        //     },
+        //     sender: selfId
+        // }, '*');
 
         /*document.getElementById("saveBtn").appendChild(aref);*/
         //window.open(mainCanvas.toDataURL("image/png") , "canvasDiagram");
-        /*var e = mainCanvas.toDataURL("image/png"),
+        var e = mainCanvas.toDataURL("image/png"),
         a = window.open("about:blank", "image from canvas");
-        a.document.write("<img src='" + e + "' alt='from canvas'/>");*/
+        a.document.write("<img src='" + e + "' alt='from canvas'/>");
     };
 } else {
     webrtcdev.error("save button not found");
@@ -531,7 +532,7 @@ function paste() {
 // -------------------------------------------------------------
 
 
-/* Generated on:Thu Feb 18 2021 10:35:47 GMT-0800 (Pacific Standard Time) || version: 6.7.7 - Altanai (@altanai)  , License : MIT  */ 
+/* Generated on:Fri Feb 19 2021 18:57:28 GMT-0800 (Pacific Standard Time) || version: 6.7.9 - Altanai (@altanai)  , License : MIT  */ 
 /* ***********************************************
 Decorator
 *********************************************/
@@ -1217,7 +1218,7 @@ function hideContainers() {
 
 
 
-/* Generated on:Thu Feb 18 2021 10:35:47 GMT-0800 (Pacific Standard Time) || version: 6.7.7 - Altanai (@altanai)  , License : MIT  */ 
+/* Generated on:Fri Feb 19 2021 18:57:28 GMT-0800 (Pacific Standard Time) || version: 6.7.9 - Altanai (@altanai)  , License : MIT  */ 
 /* ***********************************************
 Draw helper
 *********************************************/
@@ -1311,7 +1312,7 @@ var drawHelper = {
 
 };
 
-/* Generated on:Thu Feb 18 2021 10:35:47 GMT-0800 (Pacific Standard Time) || version: 6.7.7 - Altanai (@altanai)  , License : MIT  */ 
+/* Generated on:Fri Feb 19 2021 18:57:28 GMT-0800 (Pacific Standard Time) || version: 6.7.9 - Altanai (@altanai)  , License : MIT  */ 
 /* ***********************************************
 Drag helper
 *********************************************/
@@ -1714,7 +1715,7 @@ var dragHelper = {
     }
 };
 
-/* Generated on:Thu Feb 18 2021 10:35:47 GMT-0800 (Pacific Standard Time) || version: 6.7.7 - Altanai (@altanai)  , License : MIT  */ 
+/* Generated on:Fri Feb 19 2021 18:57:28 GMT-0800 (Pacific Standard Time) || version: 6.7.9 - Altanai (@altanai)  , License : MIT  */ 
 /* ***********************************************
 pencil Handler 
 *********************************************/
@@ -1770,7 +1771,7 @@ var pencilHandler = {
 };
 
 
-/* Generated on:Thu Feb 18 2021 10:35:47 GMT-0800 (Pacific Standard Time) || version: 6.7.7 - Altanai (@altanai)  , License : MIT  */ 
+/* Generated on:Fri Feb 19 2021 18:57:28 GMT-0800 (Pacific Standard Time) || version: 6.7.9 - Altanai (@altanai)  , License : MIT  */ 
 /* ***********************************************
 Eraser Handler 
 *********************************************/
@@ -1829,7 +1830,7 @@ var eraserHandler = {
 
 
 };
-/* Generated on:Thu Feb 18 2021 10:35:47 GMT-0800 (Pacific Standard Time) || version: 6.7.7 - Altanai (@altanai)  , License : MIT  */ 
+/* Generated on:Fri Feb 19 2021 18:57:28 GMT-0800 (Pacific Standard Time) || version: 6.7.9 - Altanai (@altanai)  , License : MIT  */ 
 /* ***********************************************
 Line Handler 
 *********************************************/
@@ -1879,7 +1880,7 @@ var lineHandler = {
 
 };
 
-/* Generated on:Thu Feb 18 2021 10:35:47 GMT-0800 (Pacific Standard Time) || version: 6.7.7 - Altanai (@altanai)  , License : MIT  */ 
+/* Generated on:Fri Feb 19 2021 18:57:28 GMT-0800 (Pacific Standard Time) || version: 6.7.9 - Altanai (@altanai)  , License : MIT  */ 
 /* ***********************************************
 rect Handler 
 *********************************************/
@@ -1935,7 +1936,7 @@ var rectHandler = {
 
 };
 
-/* Generated on:Thu Feb 18 2021 10:35:47 GMT-0800 (Pacific Standard Time) || version: 6.7.7 - Altanai (@altanai)  , License : MIT  */ 
+/* Generated on:Fri Feb 19 2021 18:57:28 GMT-0800 (Pacific Standard Time) || version: 6.7.9 - Altanai (@altanai)  , License : MIT  */ 
 // ------------------------textHandler-------------------------------------
 var textInput = document.getElementById('text-input');
 textInput.onkeyup = function(e) {
@@ -2015,7 +2016,7 @@ var textHandler = {
 };
 // -------------------------------------------------------------
 
-/* Generated on:Thu Feb 18 2021 10:35:47 GMT-0800 (Pacific Standard Time) || version: 6.7.7 - Altanai (@altanai)  , License : MIT  */ 
+/* Generated on:Fri Feb 19 2021 18:57:28 GMT-0800 (Pacific Standard Time) || version: 6.7.9 - Altanai (@altanai)  , License : MIT  */ 
 /* ***********************************************
 Events handler 
 *********************************************/

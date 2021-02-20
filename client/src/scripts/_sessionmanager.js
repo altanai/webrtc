@@ -531,7 +531,7 @@ var setRtcConn = function (sessionid, sessionobj) {
                             button.className = screenshareobj.button.shareButton.class_off;
                             button.innerHTML = screenshareobj.button.shareButton.html_off;
                             button.disabled = false;
-                            webrtcdevCleanShareScreen(e.data.screenStreamid);
+                            webrtcdevCleanShareScreen(msg.data.screenStreamid);
                         } else {
                             webrtcdev.warn("[sessionmanager] unrecognized screen-share message ", msg.data.message);
                         }

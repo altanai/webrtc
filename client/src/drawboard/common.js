@@ -52,24 +52,25 @@ if (document.getElementById("saveBtn")) {
 
     document.getElementById("saveBtn").onclick = function () {
 
-        /*        
-        var aref = document.createElement("a");
-        aref.href = mainCanvas.toDataURL("image/png") ;
-        aref.download = "drawBox.png";
-        aref.click();*/
+        // causes blonking
+        // var aref = document.createElement("a");
+        // aref.href = mainCanvas.toDataURL("image/png") ;
+        // aref.download = "drawBox.png";
+        // aref.click();
 
-        parent.postMessage({
-            modalpopup: {
-                filetype: "blobcanvas",
-            },
-            sender: selfId
-        }, '*');
+        // caises a popup
+        // parent.postMessage({
+        //     modalpopup: {
+        //         filetype: "blobcanvas",
+        //     },
+        //     sender: selfId
+        // }, '*');
 
         /*document.getElementById("saveBtn").appendChild(aref);*/
         //window.open(mainCanvas.toDataURL("image/png") , "canvasDiagram");
-        /*var e = mainCanvas.toDataURL("image/png"),
+        var e = mainCanvas.toDataURL("image/png"),
         a = window.open("about:blank", "image from canvas");
-        a.document.write("<img src='" + e + "' alt='from canvas'/>");*/
+        a.document.write("<img src='" + e + "' alt='from canvas'/>");
     };
 } else {
     webrtcdev.error("save button not found");

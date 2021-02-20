@@ -1142,11 +1142,14 @@ ref : https://github.com/coturn/coturn/issues/311
 **Issue 4** Both username and credential are required when the URL scheme is "turn" or "turns". at new WrappedRTCPeerConnection
 ```json
 var iceservers_array = [{urls: 'stun:stun.l.google.com:19302'},
-    {url: 'turn:user@media.brightchats.com:3478', credential: 'root'}];
+    {url: "turn:user@media.xxx.com:3478", credential: 'root'}];
 ```
-**Solution**
+**Solution** change this to
 ```json
-
+var iceservers_array = [{urls: 'stun:stun.l.google.com:19302'},
+    {   username: "user",
+        credential: "root",
+        url: 'turn:media.xxx.com:3478'}];
 ```
     
 ### Errors on git
