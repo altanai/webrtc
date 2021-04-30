@@ -85,8 +85,12 @@ gulp.task('server', function (done) {
     gulp.src(list)
         .pipe(rev({strict: true}))
         .pipe(header(headerComment))
-        // .pipe(uglify())
-        .pipe(concat('webrtcdevelopmentServer.js'))
+        .pipe(uglify({
+            mangle: {
+                keepClassName: true
+            }
+        }))
+        .pipe(concat('webrtcdevelopmentServer_min.js'))
         .pipe(gulp.dest(folderPath));
     done();
 });
