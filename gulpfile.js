@@ -107,7 +107,7 @@ gulp.task('drawjs', function (done) {
     ];
     console.log(scriptList);
     // gulp.src(list)
-    //     // .pipe(uglify())
+    //     .pipe(uglify())
     //     .pipe(concat('drawBoardScript.js'))
     //     .pipe(gulp.dest(folderPath));
     pipeline(gulp.src(scriptList, {allowEmpty: true}),
@@ -136,7 +136,7 @@ gulp.task('drawcss', function (done) {
     ];
     console.log(list);
     gulp.src(list)
-        .pipe(concat('drawBoardCss.css'))
+        .pipe(concat('drawBoardCss_min.css'))
         .pipe(gulp.dest(folderPath));
     done();
 
