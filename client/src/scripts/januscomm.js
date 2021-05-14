@@ -43,10 +43,8 @@ wsHandlers = {
                 transaction: "5NDfZlCJThoG"
             }));
         } else if (resp.janus == "event" && resp.data.result == "ok"){
-
-
+            // do nothing
         }
-
     },
 
     'close': function () {

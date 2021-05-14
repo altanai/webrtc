@@ -27,9 +27,8 @@ var findPeerInfo = function (userid) {
  */
 var findPeerInfoIndex = function (userid) {
     for (x in webcallpeers) {
-        if (webcallpeers[x].userid == userid) {
+        if (webcallpeers[x].userid == userid)
             return x;
-        }
     }
     return null;
 };

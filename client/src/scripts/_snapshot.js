@@ -9,26 +9,22 @@ Snapshot
  * @param {int} peerinfo
  * @param {callback} callback
 */
+
+function _takeSnapshot(video) {
+    if (video) {
+        let canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth || video.clientWidth;
+        canvas.height = video.videoHeight || video.clientHeight;
+        let context = canvas.getContext('2d');
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        callback(canvas.toDataURL('image/png'));
+    } else {
+        callback("");
+    }
+}
+
 function takeSnapshot(peerinfo, callback) {
     try {
-
-        function _takeSnapshot(video) {
-
-            if (video) {
-                let canvas = document.createElement('canvas');
-                canvas.width = video.videoWidth || video.clientWidth;
-                canvas.height = video.videoHeight || video.clientHeight;
-
-                let context = canvas.getContext('2d');
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-                callback(canvas.toDataURL('image/png'));
-            } else {
-                callback("");
-            }
-
-        };
-
         if (peerinfo.videoContainer.nodeName =="VIDEO") {
             let video = peerinfo.videoContainer;
             return _takeSnapshot(video);

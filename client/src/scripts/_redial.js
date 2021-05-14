@@ -10,7 +10,6 @@ function createButtonRedial(reconnectobj){
         let r = confirm("Do you want to reconnet ?");
         if (r == true) {
           //location.reload();
-
           $(this).html('<img src="http://www.bba-reman.com/images/fbloader.gif" />');
            setTimeout(function(){ 
             $(this).html(reconnectobj.button.html )
