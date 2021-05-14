@@ -13,10 +13,10 @@ describe('Websocket server tests', function () {
         requestCert: true,
         rejectUnauthorized: false
     };
-
+    var wssPort= properties.wssPort;
     before( (done) => {
         try {
-            server = require('./../build/webrtcdevelopmentServer.js').realtimecomm(properties, options, null);
+            server = require('./../build/webrtcdevelopmentServer_min.js').realtimecomm(properties, options, null);
             console.log("BEFORE");
             done();
         } catch (e) {
@@ -38,7 +38,7 @@ describe('Websocket server tests', function () {
     it('PING Test',  (done)=> {
         this.timeout(10000);
         const io = require("socket.io-client");
-        client = io("wss://localhost:8083",{
+        client = io("wss://localhost:"+wssPort,{
             ca: options.cert,
             rejectUnauthorized: false
             // 'reconnection delay' : 0,
@@ -70,7 +70,7 @@ describe('Websocket server tests', function () {
     it('OPEN Room Test',  (done)=> {
         this.timeout(10000);
         const io = require("socket.io-client");
-        client = io("wss://localhost:8083",{
+        client = io("wss://localhost:"+wssPort,{
             ca: options.cert,
             rejectUnauthorized: false
         });
@@ -100,7 +100,7 @@ describe('Websocket server tests', function () {
     it('JOIN Room Test',  (done)=> {
         this.timeout(10000);
         const io = require("socket.io-client");
-        client = io("wss://localhost:8083",{
+        client = io("wss://localhost:"+wssPort,{
             ca: options.cert,
             rejectUnauthorized: false
         });

@@ -1,3 +1,10 @@
+/**
+ * Created by IntelliJ IDEA.
+ * User: Altanai ( @altanai)
+ * Date: 2020
+ * Time: 12:54 PM
+ * webrtcdevelopment (https://telecom.altanai.com/)
+ */
 const gulp = require('gulp');
 const concat = require('gulp-concat');
 const uglify = require('gulp-babel-minify');
@@ -344,9 +351,6 @@ gulp.task('fonts', function (cb) {
         cb();
     });
 });
-
-
-
 
 // gulp webrtc dev css and js along with server changes
 gulp.task('default', gulp.series(

@@ -1,5 +1,4 @@
 /*********** global Params ****************/
-
 var rtcConn = null;
 var selfuserid = null, remoteUserId = null;
 
@@ -27,7 +26,6 @@ var config = {
 };
 
 /* turn*/
-
 var turn = [];
 
 /* incoming and outgoing call params */
@@ -42,45 +40,26 @@ this.remoteVideos = remoteVideos = [];
 
 /* widget objects */
 var debug = false;
-
 var timerobj = false;
 var peerTimerStarted = false;
-
 var chatobj = false, chatContainer = null;
-
 var fileshareobj = false;
 var pendingFileTransferlimit = 3;
-
 var screenrecordobj = false;
-
 var snapshotobj = false;
-
 var videoRecordobj = false, videoRecordContainer = null;
-
 var drawCanvasobj = false;
-
 var texteditorobj = false;
-
 var codeeditorobj = false, editor = null;
-
 var reconnectobj = false;
-
 var cursorobj = false;
-
 var muteobj = false;
-
 var minmaxobj = false;
-
 var listeninobj = false;
-
 var screenshareobj = false;
-
 var helpobj = false;
-
 var statisticsobj = false;
-
 var screen, isScreenOn = 0, chromeMediaSourceId = null;
 var screen_roomid, screen_userid;
-
 var role = "participant";
 
