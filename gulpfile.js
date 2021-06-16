@@ -20,19 +20,7 @@ var rev = require('gulp-rev-timestamp');
 const del = require('del');
 const fs = require('fs');
 const sourcemaps = require('gulp-sourcemaps');
-
-const _properties = require('./env.js')(fs).readEnv();
-const properties = JSON.parse(_properties);
-console.log("Properties ", properties);
-
-var folderPath = "";
-if (properties.enviornment == "production") {
-    folderPath = 'prod/';
-} else if (properties.enviornment == "test") {
-    folderPath = 'tests/';
-} else {
-    folderPath = 'build/';
-}
+var  folderPath = 'build/';
 
 var header = require('gulp-header'),
     date = new Date(),

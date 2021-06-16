@@ -1,4 +1,4 @@
-/* Generated on:Fri May 14 2021 07:56:17 GMT-0700 (Pacific Daylight Time) || version: 6.8.6 - Altanai (@altanai)  , License : MIT  */ 
+/* Generated on:Wed Jun 16 2021 00:44:18 GMT-0700 (Pacific Daylight Time) || version: 6.8.12 - Altanai (@altanai)  , License : MIT  */ 
 /* ***********************************************
 common 
 *********************************************/
@@ -532,7 +532,7 @@ function paste() {
 // -------------------------------------------------------------
 
 
-/* Generated on:Fri May 14 2021 07:56:17 GMT-0700 (Pacific Daylight Time) || version: 6.8.6 - Altanai (@altanai)  , License : MIT  */ 
+/* Generated on:Wed Jun 16 2021 00:44:18 GMT-0700 (Pacific Daylight Time) || version: 6.8.12 - Altanai (@altanai)  , License : MIT  */ 
 /* ***********************************************
 Decorator
 *********************************************/
@@ -549,38 +549,39 @@ function make_base(imgsrc, context) {
 }
 
 // -------------------------------------------------------------
-(function () {
-    var params = {},
-        r = /([^&=]+)=?([^&]*)/g;
-
-    function d(s) {
-        return decodeURIComponent(s.replace(/\+/g, ' '));
-    }
-
-    var match, search = window.location.search;
-    while (match = r.exec(search.substring(1)))
-        params[d(match[1])] = d(match[2]);
-
-    window.params = params;
-})();
+// (function () {
+//     var params = {},
+//         r = /([^&=]+)=?([^&]*)/g;
+//
+//     function d(s) {
+//         return decodeURIComponent(s.replace(/\+/g, ' '));
+//     }
+//
+//     var match, search = window.location.search;
+//     while (match = r.exec(search.substring(1)))
+//         params[d(match[1])] = d(match[2]);
+//
+//     window.params = params;
+// })();
 
 // initialised tools
 var tools = {
-    line: true,
     pencil: true,
-    dragSingle: true,
-    dragMultiple: true,
     eraser: true,
+    line: true,
+    text: true,
+    dragSingle: false,
+    dragMultiple: false,
+    arc: false,
     rectangle: true,
-    arc: true,
     bezier: false,
     quadratic: false,
-    text: true
+
 };
 
-if (params.tools) {
-    tools = JSON.parse(params.tools);
-}
+// if (params.tools) {
+//     tools = JSON.parse(params.tools);
+// }
 
 function setSelection(element, prop) {
     endLastPath();
@@ -617,13 +618,15 @@ function setSelection(element, prop) {
             lineCap = lineJoin = 'round';
         }
 
-        /* Default: setting default selected shape!! */
-        if (params.selectedIcon) {
-            params.selectedIcon = params.selectedIcon.split('')[0].toUpperCase() + params.selectedIcon.replace(params.selectedIcon.split('').shift(1), '');
-            if (params.selectedIcon === shape) {
-                is.set(params.selectedIcon);
-            }
-        } else is.set('Pencil');
+        // /* Default: setting default selected shape!! */
+        // if (params.selectedIcon) {
+        //     params.selectedIcon = params.selectedIcon.split('')[0].toUpperCase() + params.selectedIcon.replace(params.selectedIcon.split('').shift(1), '');
+        //     if (params.selectedIcon === shape) {
+        //         is.set(params.selectedIcon);
+        //     }
+        // } else is.set('Pencil');
+
+        is.set('Pencil');
 
         if(elem.canvas){
             elem = context.canvas;
@@ -813,7 +816,7 @@ function setSelection(element, prop) {
         }
     }
 
-    if (tools.pencil === true) {
+    if (tools.pencil) {
         decoratePencil();
     } else {
         document.getElementById('pencil-icon').style.display = 'none';
@@ -1218,7 +1221,7 @@ function hideContainers() {
 
 
 
-/* Generated on:Fri May 14 2021 07:56:17 GMT-0700 (Pacific Daylight Time) || version: 6.8.6 - Altanai (@altanai)  , License : MIT  */ 
+/* Generated on:Wed Jun 16 2021 00:44:18 GMT-0700 (Pacific Daylight Time) || version: 6.8.12 - Altanai (@altanai)  , License : MIT  */ 
 /* ***********************************************
 Draw helper
 *********************************************/
@@ -1312,7 +1315,7 @@ var drawHelper = {
 
 };
 
-/* Generated on:Fri May 14 2021 07:56:17 GMT-0700 (Pacific Daylight Time) || version: 6.8.6 - Altanai (@altanai)  , License : MIT  */ 
+/* Generated on:Wed Jun 16 2021 00:44:18 GMT-0700 (Pacific Daylight Time) || version: 6.8.12 - Altanai (@altanai)  , License : MIT  */ 
 /* ***********************************************
 Drag helper
 *********************************************/
@@ -1715,7 +1718,7 @@ var dragHelper = {
     }
 };
 
-/* Generated on:Fri May 14 2021 07:56:17 GMT-0700 (Pacific Daylight Time) || version: 6.8.6 - Altanai (@altanai)  , License : MIT  */ 
+/* Generated on:Wed Jun 16 2021 00:44:18 GMT-0700 (Pacific Daylight Time) || version: 6.8.12 - Altanai (@altanai)  , License : MIT  */ 
 /* ***********************************************
 pencil Handler 
 *********************************************/
@@ -1771,7 +1774,7 @@ var pencilHandler = {
 };
 
 
-/* Generated on:Fri May 14 2021 07:56:17 GMT-0700 (Pacific Daylight Time) || version: 6.8.6 - Altanai (@altanai)  , License : MIT  */ 
+/* Generated on:Wed Jun 16 2021 00:44:18 GMT-0700 (Pacific Daylight Time) || version: 6.8.12 - Altanai (@altanai)  , License : MIT  */ 
 /* ***********************************************
 Eraser Handler 
 *********************************************/
@@ -1830,7 +1833,7 @@ var eraserHandler = {
 
 
 };
-/* Generated on:Fri May 14 2021 07:56:17 GMT-0700 (Pacific Daylight Time) || version: 6.8.6 - Altanai (@altanai)  , License : MIT  */ 
+/* Generated on:Wed Jun 16 2021 00:44:18 GMT-0700 (Pacific Daylight Time) || version: 6.8.12 - Altanai (@altanai)  , License : MIT  */ 
 /* ***********************************************
 Line Handler 
 *********************************************/
@@ -1880,7 +1883,7 @@ var lineHandler = {
 
 };
 
-/* Generated on:Fri May 14 2021 07:56:17 GMT-0700 (Pacific Daylight Time) || version: 6.8.6 - Altanai (@altanai)  , License : MIT  */ 
+/* Generated on:Wed Jun 16 2021 00:44:18 GMT-0700 (Pacific Daylight Time) || version: 6.8.12 - Altanai (@altanai)  , License : MIT  */ 
 /* ***********************************************
 rect Handler 
 *********************************************/
@@ -1936,7 +1939,7 @@ var rectHandler = {
 
 };
 
-/* Generated on:Fri May 14 2021 07:56:17 GMT-0700 (Pacific Daylight Time) || version: 6.8.6 - Altanai (@altanai)  , License : MIT  */ 
+/* Generated on:Wed Jun 16 2021 00:44:18 GMT-0700 (Pacific Daylight Time) || version: 6.8.12 - Altanai (@altanai)  , License : MIT  */ 
 // ------------------------textHandler-------------------------------------
 var textInput = document.getElementById('text-input');
 textInput.onkeyup = function(e) {
@@ -2016,7 +2019,7 @@ var textHandler = {
 };
 // -------------------------------------------------------------
 
-/* Generated on:Fri May 14 2021 07:56:17 GMT-0700 (Pacific Daylight Time) || version: 6.8.6 - Altanai (@altanai)  , License : MIT  */ 
+/* Generated on:Wed Jun 16 2021 00:44:18 GMT-0700 (Pacific Daylight Time) || version: 6.8.12 - Altanai (@altanai)  , License : MIT  */ 
 /* ***********************************************
 Events handler 
 *********************************************/

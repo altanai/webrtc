@@ -14,38 +14,39 @@ function make_base(imgsrc, context) {
 }
 
 // -------------------------------------------------------------
-(function () {
-    var params = {},
-        r = /([^&=]+)=?([^&]*)/g;
-
-    function d(s) {
-        return decodeURIComponent(s.replace(/\+/g, ' '));
-    }
-
-    var match, search = window.location.search;
-    while (match = r.exec(search.substring(1)))
-        params[d(match[1])] = d(match[2]);
-
-    window.params = params;
-})();
+// (function () {
+//     var params = {},
+//         r = /([^&=]+)=?([^&]*)/g;
+//
+//     function d(s) {
+//         return decodeURIComponent(s.replace(/\+/g, ' '));
+//     }
+//
+//     var match, search = window.location.search;
+//     while (match = r.exec(search.substring(1)))
+//         params[d(match[1])] = d(match[2]);
+//
+//     window.params = params;
+// })();
 
 // initialised tools
 var tools = {
-    line: true,
     pencil: true,
-    dragSingle: true,
-    dragMultiple: true,
     eraser: true,
+    line: true,
+    text: true,
+    dragSingle: false,
+    dragMultiple: false,
+    arc: false,
     rectangle: true,
-    arc: true,
     bezier: false,
     quadratic: false,
-    text: true
+
 };
 
-if (params.tools) {
-    tools = JSON.parse(params.tools);
-}
+// if (params.tools) {
+//     tools = JSON.parse(params.tools);
+// }
 
 function setSelection(element, prop) {
     endLastPath();
@@ -82,13 +83,15 @@ function setSelection(element, prop) {
             lineCap = lineJoin = 'round';
         }
 
-        /* Default: setting default selected shape!! */
-        if (params.selectedIcon) {
-            params.selectedIcon = params.selectedIcon.split('')[0].toUpperCase() + params.selectedIcon.replace(params.selectedIcon.split('').shift(1), '');
-            if (params.selectedIcon === shape) {
-                is.set(params.selectedIcon);
-            }
-        } else is.set('Pencil');
+        // /* Default: setting default selected shape!! */
+        // if (params.selectedIcon) {
+        //     params.selectedIcon = params.selectedIcon.split('')[0].toUpperCase() + params.selectedIcon.replace(params.selectedIcon.split('').shift(1), '');
+        //     if (params.selectedIcon === shape) {
+        //         is.set(params.selectedIcon);
+        //     }
+        // } else is.set('Pencil');
+
+        is.set('Pencil');
 
         if(elem.canvas){
             elem = context.canvas;
@@ -278,7 +281,7 @@ function setSelection(element, prop) {
         }
     }
 
-    if (tools.pencil === true) {
+    if (tools.pencil) {
         decoratePencil();
     } else {
         document.getElementById('pencil-icon').style.display = 'none';

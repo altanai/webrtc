@@ -1,11 +1,12 @@
 {
   "name": "webrtcdevelopment",
-  "version": "6.8.7",
+  "version": "6.8.13",
   "description": "webrtc based communication and collaboration client. Contains lot of experiments modules",
   "engines": {
     "node": "12.*"
   },
   "dependencies": {
+    "dotenv": "^10.0.0",
     "log": "^1.4.0",
     "node": "^13.14.0",
     "node-static": "^0.7.11",

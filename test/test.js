@@ -1,22 +1,26 @@
 const expect = require('chai').expect;
 const http = require('http');
+require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
+
+console.log('.env.' + process.env.NODE_ENV);
+console.log(`Your serverkey is ${process.env.key}`);
 
 describe('Websocket server tests', function () {
     var server = null;
     var client = null;
 
     const fs = require('fs');
-    const properties = JSON.parse(require('./../env.js')(fs).readEnv());
+
     const options = {
-        key: fs.readFileSync(properties.serverkey),
-        cert: fs.readFileSync(properties.servercert),
+        key: fs.readFileSync(process.env.key),
+        cert: fs.readFileSync(process.env.cert),
         requestCert: true,
         rejectUnauthorized: false
     };
-    var wssPort= properties.wssPort;
+    var wssPort= process.env.wssPort;
     before( (done) => {
         try {
-            server = require('./../build/webrtcdevelopmentServer_min.js').realtimecomm(properties, options, null);
+            server = require('./../build/webrtcdevelopmentServer_min.js').realtimecomm(process.env, options, null);
             console.log("BEFORE");
             done();
         } catch (e) {

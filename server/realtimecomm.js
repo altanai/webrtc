@@ -3,13 +3,12 @@
  * handled on connection of socket for every new connection
  * @method
  * @name realtimecomm
- * @param {json} properties
  * @param {json} options
  * @param {cache} cache like redis
  * @param {function} socketCallback
  */
 
-exports.realtimecomm = function (properties, options , cache) {
+exports.realtimecomm = function ( options , cache) {
 
     var listOfUsers = {};
     var shiftedModerationControls = {};
@@ -21,7 +20,7 @@ exports.realtimecomm = function (properties, options , cache) {
     var sessions = {};
 
     console.log("[RealtimeComm] ----------------realtimecomm----------------------");
-    console.log("[RealtimeComm] env => " + properties.enviornment + " running at " + properties.wssPort);
+    console.log("[RealtimeComm] env => " + process.env.enviornment + " running at " + process.env.wssPort);
 
 
     // http2
@@ -53,7 +52,7 @@ exports.realtimecomm = function (properties, options , cache) {
         console.error("disconnected ");
     });
 
-    server.listen(properties.wssPort);
+    server.listen(process.env.wssPort);
 
     /**
      * append user to list of user

@@ -1,4 +1,4 @@
-exports.restapi = function (realtimecomm, options, app, properties) {
+exports.restapi = function (realtimecomm, options, app) {
 
     var restify = require('restify');
     var server = restify.createServer(options);
@@ -174,12 +174,12 @@ exports.restapi = function (realtimecomm, options, app, properties) {
 
     server.on('MethodNotAllowed', unknownMethodHandler);
 
-    server.listen(properties.restPort, function () {
+    server.listen(process.env.restPort, function () {
         console.log('%s listening at %s', server.name, server.url);
     });
 
     console.log("----------------------REST APIs ----------------");
-    console.log(" REST server env => " + properties.enviornment + " running at\n " + properties.restPort);
+    console.log(" REST server env => " + process.env.enviornment + " running at\n " + process.env.restPort);
 
     return module;
 };
